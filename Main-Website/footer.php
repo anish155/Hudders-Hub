@@ -8,20 +8,28 @@
       <p class="footer-tagline">
         Local food, trusted traders, and fresh picks curated for Huddersfield.
       </p>
+      <p class="footer-slogan">Eat Fresh. Buy Local.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About HuddersHub</a>
+      <a href="#">Our traders</a>
+      <a href="#">Sustainability</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#">Help center</a>
+      <a href="#">Order tracking</a>
+      <a href="#">Returns &amp; refunds</a>
     </div>
 
     <div class="footer-col">
       <h4>Explore</h4>
       <a href="homepage.php">Homepage</a>
-      <a href="invoice.php">Invoice (Test)</a>
       <a href="contact.php">Contact</a>
-    </div>
-
-    <div class="footer-col">
-      <h4>Support</h4>
-      <a href="#">Help Center</a>
-      <a href="#">Order Tracking</a>
-      <a href="#">Returns</a>
+      <a href="invoice.php">Invoice</a>
     </div>
 
     <div class="footer-col">
@@ -34,7 +42,7 @@
 
   <div class="page-wrap footer-bottom">
     <span>Copyright 2026 HuddersHub. All rights reserved.</span>
-    <span>Built for testing only.</span>
+    <span>Eat Fresh. Buy Local.</span>
   </div>
 </footer>
 
@@ -48,7 +56,7 @@
 
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
     gap: 28px;
     align-items: start;
   }
@@ -73,9 +81,18 @@
   }
 
   .footer-tagline {
-    color: rgba(255, 255, 255, 0.7);
+    color: #FFFFFF;
     font-size: 14px;
     line-height: 1.6;
+  }
+
+  .footer-slogan {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #FFFFFF;
   }
 
   .footer-col h4 {
@@ -83,15 +100,22 @@
     margin-bottom: 12px;
     letter-spacing: 0.4px;
     text-transform: uppercase;
+    color: #FFFFFF;
   }
 
   .footer-col a,
   .footer-col p {
     display: block;
-    color: rgba(255, 255, 255, 0.72);
+    color: #FFFFFF;
     text-decoration: none;
     font-size: 13px;
     margin-bottom: 8px;
+  }
+
+  .footer-policy {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #FFFFFF;
   }
 
   .footer-col a:hover {
@@ -105,7 +129,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: #FFFFFF;
   }
 
   @media (max-width: 900px) {

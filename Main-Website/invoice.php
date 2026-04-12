@@ -1,11 +1,29 @@
-<?php include 'nav-bar.php'; ?>
+<?php
+$navBreadcrumb = ['Home', 'user', 'cart', 'collection', 'pay', 'invoice'];
+include 'nav-bar.php';
+?>
 
 <main class="invoice-page">
+  <section class="payment-strip">
+    <div class="page-wrap">
+      <div class="payment-success">
+        <div class="success-icon">✓</div>
+        <div>
+          <h2>Payment successful</h2>
+          <p>Thank you for shopping local.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="invoice-hero">
     <div class="page-wrap">
-      <p class="hero-kicker">HuddersHub Invoice</p>
-      <h1>Invoice preview (testing)</h1>
-      <p class="hero-sub">This invoice is a static demo for layout testing.</p>
+      <div class="invoice-title">
+        <h1>
+          <span class="invoice-step">03</span>
+          Invoice
+        </h1>
+      </div>
     </div>
   </section>
 
@@ -14,12 +32,15 @@
       <div class="invoice-card">
         <div class="invoice-header">
           <div>
-            <h2>Invoice #HH-2026-0412</h2>
+            <div class="invoice-title-row">
+              <h2>Invoice #HH-2026-0412</h2>
+            </div>
             <p>Date: April 12, 2026</p>
-            <p>Status: Pending</p>
+            <p>Payment: PayPal</p>
           </div>
           <div class="invoice-meta">
             <span>Trader: Hudders Butchers</span>
+            <span>Shop owners: A. Khan, S. Patel</span>
             <span>Customer: Jamie Sutton</span>
             <span>Collection: Wed 10:00-13:00</span>
           </div>
@@ -72,7 +93,7 @@
 
         <div class="invoice-actions">
           <button class="btn btn-secondary">Download</button>
-          <button class="btn btn-primary">Send</button>
+          <button class="btn btn-primary">Shop more</button>
         </div>
       </div>
     </div>
@@ -86,39 +107,103 @@
     padding-top: 24px;
   }
 
+
+  .payment-strip {
+    padding: 8px 0 6px;
+  }
+
   .invoice-hero {
-    padding: 40px 0 28px;
+    padding: 24px 0 22px;
   }
 
   .invoice-hero h1 {
-    font-size: 36px;
-    letter-spacing: -0.4px;
-    margin-bottom: 10px;
-  }
-
-  .hero-kicker {
+    font-size: 48px;
+    letter-spacing: 0.6px;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    font-size: 12px;
-    color: #FF5E3A;
-    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+    padding-top: 16px;
   }
 
-  .hero-sub {
-    color: #6B7280;
-    max-width: 520px;
+  .invoice-step {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F260B;
+    letter-spacing: 1px;
   }
 
   .invoice-content {
-    padding: 22px 0 60px;
+    padding: 12px 0 70px;
   }
+
+  .payment-success {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
+    color: #FFFFFF;
+    padding: 16px 18px;
+    border-radius: 6px;
+    box-shadow: 0 12px 24px rgba(15, 38, 11, 0.18);
+  }
+
+  .payment-success h2 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .payment-success p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .success-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
 
   .invoice-card {
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
-    padding: 28px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px dashed #D1D5DB;
+    border-radius: 8px;
+    padding: 28px 26px;
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.08);
+    font-family: "Courier New", monospace;
+    position: relative;
+  }
+
+  .invoice-card::before,
+  .invoice-card::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: repeating-linear-gradient(
+      to right,
+      #D1D5DB,
+      #D1D5DB 6px,
+      transparent 6px,
+      transparent 12px
+    );
+  }
+
+  .invoice-card::before {
+    top: 10px;
+  }
+
+  .invoice-card::after {
+    bottom: 10px;
   }
 
   .invoice-header {
@@ -129,15 +214,35 @@
     border-bottom: 1px solid #E5E7EB;
     padding-bottom: 18px;
     margin-bottom: 18px;
+    padding-top: 6px;
+  }
+
+  .invoice-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status-pill {
+    background: rgba(255, 94, 58, 0.12);
+    color: #FF5E3A;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 4px 10px;
+    border-radius: 999px;
   }
 
   .invoice-header h2 {
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
   .invoice-header p {
-    font-size: 13px;
+    font-size: 12px;
     color: #6B7280;
     margin-bottom: 4px;
   }
@@ -145,27 +250,29 @@
   .invoice-meta {
     display: grid;
     gap: 6px;
-    font-size: 13px;
-    color: #222222;
+    font-size: 12px;
+    color: #111111;
     text-align: right;
   }
 
   .invoice-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .invoice-table th,
   .invoice-table td {
-    border: 1px solid #E5E7EB;
-    padding: 10px 12px;
+    border-bottom: 1px dashed #D1D5DB;
+    padding: 8px 4px;
     text-align: left;
   }
 
   .invoice-table th {
-    background: #F5F5F5;
+    background: transparent;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
   }
 
   .invoice-table tfoot td {
@@ -175,6 +282,7 @@
   .invoice-table .total-row td {
     font-weight: 700;
     color: #0F260B;
+    border-bottom: none;
   }
 
   .invoice-actions {
@@ -182,6 +290,10 @@
     gap: 12px;
     justify-content: flex-end;
     margin-top: 18px;
+  }
+
+  .invoice-actions .btn-secondary {
+    color: #FFFFFF;
   }
 
   @media (max-width: 900px) {

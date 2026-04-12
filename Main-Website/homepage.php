@@ -5,6 +5,7 @@
  */
 
 // Include the header/navigation bar
+$activePage = 'home';
 include 'nav-bar.php';
 
 // Banner images - banner-1.png (Cleckheaton) always first
