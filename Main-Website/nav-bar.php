@@ -59,6 +59,8 @@ $wishlistCount = 5;
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+  <link href="Asstes/site-polish.css" rel="stylesheet">
   
   <!-- Google Material Icons Outlined -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
@@ -70,39 +72,39 @@ $wishlistCount = 5;
     :root {
       /* Primary Accent (Orange) */
       --primary-orange: #FF5E3A;
-      --primary-orange-light: #FF8A6A;
-      --primary-orange-dark: #E84A2A;
+      --primary-orange-light: #FF8C70;
+      --primary-orange-dark: #E3472C;
 
       /* Secondary Accent (Green) */
       --primary-green: #0F260B;
-      --primary-green-light: rgba(15, 38, 11, 0.12);
+      --primary-green-light: rgba(15, 38, 11, 0.14);
       --primary-green-dark: #0B1C08;
 
       /* Grays & Backgrounds */
       --bg-white: #FFFFFF;
-      --bg-light: #FAF9F6;
-      --bg-gray: #F5F5F5;
-      --border-light: #e0e0e0;
-      --bg-gradient: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+      --bg-light: #F7F6F3;
+      --bg-gray: #F2F4F1;
+      --border-light: #DCE3DA;
+      --bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
 
       /* Text Colors */
-      --text-black: #000000;
-      --text-dark-gray: #222222;
-      --text-medium-gray: #888888;
+      --text-black: #0B140A;
+      --text-dark-gray: #1E2A1C;
+      --text-medium-gray: #5E6A63;
 
       /* Badge */
-      --badge-bg: #000000;
+      --badge-bg: #0F260B;
       --badge-text: #ffffff;
 
       /* Shadows */
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
+      --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+      --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+      --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
 
       /* Transitions & Borders */
-      --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --radius-sm: 6px;
-      --radius-md: 8px;
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius-sm: 0;
+      --radius-md: 0;
     }
 
     /* ========================================================================
@@ -132,7 +134,7 @@ $wishlistCount = 5;
       right: 0;
       z-index: 1000;
       background: var(--bg-gradient);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
       transition: var(--transition-smooth);
     }
 
@@ -146,7 +148,7 @@ $wishlistCount = 5;
        TOP BAR - Contains logo, search, and user actions
        ======================================================================== */
     .top-bar {
-      background: #FFFFFF;
+      background: rgba(255, 255, 255, 0.98);
       border-bottom: 1px solid var(--border-light);
       padding: 14px 0;
       transition: var(--transition-smooth);
@@ -178,7 +180,7 @@ $wishlistCount = 5;
        NAVIGATION BAR - Contains category links
        ======================================================================== */
     .nav-bar {
-      background: #F3F4F6;
+      background: #F1F3F0;
       border-bottom: 1px solid var(--border-light);
       padding: 10px 0;
       transition: var(--transition-smooth);
@@ -224,7 +226,7 @@ $wishlistCount = 5;
       height: 56px;
       object-fit: contain;
       transition: var(--transition-smooth);
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+      filter: drop-shadow(0 6px 12px rgba(15, 38, 11, 0.12));
     }
 
     .brand-text {
@@ -232,7 +234,7 @@ $wishlistCount = 5;
       font-weight: 700;
       font-style: italic;
       font-size: 36px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       color: #0F260B;
     }
 
@@ -284,8 +286,8 @@ $wishlistCount = 5;
       width: 100%;
       padding: 6px 44px 6px 14px;
       height: 36px;
-      border-radius: 50px;
-      border: 1px solid #111111;
+      border-radius: 0;
+      border: 1px solid #C8D1C6;
       background: var(--bg-white);
       font-size: 14px;
       font-weight: 500;
@@ -296,12 +298,12 @@ $wishlistCount = 5;
 
     .search-bar input:focus {
       border-color: var(--primary-orange);
-      box-shadow: 0 0 0 2px rgba(255, 111, 60, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.22);
     }
 
     .search-bar input::placeholder {
-      color: #000000;
-      opacity: 0.5;
+      color: #1B2419;
+      opacity: 0.55;
     }
 
     .search-icon {
@@ -310,8 +312,8 @@ $wishlistCount = 5;
       top: 50%;
       transform: translateY(-50%);
       font-size: 18px;
-      color: #000000;
-      opacity: 0.5;
+      color: #1B2419;
+      opacity: 0.55;
       transition: var(--transition-smooth);
     }
 
@@ -336,8 +338,8 @@ $wishlistCount = 5;
       align-items: center;
       gap: 6px;
       font-size: 14px;
-      font-weight: 400;
-      color: #6B7280;
+      font-weight: 600;
+      color: var(--text-medium-gray);
       text-decoration: none;
       transition: var(--transition-smooth);
       cursor: pointer;
@@ -346,7 +348,7 @@ $wishlistCount = 5;
     }
 
     .action-btn:hover {
-      background: transparent;
+      background: rgba(15, 38, 11, 0.06);
       color: var(--primary-green);
     }
 
@@ -366,7 +368,7 @@ $wishlistCount = 5;
     }
 
     .user-menu:hover {
-      background: transparent;
+      background: rgba(15, 38, 11, 0.06);
       color: var(--primary-green);
     }
 
@@ -383,13 +385,13 @@ $wishlistCount = 5;
       padding: 6px;
       border-radius: 0;
       background: transparent;
-      border: none;
+      border: 1px solid transparent;
       box-shadow: none;
       outline: none;
     }
 
     .icon-with-badge:hover {
-      background: transparent;
+      background: rgba(15, 38, 11, 0.06);
       color: var(--primary-green);
     }
 
@@ -419,7 +421,7 @@ $wishlistCount = 5;
       height: 100vh;
       width: min(420px, 92vw);
       background: #FFFFFF;
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+      box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
       transform: translateX(100%);
       transition: var(--transition-smooth);
       z-index: 1300;
@@ -473,7 +475,7 @@ $wishlistCount = 5;
       gap: 14px;
       align-items: flex-start;
       border: 1px solid var(--border-light);
-      border-radius: 12px;
+      border-radius: 0;
       padding: 12px;
       background: #FFFFFF;
       box-shadow: var(--shadow-sm);
@@ -483,7 +485,7 @@ $wishlistCount = 5;
       width: 56px;
       height: 56px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 0;
       background: var(--bg-gray);
     }
 
@@ -616,7 +618,7 @@ $wishlistCount = 5;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 8px 18px rgba(255, 111, 60, 0.25);
+      box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
     }
 
     .cart-checkout:hover {
@@ -635,7 +637,7 @@ $wishlistCount = 5;
       right: 0px;
       background: var(--badge-bg);
       color: var(--badge-text);
-      border-radius: 4px;
+      border-radius: 0;
       padding: 2px 5px;
       font-size: 10px;
       font-weight: 600;
@@ -677,7 +679,7 @@ $wishlistCount = 5;
 
     .btn-secondary {
       background: var(--primary-green);
-      color: #000000;
+      color: #FFFFFF;
     }
 
     .btn-secondary:hover {
@@ -707,7 +709,7 @@ $wishlistCount = 5;
        ======================================================================== */
     .card {
       background: var(--bg-white);
-      border-radius: 6px;
+      border-radius: 0;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-light);
       overflow: hidden;
@@ -747,7 +749,7 @@ $wishlistCount = 5;
        ======================================================================== */
     .product-card {
       background: var(--bg-white);
-      border-radius: 6px;
+      border-radius: 0;
       box-shadow: var(--shadow-sm);
       border: 1px solid var(--border-light);
       overflow: hidden;
@@ -852,14 +854,14 @@ $wishlistCount = 5;
     }
 
     .nav-item:not(.primary):hover {
-      background: var(--primary-green-light);
+      background: rgba(15, 38, 11, 0.08);
       color: var(--text-black);
     }
 
     .nav-item.primary {
       background: transparent;
       color: #0F260B;
-      font-weight: 400;
+      font-weight: 600;
       font-size: 14px;
       border-radius: 0;
       box-shadow: none;
@@ -917,7 +919,7 @@ $wishlistCount = 5;
       left: 0;
       background: var(--bg-white);
       border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
+      border-radius: 0;
       box-shadow: var(--shadow-lg);
       padding: 0;
       min-width: 240px;
@@ -981,7 +983,7 @@ $wishlistCount = 5;
     }
 
     .dropdown-item:hover {
-      background: var(--primary-green-light);
+      background: rgba(15, 38, 11, 0.08);
       color: var(--text-black);
       border-left-color: var(--primary-green);
     }
@@ -1022,7 +1024,7 @@ $wishlistCount = 5;
     }
   </style>
 </head>
-<body>
+<body class="theme-organic">
   <!-- =========================================================================
        HEADER START
        Contains: Top Bar (logo, search, actions) + Nav Bar (categories)

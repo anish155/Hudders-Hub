@@ -102,8 +102,8 @@ include 'nav-bar.php';
 
 <style>
   .invoice-page {
-    background: linear-gradient(180deg, #f5f7fb 0%, #FFFFFF 100%);
-    color: #111111;
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 55%, #F7F6F3 100%);
+    color: #0B140A;
     padding-top: 24px;
   }
 
@@ -146,8 +146,8 @@ include 'nav-bar.php';
     background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
     color: #FFFFFF;
     padding: 16px 18px;
-    border-radius: 6px;
-    box-shadow: 0 12px 24px rgba(15, 38, 11, 0.18);
+    border-radius: 0;
+    box-shadow: 0 16px 32px rgba(15, 38, 11, 0.22);
   }
 
   .payment-success h2 {
@@ -163,7 +163,7 @@ include 'nav-bar.php';
   .success-icon {
     width: 40px;
     height: 40px;
-    border-radius: 6px;
+    border-radius: 0;
     background: rgba(255, 255, 255, 0.15);
     display: grid;
     place-items: center;
@@ -175,9 +175,9 @@ include 'nav-bar.php';
   .invoice-card {
     background: #FFFFFF;
     border: 1px dashed #D1D5DB;
-    border-radius: 8px;
+    border-radius: 0;
     padding: 28px 26px;
-    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 34px rgba(15, 38, 11, 0.14);
     font-family: "Courier New", monospace;
     position: relative;
   }
@@ -211,7 +211,7 @@ include 'nav-bar.php';
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid #DCE3DA;
     padding-bottom: 18px;
     margin-bottom: 18px;
     padding-top: 6px;
@@ -243,7 +243,7 @@ include 'nav-bar.php';
 
   .invoice-header p {
     font-size: 12px;
-    color: #6B7280;
+    color: #5E6A63;
     margin-bottom: 4px;
   }
 
@@ -251,7 +251,7 @@ include 'nav-bar.php';
     display: grid;
     gap: 6px;
     font-size: 12px;
-    color: #111111;
+    color: #0B140A;
     text-align: right;
   }
 

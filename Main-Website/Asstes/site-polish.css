@@ -1,0 +1,104 @@
+:root {
+  --page-bg: #F4F5F2;
+  --surface: #FFFFFF;
+  --text-strong: #0B140A;
+  --text-muted: #5E6A63;
+  --border-soft: #DCE3DA;
+  --accent-color: #FF5E3A;
+  --accent-strong: #E3472C;
+  --shadow-card: 0 14px 28px rgba(15, 38, 11, 0.12);
+  --shadow-soft: 0 10px 22px rgba(15, 38, 11, 0.1);
+  --focus-ring: 0 0 0 3px rgba(255, 94, 58, 0.28);
+}
+
+body.theme-organic {
+  --page-bg: #F3F5EF;
+  --surface: #FFFFFF;
+  --text-strong: #0B140A;
+  --text-muted: #5B6B60;
+  --border-soft: #DCE3DA;
+  --accent-color: #FF5E3A;
+  --accent-strong: #E3472C;
+  --shadow-card: 0 16px 30px rgba(15, 38, 11, 0.14);
+  --shadow-soft: 0 12px 24px rgba(15, 38, 11, 0.12);
+  --focus-ring: 0 0 0 3px rgba(255, 94, 58, 0.3);
+}
+
+body.theme-market {
+  --page-bg: #FFF1E4;
+  --surface: #FFFFFF;
+  --text-strong: #1F1B16;
+  --text-muted: #6B5B4F;
+  --border-soft: #E4D6C9;
+  --accent-color: #FF5E3A;
+  --accent-strong: #E3472C;
+  --shadow-card: 0 16px 30px rgba(31, 27, 22, 0.14);
+  --shadow-soft: 0 12px 24px rgba(31, 27, 22, 0.12);
+  --focus-ring: 0 0 0 3px rgba(255, 94, 58, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(180deg, var(--page-bg) 0%, #FFFFFF 45%, var(--page-bg) 100%);
+  color: var(--text-strong);
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--border-soft);
+  background: #FFFFFF;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: var(--focus-ring);
+}
+
+button {
+  transition: all 0.2s ease;
+}
+
+.section-title {
+  letter-spacing: -0.02em;
+}
+
+.section-header p,
+.results-count,
+.card-text {
+  color: var(--text-muted);
+}
+
+.card,
+.filter-card,
+.results-meta,
+.empty-state,
+.review-card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.products-grid,
+.review-grid {
+  align-items: stretch;
+}

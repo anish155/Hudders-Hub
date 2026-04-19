@@ -49,7 +49,7 @@
 <style>
   .site-footer {
     margin-top: 60px;
-    background: #0F260B;
+    background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
     color: #FFFFFF;
     padding: 48px 0 22px;
   }
@@ -119,12 +119,12 @@
   }
 
   .footer-col a:hover {
-    color: #FF8A6A;
+    color: #FF8C70;
   }
 
   .footer-bottom {
     margin-top: 26px;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
     padding-top: 16px;
     display: flex;
     justify-content: space-between;

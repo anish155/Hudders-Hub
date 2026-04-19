@@ -92,8 +92,8 @@ include 'nav-bar.php';
 
 <style>
   .contact-page {
-    background: linear-gradient(180deg, #f5f7fb 0%, #FFFFFF 100%);
-    color: #111111;
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 55%, #F7F6F3 100%);
+    color: #0B140A;
     padding-top: 24px;
   }
 
@@ -127,10 +127,10 @@ include 'nav-bar.php';
 
   .contact-card {
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
+    border: 1px solid #DCE3DA;
+    border-radius: 0;
     padding: 28px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
   }
 
   .contact-card h2 {
@@ -140,7 +140,7 @@ include 'nav-bar.php';
 
   .contact-card p {
     font-size: 15px;
-    color: #4B5563;
+    color: #5E6A63;
   }
 
   .contact-form {
@@ -154,13 +154,13 @@ include 'nav-bar.php';
     gap: 6px;
     font-size: 14px;
     font-weight: 600;
-    color: #222222;
+    color: #1E2A1C;
   }
 
   .contact-form input,
   .contact-form textarea {
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
+    border: 1px solid #DCE3DA;
+    border-radius: 0;
     padding: 12px 14px;
     font-size: 14px;
   }
@@ -169,7 +169,7 @@ include 'nav-bar.php';
   .contact-form textarea:focus {
     outline: none;
     border-color: #FF5E3A;
-    box-shadow: 0 0 0 2px rgba(255, 111, 60, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.22);
   }
 
   .contact-panel {
@@ -178,10 +178,10 @@ include 'nav-bar.php';
 
   .contact-panel-card {
     background: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
+    border: 1px solid #DCE3DA;
+    border-radius: 0;
     padding: 18px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
     display: grid;
     gap: 16px;
   }
@@ -193,7 +193,7 @@ include 'nav-bar.php';
 
   .panel-section p {
     font-size: 13px;
-    color: #6B7280;
+    color: #5E6A63;
     margin-bottom: 6px;
   }
 
@@ -201,7 +201,7 @@ include 'nav-bar.php';
     width: 100%;
     height: 240px;
     border: 0;
-    border-radius: 12px;
+    border-radius: 0;
     margin-top: 10px;
   }
 

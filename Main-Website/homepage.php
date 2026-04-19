@@ -367,7 +367,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   :root {
     --secondary-color: #0F260B;
-    --secondary-color-soft: rgba(15, 38, 11, 0.12);
+    --secondary-color-soft: rgba(15, 38, 11, 0.14);
     --accent-sale: #FF5E3A;
   }
 
@@ -387,8 +387,8 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     font-style: normal;
     font-size: 1rem;
     line-height: 1.6;
-    color: #333333;
-    background: #FFFFFF;
+    color: #1B2419;
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 35%, #F7F6F3 100%);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -424,7 +424,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   .banner-slider {
     width: 100%;
-    background: #FFFFFF;
+    background: #F7F6F3;
     padding: 20px 0;
   }
 
@@ -433,8 +433,8 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     max-width: 1200px;
     margin: 0 auto;
     overflow: hidden;
-    border-radius: 25px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 0;
+    box-shadow: 0 12px 28px rgba(15, 38, 11, 0.14);
   }
 
   .slider-wrapper {
@@ -456,7 +456,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     height: auto;
     display: block;
     object-fit: cover;
-    border-radius: 25px;
+    border-radius: 0;
   }
 
   /* Slider Navigation Buttons */
@@ -477,13 +477,13 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     transition: all 0.3s ease;
     z-index: 10;
     border-radius: 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 22px rgba(15, 38, 11, 0.18);
   }
 
   .slider-btn:hover {
     background: #FF5E3A;
     transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 24px rgba(255, 94, 58, 0.3);
+    box-shadow: 0 10px 24px rgba(255, 94, 58, 0.35);
   }
 
   .slider-btn:hover .material-icons-outlined {
@@ -523,7 +523,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     width: 10px;
     height: 10px;
     border-radius: 0;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.65);
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.8);
@@ -546,7 +546,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   .flash-sale {
     padding: 60px 0;
-    background: #F3F4F6;
+    background: #F7F6F3;
   }
 
   .top-rated {
@@ -561,7 +561,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   .section-title {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 54px;
-    font-weight: 600;
+    font-weight: 700;
     color: #0F260B;
     letter-spacing: -0.015em;
     line-height: 1.1;
@@ -577,7 +577,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     align-items: center;
     gap: 0;
     background: transparent;
-    color: #000000;
+    color: #0F260B;
     padding: 0;
     border-radius: 2px;
     font-size: 54px;
@@ -648,7 +648,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   .slider-arrow {
     width: 36px;
     height: 36px;
-    border-radius: 999px;
+    border-radius: 0;
     border: none;
     background: transparent;
     cursor: pointer;
@@ -677,7 +677,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   }
 
   .slider-arrow:hover {
-    background: transparent;
+    background: rgba(15, 38, 11, 0.06);
     transform: translateY(-1px) scale(1.05);
     box-shadow: none;
   }
@@ -738,10 +738,10 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     border-radius: 0;
     padding: 12px;
     transition: all 0.35s ease;
-    box-shadow: 0 10px 24px rgba(15, 38, 11, 0.08);
+    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
     position: relative;
     overflow: hidden;
-    border: 1px solid #E2E8E0;
+    border: 1px solid #DCE3DA;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -750,9 +750,9 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
 
   .product-card:hover .product-card-inner,
   .slider-card:hover .product-card-inner {
-    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.14);
+    box-shadow: 0 18px 36px rgba(15, 38, 11, 0.18);
     transform: translateY(-2px);
-    border-color: #9CA3AF;
+    border-color: rgba(255, 94, 58, 0.45);
   }
 
   /* Product Image Wrapper */
@@ -780,7 +780,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     border-radius: 0;
     background: #0F260B;
     color: #E6F5C9;
-    border: 1px solid rgba(15, 38, 11, 0.35);
+    border: 1px solid rgba(15, 38, 11, 0.45);
   }
 
   .stock-badge.new {
@@ -791,7 +791,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   .stock-badge.sale {
     background: #0F260B;
     color: #E6F5C9;
-    border: 1px solid rgba(15, 38, 11, 0.35);
+    border: 1px solid rgba(15, 38, 11, 0.45);
   }
 
   .stock-badge.out {
@@ -807,7 +807,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     right: 6px;
     width: 32px;
     height: 32px;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.9);
     border: none;
     cursor: pointer;
     display: flex;
@@ -817,12 +817,11 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     transition: all 0.3s ease;
     padding: 0;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: 0 8px 18px rgba(15, 38, 11, 0.12);
   }
 
   .favorite-btn:hover {
-    transform: scale(1.1);
-    box-shadow: none;
+    transform: translateY(-1px) scale(1.05);
   }
 
   .favorite-btn .material-icons-outlined {
@@ -1080,9 +1079,9 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   }
 
   .add-to-cart-btn:hover {
-    background: #071205;
+    background: #091406;
     transform: translateY(-2px);
-    box-shadow: none;
+    box-shadow: 0 10px 22px rgba(15, 38, 11, 0.18);
   }
 
   .add-to-cart-btn:active {
@@ -1141,11 +1140,11 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   }
 
   .review-card {
-    border: 1px solid rgba(15, 38, 11, 0.12);
+    border: 1px solid rgba(15, 38, 11, 0.14);
     border-radius: 0;
     padding: 20px;
     background: #FFFFFF;
-    box-shadow: 0 6px 18px rgba(15, 38, 11, 0.08);
+    box-shadow: 0 12px 24px rgba(15, 38, 11, 0.12);
   }
 
   .review-meta {
@@ -1205,9 +1204,9 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   .banner-container {
     max-width: 1200px;
     margin: 0 auto;
-    border-radius: 25px;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.14);
   }
 
   .banner-container img {
@@ -1222,7 +1221,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   .recommended {
     padding: 60px 0;
-    background: #F3F4F6;
+    background: #F7F6F3;
   }
 
   /* ========================================================================

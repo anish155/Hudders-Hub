@@ -84,31 +84,31 @@ if (!in_array($page, $allowed_pages)) $page = 'dashboard';
 /* TRADER DASHBOARD STYLES (aligned with homepage) */
 :root {
     --primary-orange: #FF5E3A;
-    --primary-orange-light: #FF8A6A;
-    --primary-orange-dark: #E84A2A;
+    --primary-orange-light: #FF8C70;
+    --primary-orange-dark: #E3472C;
     --primary-green: #0F260B;
     --primary-green-light: rgba(15, 38, 11, 0.12);
     --primary-green-dark: #0B1C08;
     --bg-white: #FFFFFF;
-    --bg-light: #FAF9F6;
-    --bg-gray: #F5F5F5;
-    --border-light: #E5E7EB;
-    --text-black: #111111;
-    --text-dark-gray: #222222;
-    --text-medium-gray: #6B7280;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --bg-light: #F7F6F3;
+    --bg-gray: #F2F4F1;
+    --border-light: #DCE3DA;
+    --text-black: #0B140A;
+    --text-dark-gray: #1E2A1C;
+    --text-medium-gray: #5E6A63;
+    --shadow-sm: 0 10px 22px rgba(15, 38, 11, 0.12);
+    --shadow-md: 0 16px 32px rgba(15, 38, 11, 0.16);
+    --shadow-lg: 0 20px 36px rgba(15, 38, 11, 0.18);
     --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --radius-sm: 6px;
-    --radius-md: 10px;
+    --radius-sm: 0;
+    --radius-md: 0;
     --nav-width: 240px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: linear-gradient(180deg, #f5f7fb 0%, var(--bg-white) 100%);
+    background: linear-gradient(180deg, #F7F6F3 0%, var(--bg-white) 55%, #F7F6F3 100%);
     color: var(--text-black);
     min-height: 100vh;
 }
@@ -159,7 +159,7 @@ body {
 .avatar-wrap img, .avatar-wrap .avatar-placeholder {
     width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 0;
     border: 2px solid var(--border-light);
     object-fit: cover;
     display: block;
@@ -173,7 +173,7 @@ body {
 .avatar-overlay {
     position: absolute;
     inset: 0;
-    border-radius: 50%;
+    border-radius: 0;
     background: rgba(17, 17, 17, 0.5);
     display: flex;
     align-items: center;
