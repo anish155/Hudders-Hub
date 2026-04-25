@@ -49,7 +49,7 @@
 <style>
   .site-footer {
     margin-top: 60px;
-    background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
+    background: #0F260B;
     color: #FFFFFF;
     padding: 48px 0 22px;
   }

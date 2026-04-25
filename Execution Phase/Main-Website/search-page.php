@@ -526,8 +526,8 @@ $queryLabel = $searchQuery !== '' ? $searchQuery : 'All items';
 		background: #FFFFFF;
 		border-radius: 0;
 		padding: 12px;
-		transition: all 0.35s ease;
-		box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
+		transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+		box-shadow: 0 16px 30px rgba(15, 38, 11, 0.12);
 		position: relative;
 		overflow: hidden;
 		border: 1px solid #DCE3DA;
@@ -535,12 +535,15 @@ $queryLabel = $searchQuery !== '' ? $searchQuery : 'All items';
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		will-change: transform, box-shadow, border-color;
 	}
 
-	.product-card:hover .product-card-inner {
-		box-shadow: 0 18px 36px rgba(15, 38, 11, 0.18);
-		transform: translateY(-2px);
-		border-color: rgba(255, 94, 58, 0.45);
+	.product-card:hover .product-card-inner,
+	.product-card-inner:hover {
+		box-shadow: 0 24px 50px rgba(15, 38, 11, 0.22);
+		transform: translateY(-8px) scale(1.015);
+		border-color: rgba(255, 94, 58, 0.72);
+		background: #FFFDF9;
 	}
 
 	.product-image-wrapper {
@@ -639,7 +642,7 @@ $queryLabel = $searchQuery !== '' ? $searchQuery : 'All items';
 	}
 
 	.product-card:hover .product-image img {
-		transform: scale(1.02);
+		transform: scale(1.08);
 	}
 
 	.product-info {

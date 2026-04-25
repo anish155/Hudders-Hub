@@ -30,7 +30,6 @@ $flashSaleProducts = [
   ['name' => 'Green Broccoli', 'price' => '£0.90', 'original_price' => '£1.50', 'image' => 'Asstes/Item-image/green-broccoli.jpg', 'stock' => 'in-stock', 'unit' => 'per piece', 'is_sale' => true, 'is_new' => false],
 ];
 
-$defaultDescription = 'Fresh, crisp, and packed with goodness.';
 $defaultReviews = 216;
 
 function format_discount_text($price, $originalPrice) {
@@ -87,7 +86,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
         <div class="slider-track" id="flash-sale-track">
           <?php foreach ($flashSaleProducts as $product): ?>
             <?php
-              $description = $product['desc'] ?? $defaultDescription;
               $discountText = format_discount_text($product['price'], $product['original_price']);
               $reviewCount = $product['reviews'] ?? $defaultReviews;
             ?>
@@ -110,7 +108,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
                 </div>
                 <div class="product-info">
                   <h3 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h3>
-                  <p class="product-desc"><?php echo htmlspecialchars($description); ?></p>
                   <div class="price-row">
                     <div class="price-group">
                       <span class="current-price"><?php echo $product['price']; ?></span>
@@ -162,7 +159,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
         <div class="slider-track" id="top-rated-track">
           <?php foreach ($flashSaleProducts as $product): ?>
             <?php
-              $description = $product['desc'] ?? $defaultDescription;
               $discountText = format_discount_text($product['price'], $product['original_price']);
               $reviewCount = $product['reviews'] ?? $defaultReviews;
             ?>
@@ -185,7 +181,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
                 </div>
                 <div class="product-info">
                   <h3 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h3>
-                  <p class="product-desc"><?php echo htmlspecialchars($description); ?></p>
                   <div class="price-row">
                     <div class="price-group">
                       <span class="current-price"><?php echo $product['price']; ?></span>
@@ -245,7 +240,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     <div class="products-grid">
       <?php foreach ($flashSaleProducts as $product): ?>
         <?php
-          $description = $product['desc'] ?? $defaultDescription;
           $discountText = format_discount_text($product['price'], $product['original_price']);
           $reviewCount = $product['reviews'] ?? $defaultReviews;
         ?>
@@ -268,7 +262,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
             </div>
             <div class="product-info">
               <h3 class="product-name"><?php echo htmlspecialchars($product['name']); ?></h3>
-              <p class="product-desc"><?php echo htmlspecialchars($description); ?></p>
               <div class="price-row">
                 <div class="price-group">
                   <span class="current-price"><?php echo $product['price']; ?></span>
@@ -710,7 +703,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 20px;
     align-items: stretch;
   }
@@ -737,8 +730,8 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     background: #FFFFFF;
     border-radius: 0;
     padding: 12px;
-    transition: all 0.35s ease;
-    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 16px 30px rgba(15, 38, 11, 0.12);
     position: relative;
     overflow: hidden;
     border: 1px solid #DCE3DA;
@@ -746,13 +739,16 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     display: flex;
     flex-direction: column;
     height: 100%;
+    will-change: transform, box-shadow, border-color;
   }
 
   .product-card:hover .product-card-inner,
-  .slider-card:hover .product-card-inner {
-    box-shadow: 0 18px 36px rgba(15, 38, 11, 0.18);
-    transform: translateY(-2px);
-    border-color: rgba(255, 94, 58, 0.45);
+  .slider-card:hover .product-card-inner,
+  .product-card-inner:hover {
+    box-shadow: 0 24px 50px rgba(15, 38, 11, 0.22);
+    transform: translateY(-8px) scale(1.015);
+    border-color: rgba(255, 94, 58, 0.72);
+    background: #FFFDF9;
   }
 
   /* Product Image Wrapper */
@@ -863,13 +859,14 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   }
 
   .product-card:hover .product-image img,
-  .slider-card:hover .product-image img {
-    transform: scale(1.02);
+  .slider-card:hover .product-image img,
+  .product-card-inner:hover .product-image img {
+    transform: scale(1.08);
   }
 
   /* Product Info */
   .product-info {
-    padding: 8px 4px 2px 4px;
+    padding: 6px 4px 0 4px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -880,7 +877,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     font-size: 22px;
     font-weight: 700;
     color: #0F260B;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     letter-spacing: -0.01em;
     line-height: 1.1;
     display: -webkit-box;
@@ -907,7 +904,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .price-group {
@@ -948,7 +945,7 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #F4B740;
   }
 
@@ -1099,16 +1096,26 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   }
 
   .load-more-btn {
-    padding: 8px 14px;
-    border: 1px solid var(--secondary-color);
-    background: transparent;
-    color: var(--secondary-color);
-    font-size: 12px;
+    padding: 12px 28px;
+    border: none;
+    background: #0F260B;
+    color: #FFFFFF;
+    font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.4px;
     cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 0;
+  }
+
+  .load-more-btn:hover {
+    background: #0B1C08;
+    box-shadow: 0 6px 16px rgba(15, 38, 11, 0.2);
+  }
+
+  .load-more-btn:active {
+    transform: translateY(-1px);
   }
 
   .load-more-btn.is-loading {
@@ -1122,8 +1129,8 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     width: 14px;
     height: 14px;
     margin-left: 8px;
-    border: 2px solid rgba(15, 38, 11, 0.3);
-    border-top-color: var(--secondary-color);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -1229,19 +1236,19 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
      ======================================================================== */
   @media (max-width: 1500px) {
     .products-grid {
-      grid-template-columns: repeat(4, minmax(200px, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 1100px) {
     .products-grid {
-      grid-template-columns: repeat(3, minmax(200px, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 800px) {
     .products-grid {
-      grid-template-columns: repeat(2, minmax(180px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -1322,6 +1329,10 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
 
     .product-name {
       font-size: 16px;
+    }
+
+    .product-info {
+      padding: 6px 4px 0 4px;
     }
 
     .current-price {
@@ -1406,8 +1417,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
   const loadMoreBtn = document.getElementById('load-more-btn');
   const productsGrid = document.querySelector('.products-grid');
   const productsData = <?php echo $productsJson; ?>;
-
-  const defaultDescription = 'Fresh, crisp, and packed with goodness.';
   const defaultReviews = 216;
 
   function getDiscountText(price, originalPrice) {
@@ -1431,7 +1440,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
     const originalPriceHtml = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
     const discountText = getDiscountText(product.price, product.original_price);
     const discountHtml = discountText ? `<span class="discount-text">${discountText}</span>` : '';
-    const description = product.desc || defaultDescription;
     const reviewCount = product.reviews || defaultReviews;
     const disabledAttr = isOut ? 'disabled aria-disabled="true"' : '';
     const addToCartText = isOut ? 'Out of stock' : 'Add to cart';
@@ -1450,7 +1458,6 @@ $productsJson = json_encode($flashSaleProducts, JSON_UNESCAPED_SLASHES);
           </div>
           <div class="product-info">
             <h3 class="product-name">${product.name}</h3>
-            <p class="product-desc">${description}</p>
             <div class="price-row">
               <div class="price-group">
                 <span class="current-price">${product.price}</span>
