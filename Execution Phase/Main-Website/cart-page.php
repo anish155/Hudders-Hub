@@ -72,8 +72,13 @@ include 'nav-bar-logged-in.php';
 
   <section class="cart-content">
     <div class="page-wrap cart-layout">
-      <div class="cart-items card-panel">
-        <div class="panel-head">
+      <!-- Dynamic Items Container -->
+      <div id="cart-items-container" class="cart-items card-panel">
+        
+
+
+
+<div class="panel-head">
           <h2>Items (<?php echo count($cartItems); ?>)</h2>
           <span>Ready for pickup today</span>
         </div>
@@ -105,9 +110,12 @@ include 'nav-bar-logged-in.php';
             </div>
           </article>
         <?php endforeach; ?>
+
+        <div class="panel-loading">Loading your basket...</div>
       </div>
 
-      <aside class="cart-summary card-panel">
+      <!-- Summary Sidebar -->
+     <aside class="cart-summary card-panel">
         <div class="panel-head">
           <h2>Summary</h2>
         </div>
@@ -133,7 +141,7 @@ include 'nav-bar-logged-in.php';
     </div>
   </section>
 
-  <section class="cart-for-you">
+<section class="cart-for-you">
     <div class="page-wrap">
       <div class="section-head">
         <h2>For you</h2>
@@ -156,6 +164,8 @@ include 'nav-bar-logged-in.php';
     </div>
   </section>
 
+
+
   <section class="cart-banner">
     <div class="page-wrap">
       <a href="homepage.php" class="promo-banner-link" aria-label="Browse this week market specials">
@@ -164,6 +174,8 @@ include 'nav-bar-logged-in.php';
     </div>
   </section>
 </main>
+
+
 
 <style>
   .cart-page {
@@ -573,74 +585,64 @@ include 'nav-bar-logged-in.php';
 </style>
 
 <script>
-  (function () {
-    const formatter = new Intl.NumberFormat('en-GB', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+(function() {
+  const container = document.getElementById('cart-items-container');
+  const totalEl = document.getElementById('summary-total');
+  const countEl = document.getElementById('cart-count-header');
 
-    const summarySubtotal = document.querySelector('[data-subtotal]');
-    const summaryFee = document.querySelector('[data-fee]');
-    const summaryTotal = document.querySelector('[data-total]');
-    const feeValue = parseFloat(summaryFee?.dataset.fixedFee || '0');
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem('hh_cart') || '[]');
+    let html = '<div class="panel-head"><h2>Items (' + cart.length + ')</h2></div>';
+    let total = 0;
 
-    function recalcTotals() {
-      const lineTotals = Array.from(document.querySelectorAll('[data-line-total]'));
-      const subTotal = lineTotals.reduce((sum, line) => {
-        const value = parseFloat(line.dataset.value || '0');
-        return sum + (Number.isFinite(value) ? value : 0);
-      }, 0);
+    if (cart.length === 0) {
+      html += '<p>Your cart is empty.</p>';
+    } else {
+      cart.forEach((item, index) => {
+        const price = parseFloat(item.price.replace('£', ''));
+        const lineTotal = price * item.qty;
+        total += lineTotal;
 
-      const total = subTotal + feeValue;
-      if (summarySubtotal) {
-        summarySubtotal.textContent = `GBP ${formatter.format(subTotal)}`;
-      }
-      if (summaryTotal) {
-        summaryTotal.textContent = `GBP ${formatter.format(total)}`;
-      }
+        html += `
+          <article class="cart-item">
+            <div class="item-meta">
+              <h3>${item.name}</h3>
+              <p>Unit Price: ${item.price}</p>
+              <button onclick="removeFromCart(${index})" class="remove-btn">Remove</button>
+            </div>
+            <div class="item-actions">
+              <div class="qty-control">
+                <button onclick="updateQty(${index}, -1)">-</button>
+                <span class="qty-value">${item.qty}</span>
+                <button onclick="updateQty(${index}, 1)">+</button>
+              </div>
+              <strong>GBP ${lineTotal.toFixed(2)}</strong>
+            </div>
+          </article>`;
+      });
     }
 
-    function setLineTotal(row) {
-      const qtyEl = row.querySelector('[data-qty-value]');
-      const lineEl = row.querySelector('[data-line-total]');
-      const unitPrice = parseFloat(lineEl?.dataset.unitPrice || '0');
-      const qty = parseInt(qtyEl?.textContent || '1', 10);
-      const value = Math.max(1, qty) * unitPrice;
+    container.innerHTML = html;
+    countEl.textContent = cart.length;
+    totalEl.textContent = 'GBP ' + (total + 2.40).toFixed(2); // Adding service fee
+  }
 
-      lineEl.dataset.value = String(value);
-      lineEl.textContent = `GBP ${formatter.format(value)}`;
-    }
+  window.updateQty = (index, change) => {
+    let cart = JSON.parse(localStorage.getItem('hh_cart'));
+    cart[index].qty = Math.max(1, cart[index].qty + change);
+    localStorage.setItem('hh_cart', JSON.stringify(cart));
+    renderCart();
+  };
 
-    document.querySelectorAll('[data-item-row]').forEach((row) => {
-      setLineTotal(row);
+  window.removeFromCart = (index) => {
+    let cart = JSON.parse(localStorage.getItem('hh_cart'));
+    cart.splice(index, 1);
+    localStorage.setItem('hh_cart', JSON.stringify(cart));
+    renderCart();
+  };
 
-      const minus = row.querySelector('[data-qty-minus]');
-      const plus = row.querySelector('[data-qty-plus]');
-      const qtyEl = row.querySelector('[data-qty-value]');
-      const removeBtn = row.querySelector('.remove-btn');
-
-      minus?.addEventListener('click', () => {
-        const current = parseInt(qtyEl.textContent || '1', 10);
-        qtyEl.textContent = String(Math.max(1, current - 1));
-        setLineTotal(row);
-        recalcTotals();
-      });
-
-      plus?.addEventListener('click', () => {
-        const current = parseInt(qtyEl.textContent || '1', 10);
-        qtyEl.textContent = String(Math.min(20, current + 1));
-        setLineTotal(row);
-        recalcTotals();
-      });
-
-      removeBtn?.addEventListener('click', () => {
-        row.remove();
-        recalcTotals();
-      });
-    });
-
-    recalcTotals();
-  })();
+  renderCart();
+})();
 </script>
 
 <?php include 'footer.php'; ?>

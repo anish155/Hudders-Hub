@@ -1126,11 +1126,11 @@ $wishlistCount = 5;
               <div class="dropdown-section">
                 <div class="dropdown-section-title">Browse by Shop</div>
                 <div class="dropdown-divider"></div>
-                <a href="category.php?cat=butcher" class="dropdown-item">Butcher</a>
-                <a href="category.php?cat=greengrocer" class="dropdown-item">Greengrocer</a>
-                <a href="category.php?cat=fishmonger" class="dropdown-item">Fishmonger</a>
-                <a href="category.php?cat=bakery" class="dropdown-item">Bakery</a>
-                <a href="category.php?cat=delicatessen" class="dropdown-item">Delicatessen</a>
+                <a href="butcher.php?cat=butcher" class="dropdown-item">Butcher</a>
+                <a href="greengrocer.php?cat=greengrocer" class="dropdown-item">Greengrocer</a>
+                <a href="fishmonger.php?cat=fishmonger" class="dropdown-item">Fishmonger</a>
+                <a href="bakery.php?cat=bakery" class="dropdown-item">Bakery</a>
+                <a href="delicat.php?cat=delicatessen" class="dropdown-item">Delicatessen</a>
               </div>
 
               <!-- Browse by Type Section -->
