@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Cart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+/* =========================================================================
+   GLOBAL VARIABLES & RESET
+   ========================================================================= */
+:root {
+    --primary-orange: #FF5E3A;
+    --primary-orange-light: #FF8C70;
+    --primary-orange-dark: #E3472C;
+    --primary-green: #0F260B;
+    --primary-green-light: rgba(15, 38, 11, 0.14);
+    --primary-green-dark: #0B1C08;
+    --bg-white: #FFFFFF;
+    --bg-light: #F7F6F3;
+    --bg-gray: #F2F4F1;
+    --border-light: #DCE3DA;
+    --bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
+    --text-black: #0B140A;
+    --text-dark-gray: #1E2A1C;
+    --text-medium-gray: #5E6A63;
+    --badge-bg: #0F260B;
+    --badge-text: #ffffff;
+    --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+    --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+    --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-sm: 0;
+    --radius-md: 0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1B2419;
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 35%, #F7F6F3 100%);
+    line-height: 1.6;
+    padding-top: 0; /* Header is fixed, but body doesn't need padding if we handle it in header or use margin */
+}
+html { scroll-behavior: smooth; }
+img { max-width: 100%; height: auto; display: block; }
+button { font-family: inherit; cursor: pointer; transition: all 0.3s ease; }
+a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+.page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* =========================================================================
+   HEADER STYLES
+   ========================================================================= */
+body { padding-top: 140px; }
+header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth);
+}
+header.scrolled { box-shadow: var(--shadow-md); background: #FFFFFF; }
+.top-bar { background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
+header.scrolled .top-bar { padding: 10px 0; }
+header.scrolled .brand img { width: 42px; height: 42px; }
+header.scrolled .brand-text { font-size: 30px; }
+.top-bar-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { width: 56px; height: 56px; object-fit: contain; transition: var(--transition-smooth); }
+.brand-text { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 36px; color: #0F260B; }
+.search-wrap { display: flex; align-items: center; gap: 12px; }
+.search-bar { position: relative; flex: 1; min-width: 280px; }
+.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; border-radius: 0; }
+.search-bar input:focus { border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(255,94,58,.22); }
+.search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #1B2419; opacity: .55; }
+.actions { display: flex; align-items: center; gap: 16px; }
+.icon-with-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 6px; color: var(--text-black); }
+.icon-with-badge:hover { background: rgba(15,38,11,.06); color: var(--primary-green); }
+.icon-with-badge .material-icons-outlined { font-size: 24px; }
+.badge { position: absolute; top: 0; right: 0; background: var(--badge-bg); color: #fff; padding: 2px 5px; font-size: 10px; font-weight: 600; min-width: 16px; text-align: center; }
+.user-menu { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--text-black); cursor: pointer; padding: 8px 12px; }
+.user-menu:hover { background: rgba(15,38,11,.06); color: var(--primary-green); }
+.nav-bar { background: #F1F3F0; border-bottom: 1px solid var(--border-light); padding: 10px 0; transition: var(--transition-smooth); }
+header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
+.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-medium-gray); }
+.breadcrumb a { color: var(--text-dark-gray); }
+.breadcrumb a:hover { color: var(--primary-green); }
+.breadcrumb-sep { color: #9AA19A; }
+.breadcrumb-current { color: var(--primary-green); font-weight: 600; }
+
+/* =========================================================================
+   CART DRAWER
+   ========================================================================= */
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1200; }
+.cart-overlay.open { opacity: 1; visibility: visible; }
+.cart-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); background: #fff; box-shadow: -16px 0 40px rgba(15,38,11,.18); transform: translateX(100%); transition: var(--transition-smooth); z-index: 1300; display: flex; flex-direction: column; }
+.cart-drawer.open { transform: translateX(0); }
+.cart-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+.cart-header h3 { font-size: 20px; font-weight: 700; color: var(--text-dark-gray); }
+.cart-close { border: none; background: transparent; font-size: 20px; color: var(--text-dark-gray); }
+.cart-body { padding: 18px 22px; flex: 1; display: grid; gap: 14px; align-content: start; overflow-y: auto; }
+.cart-item { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: flex-start; border: 1px solid var(--border-light); padding: 12px; background: #fff; box-shadow: var(--shadow-sm); }
+.cart-item img { width: 56px; height: 56px; object-fit: cover; background: var(--bg-gray); }
+.cart-item-details { display: grid; gap: 10px; }
+.cart-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cart-item h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-dark-gray); }
+.cart-item p { font-size: 12px; color: var(--text-medium-gray); }
+.cart-price { font-weight: 700; color: var(--primary-orange); font-size: 14px; white-space: nowrap; }
+.cart-item-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cart-qty { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-gray); padding: 6px 10px; border-radius: 0; }
+.cart-qty button { border: none; background: #fff; width: 22px; height: 22px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-dark-gray); box-shadow: var(--shadow-sm); border-radius: 0; }
+.qty-val { font-size: 12px; font-weight: 700; min-width: 12px; text-align: center; }
+.cart-remove { border: none; background: transparent; color: var(--text-medium-gray); font-size: 12px; cursor: pointer; text-decoration: underline; }
+.cart-empty { text-align: center; color: var(--text-medium-gray); font-size: 13px; padding: 24px 0 10px; display: none; }
+.cart-footer { border-top: 1px solid var(--border-light); padding: 16px 22px 20px; display: grid; gap: 12px; }
+.cart-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-dark-gray); }
+.cart-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.cart-link { font-size: 13px; color: var(--text-medium-gray); text-decoration: none; border-bottom: 1px solid var(--border-light); padding-bottom: 2px; }
+.cart-link:hover { color: var(--primary-green); border-bottom-color: var(--primary-green); }
+.cart-checkout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(255,94,58,.28); border-radius: 0; }
+.cart-checkout:hover { transform: translateY(-1px); }
+
+/* =========================================================================
+   CART PAGE SPECIFIC STYLES
+   ========================================================================= */
+.cart-page { background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 55%, #F7F6F3 100%); color: #0B140A; padding-top: 20px; }
+.cart-hero { padding: 22px 0 18px; }
+.cart-hero h1 { position: relative; font-size: 48px; text-transform: uppercase; letter-spacing: 0.6px; padding-top: 16px; margin-bottom: 10px; }
+.step-id { position: absolute; top: 0; left: 0; font-size: 16px; font-weight: 700; color: #0F260B; letter-spacing: 1px; }
+.cart-hero p { color: #5E6A63; font-size: 15px; }
+.cart-content { padding: 8px 0 70px; }
+.cart-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); gap: 24px; align-items: start; }
+.card-panel { background: #FFFFFF; border: 1px solid #DCE3DA; box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12); padding: 20px; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-bottom: 1px solid #E3E9E1; padding-bottom: 12px; margin-bottom: 14px; }
+.panel-head h2 { font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; }
+.panel-head span { font-size: 13px; color: #6A756F; }
+.cart-items { display: grid; gap: 12px; }
+.cart-item-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 14px; align-items: center; border: 1px solid #E3E9E1; padding: 12px; background: #FFFFFF; }
+.item-image-wrap { width: 92px; height: 92px; border: 1px solid #E3E9E1; overflow: hidden; background: #F7F6F3; }
+.item-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.item-meta h3 { font-size: 17px; margin-bottom: 4px; color: #0B140A; }
+.item-meta p { font-size: 13px; color: #5E6A63; margin-bottom: 8px; }
+.remove-btn { border: none; background: transparent; color: #FF5E3A; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; padding: 0; }
+.item-actions { display: grid; gap: 10px; justify-items: end; }
+.qty-control { display: inline-grid; grid-template-columns: 34px 42px 34px; border: 1px solid #DCE3DA; background: #FAFBF8; align-items: center; }
+.qty-btn { border: none; background: transparent; color: #0F260B; font-size: 18px; font-weight: 700; height: 34px; cursor: pointer; }
+.qty-value { display: grid; place-items: center; font-size: 14px; font-weight: 700; color: #0B140A; border-left: 1px solid #DCE3DA; border-right: 1px solid #DCE3DA; height: 34px; }
+.item-pricing { text-align: right; display: grid; gap: 2px; }
+.unit-price { color: #5E6A63; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+.line-total { font-size: 18px; color: #0B140A; }
+.cart-summary { position: sticky; top: 160px; display: grid; gap: 12px; }
+.summary-row { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; color: #1E2A1C; }
+.summary-row strong { font-size: 16px; }
+.total-row { border-top: 1px solid #E3E9E1; padding-top: 12px; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.4px; }
+.total-row strong { font-size: 20px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 0; font-size: 16px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); border: none; text-decoration: none; line-height: 1; }
+.btn-primary { background: #FF5E3A; color: #FFFFFF; }
+.btn-primary:hover { background: #E3472C; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(255, 94, 58, 0.28); }
+.btn-secondary { background: #E4F7C5; color: #0B140A; }
+.btn-secondary:hover { background: #D6F0A7; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(15, 38, 11, 0.18); }
+.full-width { width: 100%; }
+.summary-note { font-size: 12px; color: #6A756F; margin-top: 4px; }
+.cart-for-you { padding: 4px 0 24px; }
+.section-head { margin-bottom: 14px; }
+.section-head h2 { font-size: 36px; text-transform: uppercase; letter-spacing: 0.45px; color: #0F260B; }
+.for-you-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.for-you-card { background: #FFFFFF; border: 1px solid #DCE3DA; box-shadow: 0 12px 24px rgba(15, 38, 11, 0.1); overflow: hidden; transition: all 0.25s ease; }
+.for-you-card:hover { transform: translateY(-3px); box-shadow: 0 16px 28px rgba(15, 38, 11, 0.16); border-color: rgba(255, 94, 58, 0.38); }
+.for-you-image-wrap { height: 170px; background: #F7F6F3; border-bottom: 1px solid #E3E9E1; }
+.for-you-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.for-you-info { padding: 12px; display: grid; gap: 8px; }
+.for-you-info h3 { font-size: 16px; color: #0B140A; }
+.for-you-info strong { font-size: 15px; color: #0F260B; }
+.mini-add-btn { border: none; background: #0B1C08; color: #FFFFFF; padding: 10px 12px; text-transform: uppercase; letter-spacing: 0.4px; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 0; }
+.mini-add-btn:hover { background: #143311; }
+.cart-banner { padding: 0 0 16px; }
+.promo-banner-link { display: block; overflow: hidden; border: 1px solid #DCE3DA; box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12); }
+.promo-banner-link img { width: 100%; height: clamp(170px, 25vw, 290px); object-fit: cover; display: block; }
+
+@media (max-width: 980px) {
+    .cart-layout { grid-template-columns: 1fr; }
+    .cart-summary { position: static; }
+    .for-you-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+    .cart-hero h1 { font-size: 36px; }
+    .cart-item-row { grid-template-columns: 74px minmax(0, 1fr); }
+    .item-image-wrap { width: 74px; height: 74px; }
+    .item-actions { grid-column: 1 / -1; justify-items: start; width: 100%; grid-template-columns: 1fr auto; align-items: center; }
+    .item-pricing { text-align: left; }
+    .section-head h2 { font-size: 30px; }
+    .for-you-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+.site-footer { margin-top: 60px; background: #0F260B; color: #FFFFFF; padding: 48px 0 22px; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; }
+.footer-brand img { width: 48px; height: 48px; object-fit: contain; }
+.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.brand-name { font-weight: 700; font-style: italic; font-size: 24px; }
+.footer-tagline { color: #FFFFFF; font-size: 14px; line-height: 1.6; }
+.footer-slogan { margin-top: 12px; font-size: 13px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #FFFFFF; }
+.footer-col h4 { font-size: 14px; margin-bottom: 12px; letter-spacing: 0.4px; text-transform: uppercase; color: #FFFFFF; }
+.footer-col a, .footer-col p { display: block; color: #FFFFFF; text-decoration: none; font-size: 13px; margin-bottom: 8px; }
+.footer-col a:hover { color: #FF8C70; }
+.footer-bottom { margin-top: 26px; border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 16px; display: flex; justify-content: space-between; font-size: 12px; color: #FFFFFF; }
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; } }
+@media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- =========================================================================
+   HEADER START
+   ========================================================================= -->
+<header>
+<div class="top-bar">
+<div class="page-wrap top-bar-inner">
+    <div class="brand">
+        <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
+            <img src="Asstes/logo.png" alt="HuddersHub logo">
+            <span class="brand-text">HuddersHub</span>
+        </a>
+    </div>
+    <div class="search-wrap">
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <span class="search-icon material-icons-outlined">search</span>
+        </div>
+    </div>
+    <div class="actions">
+        <a class="user-menu" href="account.html">
+            <span class="material-icons-outlined" style="font-size: 24px;">account_circle</span>
+            <span>Welcome, John</span>
+        </a>
+        <a class="icon-with-badge" href="cart.html" id="cartTrigger">
+            <span class="material-icons-outlined">shopping_cart</span>
+            <span class="badge">3</span>
+        </a>
+        <a class="icon-with-badge" href="wishlist.html">
+            <span class="material-icons-outlined">favorite_border</span>
+            <span class="badge">5</span>
+        </a>
+        <a class="icon-with-badge moon" href="#" style="font-size: 20px;"><span class="material-icons-outlined">dark_mode</span></a>
+    </div>
+</div>
+</div>
+<nav class="nav-bar">
+<div class="page-wrap">
+    <div class="breadcrumb">
+        <a href="index.html">Home</a><span class="breadcrumb-sep">/</span>
+        <a href="#">GreenGrocer</a><span class="breadcrumb-sep">/</span>
+        <a href="#">Fresh Vegetable</a><span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Cart</span>
+    </div>
+</div>
+</nav>
+</header>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+<div class="cart-header">
+    <h3>Your cart</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button>
+</div>
+<div class="cart-body">
+    <div class="cart-item" data-price="6.50" data-category="Hudders Butchers">
+        <img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Fresh chicken breast">
+        <div class="cart-item-details">
+            <div class="cart-item-top">
+                <div><h4>Fresh chicken breast</h4><p class="cart-meta">Hudders Butchers · Qty 2</p></div>
+                <span class="cart-price">£13.00</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-qty">
+                    <button class="qty-btn" data-action="decrease">-</button>
+                    <span class="qty-val">2</span>
+                    <button class="qty-btn" data-action="increase">+</button>
+                </div>
+                <button class="cart-remove">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-item" data-price="8.20" data-category="Hudders Butchers">
+        <img src="Asstes/Item-image/green-broccoli.jpg" alt="Lamb mince">
+        <div class="cart-item-details">
+            <div class="cart-item-top">
+                <div><h4>Lamb mince</h4><p class="cart-meta">Hudders Butchers · Qty 1</p></div>
+                <span class="cart-price">£8.20</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-qty">
+                    <button class="qty-btn" data-action="decrease">-</button>
+                    <span class="qty-val">1</span>
+                    <button class="qty-btn" data-action="increase">+</button>
+                </div>
+                <button class="cart-remove">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-item" data-price="9.00" data-category="Hudders Butchers">
+        <img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Dry aged steak">
+        <div class="cart-item-details">
+            <div class="cart-item-top">
+                <div><h4>Dry aged steak</h4><p class="cart-meta">Hudders Butchers · Qty 3</p></div>
+                <span class="cart-price">£27.00</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-qty">
+                    <button class="qty-btn" data-action="decrease">-</button>
+                    <span class="qty-val">3</span>
+                    <button class="qty-btn" data-action="increase">+</button>
+                </div>
+                <button class="cart-remove">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-empty">Your cart is empty.</div>
+</div>
+<div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span class="cart-total-value">£48.20</span></div>
+    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div>
+</div>
+</aside>
+
+<!-- =========================================================================
+   MAIN CONTENT
+   ========================================================================= -->
+<main class="cart-page">
+<section class="cart-hero">
+    <div class="page-wrap">
+        <h1><span class="step-id">01</span>Cart</h1>
+        <p>Review your items before choosing a collection slot.</p>
+    </div>
+</section>
+
+<section class="cart-content">
+    <div class="page-wrap cart-layout">
+        <!-- Dynamic Items Container -->
+        <div id="cart-items-container" class="cart-items card-panel">
+            <div class="panel-head">
+                <h2>Items (3)</h2>
+                <span>Ready for pickup today</span>
+            </div>
+            
+            <article class="cart-item-row" data-item-row>
+                <div class="item-image-wrap">
+                    <img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Fresh chicken breast">
+                </div>
+                <div class="item-meta">
+                    <h3>Fresh chicken breast</h3>
+                    <p>Hudders Butchers</p>
+                    <button type="button" class="remove-btn">Remove</button>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-control" data-qty-control>
+                        <button type="button" class="qty-btn" data-qty-minus aria-label="Decrease quantity">-</button>
+                        <span class="qty-value" data-qty-value>2</span>
+                        <button type="button" class="qty-btn" data-qty-plus aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="item-pricing">
+                        <span class="unit-price">GBP 6.50</span>
+                        <strong class="line-total" data-line-total data-unit-price="6.50">GBP 13.00</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article class="cart-item-row" data-item-row>
+                <div class="item-image-wrap">
+                    <img src="Asstes/Item-image/green-broccoli.jpg" alt="Lamb mince">
+                </div>
+                <div class="item-meta">
+                    <h3>Lamb mince</h3>
+                    <p>Hudders Butchers</p>
+                    <button type="button" class="remove-btn">Remove</button>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-control" data-qty-control>
+                        <button type="button" class="qty-btn" data-qty-minus aria-label="Decrease quantity">-</button>
+                        <span class="qty-value" data-qty-value>1</span>
+                        <button type="button" class="qty-btn" data-qty-plus aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="item-pricing">
+                        <span class="unit-price">GBP 8.20</span>
+                        <strong class="line-total" data-line-total data-unit-price="8.20">GBP 8.20</strong>
+                    </div>
+                </div>
+            </article>
+
+            <article class="cart-item-row" data-item-row>
+                <div class="item-image-wrap">
+                    <img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Dry aged steak">
+                </div>
+                <div class="item-meta">
+                    <h3>Dry aged steak</h3>
+                    <p>Hudders Butchers</p>
+                    <button type="button" class="remove-btn">Remove</button>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-control" data-qty-control>
+                        <button type="button" class="qty-btn" data-qty-minus aria-label="Decrease quantity">-</button>
+                        <span class="qty-value" data-qty-value>3</span>
+                        <button type="button" class="qty-btn" data-qty-plus aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="item-pricing">
+                        <span class="unit-price">GBP 9.00</span>
+                        <strong class="line-total" data-line-total data-unit-price="9.00">GBP 27.00</strong>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Summary Sidebar -->
+        <aside class="cart-summary card-panel">
+            <div class="panel-head"><h2>Summary</h2></div>
+            <div class="summary-row"><span>Subtotal</span><strong data-subtotal>GBP 48.20</strong></div>
+            <div class="summary-row"><span>Service fee</span><strong data-fee data-fixed-fee="2.40">GBP 2.40</strong></div>
+            <div class="summary-row total-row"><span>Total</span><strong data-total>GBP 50.60</strong></div>
+            <a class="btn btn-primary full-width" href="collection-slot.html">Choose collection slot</a>
+            <a class="btn btn-secondary full-width" href="index.html">Continue shopping</a>
+            <p class="summary-note">Prices are static demo values for this UI prototype.</p>
+        </aside>
+    </div>
+</section>
+
+<section class="cart-for-you">
+    <div class="page-wrap">
+        <div class="section-head"><h2>For you</h2></div>
+        <div class="for-you-grid">
+            <article class="for-you-card">
+                <div class="for-you-image-wrap"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Premium chicken wings"></div>
+                <div class="for-you-info">
+                    <h3>Premium chicken wings</h3>
+                    <strong>GBP 5.90</strong>
+                    <button type="button" class="mini-add-btn">Add to cart</button>
+                </div>
+            </article>
+            <article class="for-you-card">
+                <div class="for-you-image-wrap"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Lean beef mince"></div>
+                <div class="for-you-info">
+                    <h3>Lean beef mince</h3>
+                    <strong>GBP 7.40</strong>
+                    <button type="button" class="mini-add-btn">Add to cart</button>
+                </div>
+            </article>
+            <article class="for-you-card">
+                <div class="for-you-image-wrap"><img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Marinated lamb chops"></div>
+                <div class="for-you-info">
+                    <h3>Marinated lamb chops</h3>
+                    <strong>GBP 11.80</strong>
+                    <button type="button" class="mini-add-btn">Add to cart</button>
+                </div>
+            </article>
+            <article class="for-you-card">
+                <div class="for-you-image-wrap"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Family grill pack"></div>
+                <div class="for-you-info">
+                    <h3>Family grill pack</h3>
+                    <strong>GBP 15.20</strong>
+                    <button type="button" class="mini-add-btn">Add to cart</button>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="cart-banner">
+    <div class="page-wrap">
+        <a href="index.html" class="promo-banner-link" aria-label="Browse this week market specials">
+            <img src="Asstes/Banner/banner-2.png" alt="HuddersHub weekly market specials">
+        </a>
+    </div>
+</section>
+</main>
+
+<!-- =========================================================================
+   FOOTER
+   ========================================================================= -->
+<footer class="site-footer">
+<div class="page-wrap footer-grid">
+    <div class="footer-brand">
+        <div class="brand-row"><img src="Asstes/logo.png" alt="HuddersHub logo"><span class="brand-name">HuddersHub</span></div>
+        <p class="footer-tagline">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
+        <p class="footer-slogan">Eat Fresh. Buy Local.</p>
+    </div>
+    <div class="footer-col"><h4>Company</h4><a href="#">About HuddersHub</a><a href="#">Our traders</a><a href="#">Sustainability</a></div>
+    <div class="footer-col"><h4>Support</h4><a href="#">Help center</a><a href="#">Order tracking</a><a href="#">Returns & refunds</a></div>
+    <div class="footer-col"><h4>Explore</h4><a href="index.html">Homepage</a><a href="contact.html">Contact</a><a href="invoice.html">Invoice</a></div>
+    <div class="footer-col"><h4>Contact</h4><p>Huddersfield, West Yorkshire</p><p>support@huddershub.test</p><p>+44 1484 000 000</p></div>
+</div>
+<div class="page-wrap footer-bottom"><span>Copyright 2026 HuddersHub. All rights reserved.</span><span>Eat Fresh. Buy Local.</span></div>
+</footer>
+
+<!-- =========================================================================
+   JAVASCRIPT
+   ========================================================================= -->
+<script>
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    if (window.scrollY > 50) { header.classList.add('scrolled'); } else { header.classList.remove('scrolled'); }
+});
+
+const cartTrigger = document.getElementById('cartTrigger');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartClose = document.getElementById('cartClose');
+
+function formatMoney(value) { return '£' + value.toFixed(2); }
+function updateCartDrawerTotals() {
+    if (!cartDrawer) return;
+    const items = cartDrawer.querySelectorAll('.cart-item');
+    let total = 0;
+    items.forEach(item => {
+        const price = parseFloat(item.dataset.price || '0');
+        const qtyEl = item.querySelector('.qty-val');
+        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
+        const lineTotal = price * qty;
+        const priceEl = item.querySelector('.cart-price');
+        if (priceEl) priceEl.textContent = formatMoney(lineTotal);
+        total += lineTotal;
+    });
+    const totalEl = cartDrawer.querySelector('.cart-total-value');
+    if (totalEl) totalEl.textContent = formatMoney(total);
+    const emptyEl = cartDrawer.querySelector('.cart-empty');
+    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
+    // Update header badge
+    const badge = document.querySelector('#cartTrigger .badge');
+    if (badge) badge.textContent = items.length;
+}
+
+function openCart() {
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+if (cartTrigger) cartTrigger.addEventListener('click', function(e) { e.preventDefault(); openCart(); });
+if (cartDrawer) {
+    cartDrawer.addEventListener('click', function(e) {
+        const qtyBtn = e.target.closest('.qty-btn');
+        if (qtyBtn) {
+            const item = qtyBtn.closest('.cart-item');
+            const qtyEl = item ? item.querySelector('.qty-val') : null;
+            if (!item || !qtyEl) return;
+            let qty = parseInt(qtyEl.textContent, 10) || 1;
+            if (qtyBtn.dataset.action === 'increase') { qty += 1; } else { qty = Math.max(1, qty - 1); }
+            qtyEl.textContent = qty;
+            updateCartDrawerTotals();
+            return;
+        }
+        const removeBtn = e.target.closest('.cart-remove');
+        if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartDrawerTotals(); }
+    });
+}
+if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+if (cartClose) cartClose.addEventListener('click', closeCart);
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeCart(); } });
+updateCartDrawerTotals();
+
+// =========================================================================
+// CART PAGE LOGIC
+// =========================================================================
+(function() {
+    const container = document.getElementById('cart-items-container');
+    const subtotalEl = document.querySelector('[data-subtotal]');
+    const totalEl = document.querySelector('[data-total]');
+    const fee = 2.40;
+    
+    // Initial update
+    function updateMainCartTotals() {
+        const items = document.querySelectorAll('.cart-item-row');
+        let subtotal = 0;
+        let count = 0;
+        
+        items.forEach(item => {
+            const unitPrice = parseFloat(item.querySelector('.line-total').dataset.unitPrice);
+            const qty = parseInt(item.querySelector('.qty-value').textContent);
+            const lineTotal = unitPrice * qty;
+            item.querySelector('.line-total').textContent = 'GBP ' + lineTotal.toFixed(2);
+            subtotal += lineTotal;
+            count++;
+        });
+        
+        const panelHead = container.querySelector('.panel-head h2');
+        if (panelHead) panelHead.textContent = `Items (${count})`;
+        
+        if (subtotalEl) subtotalEl.textContent = 'GBP ' + subtotal.toFixed(2);
+        if (totalEl) totalEl.textContent = 'GBP ' + (subtotal + fee).toFixed(2);
+    }
+
+    container.addEventListener('click', function(e) {
+        // Quantity change
+        const qtyBtn = e.target.closest('.qty-btn');
+        if (qtyBtn) {
+            const row = qtyBtn.closest('.cart-item-row');
+            const valEl = row.querySelector('.qty-value');
+            let val = parseInt(valEl.textContent);
+            if (qtyBtn.hasAttribute('data-qty-plus')) val++;
+            else if (qtyBtn.hasAttribute('data-qty-minus')) val = Math.max(1, val - 1);
+            valEl.textContent = val;
+            updateMainCartTotals();
+            return;
+        }
+        
+        // Remove item
+        const removeBtn = e.target.closest('.remove-btn');
+        if (removeBtn) {
+            const row = removeBtn.closest('.cart-item-row');
+            row.remove();
+            updateMainCartTotals();
+        }
+    });
+
+    // Add to cart in "For you" section
+    document.querySelectorAll('.mini-add-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            btn.textContent = 'Added';
+            btn.style.background = '#4CAF50';
+            setTimeout(() => {
+                btn.textContent = 'Add to cart';
+                btn.style.background = '';
+            }, 2000);
+        });
+    });
+    
+    updateMainCartTotals();
+})();
+</script>
+</body>
+</html>
+

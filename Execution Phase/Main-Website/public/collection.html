@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Collection Slot</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+/* =========================================================================
+   CSS VARIABLES (from nav-bar-logged-in.php & collection-slot.php)
+   ========================================================================= */
+:root {
+    --primary-orange: #FF5E3A;
+    --primary-orange-light: #FF8C70;
+    --primary-orange-dark: #E3472C;
+    --primary-green: #0F260B;
+    --primary-green-light: rgba(15, 38, 11, 0.14);
+    --primary-green-dark: #0B1C08;
+    --bg-white: #FFFFFF;
+    --bg-light: #F7F6F3;
+    --bg-gray: #F2F4F1;
+    --border-light: #DCE3DA;
+    --bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
+    --text-black: #0B140A;
+    --text-dark-gray: #1E2A1C;
+    --text-medium-gray: #5E6A63;
+    --badge-bg: #0F260B;
+    --badge-text: #ffffff;
+    --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+    --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+    --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-sm: 0;
+    --radius-md: 0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Google Sans Flex', sans-serif;
+    font-weight: 500;
+    color: var(--text-black);
+    background: var(--bg-white);
+    padding-top: 140px;
+    line-height: 1.6;
+}
+
+/* =========================================================================
+   HEADER STYLES
+   ========================================================================= */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--bg-gradient);
+    backdrop-filter: blur(12px);
+    transition: var(--transition-smooth);
+}
+
+header.scrolled {
+    box-shadow: var(--shadow-md);
+    background: var(--bg-white);
+}
+
+.top-bar {
+    background: rgba(255, 255, 255, 0.98);
+    border-bottom: 1px solid var(--border-light);
+    padding: 14px 0;
+    transition: var(--transition-smooth);
+}
+
+header.scrolled .top-bar {
+    padding: 10px 0;
+}
+
+header.scrolled .brand img {
+    width: 42px;
+    height: 42px;
+}
+
+header.scrolled .brand-text {
+    font-size: 30px;
+}
+
+.page-wrap {
+    width: min(1200px, 94%);
+    margin: 0 auto;
+}
+
+.top-bar-inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+}
+
+.brand img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 6px 12px rgba(15, 38, 11, 0.12));
+}
+
+.brand-text {
+    font-family: 'Google Sans Flex', sans-serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 36px;
+    letter-spacing: 0.6px;
+    color: #0F260B;
+}
+
+.search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-bar {
+    position: relative;
+    flex: 1;
+    min-width: 280px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 6px 44px 6px 14px;
+    height: 36px;
+    border-radius: 0;
+    border: 1px solid #C8D1C6;
+    background: var(--bg-white);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-black);
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.search-bar input:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.22);
+}
+
+.search-bar input::placeholder {
+    color: #1B2419;
+    opacity: 0.55;
+}
+
+.search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #1B2419;
+    opacity: 0.55;
+    transition: var(--transition-smooth);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    white-space: nowrap;
+}
+
+.user-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-black);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+}
+
+.user-menu:hover {
+    background: rgba(15, 38, 11, 0.06);
+    color: var(--primary-green);
+}
+
+.icon-with-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+    color: var(--text-black);
+    padding: 6px;
+    border-radius: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    box-shadow: none;
+    outline: none;
+}
+
+.icon-with-badge:hover {
+    background: rgba(15, 38, 11, 0.06);
+    color: var(--primary-green);
+}
+
+.icon-with-badge .material-icons-outlined {
+    font-size: 24px;
+    color: inherit;
+}
+
+.badge {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border-radius: 0;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    min-width: 16px;
+    text-align: center;
+}
+
+.nav-bar {
+    background: #F1F3F0;
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 0;
+    transition: var(--transition-smooth);
+}
+
+header.scrolled .nav-bar {
+    padding: 8px 0;
+    background: #F3F4F6;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-medium-gray);
+}
+
+.breadcrumb a {
+    color: var(--text-dark-gray);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-green);
+}
+
+.breadcrumb-sep {
+    color: #9AA19A;
+}
+
+.breadcrumb-current {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+/* =========================================================================
+   CART DRAWER
+   ========================================================================= */
+.cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+    z-index: 1200;
+}
+
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: min(420px, 92vw);
+    background: #FFFFFF;
+    box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
+    transform: translateX(100%);
+    transition: var(--transition-smooth);
+    z-index: 1300;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.open {
+    transform: translateX(0);
+}
+
+.cart-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cart-header {
+    padding: 20px 22px 16px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark-gray);
+}
+
+.cart-close {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-dark-gray);
+}
+
+.cart-body {
+    padding: 18px 22px;
+    flex: 1;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    align-items: flex-start;
+    border: 1px solid var(--border-light);
+    border-radius: 0;
+    padding: 12px;
+    background: #FFFFFF;
+    box-shadow: var(--shadow-sm);
+}
+
+.cart-item img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 0;
+    background: var(--bg-gray);
+}
+
+.cart-item-details {
+    display: grid;
+    gap: 10px;
+}
+
+.cart-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cart-item h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text-dark-gray);
+}
+
+.cart-item p {
+    font-size: 12px;
+    color: var(--text-medium-gray);
+}
+
+.cart-price {
+    font-weight: 700;
+    color: var(--primary-orange);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cart-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-gray);
+    padding: 6px 10px;
+    border-radius: 0;
+}
+
+.cart-qty .qty-btn {
+    border: none;
+    background: #FFFFFF;
+    width: 22px;
+    height: 22px;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-dark-gray);
+    box-shadow: var(--shadow-sm);
+}
+
+.cart-qty .qty-val {
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 12px;
+    text-align: center;
+}
+
+.cart-remove {
+    border: none;
+    background: transparent;
+    color: var(--text-medium-gray);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.cart-empty {
+    text-align: center;
+    color: var(--text-medium-gray);
+    font-size: 13px;
+    padding: 24px 0 10px;
+}
+
+.cart-footer {
+    border-top: 1px solid var(--border-light);
+    padding: 16px 22px 20px;
+    display: grid;
+    gap: 12px;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark-gray);
+}
+
+.cart-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.cart-link {
+    font-size: 13px;
+    color: var(--text-medium-gray);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 2px;
+}
+
+.cart-link:hover {
+    color: var(--primary-green);
+    border-bottom-color: var(--primary-green);
+}
+
+.cart-checkout {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 0;
+    border: none;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
+}
+
+.cart-checkout:hover {
+    transform: translateY(-1px);
+}
+
+/* =========================================================================
+   COLLECTION PAGE STYLES
+   ========================================================================= */
+.collection-page {
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 55%, #F7F6F3 100%);
+    color: #0B140A;
+    padding-top: 20px;
+}
+
+.collection-hero {
+    padding: 22px 0 18px;
+}
+
+.collection-hero h1 {
+    position: relative;
+    font-size: 48px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding-top: 16px;
+    margin-bottom: 10px;
+}
+
+.step-id {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F260B;
+    letter-spacing: 1px;
+}
+
+.collection-hero p {
+    color: #5E6A63;
+    font-size: 15px;
+}
+
+.collection-content {
+    padding: 8px 0 70px;
+}
+
+.collection-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.card-panel {
+    background: #FFFFFF;
+    border: 1px solid #DCE3DA;
+    box-shadow: 0 14px 28px rgba(15, 38, 11, 0.12);
+    padding: 20px;
+}
+
+.panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #E3E9E1;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+}
+
+.panel-head h2 {
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.panel-head span {
+    font-size: 13px;
+    color: #6A756F;
+}
+
+.panel-head-tight {
+    margin-top: 18px;
+}
+
+.day-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.day-btn {
+    border: 1px solid #DCE3DA;
+    background: #FAFBF8;
+    padding: 12px 10px;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.22s ease;
+}
+
+.day-btn strong {
+    font-size: 15px;
+    color: #0B140A;
+}
+
+.day-btn span {
+    font-size: 13px;
+    color: #334236;
+}
+
+.day-btn small {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.35px;
+    color: #6A756F;
+}
+
+.day-btn:hover {
+    border-color: #FF8C70;
+    transform: translateY(-1px);
+}
+
+.day-btn.is-active {
+    border-color: #FF5E3A;
+    background: #FFF3EE;
+    box-shadow: 0 8px 14px rgba(255, 94, 58, 0.18);
+}
+
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.time-slot {
+    border: 1px solid #DCE3DA;
+    background: #FFFFFF;
+    color: #0B140A;
+    padding: 12px;
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.22s ease;
+}
+
+.time-slot span {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.time-slot small {
+    font-size: 12px;
+    color: #6A756F;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.time-slot:hover:not(:disabled) {
+    border-color: #FF8C70;
+    transform: translateY(-1px);
+}
+
+.time-slot.is-active {
+    border-color: #FF5E3A;
+    background: #FFF3EE;
+    box-shadow: 0 8px 14px rgba(255, 94, 58, 0.18);
+}
+
+.pickup-panel {
+    position: sticky;
+    top: 160px;
+    display: grid;
+    gap: 12px;
+}
+
+.pickup-card {
+    border: 1px solid #E3E9E1;
+    background: #FAFBF8;
+    padding: 14px;
+}
+
+.pickup-card h3 {
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.pickup-card p {
+    font-size: 13px;
+    color: #4D5D53;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.pickup-card ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    color: #36453A;
+    font-size: 12px;
+}
+
+.order-summary-card {
+    border: 1px solid #E3E9E1;
+    background: #FFFFFF;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+}
+
+.order-summary-card h3 {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.45px;
+    color: #0B140A;
+}
+
+.order-summary-list {
+    display: grid;
+    gap: 8px;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: #34453A;
+}
+
+.order-row strong {
+    color: #0B140A;
+}
+
+.total-line {
+    border-top: 1px solid #E9EEE7;
+    padding-top: 8px;
+}
+
+.grand-total {
+    border-top: 1px solid #DCE3DA;
+    padding-top: 10px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.selection-preview {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid #E3E9E1;
+    padding: 11px 12px;
+    font-size: 14px;
+}
+
+.selection-preview span {
+    color: #5E6A63;
+}
+
+.selection-preview strong {
+    color: #0B140A;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn-primary {
+    background: #FF5E3A;
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background: #E3472C;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(255, 94, 58, 0.28);
+}
+
+.btn-secondary {
+    background: #E4F7C5;
+    color: #0B140A;
+}
+
+.btn-secondary:hover {
+    background: #D6F0A7;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(15, 38, 11, 0.18);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.summary-note {
+    font-size: 12px;
+    color: #6A756F;
+    margin-top: 4px;
+}
+
+/* =========================================================================
+   FOOTER STYLES
+   ========================================================================= */
+.site-footer {
+    margin-top: 60px;
+    background: #0F260B;
+    color: #FFFFFF;
+    padding: 48px 0 22px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.footer-brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-style: italic;
+    font-size: 24px;
+}
+
+.footer-tagline {
+    color: #FFFFFF;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-slogan {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.footer-col h4 {
+    font-size: 14px;
+    margin-bottom: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+
+.footer-col a,
+.footer-col p {
+    display: block;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.footer-col a:hover {
+    color: #FF8C70;
+}
+
+.footer-bottom {
+    margin-top: 26px;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #FFFFFF;
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================= */
+@media (max-width: 900px) {
+    .top-bar-inner { grid-template-columns: 1fr; }
+    .search-wrap { width: 100%; }
+    .actions { justify-content: space-between; flex-wrap: wrap; }
+    .nav-separator { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
+}
+
+@media (max-width: 980px) {
+    .collection-layout { grid-template-columns: 1fr; }
+    .pickup-panel { position: static; }
+}
+
+@media (max-width: 700px) {
+    .collection-hero h1 { font-size: 36px; }
+    .day-grid { grid-template-columns: 1fr; }
+    .slot-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- =========================================================================
+   HEADER START
+   ========================================================================= -->
+<header>
+<div class="top-bar">
+<div class="page-wrap top-bar-inner">
+    <div class="brand">
+        <a href="index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+            <img src="Asstes/logo.png" alt="HuddersHub logo">
+            <span class="brand-text">HuddersHub</span>
+        </a>
+    </div>
+    <div class="search-wrap">
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <span class="search-icon material-icons-outlined">search</span>
+        </div>
+    </div>
+    <div class="actions">
+        <a class="user-menu" href="account.html">
+            <span class="material-icons-outlined" style="font-size: 24px;">account_circle</span>
+            <span>Welcome, John</span>
+        </a>
+        <a class="icon-with-badge" href="cart.html" id="cartTrigger">
+            <span class="material-icons-outlined">shopping_cart</span>
+            <span class="badge">3</span>
+        </a>
+        <a class="icon-with-badge" href="wishlist.html">
+            <span class="material-icons-outlined">favorite_border</span>
+            <span class="badge">5</span>
+        </a>
+        <a class="icon-with-badge moon" href="#" aria-label="Dark mode" style="font-size: 20px;">
+            <span class="material-icons-outlined">dark_mode</span>
+        </a>
+    </div>
+</div>
+</div>
+<nav class="nav-bar">
+<div class="page-wrap">
+    <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">/</span>
+        <a href="cart.html">Cart</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Collection slot</span>
+    </div>
+</div>
+</nav>
+</header>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+<div class="cart-header">
+    <h3>Your cart</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button>
+</div>
+<div class="cart-body">
+    <div class="cart-item" data-price="0.90" data-category="Greengrocer">
+        <img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper">
+        <div class="cart-item-details">
+            <div class="cart-item-top">
+                <div>
+                    <h4>Green Bell Pepper</h4>
+                    <p class="cart-meta">Greengrocer · Qty 2</p>
+                </div>
+                <span class="cart-price">£1.80</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-qty">
+                    <button class="qty-btn" data-action="decrease" type="button">-</button>
+                    <span class="qty-val">2</span>
+                    <button class="qty-btn" data-action="increase" type="button">+</button>
+                </div>
+                <button class="cart-remove" type="button">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-item" data-price="0.90" data-category="Greengrocer">
+        <img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli">
+        <div class="cart-item-details">
+            <div class="cart-item-top">
+                <div>
+                    <h4>Green Broccoli</h4>
+                    <p class="cart-meta">Greengrocer · Qty 1</p>
+                </div>
+                <span class="cart-price">£0.90</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-qty">
+                    <button class="qty-btn" data-action="decrease" type="button">-</button>
+                    <span class="qty-val">1</span>
+                    <button class="qty-btn" data-action="increase" type="button">+</button>
+                </div>
+                <button class="cart-remove" type="button">Remove</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-empty" style="display:none;">Your cart is empty.</div>
+</div>
+<div class="cart-footer">
+    <div class="cart-total">
+        <span>Total</span>
+        <span class="cart-total-value">£2.70</span>
+    </div>
+    <div class="cart-actions">
+        <a class="cart-link" href="cart.html">Go to cart</a>
+        <button class="cart-checkout" type="button">Checkout →</button>
+    </div>
+</div>
+</aside>
+
+<!-- =========================================================================
+   MAIN CONTENT
+   ========================================================================= -->
+<main class="collection-page">
+<section class="collection-hero">
+<div class="page-wrap">
+    <h1>
+        <span class="step-id">02</span>
+        Collection slot
+    </h1>
+    <p>Pick a date and time for a fast market pickup.</p>
+</div>
+</section>
+
+<section class="collection-content">
+<div class="page-wrap collection-layout">
+    <!-- LEFT PANEL: DATE & TIME SELECTION -->
+    <div class="slot-panel card-panel">
+        <div class="panel-head">
+            <h2>Select date</h2>
+            <span>3 days available</span>
+        </div>
+        <div class="day-grid" id="day-grid">
+            <button type="button" class="day-btn" data-day aria-pressed="false">
+                <strong>Wed</strong>
+                <span>29 Apr</span>
+                <small>Popular</small>
+            </button>
+            <button type="button" class="day-btn" data-day aria-pressed="false">
+                <strong>Thu</strong>
+                <span>30 Apr</span>
+                <small>Quiet</small>
+            </button>
+            <button type="button" class="day-btn is-active" data-day aria-pressed="true">
+                <strong>Fri</strong>
+                <span>01 May</span>
+                <small>Fast pickup</small>
+            </button>
+        </div>
+
+        <div class="panel-head panel-head-tight">
+            <h2>Choose time</h2>
+            <span>3 hour windows</span>
+        </div>
+        <div class="slot-grid" id="slot-grid">
+            <button type="button" class="time-slot selected is-active" data-slot aria-pressed="true">
+                <span>10:00 - 13:00</span>
+                <small>Selected</small>
+            </button>
+            <button type="button" class="time-slot available" data-slot aria-pressed="false">
+                <span>13:00 - 16:00</span>
+                <small>Available</small>
+            </button>
+            <button type="button" class="time-slot available" data-slot aria-pressed="false">
+                <span>16:00 - 19:00</span>
+                <small>Available</small>
+            </button>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: PICKUP DETAILS & SUMMARY -->
+    <aside class="pickup-panel card-panel">
+        <div class="panel-head">
+            <h2>Pickup details</h2>
+        </div>
+        <div class="pickup-card">
+            <h3>Hudders Butchers Stall</h3>
+            <p>Queensgate Market Hall, Huddersfield HD1 2UJ</p>
+            <ul>
+                <li>Bring your order code at collection.</li>
+                <li>Slot held for 15 minutes after start time.</li>
+                <li>Free chilled bag included on request.</li>
+            </ul>
+        </div>
+        <div class="order-summary-card">
+            <h3>Order summary</h3>
+            <div class="order-summary-list">
+                <div class="order-row">
+                    <span>Fresh chicken breast x2</span>
+                    <strong>GBP 13.00</strong>
+                </div>
+                <div class="order-row">
+                    <span>Lamb mince x1</span>
+                    <strong>GBP 8.20</strong>
+                </div>
+                <div class="order-row">
+                    <span>Dry aged steak x3</span>
+                    <strong>GBP 27.00</strong>
+                </div>
+            </div>
+            <div class="order-row total-line">
+                <span>Subtotal</span>
+                <strong>GBP 48.20</strong>
+            </div>
+            <div class="order-row total-line">
+                <span>Service fee</span>
+                <strong>GBP 2.40</strong>
+            </div>
+            <div class="order-row grand-total">
+                <span>Total</span>
+                <strong>GBP 50.60</strong>
+            </div>
+        </div>
+        <div class="selection-preview">
+            <span>Date</span>
+            <strong data-selected-day>Wed 29 Apr</strong>
+        </div>
+        <div class="selection-preview">
+            <span>Time</span>
+            <strong data-selected-time>10:00 - 13:00</strong>
+        </div>
+        <a class="btn btn-primary full-width" href="invoice.html">Confirm collection slot</a>
+        <a class="btn btn-secondary full-width" href="cart.html">Back to cart</a>
+        <p class="summary-note">Mock flow only. Slot selection is not persisted yet.</p>
+    </aside>
+</div>
+</section>
+</main>
+
+<!-- =========================================================================
+   FOOTER
+   ========================================================================= -->
+<footer class="site-footer">
+<div class="page-wrap footer-grid">
+    <div class="footer-brand">
+        <div class="brand-row">
+            <img src="Asstes/logo.png" alt="HuddersHub logo">
+            <span class="brand-name">HuddersHub</span>
+        </div>
+        <p class="footer-tagline">
+            Local food, trusted traders, and fresh picks curated for Huddersfield.
+        </p>
+        <p class="footer-slogan">Eat Fresh. Buy Local.</p>
+    </div>
+    <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About HuddersHub</a>
+        <a href="#">Our traders</a>
+        <a href="#">Sustainability</a>
+    </div>
+    <div class="footer-col">
+        <h4>Support</h4>
+        <a href="#">Help center</a>
+        <a href="#">Order tracking</a>
+        <a href="#">Returns & refunds</a>
+    </div>
+    <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="index.html">Homepage</a>
+        <a href="contact.html">Contact</a>
+        <a href="invoice.html">Invoice</a>
+    </div>
+    <div class="footer-col">
+        <h4>Contact</h4>
+        <p>Huddersfield, West Yorkshire</p>
+        <p>support@huddershub.test</p>
+        <p>+44 1484 000 000</p>
+    </div>
+</div>
+<div class="page-wrap footer-bottom">
+    <span>Copyright 2026 HuddersHub. All rights reserved.</span>
+    <span>Eat Fresh. Buy Local.</span>
+</div>
+</footer>
+
+<!-- =========================================================================
+   JAVASCRIPT
+   ========================================================================= -->
+<script>
+/**
+* HEADER SCROLL EFFECT
+*/
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+/**
+* CART DRAWER LOGIC
+*/
+const cartTrigger = document.getElementById('cartTrigger');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartClose = document.getElementById('cartClose');
+
+function formatMoney(value) {
+    return '£' + value.toFixed(2);
+}
+
+function updateCartTotals() {
+    if (!cartDrawer) return;
+    const items = cartDrawer.querySelectorAll('.cart-item');
+    let total = 0;
+    items.forEach(item => {
+        const price = parseFloat(item.dataset.price || '0');
+        const qtyEl = item.querySelector('.qty-val');
+        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
+        const lineTotal = price * qty;
+        const priceEl = item.querySelector('.cart-price');
+        const metaEl = item.querySelector('.cart-meta');
+        if (priceEl) priceEl.textContent = formatMoney(lineTotal);
+        if (metaEl) {
+            const cat = item.dataset.category || 'Item';
+            metaEl.textContent = cat + ' · Qty ' + qty;
+        }
+        total += lineTotal;
+    });
+    const totalEl = cartDrawer.querySelector('.cart-total-value');
+    if (totalEl) totalEl.textContent = formatMoney(total);
+    const emptyEl = cartDrawer.querySelector('.cart-empty');
+    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
+}
+
+function openCart() {
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
+if (cartTrigger) {
+    cartTrigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        openCart();
+    });
+}
+
+if (cartDrawer) {
+    cartDrawer.addEventListener('click', function(e) {
+        const qtyBtn = e.target.closest('.qty-btn');
+        if (qtyBtn) {
+            const item = qtyBtn.closest('.cart-item');
+            const qtyEl = item ? item.querySelector('.qty-val') : null;
+            if (!item || !qtyEl) return;
+            let qty = parseInt(qtyEl.textContent, 10) || 1;
+            if (qtyBtn.dataset.action === 'increase') {
+                qty += 1;
+            } else {
+                qty = Math.max(1, qty - 1);
+            }
+            qtyEl.textContent = qty;
+            updateCartTotals();
+            return;
+        }
+        const removeBtn = e.target.closest('.cart-remove');
+        if (removeBtn) {
+            const item = removeBtn.closest('.cart-item');
+            if (item) item.remove();
+            updateCartTotals();
+        }
+    });
+}
+
+if (cartOverlay) {
+    cartOverlay.addEventListener('click', closeCart);
+}
+
+if (cartClose) {
+    cartClose.addEventListener('click', closeCart);
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCart();
+    }
+});
+
+updateCartTotals();
+
+/**
+* COLLECTION SLOT LOGIC
+*/
+(function () {
+    const selectedDay = document.querySelector('[data-selected-day]');
+    const selectedTime = document.querySelector('[data-selected-time]');
+
+    document.querySelectorAll('[data-day]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-day]').forEach((other) => {
+                other.classList.remove('is-active');
+                other.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-pressed', 'true');
+            const day = btn.querySelector('strong')?.textContent?.trim() || '';
+            const date = btn.querySelector('span')?.textContent?.trim() || '';
+            if (selectedDay) {
+                selectedDay.textContent = `${day} ${date}`.trim();
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-slot]').forEach((btn) => {
+        if (btn.disabled) {
+            return;
+        }
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-slot]').forEach((other) => {
+                other.classList.remove('is-active');
+                other.setAttribute('aria-pressed', 'false');
+                const tag = other.querySelector('small');
+                if (tag && other.classList.contains('available')) {
+                    tag.textContent = 'Available';
+                }
+            });
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-pressed', 'true');
+            const time = btn.querySelector('span')?.textContent?.trim() || '';
+            const status = btn.querySelector('small');
+            if (status) {
+                status.textContent = 'Selected';
+            }
+            if (selectedTime) {
+                selectedTime.textContent = time;
+            }
+        });
+    });
+})();
+</script>
+</body>
+</html>
+

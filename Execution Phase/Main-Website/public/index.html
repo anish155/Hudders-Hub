@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+/* ========================================================================
+CSS VARIABLES
+======================================================================== */
+:root {
+--primary-orange: #FF5E3A;
+--primary-orange-light: #FF8C70;
+--primary-orange-dark: #E3472C;
+--primary-green: #0F260B;
+--primary-green-light: rgba(15, 38, 11, 0.14);
+--primary-green-dark: #0B1C08;
+--bg-white: #FFFFFF;
+--bg-light: #F7F6F3;
+--bg-gray: #F2F4F1;
+--border-light: #DCE3DA;
+--bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
+--text-black: #0B140A;
+--text-dark-gray: #1E2A1C;
+--text-medium-gray: #5E6A63;
+--badge-bg: #0F260B;
+--badge-text: #ffffff;
+--shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+--shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+--shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
+--transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+--radius-sm: 0;
+--radius-md: 0;
+--secondary-color: #0F260B;
+--secondary-color-soft: rgba(15, 38, 11, 0.14);
+--accent-sale: #FF5E3A;
+}
+/* ========================================================================
+RESET & BASE STYLES
+======================================================================== */
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+html {
+scroll-behavior: smooth;
+}
+body {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-optical-sizing: auto;
+font-style: normal;
+font-size: 1rem;
+line-height: 1.6;
+color: #1B2419;
+background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 35%, #F7F6F3 100%);
+}
+h1, h2, h3, h4, h5, h6 {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-weight: 700;
+line-height: 1.3;
+color: #1a1a1a;
+}
+a {
+text-decoration: none;
+color: inherit;
+transition: all 0.3s ease;
+}
+button {
+font-family: 'Plus Jakarta Sans', sans-serif;
+transition: all 0.3s ease;
+cursor: pointer;
+}
+img {
+max-width: 100%;
+height: auto;
+display: block;
+}
+/* ========================================================================
+HEADER & NAV STYLES
+======================================================================== */
+header {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+background: var(--bg-gradient);
+backdrop-filter: blur(12px);
+transition: var(--transition-smooth);
+}
+header.scrolled {
+box-shadow: var(--shadow-md);
+background: var(--bg-white);
+}
+.top-bar {
+background: rgba(255, 255, 255, 0.98);
+border-bottom: 1px solid var(--border-light);
+padding: 14px 0;
+transition: var(--transition-smooth);
+}
+header.scrolled .top-bar {
+padding: 10px 0;
+}
+header.scrolled .brand img {
+width: 42px;
+height: 42px;
+}
+header.scrolled .brand-text {
+font-size: 30px;
+}
+.page-wrap {
+width: min(1200px, 94%);
+margin: 0 auto;
+}
+.top-bar-inner {
+display: grid;
+grid-template-columns: auto 1fr auto;
+gap: 18px;
+align-items: center;
+}
+.brand {
+display: flex;
+align-items: center;
+gap: 14px;
+white-space: nowrap;
+}
+.brand img {
+width: 56px;
+height: 56px;
+object-fit: contain;
+transition: var(--transition-smooth);
+filter: drop-shadow(0 6px 12px rgba(15, 38, 11, 0.12));
+}
+.brand-text {
+font-family: 'Google Sans Flex', sans-serif;
+font-weight: 700;
+font-style: italic;
+font-size: 36px;
+letter-spacing: 0.6px;
+color: #0F260B;
+}
+.search-wrap {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.search-bar {
+position: relative;
+flex: 1;
+min-width: 280px;
+}
+.search-bar input {
+width: 100%;
+padding: 6px 44px 6px 14px;
+height: 36px;
+border-radius: 0;
+border: 1px solid #C8D1C6;
+background: var(--bg-white);
+font-size: 14px;
+font-weight: 500;
+color: var(--text-black);
+outline: none;
+transition: var(--transition-smooth);
+}
+.search-bar input:focus {
+border-color: var(--primary-orange);
+box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.22);
+}
+.search-bar input::placeholder {
+color: #1B2419;
+opacity: 0.55;
+}
+.search-icon {
+position: absolute;
+right: 12px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 18px;
+color: #1B2419;
+opacity: 0.55;
+transition: var(--transition-smooth);
+}
+.actions {
+display: flex;
+align-items: center;
+gap: 16px;
+white-space: nowrap;
+}
+.action-btn, .user-menu {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+font-size: 14px;
+font-weight: 600;
+color: var(--text-medium-gray);
+text-decoration: none;
+transition: var(--transition-smooth);
+cursor: pointer;
+padding: 8px 12px;
+border-radius: var(--radius-sm);
+}
+.action-btn:hover, .user-menu:hover {
+background: rgba(15, 38, 11, 0.06);
+color: var(--primary-green);
+}
+.icon-with-badge {
+position: relative;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: var(--transition-smooth);
+text-decoration: none;
+color: var(--text-black);
+padding: 6px;
+border-radius: 0;
+background: transparent;
+border: 1px solid transparent;
+box-shadow: none;
+outline: none;
+}
+.icon-with-badge:hover {
+background: rgba(15, 38, 11, 0.06);
+color: var(--primary-green);
+}
+.icon-with-badge .material-icons-outlined {
+font-size: 24px;
+color: inherit;
+}
+.badge {
+position: absolute;
+top: 0px;
+right: 0px;
+background: var(--badge-bg);
+color: var(--badge-text);
+border-radius: 0;
+padding: 2px 5px;
+font-size: 10px;
+font-weight: 600;
+line-height: 1;
+min-width: 16px;
+text-align: center;
+}
+.nav-bar {
+background: #F1F3F0;
+border-bottom: 1px solid var(--border-light);
+padding: 10px 0;
+transition: var(--transition-smooth);
+}
+header.scrolled .nav-bar {
+padding: 8px 0;
+background: #F3F4F6;
+}
+.nav-list {
+display: flex;
+align-items: center;
+gap: 8px;
+flex-wrap: wrap;
+font-size: 14px;
+font-weight: 400;
+}
+.nav-item {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+padding: 8px 14px;
+border-radius: 0;
+border: none;
+cursor: pointer;
+text-decoration: none;
+color: var(--text-black);
+transition: var(--transition-smooth);
+font-size: 15px;
+font-weight: 400;
+font-family: 'Google Sans Flex', sans-serif;
+}
+.nav-item:not(.primary):hover {
+background: rgba(15, 38, 11, 0.08);
+color: var(--text-black);
+}
+.nav-item.primary {
+background: transparent;
+color: #0F260B;
+font-weight: 600;
+font-size: 14px;
+border-radius: 0;
+box-shadow: none;
+}
+.nav-item.is-active {
+position: relative;
+}
+.nav-item.is-active::after {
+content: '';
+position: absolute;
+left: 0;
+right: 0;
+bottom: -6px;
+height: 2px;
+background: #0F260B;
+}
+.nav-separator {
+width: 1px;
+height: 24px;
+background: var(--border-light);
+margin: 0 6px;
+display: inline-block;
+}
+.categories-wrapper {
+position: relative;
+}
+.categories-dropdown {
+position: absolute;
+top: 100%;
+left: 0;
+background: var(--bg-white);
+border: 1px solid var(--border-light);
+border-radius: 0;
+box-shadow: var(--shadow-lg);
+padding: 0;
+min-width: 240px;
+display: none;
+z-index: 1000;
+margin-top: 0;
+overflow: visible;
+transform: translateY(-8px);
+opacity: 0;
+transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.categories-wrapper:hover .categories-dropdown,
+.categories-dropdown:hover {
+display: block;
+transform: translateY(0);
+opacity: 1;
+}
+.categories-dropdown::before {
+content: '';
+position: absolute;
+top: -15px;
+left: 0;
+right: 0;
+height: 15px;
+}
+.dropdown-section {
+padding: 12px 0;
+}
+.dropdown-section-title {
+padding: 8px 16px;
+font-size: 11px;
+font-weight: 700;
+color: #6b7280;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+}
+.dropdown-divider {
+height: 1px;
+background: var(--border-light);
+margin: 8px 16px;
+}
+.dropdown-item {
+display: block;
+padding: 10px 16px;
+color: var(--text-black);
+text-decoration: none;
+font-size: 14px;
+font-weight: 400;
+transition: var(--transition-smooth);
+border-left: 3px solid transparent;
+}
+.dropdown-item:hover {
+background: rgba(15, 38, 11, 0.08);
+color: var(--text-black);
+border-left-color: var(--primary-green);
+}
+.dropdown-item.all-categories {
+font-weight: 600;
+background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+padding: 12px 16px;
+}
+.dropdown-item.all-categories:hover {
+background: var(--primary-orange);
+color: var(--bg-white);
+border-left-color: var(--primary-orange);
+}
+/* ========================================================================
+CART DRAWER
+======================================================================== */
+.cart-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.35);
+opacity: 0;
+visibility: hidden;
+transition: var(--transition-smooth);
+z-index: 1200;
+}
+.cart-drawer {
+position: fixed;
+top: 0;
+right: 0;
+height: 100vh;
+width: min(420px, 92vw);
+background: #FFFFFF;
+box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
+transform: translateX(100%);
+transition: var(--transition-smooth);
+z-index: 1300;
+display: flex;
+flex-direction: column;
+}
+.cart-drawer.open {
+transform: translateX(0);
+}
+.cart-overlay.open {
+opacity: 1;
+visibility: visible;
+}
+.cart-header {
+padding: 20px 22px 16px;
+border-bottom: 1px solid var(--border-light);
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.cart-header h3 {
+font-size: 20px;
+font-weight: 700;
+color: var(--text-dark-gray);
+}
+.cart-close {
+border: none;
+background: transparent;
+font-size: 20px;
+cursor: pointer;
+color: var(--text-dark-gray);
+}
+.cart-body {
+padding: 18px 22px;
+flex: 1;
+display: grid;
+gap: 14px;
+align-content: start;
+overflow-y: auto;
+}
+.cart-item {
+display: grid;
+grid-template-columns: 64px 1fr;
+gap: 14px;
+align-items: flex-start;
+border: 1px solid var(--border-light);
+border-radius: 0;
+padding: 12px;
+background: #FFFFFF;
+box-shadow: var(--shadow-sm);
+}
+.cart-item img {
+width: 56px;
+height: 56px;
+object-fit: cover;
+border-radius: 0;
+background: var(--bg-gray);
+}
+.cart-item-details {
+display: grid;
+gap: 10px;
+}
+.cart-item-top {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 10px;
+}
+.cart-item h4 {
+font-size: 14px;
+margin-bottom: 4px;
+color: var(--text-dark-gray);
+}
+.cart-item p {
+font-size: 12px;
+color: var(--text-medium-gray);
+}
+.cart-price {
+font-weight: 700;
+color: var(--primary-orange);
+font-size: 14px;
+white-space: nowrap;
+}
+.cart-item-actions {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+}
+.cart-qty {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+background: var(--bg-gray);
+padding: 6px 10px;
+border-radius: 0;
+}
+.cart-qty .qty-btn {
+border: none;
+background: #FFFFFF;
+width: 22px;
+height: 22px;
+border-radius: 0;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+color: var(--text-dark-gray);
+box-shadow: var(--shadow-sm);
+}
+.cart-qty .qty-val {
+font-size: 12px;
+font-weight: 700;
+min-width: 12px;
+text-align: center;
+}
+.cart-remove {
+border: none;
+background: transparent;
+color: var(--text-medium-gray);
+font-size: 12px;
+cursor: pointer;
+text-decoration: underline;
+}
+.cart-empty {
+text-align: center;
+color: var(--text-medium-gray);
+font-size: 13px;
+padding: 24px 0 10px;
+}
+.cart-footer {
+border-top: 1px solid var(--border-light);
+padding: 16px 22px 20px;
+display: grid;
+gap: 12px;
+}
+.cart-total {
+display: flex;
+justify-content: space-between;
+font-size: 14px;
+font-weight: 700;
+color: var(--text-dark-gray);
+}
+.cart-actions {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 14px;
+}
+.cart-link {
+font-size: 13px;
+color: var(--text-medium-gray);
+text-decoration: none;
+border-bottom: 1px solid var(--border-light);
+padding-bottom: 2px;
+}
+.cart-link:hover {
+color: var(--primary-green);
+border-bottom-color: var(--primary-green);
+}
+.cart-checkout {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+padding: 10px 16px;
+border-radius: 0;
+border: none;
+background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
+color: #FFFFFF;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
+}
+.cart-checkout:hover {
+transform: translateY(-1px);
+}
+/* ========================================================================
+BANNER SLIDER
+======================================================================== */
+.banner-slider {
+width: 100%;
+background: #F7F6F3;
+padding: 20px 0;
+}
+.slider-container {
+position: relative;
+max-width: 1200px;
+margin: 0 auto;
+overflow: hidden;
+border-radius: 0;
+box-shadow: 0 12px 28px rgba(15, 38, 11, 0.14);
+}
+.slider-wrapper {
+display: flex;
+transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide {
+min-width: 100%;
+display: none;
+}
+.slide.active {
+display: block;
+}
+.slide img {
+width: 100%;
+height: auto;
+display: block;
+object-fit: cover;
+border-radius: 0;
+}
+.slider-dots {
+position: absolute;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 10px;
+z-index: 10;
+}
+.dot {
+width: 10px;
+height: 10px;
+border-radius: 0;
+background: rgba(255, 255, 255, 0.65);
+cursor: pointer;
+transition: all 0.3s ease;
+border: 2px solid rgba(255, 255, 255, 0.8);
+}
+.dot:hover {
+background: rgba(255, 255, 255, 0.9);
+transform: scale(1.2);
+}
+.dot.active {
+background: #FF5E3A;
+border-color: #FF5E3A;
+width: 28px;
+border-radius: 0;
+}
+/* ========================================================================
+FLASH SALE & SECTIONS
+======================================================================== */
+.flash-sale, .top-rated, .recommended {
+padding: 60px 0;
+}
+.flash-sale, .recommended {
+background: #F7F6F3;
+}
+.top-rated {
+background: #FFFFFF;
+}
+.section-header {
+margin-bottom: 28px;
+}
+.section-title {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-size: 54px;
+font-weight: 700;
+color: #0F260B;
+letter-spacing: -0.015em;
+line-height: 1.1;
+}
+.flash-sale-header {
+margin-bottom: 28px;
+}
+.flash-sale-badge {
+display: inline-flex;
+align-items: center;
+gap: 0;
+background: transparent;
+color: #0F260B;
+padding: 0;
+border-radius: 2px;
+font-size: 54px;
+font-weight: 600;
+box-shadow: none;
+border: none;
+line-height: 1.1;
+}
+.badge-text {
+letter-spacing: -0.01em;
+padding-right: 16px;
+border-right: 2px solid rgba(255, 255, 255, 0.4);
+font-size: 54px;
+color: #0F260B;
+}
+.countdown-timer {
+font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+font-weight: 700;
+letter-spacing: 1px;
+font-size: 20px;
+background: #0F260B;
+color: #FFFFFF;
+padding: 6px 12px;
+margin-left: 12px;
+}
+/* ========================================================================
+HORIZONTAL SLIDER
+======================================================================== */
+.horizontal-slider {
+position: relative;
+display: flex;
+align-items: center;
+gap: 16px;
+}
+.horizontal-slider.overlay-nav {
+gap: 0;
+}
+.slider-viewport {
+overflow: hidden;
+width: 100%;
+}
+.slider-track {
+display: flex;
+gap: 20px;
+transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+align-items: stretch;
+}
+.slider-card {
+min-width: 220px;
+max-width: 220px;
+height: 100%;
+}
+.slider-card.is-out-of-stock {
+opacity: 0.7;
+}
+.slider-card.is-out-of-stock .product-image img {
+filter: grayscale(100%);
+}
+/* ========================================================================
+PRODUCT CARDS
+======================================================================== */
+.product-card {
+background: transparent;
+border: none;
+cursor: pointer;
+height: 100%;
+}
+.product-card.is-out-of-stock {
+opacity: 0.7;
+}
+.product-card.is-out-of-stock .product-image img {
+filter: grayscale(100%);
+}
+.product-card-inner {
+background: #FFFFFF;
+border-radius: 0;
+padding: 12px;
+transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+box-shadow: 0 16px 30px rgba(15, 38, 11, 0.12);
+position: relative;
+overflow: hidden;
+border: 1px solid #DCE3DA;
+cursor: pointer;
+display: flex;
+flex-direction: column;
+height: 100%;
+will-change: transform, box-shadow, border-color;
+}
+.product-card:hover .product-card-inner,
+.slider-card:hover .product-card-inner,
+.product-card-inner:hover {
+box-shadow: 0 24px 50px rgba(15, 38, 11, 0.22);
+transform: translateY(-8px) scale(1.015);
+border-color: rgba(255, 94, 58, 0.72);
+background: #FFFDF9;
+}
+.product-image-wrapper {
+position: relative;
+margin-bottom: 12px;
+background: transparent;
+border: none;
+border-radius: 0;
+padding: 0;
+}
+.stock-badge {
+position: absolute;
+top: 10px;
+left: 10px;
+font-size: 11px;
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+padding: 4px 10px;
+z-index: 2;
+border-radius: 0;
+background: #0F260B;
+color: #E6F5C9;
+border: 1px solid rgba(15, 38, 11, 0.45);
+}
+.stock-badge.new {
+background: #0F260B;
+color: #D6F0A7;
+}
+.stock-badge.sale {
+background: #0F260B;
+color: #E6F5C9;
+border: 1px solid rgba(15, 38, 11, 0.45);
+}
+.stock-badge.out {
+background: #3B3B3B;
+color: #FFFFFF;
+border: 1px solid rgba(0, 0, 0, 0.35);
+}
+.favorite-btn {
+position: absolute;
+top: -6px;
+right: 6px;
+width: 32px;
+height: 32px;
+background: rgba(255, 255, 255, 0.9);
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 2;
+transition: all 0.3s ease;
+padding: 0;
+border-radius: 0;
+box-shadow: 0 8px 18px rgba(15, 38, 11, 0.12);
+}
+.favorite-btn:hover {
+transform: translateY(-1px) scale(1.05);
+}
+.favorite-btn .material-icons-outlined {
+font-size: 18px;
+color: #9E9E9E;
+transition: all 0.3s ease;
+}
+.favorite-btn:hover .material-icons-outlined {
+color: var(--secondary-color);
+}
+.favorite-btn.active {
+background: transparent;
+}
+.favorite-btn.active .material-icons-outlined {
+color: var(--secondary-color);
+}
+.product-image {
+width: 100%;
+aspect-ratio: 1/1;
+border-radius: 0;
+overflow: hidden;
+background: transparent;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 0;
+}
+.product-image img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.product-card:hover .product-image img,
+.slider-card:hover .product-image img,
+.product-card-inner:hover .product-image img {
+transform: scale(1.08);
+}
+.product-info {
+padding: 6px 4px 0 4px;
+display: flex;
+flex-direction: column;
+flex: 1;
+}
+.product-name {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-size: 22px;
+font-weight: 700;
+color: #0F260B;
+margin-bottom: 4px;
+letter-spacing: -0.01em;
+line-height: 1.1;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+min-height: 2.2em;
+}
+.price-row {
+display: flex;
+align-items: baseline;
+justify-content: space-between;
+gap: 12px;
+margin-bottom: 10px;
+}
+.price-group {
+display: inline-flex;
+align-items: baseline;
+gap: 10px;
+}
+.original-price {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-size: 14px;
+color: #9CA3AF;
+text-decoration: line-through;
+font-weight: 400;
+}
+.current-price {
+font-family: 'Plus Jakarta Sans', sans-serif;
+font-size: 24px;
+font-weight: 700;
+color: #0F260B;
+letter-spacing: -0.02em;
+}
+.discount-text {
+font-size: 12px;
+font-weight: 700;
+color: #FF3B00;
+background: #FFE2D4;
+padding: 3px 8px;
+border-radius: 0;
+white-space: nowrap;
+text-transform: uppercase;
+letter-spacing: 0.02em;
+}
+.rating-row {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 10px;
+color: #F4B740;
+}
+.rating-stars {
+display: inline-flex;
+align-items: center;
+gap: 2px;
+}
+.rating-stars .material-icons-outlined {
+font-size: 16px;
+}
+.rating-count {
+font-size: 12px;
+color: #6B7280;
+}
+.add-to-cart-btn {
+width: 100%;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 10px 12px;
+background: #0B1C08;
+color: #FFFFFF;
+border: none;
+border-radius: 0;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+box-shadow: none;
+margin-top: auto;
+}
+.add-to-cart-btn[disabled] {
+background: #E9ECEF;
+color: #8A8A8A;
+cursor: not-allowed;
+box-shadow: none;
+opacity: 0.9;
+}
+.add-to-cart-btn[disabled] .material-icons-outlined {
+color: #8A8A8A;
+}
+.add-to-cart-btn:hover {
+background: #091406;
+transform: translateY(-2px);
+box-shadow: 0 10px 22px rgba(15, 38, 11, 0.18);
+}
+.add-to-cart-btn .material-icons-outlined {
+font-size: 18px;
+}
+/* ========================================================================
+PRODUCTS GRID & LOAD MORE
+======================================================================== */
+.products-grid {
+display: grid;
+grid-template-columns: repeat(5, minmax(0, 1fr));
+gap: 20px;
+align-items: stretch;
+}
+.load-more-wrap {
+display: flex;
+justify-content: center;
+margin-top: 22px;
+}
+.load-more-btn {
+padding: 12px 28px;
+border: none;
+background: #0F260B;
+color: #FFFFFF;
+font-size: 13px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+cursor: pointer;
+transition: all 0.3s ease;
+border-radius: 0;
+}
+.load-more-btn:hover {
+background: #0B1C08;
+box-shadow: 0 6px 16px rgba(15, 38, 11, 0.2);
+}
+.load-more-btn.is-loading {
+pointer-events: none;
+opacity: 0.8;
+}
+.load-more-btn.is-loading::after {
+content: '';
+display: inline-block;
+width: 14px;
+height: 14px;
+margin-left: 8px;
+border: 2px solid rgba(255, 255, 255, 0.3);
+border-top-color: #FFFFFF;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+/* ========================================================================
+REVIEWS SECTION
+======================================================================== */
+.reviews {
+padding: 70px 0 90px;
+background: #FFFFFF;
+}
+.review-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 18px;
+}
+.review-card {
+border: 1px solid rgba(15, 38, 11, 0.14);
+border-radius: 0;
+padding: 20px;
+background: #FFFFFF;
+box-shadow: 0 12px 24px rgba(15, 38, 11, 0.12);
+}
+.review-meta {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 12px;
+font-weight: 700;
+color: #0F260B;
+}
+.review-stars {
+display: inline-flex;
+gap: 2px;
+margin-bottom: 12px;
+color: #F4B740;
+}
+.review-stars .material-icons-outlined {
+font-size: 16px;
+}
+.review-rating {
+background: #0F260B;
+color: #CAED95;
+padding: 4px 8px;
+border-radius: 0;
+font-size: 12px;
+font-weight: 700;
+}
+.review-card p {
+font-size: 14px;
+color: #4B534E;
+line-height: 1.6;
+}
+/* ========================================================================
+PROMO BANNER & FOOTER
+======================================================================== */
+.promo-banner {
+padding: 50px 0;
+background: #FFFFFF;
+}
+.banner-container {
+max-width: 1200px;
+margin: 0 auto;
+border-radius: 0;
+overflow: hidden;
+box-shadow: 0 14px 28px rgba(15, 38, 11, 0.14);
+}
+.banner-container img {
+width: 100%;
+height: auto;
+display: block;
+object-fit: cover;
+}
+.site-footer {
+margin-top: 60px;
+background: #0F260B;
+color: #FFFFFF;
+padding: 48px 0 22px;
+}
+.footer-grid {
+display: grid;
+grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+gap: 28px;
+align-items: start;
+}
+.footer-brand img {
+width: 48px;
+height: 48px;
+object-fit: contain;
+}
+.brand-row {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 10px;
+}
+.brand-name {
+font-weight: 700;
+font-style: italic;
+font-size: 24px;
+}
+.footer-tagline {
+color: #FFFFFF;
+font-size: 14px;
+line-height: 1.6;
+}
+.footer-slogan {
+margin-top: 12px;
+font-size: 13px;
+font-weight: 700;
+letter-spacing: 0.6px;
+text-transform: uppercase;
+color: #FFFFFF;
+}
+.footer-col h4 {
+font-size: 14px;
+margin-bottom: 12px;
+letter-spacing: 0.4px;
+text-transform: uppercase;
+color: #FFFFFF;
+}
+.footer-col a, .footer-col p {
+display: block;
+color: #FFFFFF;
+text-decoration: none;
+font-size: 13px;
+margin-bottom: 8px;
+}
+.footer-col a:hover {
+color: #FF8C70;
+}
+.footer-bottom {
+margin-top: 26px;
+border-top: 1px solid rgba(255, 255, 255, 0.25);
+padding-top: 16px;
+display: flex;
+justify-content: space-between;
+font-size: 12px;
+color: #FFFFFF;
+}
+/* ========================================================================
+RESPONSIVE
+======================================================================== */
+@media (max-width: 1500px) { .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 800px) { .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 768px) {
+.top-bar-inner { grid-template-columns: 1fr; }
+.search-wrap { width: 100%; }
+.actions { justify-content: space-between; flex-wrap: wrap; }
+.nav-separator { display: none; }
+.footer-grid { grid-template-columns: 1fr 1fr; }
+.footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
+.products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.flash-sale, .top-rated, .recommended { padding: 40px 0; }
+.slider-card { min-width: 170px; max-width: 170px; }
+.section-title { font-size: 26px; }
+.flash-sale-badge { font-size: 26px; }
+.badge-text { font-size: 26px; padding-right: 12px; }
+.countdown-timer { font-size: 18px; padding-left: 12px; }
+.review-grid { grid-template-columns: 1fr; }
+.product-name { font-size: 16px; }
+.current-price { font-size: 18px; }
+}
+@media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
+@media (max-width: 500px) {
+.products-grid { grid-template-columns: 1fr; }
+.flash-sale-badge { font-size: 22px; }
+.badge-text { font-size: 22px; }
+.countdown-timer { font-size: 17px; }
+.section-title { font-size: 22px; }
+}
+</style>
+</head>
+<body class="theme-organic">
+<!-- =========================================================================
+HEADER START
+========================================================================= -->
+<header>
+<div class="top-bar">
+<div class="page-wrap top-bar-inner">
+<div class="brand">
+<a href="index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+<img src="Asstes/logo.png" alt="HuddersHub logo">
+<span class="brand-text">HuddersHub</span>
+</a>
+</div>
+<div class="search-wrap">
+<div class="search-bar">
+<input type="text" placeholder="Search">
+<span class="search-icon material-icons-outlined">search</span>
+</div>
+</div>
+<div class="actions">
+<span class="action-btn" id="loginBtn" style="cursor: pointer;">
+<span class="material-icons-outlined" style="font-size: 24px;">person</span>
+<span id="loginBtnText">Login/Signup</span>
+</span>
+<a class="icon-with-badge" href="cart.html" aria-label="Cart" id="cartTrigger">
+<span class="material-icons-outlined">shopping_cart</span>
+<span class="badge">3</span>
+</a>
+<a class="icon-with-badge" href="wishlist.html" aria-label="Wishlist">
+<span class="material-icons-outlined">favorite_border</span>
+<span class="badge">5</span>
+</a>
+<a class="icon-with-badge moon" href="#" aria-label="Dark mode">
+<span class="material-icons-outlined" style="font-size: 20px;">dark_mode</span>
+</a>
+</div>
+</div>
+</div>
+<nav class="nav-bar">
+<div class="page-wrap">
+<div class="nav-list">
+<a href="index.html" class="nav-item primary is-active">
+<span class="material-icons-outlined" style="font-size: 18px;">home</span>
+Home
+</a>
+<span class="nav-separator"></span>
+<div class="categories-wrapper">
+<span class="nav-item">
+<span class="material-icons-outlined" style="font-size: 18px;">menu</span>
+Categories
+</span>
+<div class="categories-dropdown">
+<div class="dropdown-section">
+<div class="dropdown-section-title">Browse by Shop</div>
+<div class="dropdown-divider"></div>
+<a href="butcher.html" class="dropdown-item">Butcher</a>
+<a href="greengrocer.html" class="dropdown-item">Greengrocer</a>
+<a href="fishmonger.html" class="dropdown-item">Fishmonger</a>
+<a href="bakery.html" class="dropdown-item">Bakery</a>
+<a href="delicat.html" class="dropdown-item">Delicatessen</a>
+</div>
+<div class="dropdown-section">
+<div class="dropdown-section-title">Browse by Type</div>
+<div class="dropdown-divider"></div>
+<a href="meat-poultry.html" class="dropdown-item">Meat & Poultry</a>
+<a href="fish-seafood.html" class="dropdown-item">Fish & Seafood</a>
+<a href="fruits-veg.html" class="dropdown-item">Fruits & Veg</a>
+<a href="bakery-items.html" class="dropdown-item">Bakery Items</a>
+<a href="deli-foods.html" class="dropdown-item">Deli Foods</a>
+</div>
+<div class="dropdown-divider"></div>
+<a href="all-categories.html" class="dropdown-item all-categories">All Categories</a>
+</div>
+</div>
+<span class="nav-separator"></span>
+<a href="about.html" class="nav-item">About</a>
+<span class="nav-separator"></span>
+<a href="contact.html" class="nav-item">Contact</a>
+</div>
+</div>
+</nav>
+</header>
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+<div class="cart-header">
+<h3>Your cart</h3>
+<button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button>
+</div>
+<div class="cart-body">
+<div class="cart-item" data-price="0.90" data-category="Greengrocer">
+<img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper">
+<div class="cart-item-details">
+<div class="cart-item-top">
+<div>
+<h4>Green Bell Pepper</h4>
+<p class="cart-meta">Greengrocer · Qty 2</p>
+</div>
+<span class="cart-price">£1.80</span>
+</div>
+<div class="cart-item-actions">
+<div class="cart-qty">
+<button class="qty-btn" data-action="decrease" type="button">-</button>
+<span class="qty-val">2</span>
+<button class="qty-btn" data-action="increase" type="button">+</button>
+</div>
+<button class="cart-remove" type="button">Remove</button>
+</div>
+</div>
+</div>
+<div class="cart-item" data-price="0.90" data-category="Greengrocer">
+<img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli">
+<div class="cart-item-details">
+<div class="cart-item-top">
+<div>
+<h4>Green Broccoli</h4>
+<p class="cart-meta">Greengrocer · Qty 1</p>
+</div>
+<span class="cart-price">£0.90</span>
+</div>
+<div class="cart-item-actions">
+<div class="cart-qty">
+<button class="qty-btn" data-action="decrease" type="button">-</button>
+<span class="qty-val">1</span>
+<button class="qty-btn" data-action="increase" type="button">+</button>
+</div>
+<button class="cart-remove" type="button">Remove</button>
+</div>
+</div>
+</div>
+<div class="cart-empty" style="display:none;">Your cart is empty.</div>
+</div>
+<div class="cart-footer">
+<div class="cart-total">
+<span>Total</span>
+<span class="cart-total-value">£2.70</span>
+</div>
+<div class="cart-actions">
+<a class="cart-link" href="cart.html">Go to cart</a>
+<button class="cart-checkout" type="button">Checkout →</button>
+</div>
+</div>
+</aside>
+
+<!-- =========================================================================
+BANNER SLIDER SECTION
+========================================================================= -->
+<section class="banner-slider">
+<div class="slider-container">
+<div class="slider-wrapper">
+<div class="slide active"><img src="Asstes/Banner/cleckheaton.png" alt="Banner 1"></div>
+<div class="slide"><img src="Asstes/Banner/banner-2.png" alt="Banner 2"></div>
+<div class="slide"><img src="Asstes/Banner/banner-3.png" alt="Banner 3"></div>
+<div class="slide"><img src="Asstes/Banner/banner-4.png" alt="Banner 4"></div>
+</div>
+<div class="slider-dots">
+<span class="dot active" onclick="currentSlide(0)"></span>
+<span class="dot" onclick="currentSlide(1)"></span>
+<span class="dot" onclick="currentSlide(2)"></span>
+<span class="dot" onclick="currentSlide(3)"></span>
+</div>
+</div>
+</section>
+
+<!-- =========================================================================
+FLASH SALE SECTION
+========================================================================= -->
+<section class="flash-sale">
+<div class="page-wrap">
+<div class="flash-sale-header">
+<div class="flash-sale-badge">
+<span class="badge-text">On sale</span>
+<span class="countdown-timer" id="countdown-timer">18:14:38</span>
+</div>
+</div>
+<div class="horizontal-slider overlay-nav">
+<div class="slider-viewport">
+<div class="slider-track" id="flash-sale-track">
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card is-out-of-stock">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<span class="stock-badge out">OUT OF STOCK</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn" disabled aria-disabled="true"><span class="material-icons-outlined">shopping_cart</span>Out of stock</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Chinese Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper 2">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper 2"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli 2">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli 2"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- =========================================================================
+TOP RATED SECTION
+========================================================================= -->
+<section class="top-rated">
+<div class="page-wrap">
+<div class="section-header"><h2 class="section-title">Top rated</h2></div>
+<div class="horizontal-slider overlay-nav">
+<div class="slider-viewport">
+<div class="slider-track" id="top-rated-track">
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Chinese Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="slider-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- =========================================================================
+PROMO BANNER SECTION
+========================================================================= -->
+<section class="promo-banner">
+<div class="page-wrap">
+<div class="banner-container"><img src="Asstes/Banner/banner-2.png" alt="Promotional Banner"></div>
+</div>
+</section>
+
+<!-- =========================================================================
+RECOMMENDED FOR YOU SECTION
+========================================================================= -->
+<section class="recommended">
+<div class="page-wrap">
+<div class="section-header"><h2 class="section-title">For you</h2></div>
+<div class="products-grid">
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card is-out-of-stock">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<span class="stock-badge out">OUT OF STOCK</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn" disabled aria-disabled="true"><span class="material-icons-outlined">shopping_cart</span>Out of stock</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Chinese Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+</div>
+<div class="load-more-wrap">
+<button class="load-more-btn" id="load-more-btn">+ Load more</button>
+</div>
+</div>
+</section>
+
+<!-- =========================================================================
+REVIEWS SECTION
+========================================================================= -->
+<section class="reviews">
+<div class="page-wrap">
+<div class="section-header"><h2 class="section-title">What shoppers say</h2></div>
+<div class="review-grid">
+<div class="review-card">
+<div class="review-meta"><span class="review-name">Amelia T.</span><span class="review-rating">5.0</span></div>
+<div class="review-stars" aria-label="5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<p>Everything arrived fresh and packed with care. The greens were perfect.</p>
+</div>
+<div class="review-card">
+<div class="review-meta"><span class="review-name">Marcus J.</span><span class="review-rating">4.8</span></div>
+<div class="review-stars" aria-label="4.5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<p>Easy to browse, fast delivery, and the butcher selection is elite.</p>
+</div>
+<div class="review-card">
+<div class="review-meta"><span class="review-name">Priya S.</span><span class="review-rating">4.9</span></div>
+<div class="review-stars" aria-label="5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<p>Loved the local producers. You can taste the quality.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- =========================================================================
+FOOTER
+========================================================================= -->
+<footer class="site-footer">
+<div class="page-wrap footer-grid">
+<div class="footer-brand">
+<div class="brand-row">
+<img src="Asstes/logo.png" alt="HuddersHub logo">
+<span class="brand-name">HuddersHub</span>
+</div>
+<p class="footer-tagline">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
+<p class="footer-slogan">Eat Fresh. Buy Local.</p>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<a href="#">About HuddersHub</a>
+<a href="#">Our traders</a>
+<a href="#">Sustainability</a>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<a href="#">Help center</a>
+<a href="#">Order tracking</a>
+<a href="#">Returns &amp; refunds</a>
+</div>
+<div class="footer-col">
+<h4>Explore</h4>
+<a href="index.html">Homepage</a>
+<a href="contact.html">Contact</a>
+<a href="invoice.html">Invoice</a>
+</div>
+<div class="footer-col">
+<h4>Contact</h4>
+<p>Huddersfield, West Yorkshire</p>
+<p>support@huddershub.test</p>
+<p>+44 1484 000 000</p>
+</div>
+</div>
+<div class="page-wrap footer-bottom">
+<span>Copyright 2026 HuddersHub. All rights reserved.</span>
+<span>Eat Fresh. Buy Local.</span>
+</div>
+</footer>
+
+<!-- =========================================================================
+JAVASCRIPT
+========================================================================= -->
+<script>
+const productsData = [
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '£1.50', image: 'Asstes/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '', image: 'Asstes/Item-image/green-broccoli.jpg', stock: 'out-of-stock', is_sale: false, is_new: false },
+{ name: 'Chinese Broccoli', price: '£0.90', original_price: '', image: 'Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '£1.50', image: 'Asstes/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'Asstes/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '', image: 'Asstes/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: true },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'Asstes/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Chinese Broccoli', price: '£0.90', original_price: '', image: 'Asstes/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '', image: 'Asstes/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'Asstes/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false }
+];
+
+document.querySelectorAll('.favorite-btn').forEach(btn => {
+btn.addEventListener('click', function(e) {
+e.stopPropagation();
+this.classList.toggle('active');
+const icon = this.querySelector('.material-icons-outlined');
+if (this.classList.contains('active')) { icon.textContent = 'favorite'; } else { icon.textContent = 'favorite_border'; }
+});
+});
+
+document.querySelectorAll('.product-card-inner').forEach(card => {
+card.addEventListener('click', event => {
+if (event.target.closest('button, input, a')) { return; }
+const link = card.getAttribute('data-link');
+if (link) { window.location.href = link; }
+});
+});
+
+const loginBtn = document.getElementById('loginBtn');
+if (loginBtn) {
+loginBtn.addEventListener('click', function() {
+loginBtn.outerHTML = '<a class="user-menu" href="account.html"><span class="material-icons-outlined" style="font-size: 24px;">account_circle</span><span>Welcome, John Doe</span></a>';
+});
+}
+
+window.addEventListener('scroll', function() {
+const header = document.querySelector('header');
+if (window.scrollY > 50) { header.classList.add('scrolled'); } else { header.classList.remove('scrolled'); }
+});
+
+const cartTrigger = document.getElementById('cartTrigger');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartClose = document.getElementById('cartClose');
+
+function formatMoney(value) { return '£' + value.toFixed(2); }
+
+function updateCartTotals() {
+if (!cartDrawer) return;
+const items = cartDrawer.querySelectorAll('.cart-item');
+let total = 0;
+items.forEach(item => {
+const price = parseFloat(item.dataset.price || '0');
+const qtyEl = item.querySelector('.qty-val');
+const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
+const lineTotal = price * qty;
+const priceEl = item.querySelector('.cart-price');
+const metaEl = item.querySelector('.cart-meta');
+if (priceEl) priceEl.textContent = formatMoney(lineTotal);
+if (metaEl) { const cat = item.dataset.category || 'Item'; metaEl.textContent = cat + ' · Qty ' + qty; }
+total += lineTotal;
+});
+const totalEl = cartDrawer.querySelector('.cart-total-value');
+if (totalEl) totalEl.textContent = formatMoney(total);
+const emptyEl = cartDrawer.querySelector('.cart-empty');
+if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
+}
+
+function openCart() {
+cartDrawer.classList.add('open');
+cartOverlay.classList.add('open');
+cartDrawer.setAttribute('aria-hidden', 'false');
+document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+cartDrawer.classList.remove('open');
+cartOverlay.classList.remove('open');
+cartDrawer.setAttribute('aria-hidden', 'true');
+document.body.style.overflow = '';
+}
+
+if (cartTrigger) {
+cartTrigger.addEventListener('click', function(e) { e.preventDefault(); openCart(); });
+}
+if (cartDrawer) {
+cartDrawer.addEventListener('click', function(e) {
+const qtyBtn = e.target.closest('.qty-btn');
+if (qtyBtn) {
+const item = qtyBtn.closest('.cart-item');
+const qtyEl = item ? item.querySelector('.qty-val') : null;
+if (!item || !qtyEl) return;
+let qty = parseInt(qtyEl.textContent, 10) || 1;
+if (qtyBtn.dataset.action === 'increase') { qty += 1; } else { qty = Math.max(1, qty - 1); }
+qtyEl.textContent = qty;
+updateCartTotals();
+return;
+}
+const removeBtn = e.target.closest('.cart-remove');
+if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartTotals(); }
+});
+}
+if (cartOverlay) { cartOverlay.addEventListener('click', closeCart); }
+if (cartClose) { cartClose.addEventListener('click', closeCart); }
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeCart(); } });
+updateCartTotals();
+
+let slideIndex = 0;
+let slideInterval;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+
+function showSlide(index) {
+slides.forEach((slide, i) => { slide.classList.remove('active'); dots[i].classList.remove('active'); });
+slides[index].classList.add('active');
+dots[index].classList.add('active');
+slideIndex = index;
+}
+
+function moveSlide(direction) {
+let newIndex = slideIndex + direction;
+if (newIndex >= slides.length) newIndex = 0;
+else if (newIndex < 0) newIndex = slides.length - 1;
+showSlide(newIndex);
+resetInterval();
+}
+
+function currentSlide(index) { showSlide(index); resetInterval(); }
+
+function startSlideInterval() { slideInterval = setInterval(() => { moveSlide(1); }, 6000); }
+function resetInterval() { clearInterval(slideInterval); startSlideInterval(); }
+
+showSlide(0);
+startSlideInterval();
+
+const countdownDuration = 18 * 60 * 60 + 14 * 60 + 59;
+let remainingTime = countdownDuration;
+const countdownTimerEl = document.getElementById('countdown-timer');
+
+function formatTime(seconds) {
+const hrs = Math.floor(seconds / 3600);
+const mins = Math.floor((seconds % 3600) / 60);
+const secs = seconds % 60;
+return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function updateCountdown() {
+if (remainingTime > 0) { remainingTime--; if (countdownTimerEl) countdownTimerEl.textContent = formatTime(remainingTime); }
+else { if (countdownTimerEl) countdownTimerEl.textContent = 'EXPIRED'; }
+}
+setInterval(updateCountdown, 1000);
+
+function getDiscountText(price, originalPrice) {
+const priceValue = parseFloat(String(price).replace(/[^0-9.]/g, ''));
+const originalValue = parseFloat(String(originalPrice).replace(/[^0-9.]/g, ''));
+if (!priceValue || !originalValue || priceValue >= originalValue) return '';
+const percent = Math.round((1 - (priceValue / originalValue)) * 100);
+return `${percent}% off`;
+}
+
+function buildProductCard(product) {
+const isOut = product.stock === 'out-of-stock';
+const badgeConfig = isOut ? { klass: 'out', text: 'OUT OF STOCK' } : (product.is_sale ? { klass: 'sale', text: 'ON SALE' } : (product.is_new ? { klass: 'new', text: 'NEW' } : null));
+const badgeHtml = badgeConfig ? `<span class="stock-badge ${badgeConfig.klass}">${badgeConfig.text}</span>` : '';
+const originalPriceHtml = product.original_price ? `<span class="original-price">${product.original_price}</span>` : '';
+const discountText = getDiscountText(product.price, product.original_price);
+const discountHtml = discountText ? `<span class="discount-text">${discountText}</span>` : '';
+const disabledAttr = isOut ? 'disabled aria-disabled="true"' : '';
+const addToCartText = isOut ? 'Out of stock' : 'Add to cart';
+return `
+<div class="product-card ${isOut ? 'is-out-of-stock' : ''}">
+<div class="product-card-inner" data-link="product.html?name=${encodeURIComponent(product.name)}">
+<div class="product-image-wrapper">
+${badgeHtml}
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="${product.image}" alt="${product.name}"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">${product.name}</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">${product.price}</span>${originalPriceHtml}</div>
+${discountHtml}
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn" ${disabledAttr}><span class="material-icons-outlined">shopping_cart</span>${addToCartText}</button>
+</div>
+</div>
+</div>`;
+}
+
+const loadMoreBtn = document.getElementById('load-more-btn');
+const productsGrid = document.querySelector('.products-grid');
+if (loadMoreBtn && productsGrid) {
+loadMoreBtn.addEventListener('click', () => {
+loadMoreBtn.classList.add('is-loading');
+setTimeout(() => {
+const fragments = [];
+for (let i = 0; i < 10; i += 1) {
+const product = productsData[i % productsData.length];
+fragments.push(buildProductCard(product));
+}
+productsGrid.insertAdjacentHTML('beforeend', fragments.join(''));
+loadMoreBtn.classList.remove('is-loading');
+}, 600);
+});
+}
+
+let flashSaleScrollPos = 0;
+function slideFlashSale(direction) {
+const track = document.getElementById('flash-sale-track');
+if (!track) return;
+const cardWidth = 240;
+const viewportWidth = document.querySelector('.slider-viewport').offsetWidth;
+const maxScroll = track.scrollWidth - viewportWidth;
+flashSaleScrollPos += direction * cardWidth;
+if (flashSaleScrollPos < 0) flashSaleScrollPos = 0;
+if (flashSaleScrollPos > maxScroll) flashSaleScrollPos = maxScroll;
+track.style.transform = `translateX(-${flashSaleScrollPos}px)`;
+}
+
+let topRatedScrollPos = 0;
+function slideTopRated(direction) {
+const track = document.getElementById('top-rated-track');
+if (!track) return;
+const cardWidth = 240;
+const viewportWidth = document.querySelector('.slider-viewport').offsetWidth;
+const maxScroll = track.scrollWidth - viewportWidth;
+topRatedScrollPos += direction * cardWidth;
+if (topRatedScrollPos < 0) topRatedScrollPos = 0;
+if (topRatedScrollPos > maxScroll) topRatedScrollPos = maxScroll;
+track.style.transform = `translateX(-${topRatedScrollPos}px)`;
+}
+</script>
+</body>
+</html>
+
