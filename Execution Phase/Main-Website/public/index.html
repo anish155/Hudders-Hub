@@ -587,9 +587,10 @@ transform: translateY(-1px);
 BANNER SLIDER
 ======================================================================== */
 .banner-slider {
-width: 100%;
-background: #F7F6F3;
-padding: 20px 0;
+  width: 100%;
+  background: #FFFFFF;
+  padding: 20px 0;
+  margin-top: 140px;
 }
 .slider-container {
 position: relative;
@@ -618,58 +619,129 @@ object-fit: cover;
 border-radius: 0;
 }
 .slider-dots {
-position: absolute;
-bottom: 20px;
-left: 50%;
-transform: translateX(-50%);
-display: flex;
-gap: 10px;
-z-index: 10;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
 }
 .dot {
-width: 10px;
-height: 10px;
-border-radius: 0;
-background: rgba(255, 255, 255, 0.65);
-cursor: pointer;
-transition: all 0.3s ease;
-border: 2px solid rgba(255, 255, 255, 0.8);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0;
 }
 .dot:hover {
-background: rgba(255, 255, 255, 0.9);
-transform: scale(1.2);
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.3);
 }
 .dot.active {
-background: #FF5E3A;
-border-color: #FF5E3A;
-width: 28px;
-border-radius: 0;
+  background: #FF5E3A;
+  width: 24px;
+  border-radius: 4px;
 }
+
 /* ========================================================================
-FLASH SALE & SECTIONS
+QUICK CATEGORIES & PROMOS
 ======================================================================== */
-.flash-sale, .top-rated, .recommended {
-padding: 60px 0;
+.quick-categories { padding: 40px 0 20px; background: #F7F6F3; }
+.category-circles { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.category-circle { display: flex; flex-direction: column; align-items: center; gap: 12px; text-decoration: none; color: var(--text-black); }
+.circle-img-wrap { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; box-shadow: var(--shadow-sm); transition: var(--transition-smooth); border: 3px solid transparent; }
+.circle-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.category-circle:hover .circle-img-wrap { border-color: var(--primary-orange); box-shadow: var(--shadow-md); transform: translateY(-5px); }
+.category-circle:hover .circle-img-wrap img { transform: scale(1.1); }
+.category-name { font-weight: 600; font-size: 15px; transition: var(--transition-smooth); }
+.category-circle:hover .category-name { color: var(--primary-orange); }
+
+.featured-products { padding: 40px 0; background: #FFFFFF; }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr)); gap: 20px; margin-top: 20px; }
+
+.promo-banners { padding: 30px 0 60px; background: #F8FAFC; }
+.promo-banners-wrap { display: flex; justify-content: center; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; }
+.promo-banner { flex: 0 0 100%; max-width: 1100px; scroll-snap-align: start; min-width: 300px; }
+.promo-banner img { width: 100%; height: clamp(180px, 28vw, 340px); object-fit: cover; border-radius: 0; box-shadow: var(--shadow-sm); transition: transform 0.3s ease; }
+.promo-banner:hover img { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+/* ========================================================================
+FLASH SALE, TRENDING, TOP RATED - HORIZONTAL CAROUSEL SECTIONS
+======================================================================== */
+.flash-sale, .trending-section, .top-rated {
+padding: 70px 0;
 }
-.flash-sale, .recommended {
-background: #F7F6F3;
+.flash-sale { 
+background: linear-gradient(180deg, #F8FAFC 0%, #F0F4EE 100%);
+border-top: 1px solid rgba(15, 38, 11, 0.06);
+border-bottom: 1px solid rgba(15, 38, 11, 0.06);
 }
-.top-rated {
-background: #FFFFFF;
+.trending-section { 
+background: linear-gradient(180deg, #F8FAFC 0%, #F0F4EE 100%);
+border-top: 1px solid rgba(15, 38, 11, 0.06);
+border-bottom: 1px solid rgba(15, 38, 11, 0.06);
+}
+.top-rated { 
+background: linear-gradient(180deg, #F8FAFC 0%, #F0F4EE 100%);
+border-top: 1px solid rgba(15, 38, 11, 0.06);
+border-bottom: 1px solid rgba(15, 38, 11, 0.06);
 }
 .section-header {
-margin-bottom: 28px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.section-header::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, #0F260B, #FF5E3A);
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  border-radius: 1px;
+}
+.section-header .view-all {
+  font-size: 15px;
+  font-weight: 600;
+  color: #FF5E3A;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  letter-spacing: 0.5px;
+}
+.section-header .view-all:hover {
+  color: #E3472C;
 }
 .section-title {
-font-family: 'Plus Jakarta Sans', sans-serif;
-font-size: 54px;
-font-weight: 700;
-color: #0F260B;
-letter-spacing: -0.015em;
-line-height: 1.1;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: #0F260B;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 .flash-sale-header {
-margin-bottom: 28px;
+margin-bottom: 32px;
+position: relative;
+}
+.flash-sale-header::after {
+content: '';
+display: block;
+width: 80px;
+height: 3px;
+background: linear-gradient(90deg, #FF5E3A, #FF8C70);
+position: absolute;
+bottom: -10px;
+left: 0;
+border-radius: 2px;
 }
 .flash-sale-badge {
 display: inline-flex;
@@ -679,7 +751,7 @@ background: transparent;
 color: #0F260B;
 padding: 0;
 border-radius: 2px;
-font-size: 54px;
+font-size: 48px;
 font-weight: 600;
 box-shadow: none;
 border: none;
@@ -689,7 +761,8 @@ line-height: 1.1;
 letter-spacing: -0.01em;
 padding-right: 16px;
 border-right: 2px solid rgba(255, 255, 255, 0.4);
-font-size: 54px;
+font-size: 36px;
+font-weight: 700;
 color: #0F260B;
 }
 .countdown-timer {
@@ -702,39 +775,157 @@ color: #FFFFFF;
 padding: 6px 12px;
 margin-left: 12px;
 }
+
 /* ========================================================================
-HORIZONTAL SLIDER
+PRODUCT CAROUSEL STYLES
 ======================================================================== */
-.horizontal-slider {
+.product-carousel {
 position: relative;
-display: flex;
-align-items: center;
-gap: 16px;
+padding: 0;
 }
-.horizontal-slider.overlay-nav {
-gap: 0;
-}
-.slider-viewport {
+.carousel-viewport {
 overflow: hidden;
 width: 100%;
 }
-.slider-track {
-display: flex;
-gap: 20px;
-transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-align-items: stretch;
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  align-items: stretch;
 }
-.slider-card {
-min-width: 220px;
-max-width: 220px;
+.carousel-card {
+min-width: 228px;
+max-width: 228px;
 height: 100%;
 }
-.slider-card.is-out-of-stock {
+.carousel-card.is-out-of-stock {
 opacity: 0.7;
 }
-.slider-card.is-out-of-stock .product-image img {
+.carousel-card.is-out-of-stock .product-image img {
 filter: grayscale(100%);
 }
+/* Carousel Navigation - hidden, works on hover */
+.product-carousel { position: relative; }
+.product-carousel .carousel-btn {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  border: none;
+  background: transparent;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.product-carousel:hover .carousel-btn {
+  opacity: 1;
+}
+.product-carousel .carousel-btn:hover {
+  color: #FF5E3A;
+}
+.carousel-btn .material-icons-outlined {
+  font-size: 28px;
+  font-weight: 400;
+}
+.carousel-btn.prev { left: 0; }
+.carousel-btn.next { right: 0; }
+
+/* ============================================
+   NEW HORIZONTAL SLIDER WITH BLUR EFFECT
+   ============================================ */
+.blur-slider-section {
+  padding: 60px 0;
+  background: #FFFFFF;
+}
+.blur-slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.blur-slider-wrapper {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 10px 40px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.blur-slider-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.blur-slider-wrapper::before,
+.blur-slider-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 3;
+  pointer-events: none;
+}
+.blur-slider-wrapper::before {
+  left: 0;
+  background: linear-gradient(90deg, #FFFFFF 0%, transparent 100%);
+}
+.blur-slider-wrapper::after {
+  right: 0;
+  background: linear-gradient(270deg, #FFFFFF 0%, transparent 100%);
+}
+.blur-card {
+  flex: 0 0 300px;
+  scroll-snap-align: center;
+  background: #F8FAF8;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 38, 11, 0.08);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(15, 38, 11, 0.06);
+}
+.blur-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 38, 11, 0.12);
+  border-color: rgba(15, 38, 11, 0.15);
+}
+.blur-card-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #FFFFFF;
+  margin-bottom: 12px;
+}
+.blur-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.blur-card-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F260B;
+  margin-bottom: 8px;
+}
+.blur-card-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F260B;
+}
+.blur-card-price span {
+  font-size: 14px;
+  color: #9CA3AF;
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+
 /* ========================================================================
 PRODUCT CARDS
 ======================================================================== */
@@ -766,12 +957,12 @@ height: 100%;
 will-change: transform, box-shadow, border-color;
 }
 .product-card:hover .product-card-inner,
-.slider-card:hover .product-card-inner,
+.carousel-card:hover .product-card-inner,
 .product-card-inner:hover {
-box-shadow: 0 24px 50px rgba(15, 38, 11, 0.22);
-transform: translateY(-8px) scale(1.015);
-border-color: rgba(255, 94, 58, 0.72);
-background: #FFFDF9;
+box-shadow: 0 18px 38px rgba(15, 38, 11, 0.18);
+transform: translateY(-4px) scale(1.01);
+border-color: rgba(15, 38, 11, 0.35);
+background: #FFFFFF;
 }
 .product-image-wrapper {
 position: relative;
@@ -848,7 +1039,7 @@ color: var(--secondary-color);
 }
 .product-image {
 width: 100%;
-aspect-ratio: 1/1;
+aspect-ratio: 4/3;
 border-radius: 0;
 overflow: hidden;
 background: transparent;
@@ -864,12 +1055,12 @@ object-fit: contain;
 transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .product-card:hover .product-image img,
-.slider-card:hover .product-image img,
+.carousel-card:hover .product-image img,
 .product-card-inner:hover .product-image img {
-transform: scale(1.08);
+transform: scale(1.04);
 }
 .product-info {
-padding: 6px 4px 0 4px;
+padding: 5px 3px 0 3px;
 display: flex;
 flex-direction: column;
 flex: 1;
@@ -992,26 +1183,32 @@ gap: 20px;
 align-items: stretch;
 }
 .load-more-wrap {
-display: flex;
-justify-content: center;
-margin-top: 22px;
+  width: 100%;
+  text-align: center;
+  margin-top: 28px;
+  padding: 0;
 }
 .load-more-btn {
-padding: 12px 28px;
-border: none;
-background: #0F260B;
-color: #FFFFFF;
-font-size: 13px;
-font-weight: 600;
-text-transform: uppercase;
-letter-spacing: 0.4px;
-cursor: pointer;
-transition: all 0.3s ease;
-border-radius: 0;
+  display: inline-block;
+  padding: 14px 48px;
+  border: none;
+  background: #0F260B;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  box-shadow: 0 4px 12px rgba(15, 38, 11, 0.15);
+  margin: 0 auto;
+  text-align: center;
 }
 .load-more-btn:hover {
-background: #0B1C08;
-box-shadow: 0 6px 16px rgba(15, 38, 11, 0.2);
+  background: #183F12;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 38, 11, 0.2);
 }
 .load-more-btn.is-loading {
 pointer-events: none;
@@ -1032,53 +1229,317 @@ animation: spin 0.8s linear infinite;
 to { transform: rotate(360deg); }
 }
 /* ========================================================================
-REVIEWS SECTION
+FREE DELIVERY BANNER
 ======================================================================== */
-.reviews {
-padding: 70px 0 90px;
+.delivery-banner-section {
+padding: 40px 0;
 background: #FFFFFF;
 }
-.review-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 18px;
+.delivery-banner {
+width: 100%;
+border-radius: 0;
+overflow: hidden;
+box-shadow: 0 8px 24px rgba(15, 38, 11, 0.08);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.delivery-banner:hover {
+transform: translateY(-2px);
+box-shadow: 0 12px 32px rgba(15, 38, 11, 0.12);
+}
+.delivery-banner img {
+width: 100%;
+height: auto;
+display: block;
+object-fit: cover;
+}
+/* ========================================================================
+REVIEWS SECTION - PROFESSIONAL
+======================================================================= */
+.reviews {
+padding: 80px 0 100px;
+background: linear-gradient(180deg, #F0F4EF 0%, #FFFFFF 50%, #F0F4EF 100%);
+position: relative;
+overflow: hidden;
+}
+.reviews::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: linear-gradient(90deg, #0F260B, #FF5E3A, #0F260B);
+}
+.reviews-header {
+text-align: center;
+margin-bottom: 52px;
+position: relative;
+}
+.reviews-header::after {
+content: '';
+display: block;
+width: 60px;
+height: 3px;
+background: linear-gradient(90deg, #FF5E3A, #FF8C70);
+margin: 16px auto 0;
+border-radius: 2px;
+}
+.reviews-header .section-title {
+font-size: 42px;
+font-weight: 800;
+color: #0F260B;
+margin-bottom: 12px;
+letter-spacing: -0.02em;
+line-height: 1.1;
+}
+.reviews-subtitle {
+font-size: 18px;
+color: #5E6A63;
+font-weight: 500;
+letter-spacing: 0.3px;
+}
+.reviews-stats {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 40px;
+margin-bottom: 36px;
+padding: 24px 40px;
+background: #FFFFFF;
+border-radius: 12px;
+box-shadow: 0 8px 32px rgba(15, 38, 11, 0.08);
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+}
+.reviews-rating {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.reviews-rating-number {
+font-size: 48px;
+font-weight: 800;
+color: #0F260B;
+line-height: 1;
+}
+.reviews-rating-stars {
+display: flex;
+gap: 2px;
+color: #F4B740;
+margin-top: 6px;
+}
+.reviews-rating-stars .material-icons-outlined {
+font-size: 20px;
+}
+.reviews-total {
+text-align: center;
+color: #5E6A63;
+font-size: 14px;
+}
+.reviews-total strong {
+color: #0F260B;
+font-weight: 600;
+}
+.reviews-carousel {
+position: relative;
+overflow: hidden;
+padding: 20px 0;
+}
+.review-track-container {
+overflow: hidden;
+padding: 15px 0;
+}
+.review-track {
+display: flex;
+gap: 28px;
+transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+will-change: transform;
 }
 .review-card {
-border: 1px solid rgba(15, 38, 11, 0.14);
-border-radius: 0;
-padding: 20px;
+border: none;
+border-radius: 16px;
+padding: 32px;
 background: #FFFFFF;
-box-shadow: 0 12px 24px rgba(15, 38, 11, 0.12);
+box-shadow: 0 8px 32px rgba(15, 38, 11, 0.08);
+min-width: 360px;
+max-width: 360px;
+flex: 0 0 auto;
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+position: relative;
+overflow: hidden;
 }
-.review-meta {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 12px;
+.review-card::before {
+content: '"';
+position: absolute;
+top: 16px;
+right: 24px;
+font-size: 80px;
 font-weight: 700;
 color: #0F260B;
+opacity: 0.06;
+font-family: Georgia, serif;
+line-height: 1;
+}
+.review-card:hover {
+transform: translateY(-8px);
+box-shadow: 0 20px 48px rgba(15, 38, 11, 0.15);
+}
+.review-header {
+display: flex;
+align-items: center;
+gap: 16px;
+margin-bottom: 20px;
+}
+.review-avatar {
+width: 52px;
+height: 52px;
+border-radius: 50%;
+background: linear-gradient(135deg, #0F260B 0%, #2A4A22 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+color: #FFFFFF;
+font-weight: 700;
+font-size: 16px;
+letter-spacing: 0.5px;
+box-shadow: 0 4px 12px rgba(15, 38, 11, 0.2);
+}
+.review-author-info {
+flex: 1;
+}
+.review-name {
+font-weight: 700;
+font-size: 17px;
+color: #0F260B;
+margin-bottom: 4px;
+display: flex;
+gap: 24px;
+transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+will-change: transform;
+}
+.review-card {
+border: 1px solid rgba(15, 38, 11, 0.08);
+border-radius: 0;
+padding: 28px;
+background: #FFFFFF;
+box-shadow: 0 4px 16px rgba(15, 38, 11, 0.06);
+min-width: 350px;
+max-width: 350px;
+flex: 0 0 auto;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.review-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 12px 32px rgba(15, 38, 11, 0.1);
+}
+.review-header {
+display: flex;
+align-items: center;
+gap: 14px;
+margin-bottom: 16px;
+}
+.review-avatar {
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: linear-gradient(135deg, #0F260B 0%, #2A4A22 100%);
+display: flex;
+align-items: center;
+justify-content: center;
+color: #FFFFFF;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 0.2px;
+}
+.review-author-info {
+flex: 1;
+}
+.review-name {
+font-weight: 700;
+font-size: 15px;
+color: #0F260B;
+margin-bottom: 2px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.review-verified {
+display: inline-flex;
+align-items: center;
+gap: 4px;
+font-size: 11px;
+color: #0F260B;
+background: rgba(15, 38, 11, 0.06);
+padding: 2px 8px;
+font-weight: 600;
+letter-spacing: 0.2px;
+}
+.review-verified .material-icons-outlined {
+font-size: 12px;
+}
+.review-meta-row {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 14px;
 }
 .review-stars {
 display: inline-flex;
 gap: 2px;
-margin-bottom: 12px;
 color: #F4B740;
 }
 .review-stars .material-icons-outlined {
-font-size: 16px;
+font-size: 18px;
 }
 .review-rating {
 background: #0F260B;
 color: #CAED95;
-padding: 4px 8px;
+padding: 4px 10px;
 border-radius: 0;
-font-size: 12px;
+font-size: 13px;
 font-weight: 700;
 }
 .review-card p {
-font-size: 14px;
+font-size: 15px;
 color: #4B534E;
-line-height: 1.6;
+line-height: 1.7;
+margin: 0;
+}
+.review-date {
+font-size: 12px;
+color: #9CA3AF;
+margin-top: 14px;
+padding-top: 14px;
+border-top: 1px solid rgba(15, 38, 11, 0.06);
+}
+.review-carousel-btn {
+  display: none;
+}
+@media (max-width: 768px) {
+.review-carousel-btn.prev { left: 8px; }
+.review-carousel-btn.next { right: 8px; }
+}
+.review-dots {
+  display: none;
+}
+.review-dot {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: #DCE3DA;
+cursor: pointer;
+transition: all 0.3s ease;
+border: none;
+padding: 0;
+}
+.review-dot:hover {
+background: #0F260B;
+}
+.review-dot.active {
+background: #0F260B;
+width: 24px;
+border-radius: 4px;
 }
 /* ========================================================================
 PROMO BANNER & FOOTER
@@ -1087,9 +1548,14 @@ PROMO BANNER & FOOTER
 padding: 50px 0;
 background: #FFFFFF;
 }
+.promo-banner .page-wrap {
+display: flex;
+justify-content: center;
+}
 .banner-container {
 max-width: 1200px;
 margin: 0 auto;
+width: 100%;
 border-radius: 0;
 overflow: hidden;
 box-shadow: 0 14px 28px rgba(15, 38, 11, 0.14);
@@ -1151,50 +1617,74 @@ object-fit: cover;
     .footer-newsletter { flex-direction: column; align-items: flex-start; }
     .newsletter-form { max-width: 100%; }
     .footer-bottom { flex-direction: column; gap: 16px; align-items: center; text-align: center; }
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; }
+    .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .flash-sale, .trending-section, .top-rated { padding: 40px 0; }
+    .carousel-card { min-width: 170px; max-width: 170px; }
+    .section-title { font-size: 26px; }
+    .flash-sale-badge { font-size: 26px; }
+    .badge-text { font-size: 26px; padding-right: 12px; }
+    .countdown-timer { font-size: 18px; padding-left: 12px; }
+    .product-name { font-size: 16px; }
+    .current-price { font-size: 18px; }
+}
+@media (max-width: 640px) { 
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; }
 }
 @media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-brand { grid-column: span 1; }
-    .footer-bottom-links { justify-content: center; gap: 12px; }
+    .products-grid { grid-template-columns: 1fr; }
+    .flash-sale-badge { font-size: 22px; }
+    .badge-text { font-size: 22px; }
+    .countdown-timer { font-size: 17px; }
+    .section-title { font-size: 22px; }
 }
-/* ========================================================================
-RESPONSIVE
-======================================================================== */
-@media (max-width: 1500px) { .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (max-width: 1100px) { .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 800px) { .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 768px) {
-.top-bar-inner { grid-template-columns: 1fr; }
-.search-wrap { width: 100%; }
-.actions { justify-content: space-between; flex-wrap: wrap; }
-.nav-separator { display: none; }
-.footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; }
-.footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
-.products-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.flash-sale, .top-rated, .recommended { padding: 40px 0; }
-.slider-card { min-width: 170px; max-width: 170px; }
-.section-title { font-size: 26px; }
-.flash-sale-badge { font-size: 26px; }
-.badge-text { font-size: 26px; padding-right: 12px; }
-.countdown-timer { font-size: 18px; padding-left: 12px; }
-.review-grid { grid-template-columns: 1fr; }
-.product-name { font-size: 16px; }
-.current-price { font-size: 18px; }
+
+/* Recommended "For You" Section - Show 3 rows initially */
+.recommended {
+padding: 70px 0;
+background: #FFFFFF;
+position: relative;
 }
-@media (max-width: 640px) { .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; } }
-@media (max-width: 500px) {
-.products-grid { grid-template-columns: 1fr; }
-.flash-sale-badge { font-size: 22px; }
-.badge-text { font-size: 22px; }
-.countdown-timer { font-size: 17px; }
-.section-title { font-size: 22px; }
+.recommended::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+height: 4px;
+background: linear-gradient(90deg, #0F260B, #FF5E3A, #0F260B);
+}
+.recommended .products-grid {
+grid-template-columns: repeat(5, minmax(0, 1fr));
+gap: 20px;
+align-items: stretch;
+}
+.recommended .product-card.hidden-row {
+  display: none;
+}
+/* Section Divider */
+.section-divider {
+  height: 1px;
+  background: rgba(15, 38, 11, 0.08);
+  margin: 0;
+  border: none;
+}
+@media (max-width: 1500px) {
+.recommended .products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+.recommended .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+.recommended .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
 </head>
 <body class="theme-organic">
-<!-- =========================================================================
+<!-- ========================================================================
 HEADER START
-========================================================================= -->
+======================================================================== -->
 <header>
 <div class="top-bar">
 <div class="page-wrap top-bar-inner">
@@ -1211,10 +1701,10 @@ HEADER START
 </div>
 </div>
 <div class="actions">
-<span class="action-btn" id="loginBtn" style="cursor: pointer;">
+<a class="action-btn user-menu" id="loginBtn" href="login.html">
 <span class="material-icons-outlined" style="font-size: 24px;">person</span>
-<span id="loginBtnText">Login/Signup</span>
-</span>
+<span>Login/Signup</span>
+</a>
 <a class="icon-with-badge" href="cart.html" aria-label="Cart" id="cartTrigger">
 <span class="material-icons-outlined">shopping_cart</span>
 <span class="badge">3</span>
@@ -1287,9 +1777,9 @@ Categories
 <div class="cart-item-top">
 <div>
 <h4>Green Bell Pepper</h4>
-<p class="cart-meta">Greengrocer Â· Qty 2</p>
+<p class="cart-meta">Greengrocer · Qty 2</p>
 </div>
-<span class="cart-price">Â£1.80</span>
+<span class="cart-price">£1.80</span>
 </div>
 <div class="cart-item-actions">
 <div class="cart-qty">
@@ -1307,9 +1797,9 @@ Categories
 <div class="cart-item-top">
 <div>
 <h4>Green Broccoli</h4>
-<p class="cart-meta">Greengrocer Â· Qty 1</p>
+<p class="cart-meta">Greengrocer · Qty 1</p>
 </div>
-<span class="cart-price">Â£0.90</span>
+<span class="cart-price">£0.90</span>
 </div>
 <div class="cart-item-actions">
 <div class="cart-qty">
@@ -1326,18 +1816,18 @@ Categories
 <div class="cart-footer">
 <div class="cart-total">
 <span>Total</span>
-<span class="cart-total-value">Â£2.70</span>
+<span class="cart-total-value">£2.70</span>
 </div>
 <div class="cart-actions">
 <a class="cart-link" href="cart.html">Go to cart</a>
-<button class="cart-checkout" type="button">Checkout â†’</button>
+<button class="cart-checkout" type="button">Checkout →</button>
 </div>
 </div>
 </aside>
 
-<!-- =========================================================================
+<!-- ========================================================================
 BANNER SLIDER SECTION
-========================================================================= -->
+======================================================================== -->
 <section class="banner-slider">
 <div class="slider-container">
 <div class="slider-wrapper">
@@ -1355,21 +1845,164 @@ BANNER SLIDER SECTION
 </div>
 </section>
 
-<!-- =========================================================================
-FLASH SALE SECTION
-========================================================================= -->
+<!-- Section Divider -->
+<div class="section-divider"></div>
+
+<!-- ========================================================================
+TRENDING NOW SECTION - HORIZONTAL CAROUSEL
+======================================================================= -->
+<section class="trending-section">
+<div class="page-wrap">
+<div class="section-header">
+<h2 class="section-title">Trending Now</h2>
+<a href="offer.html" class="view-all">[View all]</a>
+</div>
+<div class="product-carousel" id="trending-carousel">
+<button class="carousel-btn prev" onclick="slideCarousel('trending', -1)"><span class="material-icons-outlined">chevron_left</span></button>
+<div class="carousel-viewport">
+<div class="carousel-track" id="trending-track">
+<!-- Trending Product 1 -->
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Orange">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/orange.jpg" alt="Fresh Orange" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Orange</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.20</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(98)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<!-- Trending Product 2 -->
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Organic Eggs">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/eggs.jpg" alt="Organic Eggs" onerror="this.src='assets/Item-image/green-broccoli.jpg'"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Organic Eggs</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.50</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(150)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<!-- Trending Product 3 -->
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Sourdough Bread">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/sourdough.jpg" alt="Sourdough Bread" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Sourdough Bread</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£3.00</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(201)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<!-- Trending Product 4 -->
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Salmon">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">HOT</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Fresh Salmon"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Salmon</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£5.50</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(84)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<!-- Trending Product 5 -->
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Premium Cheese">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/imgi_47_cheese-wood_573717-86.jpg" alt="Premium Cheese"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Premium Cheese</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£4.25</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(67)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<button class="carousel-btn next" onclick="slideCarousel('trending', 1)"><span class="material-icons-outlined">chevron_right</span></button>
+</div>
+</div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider"></div>
+
+<!-- ========================================================================
+FLASH SALE BANNER
+======================================================================= -->
+<section class="flash-sale-banner-section" style="padding: 30px 0; background: #FFFFFF;">
+<div class="page-wrap">
+<a href="#" class="flash-sale-banner" style="display: block; width: 100%; border-radius: 0; overflow: hidden; box-shadow: 0 8px 24px rgba(15, 38, 11, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease;">
+<img src="assets/Banner/flash-sale.png" alt="Flash Sale - Limited Time Offers" style="width: 100%; height: auto; display: block;">
+</a>
+</div>
+</section>
+
+<!-- ========================================================================
+FLASH SALE SECTION - HORIZONTAL CAROUSEL
+======================================================================= -->
 <section class="flash-sale">
 <div class="page-wrap">
-<div class="flash-sale-header">
+<div class="flash-sale-header" style="display: flex; align-items: center; justify-content: space-between;">
+<div>
 <div class="flash-sale-badge">
 <span class="badge-text">On sale</span>
 <span class="countdown-timer" id="countdown-timer">18:14:38</span>
 </div>
 </div>
-<div class="horizontal-slider overlay-nav">
-<div class="slider-viewport">
-<div class="slider-track" id="flash-sale-track">
-<div class="slider-card">
+<a href="offer.html" class="view-all">[View all]</a>
+</div>
+<div class="product-carousel" id="flash-sale-carousel">
+<button class="carousel-btn prev" onclick="slideCarousel('flash-sale', -1)"><span class="material-icons-outlined">chevron_left</span></button>
+<div class="carousel-viewport">
+<div class="carousel-track" id="flash-sale-track">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
 <div class="product-image-wrapper">
 <span class="stock-badge sale">ON SALE</span>
@@ -1379,7 +2012,7 @@ FLASH SALE SECTION
 <div class="product-info">
 <h3 class="product-name">Green Bell Pepper</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1390,7 +2023,7 @@ FLASH SALE SECTION
 </div>
 </div>
 </div>
-<div class="slider-card is-out-of-stock">
+<div class="carousel-card is-out-of-stock">
 <div class="product-card-inner" data-link="product.html?name=Green Broccoli">
 <div class="product-image-wrapper">
 <span class="stock-badge out">OUT OF STOCK</span>
@@ -1400,7 +2033,7 @@ FLASH SALE SECTION
 <div class="product-info">
 <h3 class="product-name">Green Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1410,7 +2043,7 @@ FLASH SALE SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
 <div class="product-image-wrapper">
 <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
@@ -1419,7 +2052,7 @@ FLASH SALE SECTION
 <div class="product-info">
 <h3 class="product-name">Chinese Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1429,7 +2062,7 @@ FLASH SALE SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Green Bell Pepper 2">
 <div class="product-image-wrapper">
 <span class="stock-badge sale">ON SALE</span>
@@ -1439,7 +2072,7 @@ FLASH SALE SECTION
 <div class="product-info">
 <h3 class="product-name">Green Bell Pepper</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1450,7 +2083,7 @@ FLASH SALE SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Green Broccoli 2">
 <div class="product-image-wrapper">
 <span class="stock-badge sale">ON SALE</span>
@@ -1460,7 +2093,7 @@ FLASH SALE SECTION
 <div class="product-info">
 <h3 class="product-name">Green Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1471,22 +2104,269 @@ FLASH SALE SECTION
 </div>
 </div>
 </div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Red Peppers Pack">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Red Peppers Pack"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Red Peppers Pack</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.80</span><span class="original-price">£3.00</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(145)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
 </div>
 </div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Organic Spinach">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Organic Spinach"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Organic Spinach</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.50</span><span class="original-price">£2.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(98)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Prawns">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg" alt="Fresh Prawns"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Prawns</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£5.99</span><span class="original-price">£8.99</span></div>
+<span class="discount-text">33% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(187)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Artisan Sourdough">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg" alt="Artisan Sourdough"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Artisan Sourdough</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.50</span><span class="original-price">£4.00</span></div>
+<span class="discount-text">38% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(234)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Cheddar Cheese Block">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/imgi_47_cheese-wood_573717-86.jpg" alt="Cheddar Cheese Block"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Cheddar Cheese Block</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£3.75</span><span class="original-price">£5.50</span></div>
+<span class="discount-text">32% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(156)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Mixed Herbs Box">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/variety-fresh-organic-herbs-lettuce-arugula-dill-mint-red-lettuce-onion-rustic-style-top-view.jpg" alt="Mixed Herbs Box"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Mixed Herbs Box</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.99</span><span class="original-price">£2.99</span></div>
+<span class="discount-text">33% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(89)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Beef Mince Premium">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg" alt="Beef Mince Premium"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Beef Mince Premium</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£4.50</span><span class="original-price">£6.50</span></div>
+<span class="discount-text">31% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(267)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Yellow Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Yellow Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Yellow Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.20</span><span class="original-price">£1.80</span></div>
+<span class="discount-text">33% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(112)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Coriander">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Fresh Coriander"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Coriander</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.75</span><span class="original-price">£1.25</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(198)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Smoked Salmon Pack">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Smoked Salmon Pack"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Smoked Salmon Pack</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£6.99</span><span class="original-price">£9.99</span></div>
+<span class="discount-text">30% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(321)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Butter Croissants">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg" alt="Butter Croissants"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Butter Croissants</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.25</span><span class="original-price">£3.50</span></div>
+<span class="discount-text">36% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(178)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<button class="carousel-btn next" onclick="slideCarousel('flash-sale', 1)"><span class="material-icons-outlined">chevron_right</span></button>
 </div>
 </div>
 </section>
 
-<!-- =========================================================================
-TOP RATED SECTION
-========================================================================= -->
+<!-- ========================================================================
+TOP RATED SECTION - HORIZONTAL CAROUSEL
+======================================================================= -->
+<section class="delivery-banner-section">
+<div class="page-wrap">
+<a href="#" class="delivery-banner">
+<img src="assets/Banner/free-delivery.png" alt="Free Delivery - Shop Now">
+</a>
+</div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider"></div>
+
+<!-- ========================================================================
+TOP RATED SECTION - HORIZONTAL CAROUSEL
+======================================================================= -->
 <section class="top-rated">
 <div class="page-wrap">
-<div class="section-header"><h2 class="section-title">Top rated</h2></div>
-<div class="horizontal-slider overlay-nav">
-<div class="slider-viewport">
-<div class="slider-track" id="top-rated-track">
-<div class="slider-card">
+<div class="section-header"><h2 class="section-title">Top rated</h2><a href="offer.html" class="view-all">[View all]</a></div>
+<div class="product-carousel" id="top-rated-carousel">
+<button class="carousel-btn prev" onclick="slideCarousel('top-rated', -1)"><span class="material-icons-outlined">chevron_left</span></button>
+<div class="carousel-viewport">
+<div class="carousel-track" id="top-rated-track">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
 <div class="product-image-wrapper">
 <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
@@ -1495,7 +2375,7 @@ TOP RATED SECTION
 <div class="product-info">
 <h3 class="product-name">Green Bell Pepper</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1505,7 +2385,7 @@ TOP RATED SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
 <div class="product-image-wrapper">
 <span class="stock-badge new">NEW</span>
@@ -1515,7 +2395,7 @@ TOP RATED SECTION
 <div class="product-info">
 <h3 class="product-name">Chinese Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1525,7 +2405,7 @@ TOP RATED SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
+<div class="carousel-card">
 <div class="product-card-inner" data-link="product.html?name=Green Broccoli">
 <div class="product-image-wrapper">
 <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
@@ -1534,7 +2414,7 @@ TOP RATED SECTION
 <div class="product-info">
 <h3 class="product-name">Green Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1544,41 +2424,40 @@ TOP RATED SECTION
 </div>
 </div>
 </div>
-<div class="slider-card">
-<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
-<div class="product-image-wrapper">
-<span class="stock-badge sale">ON SALE</span>
-<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
-<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
-</div>
-<div class="product-info">
-<h3 class="product-name">Green Bell Pepper</h3>
-<div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
-<span class="discount-text">40% off</span>
-</div>
-<div class="rating-row">
-<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
-<span class="rating-count">(216)</span>
-</div>
-<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
-</div>
-</div>
-</div>
-<div class="slider-card">
-<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Organic Carrots">
 <div class="product-image-wrapper">
 <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
-<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Organic Carrots"></div>
 </div>
 <div class="product-info">
-<h3 class="product-name">Green Broccoli</h3>
+<h3 class="product-name">Organic Carrots</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£1.20</span></div>
 </div>
 <div class="rating-row">
-<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
-<span class="rating-count">(216)</span>
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(245)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="carousel-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Cod Fillets">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg" alt="Fresh Cod Fillets"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Cod Fillets</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£5.25</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(189)</span>
 </div>
 <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
 </div>
@@ -1586,26 +2465,21 @@ TOP RATED SECTION
 </div>
 </div>
 </div>
+<button class="carousel-btn next" onclick="slideCarousel('top-rated', 1)"><span class="material-icons-outlined">chevron_right</span></button>
 </div>
 </div>
 </section>
 
-<!-- =========================================================================
-PROMO BANNER SECTION
-========================================================================= -->
-<section class="promo-banner">
-<div class="page-wrap">
-<div class="banner-container"><img src="assets/Banner/banner-2.png" alt="Promotional Banner"></div>
-</div>
-</section>
+<!-- Section Divider -->
+<div class="section-divider"></div>
 
-<!-- =========================================================================
-RECOMMENDED FOR YOU SECTION
-========================================================================= -->
+<!-- ========================================================================
+RECOMMENDED FOR YOU SECTION - 3 ROWS DEFAULT
+======================================================================= -->
 <section class="recommended">
 <div class="page-wrap">
 <div class="section-header"><h2 class="section-title">For you</h2></div>
-<div class="products-grid">
+<div class="products-grid" id="foryou-grid">
 <div class="product-card">
 <div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
 <div class="product-image-wrapper">
@@ -1616,7 +2490,7 @@ RECOMMENDED FOR YOU SECTION
 <div class="product-info">
 <h3 class="product-name">Green Bell Pepper</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1637,7 +2511,7 @@ RECOMMENDED FOR YOU SECTION
 <div class="product-info">
 <h3 class="product-name">Green Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1657,7 +2531,7 @@ RECOMMENDED FOR YOU SECTION
 <div class="product-info">
 <h3 class="product-name">Chinese Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span></div>
+<div class="price-group"><span class="current-price">£0.90</span></div>
 </div>
 <div class="rating-row">
 <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
@@ -1677,7 +2551,7 @@ RECOMMENDED FOR YOU SECTION
 <div class="product-info">
 <h3 class="product-name">Green Bell Pepper</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1698,7 +2572,7 @@ RECOMMENDED FOR YOU SECTION
 <div class="product-info">
 <h3 class="product-name">Green Broccoli</h3>
 <div class="price-row">
-<div class="price-group"><span class="current-price">Â£0.90</span><span class="original-price">Â£1.50</span></div>
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
 <span class="discount-text">40% off</span>
 </div>
 <div class="rating-row">
@@ -1709,42 +2583,314 @@ RECOMMENDED FOR YOU SECTION
 </div>
 </div>
 </div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Chinese Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Bell Pepper</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+<span class="discount-text">40% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Green Broccoli">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Green Broccoli"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Green Broccoli</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£0.90</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(216)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Strawberries">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Fresh Strawberries"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Strawberries</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.50</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(189)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Greek Yogurt">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/imgi_47_cheese-wood_573717-86.jpg" alt="Greek Yogurt"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Greek Yogurt</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£1.75</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(234)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Fresh Raspberries">
+<div class="product-image-wrapper">
+<span class="stock-badge sale">ON SALE</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Fresh Raspberries"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Fresh Raspberries</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.25</span><span class="original-price">£3.00</span></div>
+<span class="discount-text">25% off</span>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(156)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Honey Jar">
+<div class="product-image-wrapper">
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/other-images/variety-fresh-organic-herbs-lettuce-arugula-dill-mint-red-lettuce-onion-rustic-style-top-view.jpg" alt="Honey Jar"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Honey Jar</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£4.50</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="rating-count">(298)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
+</div>
+<div class="product-card">
+<div class="product-card-inner" data-link="product.html?name=Orange Juice Fresh">
+<div class="product-image-wrapper">
+<span class="stock-badge new">NEW</span>
+<button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+<div class="product-image"><img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Orange Juice Fresh"></div>
+</div>
+<div class="product-info">
+<h3 class="product-name">Orange Juice Fresh</h3>
+<div class="price-row">
+<div class="price-group"><span class="current-price">£2.99</span></div>
+</div>
+<div class="rating-row">
+<div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="rating-count">(145)</span>
+</div>
+<button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+</div>
+</div>
 </div>
 <div class="load-more-wrap">
-<button class="load-more-btn" id="load-more-btn">+ Load more</button>
+<button class="load-more-btn" id="load-more-btn">Load more picks</button>
 </div>
 </div>
 </section>
 
-<!-- =========================================================================
-REVIEWS SECTION
-========================================================================= -->
+<!-- ========================================================================
+REVIEWS SECTION - PROFESSIONAL
+======================================================================== -->
 <section class="reviews">
 <div class="page-wrap">
-<div class="section-header"><h2 class="section-title">What shoppers say</h2></div>
-<div class="review-grid">
+<div class="reviews-header">
+<h2 class="section-title">What our customers say</h2>
+<p class="reviews-subtitle">Trusted reviews from real shoppers in Huddersfield</p>
+</div>
+<div class="reviews-carousel">
+<button class="review-carousel-btn prev" onclick="slideReviewTrack(-1)"><span class="material-icons-outlined">chevron_left</span></button>
+<div class="review-track-container">
+<div class="review-track" id="review-track">
 <div class="review-card">
-<div class="review-meta"><span class="review-name">Amelia T.</span><span class="review-rating">5.0</span></div>
-<div class="review-stars" aria-label="5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
-<p>Everything arrived fresh and packed with care. The greens were perfect.</p>
+<div class="review-header">
+<div class="review-avatar">AT</div>
+<div class="review-author-info">
+<div class="review-name">Amelia T.</div>
+<div class="review-verified"><span class="material-icons-outlined">verified</span>Verified Purchase</div>
+</div>
+</div>
+<div class="review-meta-row">
+<div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="review-rating">5.0</span>
+</div>
+<p>Everything arrived fresh and packed with care. The greens were perfect and the delivery was right on time. This is my go-to for local produce now.</p>
+<div class="review-date">2 days ago</div>
 </div>
 <div class="review-card">
-<div class="review-meta"><span class="review-name">Marcus J.</span><span class="review-rating">4.8</span></div>
-<div class="review-stars" aria-label="4.5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
-<p>Easy to browse, fast delivery, and the butcher selection is elite.</p>
+<div class="review-header">
+<div class="review-avatar">MJ</div>
+<div class="review-author-info">
+<div class="review-name">Marcus J.</div>
+<div class="review-verified"><span class="material-icons-outlined">verified</span>Verified Purchase</div>
+</div>
+</div>
+<div class="review-meta-row">
+<div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="review-rating">4.8</span>
+</div>
+<p>Easy to browse, fast delivery, and the butcher selection is elite. I ordered the lamb cutlets and they were the best I have had in ages. Highly recommend.</p>
+<div class="review-date">1 week ago</div>
 </div>
 <div class="review-card">
-<div class="review-meta"><span class="review-name">Priya S.</span><span class="review-rating">4.9</span></div>
-<div class="review-stars" aria-label="5 star rating"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
-<p>Loved the local producers. You can taste the quality.</p>
+<div class="review-header">
+<div class="review-avatar">PS</div>
+<div class="review-author-info">
+<div class="review-name">Priya S.</div>
+<div class="review-verified"><span class="material-icons-outlined">verified</span>Verified Purchase</div>
+</div>
+</div>
+<div class="review-meta-row">
+<div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="review-rating">4.9</span>
+</div>
+<p>Loved the local producers. You can taste the quality in every bite. The sourdough and organic eggs were absolutely amazing. Will definitely order again.</p>
+<div class="review-date">3 days ago</div>
+</div>
+<div class="review-card">
+<div class="review-header">
+<div class="review-avatar">DW</div>
+<div class="review-author-info">
+<div class="review-name">David W.</div>
+<div class="review-verified"><span class="material-icons-outlined">verified</span>Verified Purchase</div>
+</div>
+</div>
+<div class="review-meta-row">
+<div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+<span class="review-rating">5.0</span>
+</div>
+<p>The freshness is unbeatable. I have been a regular for 3 months and the consistency is remarkable. Great for families looking for quality local food.</p>
+<div class="review-date">5 days ago</div>
+</div>
+<div class="review-card">
+<div class="review-header">
+<div class="review-avatar">LC</div>
+<div class="review-author-info">
+<div class="review-name">Liam C.</div>
+<div class="review-verified"><span class="material-icons-outlined">verified</span>Verified Purchase</div>
+</div>
+</div>
+<div class="review-meta-row">
+<div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+<span class="review-rating">4.7</span>
+</div>
+<p>Customer service was fantastic when I had a question about my order. The team was responsive and the delivery was seamless. A+ experience.</p>
+<div class="review-date">1 day ago</div>
+</div>
+</div>
+</div>
+<button class="review-carousel-btn next" onclick="slideReviewTrack(1)"><span class="material-icons-outlined">chevron_right</span></button>
+<div class="review-dots">
+<button class="review-dot active" onclick="goToReview(0)"></button>
+<button class="review-dot" onclick="goToReview(1)"></button>
+<button class="review-dot" onclick="goToReview(2)"></button>
 </div>
 </div>
 </div>
 </section>
 
-<!-- =========================================================================
+<!-- ========================================================================
 FOOTER
-========================================================================= -->
+======================================================================== -->
 <footer class="site-footer">
 <div class="page-wrap footer-newsletter">
     <div class="newsletter-content">
@@ -1800,21 +2946,24 @@ FOOTER
 </div>
 </footer>
 
-<!-- =========================================================================
+<!-- ========================================================================
 JAVASCRIPT
-========================================================================= -->
+======================================================================== -->
 <script>
+/* ------------------------------------------------------------------------
+   CART DRAWER
+   ------------------------------------------------------------------------ */
 const productsData = [
-{ name: 'Green Bell Pepper', price: 'Â£0.90', original_price: 'Â£1.50', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
-{ name: 'Green Broccoli', price: 'Â£0.90', original_price: '', image: 'assets/Item-image/green-broccoli.jpg', stock: 'out-of-stock', is_sale: false, is_new: false },
-{ name: 'Chinese Broccoli', price: 'Â£0.90', original_price: '', image: 'assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
-{ name: 'Green Bell Pepper', price: 'Â£0.90', original_price: 'Â£1.50', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
-{ name: 'Green Broccoli', price: 'Â£0.90', original_price: 'Â£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
-{ name: 'Green Bell Pepper', price: 'Â£0.90', original_price: '', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: true },
-{ name: 'Green Broccoli', price: 'Â£0.90', original_price: 'Â£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
-{ name: 'Chinese Broccoli', price: 'Â£0.90', original_price: '', image: 'assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
-{ name: 'Green Bell Pepper', price: 'Â£0.90', original_price: '', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: false },
-{ name: 'Green Broccoli', price: 'Â£0.90', original_price: 'Â£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false }
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '£1.50', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '', image: 'assets/Item-image/green-broccoli.jpg', stock: 'out-of-stock', is_sale: false, is_new: false },
+{ name: 'Chinese Broccoli', price: '£0.90', original_price: '', image: 'assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '£1.50', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: true },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false },
+{ name: 'Chinese Broccoli', price: '£0.90', original_price: '', image: 'assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Bell Pepper', price: '£0.90', original_price: '', image: 'assets/Item-image/green-bell-pepper-isolated.jpg', stock: 'in-stock', is_sale: false, is_new: false },
+{ name: 'Green Broccoli', price: '£0.90', original_price: '£1.50', image: 'assets/Item-image/green-broccoli.jpg', stock: 'in-stock', is_sale: true, is_new: false }
 ];
 
 document.querySelectorAll('.favorite-btn').forEach(btn => {
@@ -1834,24 +2983,20 @@ if (link) { window.location.href = link; }
 });
 });
 
-const loginBtn = document.getElementById('loginBtn');
-if (loginBtn) {
-loginBtn.addEventListener('click', function() {
-loginBtn.outerHTML = '<a class="user-menu" href="account.html"><span class="material-icons-outlined" style="font-size: 24px;">account_circle</span><span>Welcome, John Doe</span></a>';
-});
-}
-
 window.addEventListener('scroll', function() {
 const header = document.querySelector('header');
 if (window.scrollY > 50) { header.classList.add('scrolled'); } else { header.classList.remove('scrolled'); }
 });
 
+/* ------------------------------------------------------------------------
+   CART
+   ------------------------------------------------------------------------ */
 const cartTrigger = document.getElementById('cartTrigger');
 const cartDrawer = document.getElementById('cartDrawer');
 const cartOverlay = document.getElementById('cartOverlay');
 const cartClose = document.getElementById('cartClose');
 
-function formatMoney(value) { return 'Â£' + value.toFixed(2); }
+function formatMoney(value) { return '£' + value.toFixed(2); }
 
 function updateCartTotals() {
 if (!cartDrawer) return;
@@ -1865,7 +3010,7 @@ const lineTotal = price * qty;
 const priceEl = item.querySelector('.cart-price');
 const metaEl = item.querySelector('.cart-meta');
 if (priceEl) priceEl.textContent = formatMoney(lineTotal);
-if (metaEl) { const cat = item.dataset.category || 'Item'; metaEl.textContent = cat + ' Â· Qty ' + qty; }
+if (metaEl) { const cat = item.dataset.category || 'Item'; metaEl.textContent = cat + ' · Qty ' + qty; }
 total += lineTotal;
 });
 const totalEl = cartDrawer.querySelector('.cart-total-value');
@@ -1913,6 +3058,9 @@ if (cartClose) { cartClose.addEventListener('click', closeCart); }
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { closeCart(); } });
 updateCartTotals();
 
+/* ------------------------------------------------------------------------
+   BANNER SLIDER
+   ------------------------------------------------------------------------ */
 let slideIndex = 0;
 let slideInterval;
 const slides = document.querySelectorAll('.slide');
@@ -1941,6 +3089,9 @@ function resetInterval() { clearInterval(slideInterval); startSlideInterval(); }
 showSlide(0);
 startSlideInterval();
 
+/* ------------------------------------------------------------------------
+   COUNTDOWN TIMER
+   ------------------------------------------------------------------------ */
 const countdownDuration = 18 * 60 * 60 + 14 * 60 + 59;
 let remainingTime = countdownDuration;
 const countdownTimerEl = document.getElementById('countdown-timer');
@@ -1958,6 +3109,144 @@ else { if (countdownTimerEl) countdownTimerEl.textContent = 'EXPIRED'; }
 }
 setInterval(updateCountdown, 1000);
 
+/* ------------------------------------------------------------------------
+   PRODUCT CAROUSEL SLIDER
+   ------------------------------------------------------------------------ */
+const carouselStates = {
+'trending': { pos: 0 },
+'flash-sale': { pos: 0 },
+'top-rated': { pos: 0 }
+};
+
+function getItemsPerView() {
+const width = window.innerWidth;
+if (width >= 1200) return 5;
+if (width >= 1000) return 4;
+if (width >= 600) return 3;
+if (width >= 400) return 2;
+return 1;
+}
+
+function slideCarousel(name, direction) {
+const track = document.getElementById(name + '-track');
+if (!track) return;
+const state = carouselStates[name];
+const cards = track.querySelectorAll('.carousel-card');
+if (!cards.length) return;
+const cardWidth = cards[0].offsetWidth + 20; // include gap
+const itemsPerView = getItemsPerView();
+const maxScroll = track.scrollWidth - track.parentElement.offsetWidth;
+
+state.pos += direction * cardWidth * Math.max(1, Math.floor(itemsPerView / 2));
+if (state.pos < 0) state.pos = 0;
+if (state.pos > maxScroll) state.pos = maxScroll;
+
+track.style.transform = `translateX(-${state.pos}px)`;
+}
+
+/* ------------------------------------------------------------------------
+   REVIEW CAROUSEL - INFINITE LOOP
+   ------------------------------------------------------------------------ */
+let reviewIndex = 0;
+let reviewAutoSlide;
+let reviewCardWidth = 384; // card width + gap
+
+function initReviewCarousel() {
+const track = document.getElementById('review-track');
+const originalCards = track.querySelectorAll('.review-card');
+if (!originalCards.length) return;
+
+// Clone cards for infinite loop
+originalCards.forEach(card => {
+const clone = card.cloneNode(true);
+track.appendChild(clone);
+});
+
+reviewCardWidth = originalCards[0].offsetWidth + 28;
+}
+
+function slideReviewTrack(direction) {
+const track = document.getElementById('review-track');
+const cards = track.querySelectorAll('.review-card');
+if (!cards.length) return;
+
+const totalCards = cards.length;
+const visibleCards = 3;
+const maxIndex = totalCards - visibleCards;
+
+reviewIndex += direction;
+
+// Loop infinitely
+if (reviewIndex < 0) reviewIndex = maxIndex;
+if (reviewIndex > maxIndex) reviewIndex = 0;
+
+track.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+track.style.transform = `translateX(-${reviewIndex * reviewCardWidth}px)`;
+}
+
+function startReviewAutoSlide() {
+reviewAutoSlide = setInterval(() => {
+slideReviewTrack(1);
+}, 4000);
+}
+
+// Handle transition end for seamless loop
+document.addEventListener('DOMContentLoaded', function() {
+initReviewCarousel();
+startReviewAutoSlide();
+
+const track = document.getElementById('review-track');
+track.addEventListener('transitionend', function() {
+const cards = track.querySelectorAll('.review-card');
+const maxIndex = cards.length - 3;
+
+// Reset position seamlessly when reaching boundaries
+if (reviewIndex >= maxIndex) {
+reviewIndex = 0;
+track.style.transition = 'none';
+track.style.transform = `translateX(0)`;
+} else if (reviewIndex <= 0) {
+const cards = track.querySelectorAll('.review-card');
+reviewIndex = cards.length - 3;
+track.style.transition = 'none';
+track.style.transform = `translateX(-${reviewIndex * reviewCardWidth}px)`;
+}
+});
+});
+
+/* ------------------------------------------------------------------------
+   LOAD MORE FOR "FOR YOU" SECTION
+   ------------------------------------------------------------------------ */
+const loadMoreBtn = document.getElementById('load-more-btn');
+const forYouGrid = document.getElementById('foryou-grid');
+
+if (loadMoreBtn && forYouGrid) {
+loadMoreBtn.addEventListener('click', () => {
+loadMoreBtn.classList.add('is-loading');
+setTimeout(() => {
+const hiddenCards = forYouGrid.querySelectorAll('.product-card.hidden-row');
+if (hiddenCards.length > 0) {
+// Show all hidden cards
+hiddenCards.forEach(card => card.classList.remove('hidden-row'));
+loadMoreBtn.textContent = 'No more picks';
+loadMoreBtn.disabled = true;
+loadMoreBtn.style.opacity = '0.6';
+loadMoreBtn.style.cursor = 'default';
+} else {
+// All already shown
+loadMoreBtn.textContent = 'No more picks';
+loadMoreBtn.disabled = true;
+loadMoreBtn.style.opacity = '0.6';
+loadMoreBtn.style.cursor = 'default';
+}
+loadMoreBtn.classList.remove('is-loading');
+}, 600);
+});
+}
+
+/* ------------------------------------------------------------------------
+   BUILD PRODUCT CARD HELPER
+   ------------------------------------------------------------------------ */
 function getDiscountText(price, originalPrice) {
 const priceValue = parseFloat(String(price).replace(/[^0-9.]/g, ''));
 const originalValue = parseFloat(String(originalPrice).replace(/[^0-9.]/g, ''));
@@ -1998,53 +3287,6 @@ ${discountHtml}
 </div>
 </div>`;
 }
-
-const loadMoreBtn = document.getElementById('load-more-btn');
-const productsGrid = document.querySelector('.products-grid');
-if (loadMoreBtn && productsGrid) {
-loadMoreBtn.addEventListener('click', () => {
-loadMoreBtn.classList.add('is-loading');
-setTimeout(() => {
-const fragments = [];
-for (let i = 0; i < 10; i += 1) {
-const product = productsData[i % productsData.length];
-fragments.push(buildProductCard(product));
-}
-productsGrid.insertAdjacentHTML('beforeend', fragments.join(''));
-loadMoreBtn.classList.remove('is-loading');
-}, 600);
-});
-}
-
-let flashSaleScrollPos = 0;
-function slideFlashSale(direction) {
-const track = document.getElementById('flash-sale-track');
-if (!track) return;
-const cardWidth = 240;
-const viewportWidth = document.querySelector('.slider-viewport').offsetWidth;
-const maxScroll = track.scrollWidth - viewportWidth;
-flashSaleScrollPos += direction * cardWidth;
-if (flashSaleScrollPos < 0) flashSaleScrollPos = 0;
-if (flashSaleScrollPos > maxScroll) flashSaleScrollPos = maxScroll;
-track.style.transform = `translateX(-${flashSaleScrollPos}px)`;
-}
-
-let topRatedScrollPos = 0;
-function slideTopRated(direction) {
-const track = document.getElementById('top-rated-track');
-if (!track) return;
-const cardWidth = 240;
-const viewportWidth = document.querySelector('.slider-viewport').offsetWidth;
-const maxScroll = track.scrollWidth - viewportWidth;
-topRatedScrollPos += direction * cardWidth;
-if (topRatedScrollPos < 0) topRatedScrollPos = 0;
-if (topRatedScrollPos > maxScroll) topRatedScrollPos = maxScroll;
-track.style.transform = `translateX(-${topRatedScrollPos}px)`;
-}
 </script>
 </body>
 </html>
-
-
-
-
