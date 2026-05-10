@@ -151,8 +151,8 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 .product-breadcrumb { padding: 12px 0 0; background: transparent; }
 
 /* Hero Section */
-.product-hero { padding: 16px 0 32px; }
-.hero-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-md); padding: 24px; }
+.product-hero { padding: 24px 0 48px; }
+.hero-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; background: var(--surface); border: none; box-shadow: 0 12px 40px rgba(15, 38, 11, 0.1); padding: 32px; position: relative; }
 
 /* Left: Image Gallery */
 .hero-left { display: flex; flex-direction: column; }
@@ -230,43 +230,132 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 .delivery-row .material-icons-outlined { font-size: 20px; color: var(--brand-dark); }
 .delivery-row strong { color: var(--text-primary); }
 
-/* Divider */
-.section-divider { border: none; height: 1px; background: var(--border); margin: 48px auto; width: min(1200px, 94%); }
-
 /* Description Section */
-.product-description { padding: 32px 0 56px; }
-.section-title { font-size: clamp(28px, 3.5vw, 36px); font-weight: 700; margin-bottom: 24px; color: var(--brand-dark); font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+.product-description { padding: 48px 0 64px; background: #FFFFFF; }
+.section-title { 
+  font-size: 48px; 
+  font-weight: 600; 
+  margin-bottom: 32px; 
+  color: var(--brand-dark); 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  letter-spacing: -0.02em; 
+  position: relative;
+  display: inline-block;
+  padding-bottom: 16px;
+}
+.section-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, #FF5E3A, #FF8C70);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+}
+.section-title .seller-name {
+  color: #FF5E3A;
+  font-weight: 700;
+}
 .desc-intro { font-size: 18px; color: var(--text-dark-gray); line-height: 1.7; margin-bottom: 40px; max-width: 800px; font-weight: 400; }
-.desc-compact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
-.desc-sub-card { padding: 36px 32px; background: #fff; border: 1px solid var(--border); transition: all 0.3s ease; position: relative; overflow: hidden; }
-.desc-sub-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--primary-orange); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+.desc-compact-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  gap: 24px; 
+}
+.desc-sub-card { 
+  padding: 40px 36px; 
+  background: #fff; 
+  border: 1px solid rgba(15, 38, 11, 0.06); 
+  transition: all 0.3s ease; 
+  position: relative; 
+  overflow: hidden; 
+  box-shadow: 0 4px 16px rgba(15, 38, 11, 0.06);
+}
+.desc-sub-card::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 3px; 
+  background: linear-gradient(90deg, #FF5E3A, #FF8C70); 
+  transform: scaleX(0); 
+  transform-origin: left; 
+  transition: transform 0.4s ease; 
+}
 .desc-sub-card:hover::before { transform: scaleX(1); }
-.desc-sub-card:hover { box-shadow: var(--shadow-sm); transform: translateY(-4px); border-color: rgba(255,94,58,0.2); }
-.desc-icon { background: rgba(15,38,11,0.04); width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--brand-dark); margin-bottom: 20px; transition: all 0.3s ease; }
-.desc-sub-card:hover .desc-icon { background: var(--primary-orange); color: #fff; transform: scale(1.05); }
-.desc-icon .material-icons-outlined { font-size: 24px; }
-.desc-sub-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 12px; color: var(--brand-dark); font-family: 'Plus Jakarta Sans', sans-serif; }
-.desc-sub-card p { font-size: 15px; color: var(--text-muted); line-height: 1.65; }
+.desc-sub-card:hover { 
+  box-shadow: 0 16px 32px rgba(15, 38, 11, 0.1); 
+  transform: translateY(-6px); 
+  border-color: rgba(255,94,58,0.15); 
+}
+.desc-icon { 
+  background: linear-gradient(135deg, rgba(15,38,11,0.06) 0%, rgba(15,38,11,0.02) 100%); 
+  width: 56px; 
+  height: 56px; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 0; 
+  color: var(--brand-dark); 
+  margin-bottom: 24px; 
+  transition: all 0.3s ease; 
+}
+.desc-sub-card:hover .desc-icon { 
+  background: linear-gradient(135deg, #FF5E3A 0%, #FF8C70 100%); 
+  color: #fff; 
+  transform: scale(1.1); 
+}
+.desc-icon .material-icons-outlined { font-size: 26px; }
+.desc-sub-card h3 { 
+  font-size: 20px; 
+  font-weight: 700; 
+  margin-bottom: 14px; 
+  color: var(--brand-dark); 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+}
+.desc-sub-card p { 
+  font-size: 15px; 
+  color: var(--text-muted); 
+  line-height: 1.7; 
+}
 
 /* Reviews Section */
-.reviews-section { padding: 56px 0; background: #fff; border-top: 1px solid var(--border); }
+.reviews-section { 
+  padding: 64px 0; 
+  background: linear-gradient(180deg, #F8FAF7 0%, #FFFFFF 50%, #F8FAF7 100%); 
+  position: relative;
+}
 .reviews-top { display: grid; grid-template-columns: auto 1fr; gap: 64px; margin-bottom: 40px; align-items: start; }
 .reviews-summary { display: flex; flex-direction: column; gap: 8px; padding-right: 48px; border-right: 1px solid var(--border); }
-.reviews-title { font-size: 28px; font-weight: 700; color: var(--brand-dark); font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.5px; margin-bottom: 8px; }
-.review-big-score { display: flex; align-items: baseline; gap: 6px; }
-.big-num { font-size: 56px; font-weight: 800; color: var(--brand-dark); line-height: 1; }
-.big-total { font-size: 20px; color: var(--text-muted); font-weight: 500; }
-.stars-big { display: inline-flex; gap: 4px; color: #F4B740; margin-top: 4px; }
-.stars-big .material-icons-outlined { font-size: 28px; }
-.reviews-count { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
-.review-bars-wrap { display: flex; flex-direction: column; gap: 10px; max-width: 400px; padding-top: 8px; }
-.bar-row { display: grid; grid-template-columns: 24px 1fr 34px; gap: 12px; align-items: center; cursor: pointer; transition: opacity 0.2s; }
-.bar-row:hover { opacity: 0.8; }
-.bar-label { font-size: 14px; font-weight: 600; color: var(--text-dark-gray); display: flex; align-items: center; gap: 4px; }
-.bar-label::after { content: 'â˜…'; font-size: 12px; color: #F4B740; }
-.bar-bg { height: 8px; background: #F2F4F1; width: 100%; border-radius: 4px; overflow: hidden; }
-.bar-fill { display: block; height: 100%; background: var(--brand-dark); transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 4px; }
-.bar-count { font-size: 13px; color: var(--text-muted); text-align: right; }
+.reviews-title { font-size: 44px; font-weight: 700; color: var(--brand-dark); font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; margin-bottom: 12px; position: relative; display: inline-block; }
+.reviews-title::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #0F260B, #FF5E3A);
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  border-radius: 2px;
+}
+.review-big-score { display: flex; align-items: baseline; gap: 8px; }
+.big-num { font-size: 72px; font-weight: 800; color: var(--brand-dark); line-height: 1; }
+.big-total { font-size: 28px; color: var(--text-muted); font-weight: 500; }
+.stars-big { display: inline-flex; gap: 6px; color: #F4B740; margin-top: 8px; }
+.stars-big .material-icons-outlined { font-size: 32px; }
+.reviews-count { font-size: 16px; color: var(--text-muted); margin-top: 8px; }
+.review-bars-wrap { display: flex; flex-direction: column; gap: 16px; max-width: 500px; padding-top: 12px; }
+.bar-row { display: grid; grid-template-columns: 40px 1fr 50px; gap: 16px; align-items: center; cursor: pointer; transition: opacity 0.2s; }
+.bar-row:hover { opacity: 0.85; }
+.bar-label { font-size: 18px; font-weight: 700; color: var(--text-dark-gray); display: flex; align-items: center; gap: 6px; }
+.bar-label::after { content: '★'; font-size: 16px; color: #F4B740; }
+.bar-bg { height: 14px; background: #F2F4F1; width: 100%; border-radius: 6px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: var(--brand-dark); transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1); border-radius: 6px; }
+.bar-count { font-size: 18px; font-weight: 600; color: var(--text-muted); text-align: right; }
 
 .review-sort-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
 .sort-btn { border: 1px solid var(--border); background: #fff; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-muted); border-radius: 30px; }
@@ -274,49 +363,530 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 .sort-btn.active { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
 .sort-btn.active:hover { background: var(--brand-mid); }
 
-.review-cards { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 16px; }
-.review-card { padding: 28px; border: 1px solid var(--border); background: #fff; transition: all 0.3s ease; display: grid; gap: 16px; }
-.review-card:hover { border-color: #C8D1C6; box-shadow: 0 4px 12px rgba(15,38,11,0.04); }
+.review-cards { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px; 
+  margin-top: 24px; 
+}
+.review-card { 
+  padding: 32px; 
+  border: 1px solid rgba(15, 38, 11, 0.06); 
+  background: #fff; 
+  transition: all 0.3s ease; 
+  display: grid; 
+  grid-template-columns: 240px 1fr; 
+  gap: 32px; 
+  box-shadow: 0 4px 16px rgba(15, 38, 11, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+.review-card::before {
+  content: '"';
+  position: absolute;
+  top: 20px;
+  right: 28px;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--brand-dark);
+  opacity: 0.06;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+.review-card:hover { 
+  border-color: rgba(15, 38, 11, 0.12); 
+  box-shadow: 0 12px 32px rgba(15, 38, 11, 0.08); 
+  transform: translateY(-4px);
+}
+.review-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-right: 1px solid rgba(15, 38, 11, 0.08);
+  padding-right: 20px;
+}
+.review-header-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 .review-header-inner { display: flex; justify-content: space-between; align-items: flex-start; }
 .review-author { display: flex; gap: 16px; align-items: center; }
-.review-avatar { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: var(--primary-green-light); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; text-transform: uppercase; }
-.review-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.review-name-wrap { display: flex; flex-direction: column; gap: 2px; }
-.review-name { font-weight: 700; color: var(--text-primary); font-size: 16px; display: flex; align-items: center; gap: 8px; }
-.verified-badge { background: rgba(15,38,11,0.06); color: var(--brand-dark); font-size: 11px; padding: 2px 8px; font-weight: 600; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px; }
+.review-avatar { 
+  width: 48px; 
+  height: 48px; 
+  flex-shrink: 0; 
+  border-radius: 0; 
+  background: linear-gradient(135deg, #0F260B 0%, #2A4A22 100%); 
+  color: #fff; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-weight: 700; 
+  font-size: 18px; 
+  text-transform: uppercase; 
+  box-shadow: 0 4px 12px rgba(15, 38, 11, 0.15);
+}
+.review-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.review-name-wrap { display: flex; flex-direction: column; gap: 4px; }
+.review-name { font-weight: 700; color: var(--text-primary); font-size: 17px; display: flex; align-items: center; gap: 8px; }
+.verified-badge { 
+  background: rgba(15,38,11,0.06); 
+  color: var(--brand-dark); 
+  font-size: 11px; 
+  padding: 4px 10px; 
+  font-weight: 600; 
+  border-radius: 0; 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 4px; 
+}
 .verified-badge .material-icons-outlined { font-size: 12px; }
 .review-date { color: var(--text-muted); font-size: 13px; font-weight: 500; }
 .review-stars { display: inline-flex; gap: 2px; color: #F4B740; }
-.review-stars .material-icons-outlined { font-size: 18px; }
-.review-text p { font-size: 15px; color: var(--text-dark-gray); line-height: 1.7; }
-.review-actions { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
-.helpful-btn { border: none; background: transparent; font-size: 13px; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: color 0.2s; }
-.helpful-btn:hover { color: var(--brand-dark); }
+.review-stars .material-icons-outlined { font-size: 20px; }
+.review-text p { font-size: 16px; color: var(--text-dark-gray); line-height: 1.7; }
+.review-actions { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
+.helpful-btn { 
+  border: 1px solid rgba(15, 38, 11, 0.1); 
+  background: transparent; 
+  font-size: 13px; 
+  font-weight: 600; 
+  color: var(--text-muted); 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 6px; 
+  cursor: pointer; 
+  transition: all 0.2s; 
+  padding: 8px 14px;
+}
+.helpful-btn:hover { 
+  color: var(--brand-dark); 
+  border-color: var(--brand-dark);
+  background: rgba(15, 38, 11, 0.04);
+}
 .helpful-btn .material-icons-outlined { font-size: 16px; }
 
-.show-more-btn { display: inline-flex; align-items: center; gap: 8px; margin: 40px auto 0; border: 2px solid var(--brand-dark); background: transparent; padding: 14px 40px; cursor: pointer; font-weight: 700; font-size: 15px; color: var(--brand-dark); transition: all 0.3s; position: relative; left: 50%; transform: translateX(-50%); font-family: 'Plus Jakarta Sans', sans-serif; }
-.show-more-btn:hover { background: var(--brand-dark); color: #fff; box-shadow: var(--shadow-sm); }
-.show-more-btn .material-icons-outlined { font-size: 18px; transition: transform 0.3s; }
+.review-images img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.review-images img:hover {
+  transform: scale(1.05);
+}
+
+.show-more-btn { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px; 
+  margin: 48px auto 0; 
+  border: none; 
+  background: #0F260B; 
+  padding: 16px 48px; 
+  cursor: pointer; 
+  font-weight: 700; 
+  font-size: 14px; 
+  color: #fff; 
+  transition: all 0.3s; 
+  position: relative; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 20px rgba(15, 38, 11, 0.2);
+}
+.show-more-btn:hover { 
+  background: #FF5E3A; 
+  color: #fff; 
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 94, 58, 0.3);
+}
+.show-more-btn .material-icons-outlined { font-size: 20px; transition: transform 0.3s; }
 .show-more-btn:hover .material-icons-outlined { transform: translateY(2px); }
 
+/* Review Pagination */
+.review-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.page-btn {
+  min-width: 40px;
+  height: 40px;
+  border: 1px solid rgba(15, 38, 11, 0.15);
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(15, 38, 11, 0.06);
+}
+.page-btn:hover {
+  border-color: var(--brand-dark);
+  color: var(--brand-dark);
+}
+.page-btn.active {
+  background: var(--brand-dark);
+  color: #fff;
+  border-color: var(--brand-dark);
+}
+.page-btn.next {
+  padding: 0 16px;
+  gap: 4px;
+  min-width: auto;
+}
+.page-btn.next .material-icons-outlined {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .review-header-left {
+    border-right: none !important;
+    padding-right: 0 !important;
+    border-bottom: 1px solid rgba(15, 38, 11, 0.08);
+    padding-bottom: 16px;
+  }
+  .review-images {
+    justify-content: flex-start;
+  }
+}
+
 /* Horizontal Product Rows */
-.horizontal-products { padding: 48px 0; background: var(--bg-light); border-top: 1px solid var(--border); }
-.horizontal-products:last-of-type { border-bottom: 1px solid var(--border); background: #fff; }
+.horizontal-products { 
+  padding: 64px 0; 
+  position: relative;
+}
+.more-from-seller {
+  background: #F7F6F3;
+}
+.horizontal-products:not(.more-from-seller) {
+  background: #FFFFFF;
+}
 .scroll-row { display: flex; gap: 20px; overflow-x: auto; padding: 4px 4px 24px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: rgba(15,38,11,0.2) transparent; }
 .scroll-row::-webkit-scrollbar { height: 6px; }
 .scroll-row::-webkit-scrollbar-track { background: transparent; }
 .scroll-row::-webkit-scrollbar-thumb { background: rgba(15,38,11,0.2); border-radius: 10px; }
-.h-card { flex: 0 0 200px; text-align: left; cursor: pointer; scroll-snap-align: start; background: #fff; border: 1px solid var(--border); transition: all 0.3s ease; position: relative; display: flex; flex-direction: column; }
-.h-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-sm); border-color: #C8D1C6; }
-.h-card-img { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--surface-alt); position: relative; }
-.h-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-.h-card:hover .h-card-img img { transform: scale(1.1); }
-.h-card-add-btn { position: absolute; bottom: 12px; right: 12px; width: 36px; height: 36px; background: var(--bg-white); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); box-shadow: 0 4px 10px rgba(0,0,0,0.1); opacity: 0; transform: translateY(10px); transition: all 0.3s ease; cursor: pointer; }
+.scroll-row .carousel-card { flex: 0 0 250px; }
+
+/* Product Card Styles from Homepage */
+.carousel-card {
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+  position: relative;
+}
+.product-card-inner {
+  background: #FFFFFF;
+  border-radius: 0;
+  padding: 12px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 16px 30px rgba(15, 38, 11, 0.12);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #DCE3DA;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.carousel-card:hover .product-card-inner {
+  box-shadow: 0 18px 38px rgba(15, 38, 11, 0.18);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(15, 38, 11, 0.35);
+  background: #FFFFFF;
+}
+.product-image-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+.stock-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 11px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  z-index: 2;
+  border-radius: 0;
+  background: #0F260B;
+  color: #E6F5C9;
+  border: 1px solid rgba(15, 38, 11, 0.45);
+}
+.stock-badge.new { background: #0F260B; color: #D6F0A7; }
+.stock-badge.sale { background: #0F260B; color: #E6F5C9; }
+.favorite-btn {
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: all 0.3s ease;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: 0 8px 18px rgba(15, 38, 11, 0.12);
+}
+.favorite-btn:hover { transform: translateY(-1px) scale(1.05); }
+.favorite-btn .material-icons-outlined { font-size: 18px; color: #9E9E9E; transition: all 0.3s ease; }
+.favorite-btn:hover .material-icons-outlined { color: #0F260B; }
+.product-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 0;
+  overflow: hidden;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-image img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.carousel-card:hover .product-image img { transform: scale(1.04); }
+.product-info {
+  padding: 5px 3px 0 3px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.product-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0F260B;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.price-row { margin-bottom: 6px; display: flex; align-items: center; }
+.price-group { display: flex; align-items: baseline; }
+.current-price { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 700; color: #0F260B; }
+.original-price { font-size: 14px; color: #9CA3AF; text-decoration: line-through; margin-left: 8px; font-weight: 400; }
+.rating-row { display: flex; align-items: center; gap: 6px; margin-bottom: 0; }
+.rating-stars { display: flex; gap: 0; color: #F4B740; }
+.rating-stars .material-icons-outlined { font-size: 16px; }
+.rating-count { font-size: 13px; color: #5E6A63; }
+.add-to-cart-btn {
+  width: 100%;
+  padding: 10px 16px;
+  margin-top: auto;
+  background: #0F260B;
+  color: #fff;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 0;
+  transition: all 0.3s ease;
+}
+.add-to-cart-btn:hover { background: #1C3C17; }
+.add-to-cart-btn .material-icons-outlined { font-size: 18px; }
+
+/* Carousel Styles */
+.product-carousel {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+.product-carousel .carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 38, 11, 0.15);
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 6px 16px rgba(15, 38, 11, 0.12);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.product-carousel:hover .carousel-btn {
+  opacity: 1;
+}
+.product-carousel .carousel-btn:hover {
+  background: #0F260B;
+  color: #fff;
+  border-color: #0F260B;
+}
+.product-carousel .carousel-btn .material-icons-outlined {
+  font-size: 24px;
+  color: #0F260B;
+}
+.product-carousel .carousel-btn:hover .material-icons-outlined {
+  color: #fff;
+}
+.carousel-btn.prev { left: -22px; }
+.carousel-btn.next { right: -22px; }
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.h-card { 
+  flex: 0 0 240px; 
+  text-align: left; 
+  cursor: pointer; 
+  scroll-snap-align: start; 
+  background: #fff; 
+  border: 1px solid rgba(15, 38, 11, 0.08); 
+  transition: all 0.3s ease; 
+  position: relative; 
+  display: flex; 
+  flex-direction: column; 
+  box-shadow: 0 8px 24px rgba(15, 38, 11, 0.08);
+}
+.h-card:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 20px 40px rgba(15, 38, 11, 0.15); 
+  border-color: rgba(15, 38, 11, 0.2); 
+}
+.h-card-img { 
+  width: 100%; 
+  aspect-ratio: 4/3; 
+  overflow: hidden; 
+  background: var(--surface-alt); 
+  position: relative; 
+}
+.h-card-img img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain; 
+  display: block; 
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+}
+.h-card:hover .h-card-img img { transform: scale(1.05); }
+.h-card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  z-index: 2;
+  background: #0F260B;
+  color: #CAED95;
+  border: 1px solid rgba(15, 38, 11, 0.45);
+}
+.h-card-fav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(15, 38, 11, 0.1);
+}
+.h-card:hover .h-card-fav { opacity: 1; }
+.h-card-fav:hover { background: #fff; color: #FF5E3A; }
+.h-card-fav .material-icons-outlined { font-size: 18px; color: #9E9E9E; }
+.h-card-fav:hover .material-icons-outlined { color: #FF5E3A; }
+.h-card-add-btn { 
+  position: absolute; 
+  bottom: 16px; 
+  right: 16px; 
+  width: 40px; 
+  height: 40px; 
+  background: var(--brand-dark); 
+  border: none; 
+  border-radius: 0;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  color: #fff; 
+  box-shadow: 0 4px 16px rgba(15, 38, 11, 0.25); 
+  opacity: 0; 
+  transform: translateY(10px); 
+  transition: all 0.3s ease; 
+  cursor: pointer; 
+}
 .h-card:hover .h-card-add-btn { opacity: 1; transform: translateY(0); }
-.h-card-add-btn:hover { background: var(--brand-dark); color: #fff; }
-.h-card-info { padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.h-card-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); line-height: 1.3; }
-.h-card-price { font-size: 16px; font-weight: 700; color: var(--brand-dark); margin-top: auto; }
+.h-card-add-btn:hover { background: #FF5E3A; }
+.h-card-info { 
+  padding: 16px 20px 20px; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
+}
+.h-card-name { 
+  font-size: 18px; 
+  font-weight: 700; 
+  margin-bottom: 8px; 
+  color: #0F260B; 
+  line-height: 1.2; 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.h-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.h-card-rating .stars { display: flex; gap: 2px; color: #F4B740; }
+.h-card-rating .stars .material-icons-outlined { font-size: 16px; }
+.h-card-rating .count { font-size: 12px; color: #5E6A63; }
+.h-card-price { 
+  font-size: 22px; 
+  font-weight: 700; 
+  color: #0F260B; 
+  margin-top: auto; 
+}
+.h-card-price .original-price, .original-price {
+  font-size: 14px;
+  color: #9CA3AF;
+  text-decoration: line-through;
+  margin-left: 8px;
+  font-weight: 400;
+}
 
 /* Cart Toast */
 .cart-toast { position: fixed; bottom: 24px; right: 24px; background: var(--brand-dark); color: #fff; display: flex; align-items: center; gap: 10px; padding: 14px 20px; font-size: 14px; font-weight: 600; box-shadow: 0 12px 30px rgba(15,38,11,.3); transform: translateY(80px); opacity: 0; transition: all .35s cubic-bezier(.4,0,.2,1); z-index: 9999; pointer-events: none; border-radius: 0; }
@@ -464,12 +1034,12 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
 <div class="cart-header"><h3>Your cart</h3><button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button></div>
 <div class="cart-body">
-    <div class="cart-item" data-price="6.50" data-category="Butcher"><img src="assets/Item-image/chickenbreast.png" alt="Chicken"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Fresh chicken breast</h4><p class="cart-meta">Butcher Â· Qty 2</p></div><span class="cart-price">Â£13.00</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
+    <div class="cart-item" data-price="6.50" data-category="Butcher"><img src="assets/Item-image/chickenbreast.png" alt="Chicken"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Fresh chicken breast</h4><p class="cart-meta">Butcher · Qty 2</p></div><span class="cart-price">£13.00</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
     <div class="cart-empty" style="display:none;">Your cart is empty.</div>
 </div>
 <div class="cart-footer">
-    <div class="cart-total"><span>Total</span><span class="cart-total-value">Â£13.00</span></div>
-    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout â†’</button></div>
+    <div class="cart-total"><span>Total</span><span class="cart-total-value">£13.00</span></div>
+    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div>
 </div>
 </aside>
 
@@ -518,7 +1088,7 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
                 <div class="stars-inline">
                     <span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span>
                 </div>
-                <span class="rating-text">4.5 / 5 Â· 128 reviews</span>
+                <span class="rating-text">4.5 / 5 · 128 reviews</span>
             </div>
         </div>
 
@@ -542,7 +1112,7 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
             <div class="qty-row">
                 <label>Quantity</label>
                 <div class="qty-control">
-                    <button class="qty-btn-sm" type="button" onclick="changeQty(-1)">âˆ’</button>
+                    <button class="qty-btn-sm" type="button" onclick="changeQty(-1)">−</button>
                     <span class="qty-val" id="qtyVal">1</span>
                     <button class="qty-btn-sm" type="button" onclick="changeQty(1)">+</button>
                 </div>
@@ -552,7 +1122,7 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 
         <div class="info-card price-card">
             <div class="price-block">
-                <span class="price"><span class="pound-sign">Â£</span> 0.90</span>
+                <span class="price"><span class="pound-sign">£</span> 0.90</span>
             </div>
             <div class="btn-row">
                 <button class="btn btn-add-cart" type="button" onclick="addToCartToast('Fresh Spinach')">Add to cart</button>
@@ -561,15 +1131,13 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
         </div>
 
         <div class="info-card delivery-info">
-            <div class="delivery-row"><span class="material-icons-outlined">local_shipping</span><span>Free delivery on orders over <strong>Â£25</strong></span></div>
+            <div class="delivery-row"><span class="material-icons-outlined">local_shipping</span><span>Free delivery on orders over <strong>£25</strong></span></div>
             <div class="delivery-row"><span class="material-icons-outlined">schedule</span><span>Collection today or <strong>tomorrow</strong></span></div>
             <div class="delivery-row"><span class="material-icons-outlined">eco</span><span>Freshly sourced from <strong>local farms</strong></span></div>
         </div>
     </div>
 </div>
 </section>
-
-<hr class="section-divider">
 
 <!-- DESCRIPTION SECTION -->
 <section class="product-description">
@@ -638,107 +1206,200 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
     </div>
     <div class="review-cards">
         <div class="review-card">
-            <div class="review-header-inner">
+            <div class="review-header-left">
                 <div class="review-author">
                     <div class="review-avatar">A</div>
                     <div class="review-name-wrap">
-                        <span class="review-name">Amelia T. <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span></span>
-                        <span class="review-date">12 Mar 2026</span>
+                        <span class="review-name">Amelia T.</span>
+                        <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span>
                     </div>
                 </div>
-                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                <span class="review-date">12 Mar 2026</span>
+                <div class="review-images" style="display: flex; gap: 8px; margin-top: 8px;">
+                    <img src="assets/Item-image/green-broccoli.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                    <img src="assets/Item-image/green-bell-pepper-isolated.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                </div>
             </div>
-            <div class="review-text"><p>Very fresh and tender leaves. Great in salads and smoothies. Will definitely order again! Everything was nicely packaged too.</p></div>
-            <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (12)</button></div>
+            <div class="review-header-right">
+                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                <div class="review-text"><p>Very fresh and tender leaves. Great in salads and smoothies. Will definitely order again! Everything was nicely packaged too. The delivery was on time and the produce was in perfect condition.</p></div>
+                <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (12)</button></div>
+            </div>
         </div>
         <div class="review-card">
-            <div class="review-header-inner">
+            <div class="review-header-left">
                 <div class="review-author">
                     <div class="review-avatar">M</div>
                     <div class="review-name-wrap">
-                        <span class="review-name">Marcus J. <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span></span>
-                        <span class="review-date">8 Mar 2026</span>
+                        <span class="review-name">Marcus J.</span>
+                        <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span>
                     </div>
                 </div>
-                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                <span class="review-date">8 Mar 2026</span>
+                <div class="review-images" style="display: flex; gap: 8px; margin-top: 8px;">
+                    <img src="assets/Item-image/green-broccoli.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                </div>
             </div>
-            <div class="review-text"><p>Excellent quality! Crisp, clean taste and the leaves were perfectly sized. Great value for money and incredible freshness compared to supermarket bought.</p></div>
-            <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (5)</button></div>
+            <div class="review-header-right">
+                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                <div class="review-text"><p>Excellent quality! Crisp, clean taste and the leaves were perfectly sized. Great value for money and incredible freshness compared to supermarket bought. Highly recommend!</p></div>
+                <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (5)</button></div>
+            </div>
         </div>
         <div class="review-card">
-            <div class="review-header-inner">
+            <div class="review-header-left">
                 <div class="review-author">
                     <div class="review-avatar">P</div>
                     <div class="review-name-wrap">
                         <span class="review-name">Priya S.</span>
-                        <span class="review-date">2 Mar 2026</span>
                     </div>
                 </div>
-                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                <span class="review-date">2 Mar 2026</span>
             </div>
-            <div class="review-text"><p>Love the freshness! Perfect for meal prep and wilting into pasta dishes. Highly recommend to everyone trying to eat greener.</p></div>
-            <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (2)</button></div>
+            <div class="review-header-right">
+                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                <div class="review-text"><p>Love the freshness! Perfect for meal prep and wilting into pasta dishes. Highly recommend to everyone trying to eat greener. Will definitely order again.</p></div>
+                <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (2)</button></div>
+            </div>
+        </div>
+        <div class="review-card">
+            <div class="review-header-left">
+                <div class="review-author">
+                    <div class="review-avatar">D</div>
+                    <div class="review-name-wrap">
+                        <span class="review-name">David W.</span>
+                        <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span>
+                    </div>
+                </div>
+                <span class="review-date">28 Feb 2026</span>
+            </div>
+            <div class="review-header-right">
+                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                <div class="review-text"><p>Outstanding freshness and quality! This is my third order and it has been consistently brilliant. The spinach stays fresh for over a week in the fridge. Great service!</p></div>
+                <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (8)</button></div>
+            </div>
+        </div>
+        <div class="review-card">
+            <div class="review-header-left">
+                <div class="review-author">
+                    <div class="review-avatar">L</div>
+                    <div class="review-name-wrap">
+                        <span class="review-name">Lisa M.</span>
+                    </div>
+                </div>
+                <span class="review-date">25 Feb 2026</span>
+                <div class="review-images" style="display: flex; gap: 8px; margin-top: 8px;">
+                    <img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                    <img src="assets/Item-image/green-bell-pepper-isolated.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                    <img src="assets/Item-image/green-broccoli.jpg" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" alt="Review image">
+                </div>
+            </div>
+            <div class="review-header-right">
+                <div class="review-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                <div class="review-text"><p>Perfect for my green smoothies every morning. The quality is amazing and you can really taste the difference from supermarket greens. Fast delivery too!</p></div>
+                <div class="review-actions"><button class="helpful-btn"><span class="material-icons-outlined">thumb_up</span> Helpful (15)</button></div>
+            </div>
         </div>
     </div>
-    <button class="show-more-btn" type="button">Show all 128 reviews <span class="material-icons-outlined">expand_more</span></button>
+    <div class="review-pagination">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn next">Next <span class="material-icons-outlined">chevron_right</span></button>
+    </div>
 </div>
 </section>
 
 <!-- MORE FROM SELLER -->
-<section class="horizontal-products">
+<section class="horizontal-products more-from-seller">
 <div class="page-wrap">
-    <h2 class="section-title"><span class="material-icons-outlined">storefront</span> More from GreenGrocer</h2>
-    <div class="scroll-row">
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Green Bell Pepper</p>
-                <p class="h-card-price">Â£0.90</p>
+    <h2 class="section-title">More from <span class="seller-name">GreenGrocer</span></h2>
+    <div class="product-carousel" id="greengrocer-carousel">
+        <button class="carousel-btn prev" onclick="slideCarousel('greengrocer', -1)"><span class="material-icons-outlined">chevron_left</span></button>
+        <div class="carousel-viewport">
+            <div class="carousel-track" id="greengrocer-track">
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Green Bell Pepper">
+                        <div class="product-image-wrapper">
+                            <span class="stock-badge sale">SALE</span>
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Green Bell Pepper</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£0.90</span><span class="original-price">£1.50</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                                <span class="rating-count">(216)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Chinese Broccoli">
+                        <div class="product-image-wrapper">
+                            <span class="stock-badge new">NEW</span>
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Chinese Broccoli</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£0.90</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                                <span class="rating-count">(156)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Seasonal Greens">
+                        <div class="product-image-wrapper">
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Seasonal Greens"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Seasonal Greens</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.10</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                                <span class="rating-count">(89)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Garden Peas">
+                        <div class="product-image-wrapper">
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Garden Peas"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Garden Peas</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.30</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                                <span class="rating-count">(67)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Chinese Broccoli">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Chinese Broccoli</p>
-                <p class="h-card-price">Â£0.90</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-broccoli.jpg" alt="Seasonal Greens">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Seasonal Greens</p>
-                <p class="h-card-price">Â£1.10</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Garden Peas">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Garden Peas</p>
-                <p class="h-card-price">Â£1.30</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-broccoli.jpg" alt="Spring Cabbage">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Spring Cabbage</p>
-                <p class="h-card-price">Â£0.95</p>
-            </div>
-        </div>
+        <button class="carousel-btn next" onclick="slideCarousel('greengrocer', 1)"><span class="material-icons-outlined">chevron_right</span></button>
     </div>
 </div>
 </section>
@@ -746,58 +1407,91 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 <!-- SIMILAR PRODUCTS -->
 <section class="horizontal-products">
 <div class="page-wrap">
-    <h2 class="section-title"><span class="material-icons-outlined">auto_awesome</span> Similar products</h2>
-    <div class="scroll-row">
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-broccoli.jpg" alt="Spring Greens">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Spring Greens</p>
-                <p class="h-card-price">Â£1.20</p>
+    <h2 class="section-title">Similar products</h2>
+    <div class="product-carousel" id="similar-carousel">
+        <button class="carousel-btn prev" onclick="slideCarousel('similar', -1)"><span class="material-icons-outlined">chevron_left</span></button>
+        <div class="carousel-viewport">
+            <div class="carousel-track" id="similar-track">
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Spring Greens">
+                        <div class="product-image-wrapper">
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Spring Greens"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Spring Greens</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.20</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                                <span class="rating-count">(234)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Baby Spinach">
+                        <div class="product-image-wrapper">
+                            <span class="stock-badge new">NEW</span>
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Baby Spinach"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Baby Spinach</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.50</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                                <span class="rating-count">(189)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Pak Choi">
+                        <div class="product-image-wrapper">
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Pak Choi"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Pak Choi</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.05</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span></div>
+                                <span class="rating-count">(145)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-card">
+                    <div class="product-card-inner" data-link="product.html?name=Kale Bunch">
+                        <div class="product-image-wrapper">
+                            <button class="favorite-btn" type="button" aria-label="Add to favorites"><span class="material-icons-outlined">favorite_border</span></button>
+                            <div class="product-image"><img src="assets/Item-image/green-broccoli.jpg" alt="Kale Bunch"></div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Kale Bunch</h3>
+                            <div class="price-row">
+                                <div class="price-group"><span class="current-price">£1.40</span></div>
+                            </div>
+                            <div class="rating-row">
+                                <div class="rating-stars"><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star</span><span class="material-icons-outlined">star_half</span></div>
+                                <span class="rating-count">(98)</span>
+                            </div>
+                            <button class="add-to-cart-btn"><span class="material-icons-outlined">shopping_cart</span>Add to cart</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Baby Spinach">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Baby Spinach</p>
-                <p class="h-card-price">Â£1.50</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Pak Choi">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Pak Choi</p>
-                <p class="h-card-price">Â£1.05</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/green-broccoli.jpg" alt="Kale Bunch">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Kale Bunch</p>
-                <p class="h-card-price">Â£1.40</p>
-            </div>
-        </div>
-        <div class="h-card">
-            <div class="h-card-img">
-                <img src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Broccoli Florets">
-                <button class="h-card-add-btn"><span class="material-icons-outlined">add</span></button>
-            </div>
-            <div class="h-card-info">
-                <p class="h-card-name">Broccoli Florets</p>
-                <p class="h-card-price">Â£1.15</p>
-            </div>
-        </div>
+        <button class="carousel-btn next" onclick="slideCarousel('similar', 1)"><span class="material-icons-outlined">chevron_right</span></button>
     </div>
 </div>
 </section>
@@ -886,7 +1580,7 @@ const cartDrawer = document.getElementById('cartDrawer');
 const cartOverlay = document.getElementById('cartOverlay');
 const cartClose = document.getElementById('cartClose');
 
-function formatMoney(v) { return 'Â£' + v.toFixed(2); }
+function formatMoney(v) { return '£' + v.toFixed(2); }
 function updateCartTotals() {
     if (!cartDrawer) return;
     const items = cartDrawer.querySelectorAll('.cart-item');
@@ -1022,9 +1716,37 @@ document.querySelectorAll('.review-sort-row .sort-btn').forEach(btn => {
     });
 });
 
-// â”€â”€ HORIZONTAL CARD CLICK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ HORIZONTAL CARD CLICK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 document.querySelectorAll('.h-card').forEach(card => {
     card.addEventListener('click', () => { window.location.href = 'product.html'; });
+});
+
+// â”€â”€ FAVORITE TOGGLE FOR H-CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+document.querySelectorAll('.h-card-fav').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.querySelector('.material-icons-outlined').textContent = 
+            this.querySelector('.material-icons-outlined').textContent === 'favorite_border' ? 'favorite' : 'favorite_border';
+        this.querySelector('.material-icons-outlined').style.color = 
+            this.querySelector('.material-icons-outlined').textContent === 'favorite' ? '#FF5E3A' : '#9E9E9E';
+    });
+});
+
+// â”€â”€ DYNAMIC SELLER NAME FROM SOLD BY TEXT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+const soldByText = document.querySelector('.sold-by strong');
+const sellerNameElements = document.querySelectorAll('.seller-name');
+if (soldByText && sellerNameElements.length > 0) {
+    const sellerName = soldByText.textContent.trim();
+    sellerNameElements.forEach(el => el.textContent = sellerName);
+}
+
+// â”€â”€ PAGINATION BUTTONS â”€â”â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+document.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        if (this.classList.contains('next')) return;
+        document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+    });
 });
 
 // â”€â”€ SMOOTH SCROLL FOR THUMBNAILS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
