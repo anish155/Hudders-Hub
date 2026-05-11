@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HuddersHub - Trader Dashboard | Products</title>
+<title>HuddersHub - Trader Dashboard | Orders</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -738,13 +738,13 @@ body {
           </a>
         </li>
         <li>
-          <a href="products.html" class="sidebar-nav-item active">
+          <a href="products.html" class="sidebar-nav-item">
             <span class="material-icons-outlined">inventory_2</span>
             Products
           </a>
         </li>
         <li>
-          <a href="orders.html" class="sidebar-nav-item">
+          <a href="orders.html" class="sidebar-nav-item active">
             <span class="material-icons-outlined">receipt_long</span>
             Orders
           </a>
@@ -813,115 +813,80 @@ body {
        MAIN CONTENT
        ============================================ -->
   <main class="main-content">
-    <h1 class="page-title">Products</h1>
+    <h1 class="page-title">Orders</h1>
 
     <div class="products-section">
-      <!-- Section Header -->
       <div class="section-header">
         <span class="section-header-line"></span>
-        <h2>My products</h2>
+        <h2>Recent orders</h2>
         <span class="section-header-line"></span>
       </div>
 
-      <!-- Table Toolbar -->
       <div class="table-toolbar">
-        <input type="text" class="search-input" placeholder="Search" id="searchInput">
+        <input type="text" class="search-input" placeholder="Search orders" id="searchInput">
         <div class="shop-name">
           <span class="material-icons-outlined">storefront</span>
           John's meat shop
         </div>
       </div>
 
-      <!-- Products Table -->
-      <table class="products-table" id="productsTable">
+      <table class="products-table" id="ordersTable">
         <thead>
           <tr>
-            <th>#Id</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
+            <th>#Order</th>
+            <th>Customer</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="product-id">#001</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 100</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">50</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td><span class="order-id">#A-1042</span></td>
+            <td class="customer-name">Leah Carter</td>
+            <td>3 items</td>
+            <td>£ 84.50</td>
+            <td>Processing</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">visibility</span> View</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#002</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 250</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot out-of-stock"></span>
-                <span class="stock-qty zero">0</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td><span class="order-id">#A-1041</span></td>
+            <td class="customer-name">Ravi Singh</td>
+            <td>1 item</td>
+            <td>£ 24.00</td>
+            <td>Awaiting pickup</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">visibility</span> View</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#003</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 300</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot low-stock"></span>
-                <span class="stock-qty">4</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td><span class="order-id">#A-1039</span></td>
+            <td class="customer-name">Amira Jones</td>
+            <td>5 items</td>
+            <td>£ 162.30</td>
+            <td>Completed</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">visibility</span> View</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#004</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 500/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">66</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td><span class="order-id">#A-1037</span></td>
+            <td class="customer-name">Daniel Price</td>
+            <td>2 items</td>
+            <td>£ 48.00</td>
+            <td>Ready to ship</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">visibility</span> View</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#005</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 700/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">22</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
-          </tr>
-          <tr>
-            <td><span class="product-id">#006</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 700/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">22</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td><span class="order-id">#A-1035</span></td>
+            <td class="customer-name">Zoe Patel</td>
+            <td>4 items</td>
+            <td>£ 112.40</td>
+            <td>Cancelled</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">visibility</span> View</button></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Table Footer -->
       <div class="table-footer">
-        <div class="total-products">[Total products <strong>18</strong>]</div>
+        <div class="total-products">[Total orders <strong>42</strong>]</div>
 
         <div class="pagination">
           <button class="page-btn disabled" aria-label="Previous">
@@ -935,32 +900,7 @@ body {
           </button>
         </div>
 
-        <div class="showing-info">[Showing 1-6]</div>
-      </div>
-
-      <!-- Stock Legend -->
-      <div class="stock-legend">
-        <span class="legend-title">Stock Legend:</span>
-        <div class="legend-item">
-          <span class="stock-dot in-stock"></span>
-          <span>In stock</span>
-        </div>
-        <div class="legend-item">
-          <span class="stock-dot low-stock"></span>
-          <span>Low Stock</span>
-        </div>
-        <div class="legend-item">
-          <span class="stock-dot out-of-stock"></span>
-          <span>Out of Stock</span>
-        </div>
-      </div>
-
-      <!-- Add Product -->
-      <div class="add-product-wrap">
-        <button class="add-product-btn" id="addProductBtn">
-          <span class="material-icons-outlined">add_circle_outline</span>
-          Add new product
-        </button>
+        <div class="showing-info">[Showing 1-5]</div>
       </div>
     </div>
   </main>
@@ -992,16 +932,16 @@ body {
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');
-    const table = document.getElementById('productsTable');
+    const table = document.getElementById('ordersTable');
 
     searchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase();
       const rows = table.querySelectorAll('tbody tr');
 
       rows.forEach(row => {
-        const name = row.querySelector('.product-name').textContent.toLowerCase();
-        const id = row.querySelector('.product-id').textContent.toLowerCase();
-        if (name.includes(query) || id.includes(query)) {
+        const customer = row.querySelector('.customer-name').textContent.toLowerCase();
+        const id = row.querySelector('.order-id').textContent.toLowerCase();
+        if (customer.includes(query) || id.includes(query)) {
           row.style.display = '';
         } else {
           row.style.display = 'none';
@@ -1018,19 +958,14 @@ body {
       });
     });
 
-    // Edit button click
+    // View order button click
     document.querySelectorAll('.edit-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const row = this.closest('tr');
-        const id = row.querySelector('.product-id').textContent;
-        const name = row.querySelector('.product-name').textContent;
-        alert(`Edit product ${id} - ${name}`);
+        const id = row.querySelector('.order-id').textContent;
+        const customer = row.querySelector('.customer-name').textContent;
+        alert(`Open order ${id} for ${customer}`);
       });
-    });
-
-    // Add product button
-    document.getElementById('addProductBtn').addEventListener('click', function() {
-      alert('Open Add New Product form/modal');
     });
   </script>
 </body>

@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Trader Dashboard | Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ========================================================================
+CSS VARIABLES - HuddersHub Design System
+======================================================================== */
+:root {
+  --primary-orange: #FF5E3A;
+  --primary-orange-light: #FF8C70;
+  --primary-orange-dark: #E3472C;
+  --primary-green: #0F260B;
+  --primary-green-light: rgba(15, 38, 11, 0.14);
+  --primary-green-dark: #0B1C08;
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F6F3;
+  --bg-gray: #F2F4F1;
+  --border-light: #DCE3DA;
+  --text-black: #0B140A;
+  --text-dark-gray: #1E2A1C;
+  --text-medium-gray: #5E6A63;
+  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-black);
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+/* ========================================================================
+SIDEBAR
+======================================================================== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--primary-green);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow-y: auto;
+}
+
+.sidebar-profile {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-avatar .material-icons-outlined {
+  font-size: 32px;
+  color: #FFFFFF;
+}
+
+.sidebar-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sidebar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ADE80;
+}
+
+.sidebar-nav {
+  padding: 16px 0;
+  flex: 1;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.sidebar-nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.sidebar-nav-item .material-icons-outlined {
+  font-size: 20px;
+}
+
+.sidebar-nav-item.logout {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.sidebar-nav-item.logout:hover {
+  color: var(--primary-orange-light);
+  background: rgba(255, 94, 58, 0.1);
+}
+
+.sidebar-report-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-report-group summary {
+  list-style: none;
+}
+
+.sidebar-report-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-report-sublist {
+  list-style: none;
+  padding-left: 18px;
+  margin-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.sidebar-report-group[open] .sidebar-report-sublist {
+  max-height: 180px;
+  opacity: 1;
+  margin-top: 6px;
+}
+
+.sidebar-report-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-report-link:hover,
+.sidebar-report-link.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+}
+
+.sidebar-report-caret {
+  margin-left: auto;
+  transition: transform 0.25s ease;
+  font-size: 18px;
+}
+
+.sidebar-report-group[open] .sidebar-report-caret {
+  transform: rotate(180deg);
+}
+
+/* ========================================================================
+TOP NAVBAR
+======================================================================== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  height: 60px;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 100;
+}
+
+.top-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-nav-logo img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.top-nav-logo span {
+  font-family: 'Google Sans Flex', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--primary-green);
+}
+
+.top-nav-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-black);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--transition-smooth);
+  color: var(--text-medium-gray);
+  position: relative;
+}
+
+.top-nav-icon:hover {
+  background: var(--primary-green-light);
+  color: var(--primary-green);
+}
+
+.top-nav-icon .material-icons-outlined {
+  font-size: 22px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: var(--primary-orange);
+  border-radius: 50%;
+  border: 2px solid var(--bg-white);
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--bg-gray);
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark-gray);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.user-pill:hover {
+  background: var(--primary-green-light);
+}
+
+.user-pill .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* ========================================================================
+MAIN CONTENT
+======================================================================== */
+.main-content {
+  margin-left: 260px;
+  margin-top: 60px;
+  padding: 32px;
+  min-height: calc(100vh - 60px);
+  width: calc(100% - 260px);
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.welcome-text {
+  font-size: 14px;
+  color: var(--text-medium-gray);
+  margin-bottom: 4px;
+}
+
+.welcome-text strong {
+  color: var(--text-dark-gray);
+}
+
+.shop-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-black);
+}
+
+.page-title {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--text-black);
+  margin-top: 8px;
+}
+
+/* Report Section */
+.report-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Date Picker */
+.date-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.date-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark-gray);
+}
+
+.date-input {
+  padding: 8px 14px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  font-size: 14px;
+  color: var(--text-black);
+  font-family: inherit;
+  border-radius: 0;
+  transition: var(--transition-smooth);
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px var(--primary-green-light);
+}
+
+.date-select {
+  padding: 8px 32px 8px 14px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  font-size: 14px;
+  color: var(--text-black);
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%230F260B' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  border-radius: 0;
+  transition: var(--transition-smooth);
+  display: none;
+}
+
+.date-select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+}
+
+.report-type-toggle {
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  border-radius: 999px;
+}
+
+.toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-medium-gray);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+}
+
+.toggle-btn.active {
+  background: var(--primary-green);
+  color: #FFFFFF;
+}
+
+.toggle-btn:focus-visible {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+/* Daily Order Report Card */
+.report-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.report-card-header {
+  background: var(--bg-gray);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.report-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.report-card-subtitle {
+  font-size: 12px;
+  color: var(--text-medium-gray);
+}
+
+/* Order Table */
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table th {
+  background: var(--bg-gray);
+  padding: 10px 20px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-medium-gray);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.order-table td {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: var(--text-dark-gray);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.order-table tr:last-child td {
+  border-bottom: none;
+}
+
+.order-table .product-name {
+  font-weight: 600;
+  color: var(--text-black);
+}
+
+.order-table .qty {
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+.order-table .customer {
+  color: var(--text-medium-gray);
+  font-size: 13px;
+}
+
+/* Labels Section */
+.labels-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.labels-header {
+  background: var(--bg-gray);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.labels-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.labels-content {
+  padding: 20px;
+}
+
+.label-card {
+  border: 2px dashed var(--border-light);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.label-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label-row {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.label-label {
+  font-weight: 600;
+  color: var(--text-medium-gray);
+}
+
+.label-value {
+  font-weight: 700;
+  color: var(--text-dark-gray);
+}
+
+.print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: var(--primary-green);
+  color: #FFFFFF;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+}
+
+.print-btn:hover {
+  background: var(--primary-green-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.print-btn .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* Daily Graph */
+.graph-section {
+  margin-top: 28px;
+}
+
+.graph-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.graph-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  position: relative;
+  display: inline-block;
+}
+
+.graph-header h2::before,
+.graph-header h2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.graph-header h2::before {
+  right: calc(100% + 16px);
+}
+
+.graph-header h2::after {
+  left: calc(100% + 16px);
+}
+
+.chart-container {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  padding: 24px;
+}
+
+/* ========================================================================
+RESPONSIVE
+======================================================================== */
+@media (max-width: 900px) {
+  .sidebar {
+    left: -280px;
+    transition: left 0.3s ease;
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .top-nav {
+    left: 0;
+  }
+  .sidebar-toggle {
+    display: grid;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 300;
+    width: 44px;
+    height: 44px;
+    border-radius: 0;
+    background: var(--primary-green);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    place-items: center;
+  }
+  .report-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .label-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-title {
+    font-size: 28px;
+  }
+  .date-picker {
+    flex-direction: column;
+  }
+  .report-type-toggle {
+    display: none;
+  }
+  .date-select {
+    display: block;
+  }
+  .order-table th,
+  .order-table td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+.sidebar-toggle {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 150;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* Print Styles */
+@media print {
+  .sidebar, .top-nav, .date-picker, .print-btn, .sidebar-toggle {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: 0;
+    margin-top: 0;
+    padding: 20px;
+  }
+  .report-card, .labels-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  body {
+    display: block;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar Toggle (Mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+  <span class="material-icons-outlined">menu</span>
+</button>
+
+<!-- Sidebar Overlay (Mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ============================================
+     SIDEBAR
+     ============================================ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar">
+      <span class="material-icons-outlined">person</span>
+    </div>
+    <div class="sidebar-name">John doe</div>
+    <div class="sidebar-status">
+      <span class="status-dot"></span>
+      Status: Active
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="sidebar-nav-list">
+      <li>
+        <a href="dashboard.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">dashboard</span>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="products.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">inventory_2</span>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="orders.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">receipt_long</span>
+          Orders
+        </a>
+      </li>
+      <li>
+        <a href="finance.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">account_balance_wallet</span>
+          Finance
+        </a>
+      </li>
+      <li>
+        <details class="sidebar-report-group" open>
+          <summary class="sidebar-nav-item active">
+            <span class="material-icons-outlined">analytics</span>
+            Reports
+            <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+          </summary>
+          <ul class="sidebar-report-sublist">
+            <li><a href="report.html?type=daily" class="sidebar-report-link active" data-report-type="daily">Daily</a></li>
+            <li><a href="report.html?type=weekly" class="sidebar-report-link" data-report-type="weekly">Weekly</a></li>
+            <li><a href="report.html?type=monthly" class="sidebar-report-link" data-report-type="monthly">Monthly</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <a href="profile.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">settings</span>
+          Profile
+        </a>
+      </li>
+      <li>
+        <a href="../api/auth/logout.php" class="sidebar-nav-item logout">
+          <span class="material-icons-outlined">logout</span>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- ============================================
+     TOP NAVBAR
+     ============================================ -->
+<header class="top-nav">
+  <div class="top-nav-logo">
+    <img src="../public/assets/logo.png" alt="HuddersHub">
+    <span>HuddersHub</span>
+  </div>
+  <div class="top-nav-title">Trader Dashboard</div>
+  <div class="top-nav-right">
+    <button class="top-nav-icon" aria-label="Notifications">
+      <span class="material-icons-outlined">notifications_none</span>
+      <span class="notification-badge"></span>
+    </button>
+    <div class="user-pill">
+      <span class="material-icons-outlined">account_circle</span>
+      <span>John</span>
+      <span class="material-icons-outlined" style="font-size: 16px;">expand_more</span>
+    </div>
+    <button class="top-nav-icon" aria-label="Dark mode">
+      <span class="material-icons-outlined">dark_mode</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================================
+     MAIN CONTENT
+     ============================================ -->
+<main class="main-content">
+  <!-- Page Header -->
+  <div class="page-header">
+    <p class="welcome-text">Welcome back, <strong>John!</strong></p>
+    <p class="shop-name">John meat shop</p>
+    <h1 class="page-title" id="pageTitle">Report</h1>
+  </div>
+
+  <!-- Report Section -->
+  <div class="report-section">
+    <!-- Date Picker -->
+    <div class="date-picker">
+      <span class="date-label">Date:</span>
+      <input type="date" class="date-input" id="reportDate" value="2026-05-10">
+      <div class="report-type-toggle" role="tablist" aria-label="Report type">
+        <button class="toggle-btn active" data-report-type="daily" type="button">Daily</button>
+        <button class="toggle-btn" data-report-type="weekly" type="button">Weekly</button>
+        <button class="toggle-btn" data-report-type="monthly" type="button">Monthly</button>
+      </div>
+      <select class="date-select" id="reportType">
+        <option value="daily" selected>Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+    <div id="reportCards"></div>
+
+    <!-- Labels Section -->
+    <div class="labels-card">
+      <div class="labels-header">
+        <h3 id="labelsTitle">Labels</h3>
+      </div>
+      <div class="labels-content" id="labelsContainer"></div>
+    </div>
+
+    <!-- Daily Graph Section -->
+    <div class="graph-section">
+      <div class="graph-header">
+        <h2 id="graphTitle">Daily sales graph</h2>
+      </div>
+      <div class="chart-container">
+        <canvas id="dailyChart"></canvas>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Sidebar Toggle (Mobile)
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('active');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('active');
+});
+
+document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+  });
+});
+
+// Date change handler
+document.getElementById('reportDate').addEventListener('change', function() {
+  console.log('Report date changed to:', this.value);
+});
+
+// Report type change handler
+const reportTypeSelect = document.getElementById('reportType');
+const reportButtons = document.querySelectorAll('.toggle-btn');
+const reportCardsContainer = document.getElementById('reportCards');
+const labelsContainer = document.getElementById('labelsContainer');
+const labelsTitle = document.getElementById('labelsTitle');
+const graphTitle = document.getElementById('graphTitle');
+const pageTitle = document.getElementById('pageTitle');
+
+const reportData = {
+  daily: {
+    title: 'Daily Report',
+    labelsTitle: 'Labels',
+    cards: [
+      {
+        title: '10:00 AM - 11:00 AM',
+        subtitle: '3 orders',
+        rows: [
+          { product: 'Chicken', qty: 2, customer: 'User#12' },
+          { product: 'Steak', qty: 1, customer: 'User#20' },
+          { product: 'Lamb', qty: 1, customer: 'User#15' }
+        ]
+      },
+      {
+        title: '11:00 AM - 12:00 PM',
+        subtitle: '2 orders',
+        rows: [
+          { product: 'Chicken', qty: 3, customer: 'User#18' },
+          { product: 'Beef', qty: 2, customer: 'User#22' }
+        ]
+      },
+      {
+        title: '12:00 PM - 1:00 PM',
+        subtitle: '4 orders',
+        rows: [
+          { product: 'Chicken', qty: 1, customer: 'User#05' },
+          { product: 'Steak', qty: 2, customer: 'User#11' },
+          { product: 'Pork', qty: 1, customer: 'User#30' },
+          { product: 'Sausages', qty: 2, customer: 'User#25' }
+        ]
+      }
+    ],
+    labels: [
+      { customer: '1201', date: '2026-05-10', products: 'Chicken x2, Steak x1', total: '£25.50' },
+      { customer: '1202', date: '2026-05-10', products: 'Beef x2, Lamb x1', total: '£38.00' },
+      { customer: '1203', date: '2026-05-10', products: 'Pork x1, Sausages x2', total: '£19.50' }
+    ],
+    chart: {
+      title: 'Daily sales graph',
+      label: 'Orders',
+      labels: ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM'],
+      data: [2, 3, 2, 4, 3, 5],
+      unit: 'count'
+    }
+  },
+  weekly: {
+    title: 'Weekly Report',
+    labelsTitle: 'Weekly highlights',
+    cards: [
+      {
+        title: 'Monday',
+        subtitle: '10 orders',
+        rows: [
+          { product: 'Chicken', qty: 6, customer: 'Top: User#18' },
+          { product: 'Lamb', qty: 2, customer: 'Top: User#44' },
+          { product: 'Beef', qty: 2, customer: 'Top: User#07' }
+        ]
+      },
+      {
+        title: 'Thursday',
+        subtitle: '25 orders',
+        rows: [
+          { product: 'Steak', qty: 9, customer: 'Top: User#11' },
+          { product: 'Chicken', qty: 7, customer: 'Top: User#05' },
+          { product: 'Sausages', qty: 6, customer: 'Top: User#30' }
+        ]
+      },
+      {
+        title: 'Friday',
+        subtitle: '20 orders',
+        rows: [
+          { product: 'Pork', qty: 6, customer: 'Top: User#25' },
+          { product: 'Beef', qty: 5, customer: 'Top: User#22' },
+          { product: 'Chicken', qty: 4, customer: 'Top: User#41' }
+        ]
+      }
+    ],
+    labels: [
+      { customer: 'Top customer', date: '2026-05-13', products: 'User#11, 7 orders', total: '£142.50' },
+      { customer: 'Best day', date: 'Thu', products: '25 orders collected', total: '£300.00' },
+      { customer: 'Refunds', date: '0', products: '0 refunds', total: '£0.00' }
+    ],
+    chart: {
+      title: 'Weekly sales graph',
+      label: 'Earned (£)',
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: [0, 120, 0, 300, 240, 180, 150],
+      unit: 'currency'
+    }
+  },
+  monthly: {
+    title: 'Monthly Report',
+    labelsTitle: 'Monthly highlights',
+    cards: [
+      {
+        title: 'Week 1',
+        subtitle: '38 orders',
+        rows: [
+          { product: 'Chicken', qty: 12, customer: 'Top: User#05' },
+          { product: 'Steak', qty: 9, customer: 'Top: User#11' },
+          { product: 'Sausages', qty: 7, customer: 'Top: User#30' }
+        ]
+      },
+      {
+        title: 'Week 2',
+        subtitle: '44 orders',
+        rows: [
+          { product: 'Beef', qty: 14, customer: 'Top: User#22' },
+          { product: 'Chicken', qty: 10, customer: 'Top: User#18' },
+          { product: 'Pork', qty: 8, customer: 'Top: User#25' }
+        ]
+      },
+      {
+        title: 'Week 3',
+        subtitle: '40 orders',
+        rows: [
+          { product: 'Steak', qty: 11, customer: 'Top: User#44' },
+          { product: 'Lamb', qty: 9, customer: 'Top: User#15' },
+          { product: 'Chicken', qty: 8, customer: 'Top: User#12' }
+        ]
+      }
+    ],
+    labels: [
+      { customer: 'Top customer', date: 'May 2026', products: 'User#11, 18 orders', total: '£420.00' },
+      { customer: 'Best week', date: 'Week 2', products: '44 orders collected', total: '£1680.00' },
+      { customer: 'Refunds', date: '2', products: '2 refunds', total: '£54.00' }
+    ],
+    chart: {
+      title: 'Monthly sales graph',
+      label: 'Earned (£)',
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      data: [1420, 1680, 1540, 1790],
+      unit: 'currency'
+    }
+  }
+};
+
+// Daily Chart using Chart.js
+const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+const dailyGradient = dailyCtx.createLinearGradient(0, 0, 0, 280);
+dailyGradient.addColorStop(0, 'rgba(15, 38, 11, 0.18)');
+dailyGradient.addColorStop(1, 'rgba(15, 38, 11, 0)');
+
+const chartConfig = {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Orders',
+      data: [],
+      borderColor: '#0F260B',
+      backgroundColor: dailyGradient,
+      borderWidth: 2.5,
+      pointBackgroundColor: '#0F260B',
+      pointBorderColor: '#FFFFFF',
+      pointBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 13,
+            weight: '600'
+          },
+          color: '#1E2A1C'
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(220, 227, 218, 0.5)',
+          drawBorder: false
+        },
+        ticks: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 12
+          },
+          color: '#5E6A63'
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 12,
+            weight: '600'
+          },
+          color: '#1E2A1C'
+        }
+      }
+    }
+  }
+};
+
+const reportChart = new Chart(dailyCtx, chartConfig);
+
+const renderReportCards = (cards) => {
+  reportCardsContainer.innerHTML = cards.map((card) => {
+    const rowsHtml = card.rows.map((row) => (
+      `<tr>
+        <td class="product-name">${row.product}</td>
+        <td class="qty">${row.qty}</td>
+        <td class="customer">${row.customer}</td>
+      </tr>`
+    )).join('');
+
+    return (
+      `<div class="report-card">
+        <div class="report-card-header">
+          <span class="report-card-title">${card.title}</span>
+          <span class="report-card-subtitle">${card.subtitle}</span>
+        </div>
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Customer</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>`
+    );
+  }).join('');
+};
+
+const renderLabels = (labels) => {
+  labelsContainer.innerHTML = labels.map((label) => (
+    `<div class="label-card">
+      <div class="label-info">
+        <div class="label-row">
+          <span class="label-label">Customer #:</span>
+          <span class="label-value">${label.customer}</span>
+        </div>
+        <div class="label-row">
+          <span class="label-label">Date:</span>
+          <span class="label-value">${label.date}</span>
+        </div>
+        <div class="label-row">
+          <span class="label-label">Product Ordered:</span>
+          <span class="label-value">${label.products}</span>
+        </div>
+        <div class="label-row">
+          <span class="label-label">Total Price:</span>
+          <span class="label-value">${label.total}</span>
+        </div>
+      </div>
+      <button class="print-btn" type="button">
+        <span class="material-icons-outlined">print</span>
+        Print Label
+      </button>
+    </div>`
+  )).join('');
+};
+
+const updateChart = (chartData) => {
+  reportChart.data.labels = chartData.labels;
+  reportChart.data.datasets[0].data = chartData.data;
+  reportChart.data.datasets[0].label = chartData.label;
+  reportChart.options.scales.y.ticks.callback = (value) => {
+    if (chartData.unit === 'currency') {
+      return '£' + value;
+    }
+    return value;
+  };
+  reportChart.update();
+};
+
+const setActiveButtons = (type) => {
+  reportButtons.forEach((button) => {
+    button.classList.toggle('active', button.dataset.reportType === type);
+  });
+};
+
+const setReportType = (type, updateUrl = true) => {
+  const data = reportData[type] || reportData.daily;
+  pageTitle.textContent = data.title;
+  labelsTitle.textContent = data.labelsTitle;
+  graphTitle.textContent = data.chart.title;
+  renderReportCards(data.cards);
+  renderLabels(data.labels);
+  updateChart(data.chart);
+  setActiveButtons(type);
+  reportTypeSelect.value = type;
+
+  document.querySelectorAll('.sidebar-report-link').forEach((link) => {
+    link.classList.toggle('active', link.dataset.reportType === type);
+  });
+
+  document.querySelectorAll('.print-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      window.print();
+    });
+  });
+
+  if (updateUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('type', type);
+    window.history.replaceState({}, '', url.toString());
+  }
+};
+
+reportButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    setReportType(button.dataset.reportType);
+  });
+});
+
+reportTypeSelect.addEventListener('change', function() {
+  setReportType(this.value);
+});
+
+const initialType = new URLSearchParams(window.location.search).get('type') || 'daily';
+setReportType(initialType, false);
+</script>
+</body>
+</html>
+
