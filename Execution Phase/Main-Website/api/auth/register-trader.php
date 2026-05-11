@@ -1,8 +1,8 @@
 <?php
 /**
- * Customer Registration API
- * Endpoint: POST /api/auth/register.php
- * Inserts into HUDDER_USER and CUSTOMER tables
+ * Trader Registration API
+ * Endpoint: POST /api/auth/register-trader.php
+ * Registers a new trader (requires admin approval)
  */
 
 header('Content-Type: application/json');
@@ -14,25 +14,21 @@ require_once '../../config/database.php';
 
 $response = ['success' => false, 'message' => ''];
 
-// Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method. Only POST is allowed.';
     echo json_encode($response);
     exit;
 }
 
-// Get JSON input
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-// Validate JSON decoding
 if (!$data) {
     $response['message'] = 'Invalid JSON input.';
     echo json_encode($response);
     exit;
 }
 
-// Required fields
 $required = ['firstname', 'lastname', 'email', 'password'];
 foreach ($required as $field) {
     if (empty($data[$field])) {
@@ -42,7 +38,6 @@ foreach ($required as $field) {
     }
 }
 
-// Extract and sanitize data
 $firstname = trim($data['firstname']);
 $lastname  = trim($data['lastname']);
 $email     = trim($data['email']);
@@ -52,14 +47,12 @@ $address   = !empty($data['address']) ? trim($data['address']) : '';
 $dob       = !empty($data['date_of_birth']) ? $data['date_of_birth'] : '';
 $gender    = !empty($data['gender']) ? trim($data['gender']) : '';
 
-// Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $response['message'] = 'Invalid email format.';
     echo json_encode($response);
     exit;
 }
 
-// Validate password length
 if (strlen($password) < 6) {
     $response['message'] = 'Password must be at least 6 characters long.';
     echo json_encode($response);
@@ -67,7 +60,6 @@ if (strlen($password) < 6) {
 }
 
 try {
-    // Check if email already exists
     $checkSql = "SELECT COUNT(*) AS CNT FROM HUDDERS_USER WHERE email = :email";
     $checkStmt = oci_parse($conn, $checkSql);
     oci_bind_by_name($checkStmt, ':email', $email);
@@ -81,23 +73,20 @@ try {
         exit;
     }
 
-    // Get next user_id
     $idq = oci_parse($conn, "SELECT NVL(MAX(user_id),0)+1 AS new_id FROM HUDDERS_USER");
     oci_execute($idq);
     $idrow = oci_fetch_assoc($idq);
     $user_id = $idrow['NEW_ID'];
     oci_free_statement($idq);
 
-    // Hash the password using bcrypt
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    // Insert into HUDDERS_USER
-    $insertSql = "INSERT INTO HUDDERS_USER (";
+    $insertSql = "INSERT INTO HUDDERS_USER (
         user_id, firstname, lastname, email, user_password,
         user_role, phone_number, address, date_of_birth, gender
     ) VALUES (
         :user_id, :firstname, :lastname, :email, :password,
-        'customer', :phone, :address, TO_DATE(:dob, 'YYYY-MM-DD'), :gender
+        'trader', :phone, :address, TO_DATE(:dob, 'YYYY-MM-DD'), :gender
     )";
 
     $insertStmt = oci_parse($conn, $insertSql);
@@ -125,33 +114,29 @@ try {
         exit;
     }
 
-    // Get next customer_id
-    $cidq = oci_parse($conn, "SELECT NVL(MAX(customer_id),0)+1 AS new_id FROM CUSTOMER");
-    oci_execute($cidq);
-    $cidrow = oci_fetch_assoc($cidq);
-    $customer_id = $cidrow['NEW_ID'];
-    oci_free_statement($cidq);
+    $traderIdQ = oci_parse($conn, "SELECT NVL(MAX(trader_id),0)+1 AS new_id FROM TRADER");
+    oci_execute($traderIdQ);
+    $traderIdRow = oci_fetch_assoc($traderIdQ);
+    $trader_id = $traderIdRow['NEW_ID'];
+    oci_free_statement($traderIdQ);
 
-    // Insert into CUSTOMER
-    $cstmt = oci_parse($conn, "INSERT INTO CUSTOMER (customer_id, user_id) VALUES (:cid, :uid)");
-    oci_bind_by_name($cstmt, ':cid', $customer_id);
-    oci_bind_by_name($cstmt, ':uid', $user_id);
-    $customerResult = oci_execute($cstmt, OCI_NO_AUTO_COMMIT);
-    oci_free_statement($cstmt);
+    $traderStmt = oci_parse($conn, "INSERT INTO TRADER (trader_id, user_id, status) VALUES (:tid, :uid, 'Pending')");
+    oci_bind_by_name($traderStmt, ':tid', $trader_id);
+    oci_bind_by_name($traderStmt, ':uid', $user_id);
+    $traderResult = oci_execute($traderStmt, OCI_NO_AUTO_COMMIT);
+    oci_free_statement($traderStmt);
 
-    if (!$customerResult) {
+    if (!$traderResult) {
         oci_rollback($conn);
-        $response['message'] = 'Failed to create customer profile.';
+        $response['message'] = 'Failed to create trader profile.';
         echo json_encode($response);
         exit;
     }
 
-    // Commit the transaction
     oci_commit($conn);
 
     $response['success'] = true;
-    $response['message'] = 'Registration successful! You can now log in.';
-    $response['user_id'] = $user_id;
+    $response['message'] = 'Registration successful! Your trader account is pending approval. You will be notified once an admin reviews your application.';
 
 } catch (Exception $e) {
     oci_rollback($conn);

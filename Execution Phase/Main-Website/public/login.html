@@ -611,11 +611,11 @@ const passError = document.getElementById('passError');
 
 function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
-loginForm.addEventListener('submit', function(e) {
+loginForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     let valid = true;
-    
-    // Reset
+
+    // Reset errors
     emailInput.classList.remove('error');
     pwInput.classList.remove('error');
     emailError.classList.remove('visible');
@@ -632,19 +632,50 @@ loginForm.addEventListener('submit', function(e) {
         valid = false;
     }
 
-    if (valid) {
-        loginSubmitBtn.disabled = true;
-        document.getElementById('loginBtnTextInner').textContent = 'Logging in...';
-        document.getElementById('loginBtnArrow').style.display = 'none';
-        
-        // Simulate API call
-        setTimeout(() => {
-            window.location.href = 'index.html'; // Redirect to homepage on success
-        }, 1500);
-    } else {
-        // Focus first invalid field
+    if (!valid) {
         if (emailInput.classList.contains('error')) emailInput.focus();
         else pwInput.focus();
+        return;
+    }
+
+    // Prepare UI: disable button and show loading state
+    loginSubmitBtn.disabled = true;
+    const originalText = document.getElementById('loginBtnTextInner').textContent;
+    document.getElementById('loginBtnTextInner').textContent = 'Logging in...';
+    document.getElementById('loginBtnArrow').style.display = 'none';
+
+    try {
+        const response = await fetch('../api/auth/login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: emailInput.value.trim(),
+                password: pwInput.value
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Store user info in localStorage for UI purposes
+            localStorage.setItem('hudders_user', JSON.stringify(data.user));
+            // Redirect based on role
+            const redirect = data.redirect || 'index.html';
+            window.location.href = redirect;
+        } else {
+            loginSubmitBtn.disabled = false;
+            document.getElementById('loginBtnTextInner').textContent = originalText;
+            document.getElementById('loginBtnArrow').style.display = '';
+            // Show generic error (reuse email error container for API messages)
+            emailError.textContent = data.message || 'Login failed. Please try again.';
+            emailError.classList.add('visible');
+        }
+    } catch (err) {
+        loginSubmitBtn.disabled = false;
+        document.getElementById('loginBtnTextInner').textContent = originalText;
+        document.getElementById('loginBtnArrow').style.display = '';
+        emailError.textContent = 'Network error. Please check your connection.';
+        emailError.classList.add('visible');
     }
 });
 </script>
