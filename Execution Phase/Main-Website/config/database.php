@@ -7,6 +7,7 @@ $conn = oci_connect($username, $password, $connection_string);
 
 if (!$conn) {
     $e = oci_error();
-    die("Connection failed: " . $e['message']);
+    header('Content-Type: application/json');
+    die(json_encode(['success' => false, 'message' => 'DB Error: ' . $e['message']]));
 }
 ?>

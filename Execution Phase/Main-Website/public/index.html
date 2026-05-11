@@ -3287,6 +3287,17 @@ ${discountHtml}
 </div>
 </div>`;
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const userName = sessionStorage.getItem('user_name');
+    const loginBtn = document.getElementById('loginBtn');
+    if (userName && loginBtn) {
+        loginBtn.href = 'account.html';
+        loginBtn.innerHTML = `
+            <span class="material-icons-outlined" style="font-size:24px;">person</span>
+            <span>Hi, ${userName}</span>
+        `;
+    }
+});
 </script>
 </body>
 </html>

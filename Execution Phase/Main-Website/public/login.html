@@ -10,9 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <style>
-/* ========================================================================
-GLOBAL VARIABLES & RESET
-======================================================================== */
 :root {
     --primary-orange: #FF5E3A;
     --primary-orange-light: #FF8C70;
@@ -53,13 +50,8 @@ img { max-width: 100%; height: auto; display: block; }
 a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
 button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
 
-/* ========================================================================
-HEADER & NAV STYLES
-======================================================================== */
-header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth);
-}
+/* HEADER */
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth); }
 header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .top-bar { background: rgba(255,255,255,0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
 header.scrolled .top-bar { padding: 10px 0; }
@@ -92,12 +84,9 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 .breadcrumb-sep { color: #9AA19A; }
 .breadcrumb-current { color: var(--primary-green); font-weight: 600; }
 .categories-wrapper { position: relative; }
-.categories-dropdown {
-    position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-lg); padding: 0; min-width: 240px; display: none; z-index: 1000;
-    transform: translateY(-8px); opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease;
-}
+.categories-dropdown { position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border-light); box-shadow: var(--shadow-lg); padding: 0; min-width: 240px; display: none; z-index: 1000; transform: translateY(-8px); opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; }
 .categories-wrapper:hover .categories-dropdown, .categories-dropdown:hover { display: block; transform: translateY(0); opacity: 1; }
+.categories-dropdown::before { content: ''; position: absolute; top: -15px; left: 0; right: 0; height: 15px; }
 .dropdown-section { padding: 12px 0; }
 .dropdown-section-title { padding: 8px 16px; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.8px; }
 .dropdown-divider { height: 1px; background: var(--border-light); margin: 8px 16px; }
@@ -106,12 +95,8 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 .nav-list { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .nav-item { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 0; text-decoration: none; color: var(--text-black); font-size: 15px; }
 .nav-item.primary { background: transparent; color: #0F260B; font-weight: 600; }
-.nav-item.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #0F260B; }
-.nav-separator { width: 1px; height: 24px; background: var(--border-light); margin: 0 6px; display: inline-block; }
 
-/* ========================================================================
-CART DRAWER
-======================================================================== */
+/* CART DRAWER */
 .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1200; }
 .cart-overlay.open { opacity: 1; visibility: visible; }
 .cart-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); background: #fff; box-shadow: -16px 0 40px rgba(15,38,11,.18); transform: translateX(100%); transition: var(--transition-smooth); z-index: 1300; display: flex; flex-direction: column; }
@@ -139,61 +124,18 @@ CART DRAWER
 .cart-link:hover { color: var(--primary-green); border-bottom-color: var(--primary-green); }
 .cart-checkout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(255,94,58,.28); }
 
-/* ========================================================================
-LOGIN PAGE STYLES
-======================================================================== */
-.login-wrapper {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0 60px;
-}
-.login-container {
-    width: 100%;
-    max-width: 1000px;
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-lg);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
-}
-.login-brand-side {
-    background: linear-gradient(135deg, #0F260B 0%, #143d12 100%);
-    color: #FFFFFF;
-    padding: 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-}
-.login-brand-side::before {
-    content: '';
-    position: absolute;
-    top: -50px; right: -50px;
-    width: 300px; height: 300px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50%;
-}
-.login-brand-side::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: -80px;
-    width: 400px; height: 400px;
-    background: rgba(255,94,58,0.15);
-    border-radius: 50%;
-}
+/* LOGIN PAGE */
+.login-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0 60px; }
+.login-container { width: 100%; max-width: 1000px; background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-lg); display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+.login-brand-side { background: linear-gradient(135deg, #0F260B 0%, #143d12 100%); color: #FFFFFF; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+.login-brand-side::before { content: ''; position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.login-brand-side::after { content: ''; position: absolute; bottom: -80px; left: -80px; width: 400px; height: 400px; background: rgba(255,94,58,0.15); border-radius: 50%; }
 .brand-top { position: relative; z-index: 2; }
 .brand-top h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
 .brand-top p { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; }
 .brand-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 16px; }
 .feature-row { display: flex; align-items: center; gap: 12px; }
-.feature-icon {
-    width: 36px; height: 36px; border-radius: 0; background: rgba(255,255,255,0.15);
-    display: grid; place-items: center; color: #CAED95;
-}
+.feature-icon { width: 36px; height: 36px; border-radius: 0; background: rgba(255,255,255,0.15); display: grid; place-items: center; color: #CAED95; }
 .feature-row span { font-size: 14px; font-weight: 500; }
 .login-form-side { padding: 48px; }
 .login-header { margin-bottom: 32px; }
@@ -203,30 +145,18 @@ LOGIN PAGE STYLES
 .form-group { position: relative; }
 .form-label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark-gray); margin-bottom: 8px; }
 .form-input-wrap { position: relative; display: flex; align-items: center; }
-.form-input {
-    width: 100%; padding: 14px 16px; height: 48px;
-    border: 1px solid var(--border-light); background: #FAFBF8;
-    font-size: 15px; color: var(--text-black); outline: none; transition: var(--transition-smooth);
-}
+.form-input { width: 100%; padding: 14px 16px; height: 48px; border: 1px solid var(--border-light); background: #FAFBF8; font-size: 15px; color: var(--text-black); outline: none; transition: var(--transition-smooth); }
 .form-input:focus { border-color: var(--primary-orange); background: #fff; box-shadow: 0 0 0 3px rgba(255,94,58,0.15); }
 .form-input::placeholder { color: #8A948A; }
 .form-input.error { border-color: #EF4444; background: #FEF2F2; }
-.toggle-password {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    border: none; background: transparent; color: var(--text-medium-gray); padding: 4px; cursor: pointer;
-}
+.toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); border: none; background: transparent; color: var(--text-medium-gray); padding: 4px; cursor: pointer; }
 .toggle-password:hover { color: var(--text-dark-gray); }
 .form-extras { display: flex; justify-content: space-between; align-items: center; margin-top: -4px; }
 .remember-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: var(--text-medium-gray); }
 .remember-check input { accent-color: var(--primary-green); width: 16px; height: 16px; cursor: pointer; }
 .forgot-link { font-size: 14px; font-weight: 600; color: var(--primary-orange); }
 .forgot-link:hover { color: var(--primary-orange-dark); text-decoration: underline; }
-.login-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; height: 48px; padding: 0 24px;
-    background: var(--primary-green); color: #fff; border: none;
-    font-size: 16px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth);
-}
+.login-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; padding: 0 24px; background: var(--primary-green); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); }
 .login-btn:hover { background: var(--primary-green-dark); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(15,38,11,0.25); }
 .login-btn:active { transform: translateY(0); }
 .login-btn:disabled { background: #9CA3AF; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -234,11 +164,7 @@ LOGIN PAGE STYLES
 .divider-row::before, .divider-row::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
 .divider-row span { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); }
 .social-row { display: flex; gap: 12px; }
-.social-btn {
-    flex: 1; height: 48px; border: 1px solid var(--border-light); background: #FAFBF8;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    font-size: 14px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth);
-}
+.social-btn { flex: 1; height: 48px; border: 1px solid var(--border-light); background: #FAFBF8; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); }
 .social-btn:hover { background: #fff; border-color: var(--primary-green); box-shadow: 0 4px 12px rgba(15,38,11,0.08); }
 .signup-prompt { text-align: center; font-size: 14px; color: var(--text-medium-gray); margin-top: 8px; }
 .signup-link { font-weight: 600; color: var(--primary-green); }
@@ -247,12 +173,44 @@ LOGIN PAGE STYLES
 .form-error-msg.visible { display: flex; }
 .form-error-msg .material-icons-outlined { font-size: 16px; }
 
+/* API error banner */
+.api-error-banner { display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 12px 16px; font-size: 14px; font-weight: 600; border-radius: 0; align-items: center; gap: 8px; margin-bottom: 4px; }
+.api-error-banner.visible { display: flex; }
+.api-error-banner .material-icons-outlined { font-size: 18px; flex-shrink: 0; }
+
+/* FOOTER */
+.site-footer { background-color: #0b0f0b; background-image: radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%), radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%), linear-gradient(135deg, #1a2219 0%, #050705 100%); color: #FFFFFF; padding: 64px 0 24px; margin-top: auto; position: relative; overflow: hidden; }
+.site-footer a { transition: color 0.3s; }
+.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1; }
+.newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; align-items: start; position: relative; z-index: 1; }
+.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand img { width: 56px; height: 56px; object-fit: contain; }
+.brand-name { font-weight: 700; font-style: italic; font-size: 28px; }
+.footer-tagline { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
+.footer-slogan { font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #CAED95; margin-bottom: 24px; }
+.social-links { display: flex; gap: 16px; margin-bottom: 24px; }
+.social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; color: #fff; text-decoration: none; }
+.social-links a:hover { background: #FF5E3A; transform: translateY(-2px); }
+.footer-col h4 { font-size: 16px; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; font-weight: 700; }
+.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
+.footer-col a:hover { color: #FF5E3A; padding-left: 4px; }
+.footer-col p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
+.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative; }
+.footer-bottom-left { color: rgba(255,255,255,0.6); font-size: 13px; }
+.footer-bottom-links { display: flex; gap: 24px; }
+.footer-bottom-links a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
+.footer-bottom-links a:hover { color: #fff; }
+
 @media (max-width: 900px) {
     .top-bar-inner { grid-template-columns: 1fr; }
     .search-wrap { width: 100%; }
     .actions { justify-content: space-between; flex-wrap: wrap; }
     .login-container { grid-template-columns: 1fr; }
     .login-brand-side { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
 }
 @media (max-width: 640px) {
     .login-form-side { padding: 28px 20px; }
@@ -260,79 +218,17 @@ LOGIN PAGE STYLES
     .social-row { flex-direction: column; }
     .footer-grid { grid-template-columns: 1fr; }
 }
-
-/* ========================================================================
-FOOTER
-======================================================================== */
-.site-footer { 
-    background-color: #0b0f0b;
-    background-image: 
-        radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%),
-        linear-gradient(135deg, #1a2219 0%, #050705 100%);
-    color: #FFFFFF; 
-    padding: 64px 0 24px; 
-    margin-top: auto; 
-    position: relative;
-    overflow: hidden;
-}
-.site-footer a { transition: color 0.3s; }
-.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1;}
-.newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
-.newsletter-form { display: flex; gap: 12px; width: 100%; max-width: 400px; }
-.newsletter-form input { flex: 1; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; font-size: 14px; outline: none; }
-.newsletter-form input:focus { border-color: #FF5E3A; background: rgba(255,255,255,0.1); }
-.newsletter-form button { padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; cursor: pointer; border-radius: 4px; transition: background 0.3s; white-space: nowrap; }
-.newsletter-form button:hover { opacity: 0.9; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; align-items: start; position: relative; z-index: 1; }
-.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.footer-brand img { width: 56px; height: 56px; object-fit: contain; }
-.brand-name { font-weight: 700; font-style: italic; font-size: 28px; }
-.footer-tagline { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
-.footer-slogan { font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #CAED95; margin-bottom: 24px;}
-.social-links { display: flex; gap: 16px; margin-bottom: 24px; }
-.social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; color: #fff; text-decoration: none;}
-.social-links a:hover { background: #FF5E3A; transform: translateY(-2px); }
-.footer-col h4 { font-size: 16px; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; font-weight: 700; }
-.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
-.footer-col a:hover { color: #FF5E3A; padding-left: 4px; }
-.footer-col p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
-.payment-methods { display: flex; gap: 12px; margin-top: 20px; opacity: 0.7; }
-.payment-methods .material-icons-outlined { font-size: 28px; }
-.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative;}
-.footer-bottom-left { color: rgba(255,255,255,0.6); font-size: 13px; }
-.footer-bottom-links { display: flex; gap: 24px; }
-.footer-bottom-links a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
-.footer-bottom-links a:hover { color: #fff; }
-
-/* Responsive */
-@media (max-width: 960px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .footer-brand { grid-column: span 2; margin-bottom: 24px; margin-right: 0;}
-}
-@media (max-width: 768px) {
-    .footer-newsletter { flex-direction: column; align-items: flex-start; }
-    .newsletter-form { max-width: 100%; }
-    .footer-bottom { flex-direction: column; gap: 16px; align-items: center; text-align: center; }
-}
-@media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-brand { grid-column: span 1; }
-    .footer-bottom-links { justify-content: center; gap: 12px; }
-}
-@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; } }
 </style>
 </head>
 <body>
 
-<!-- HEADER START -->
+<!-- HEADER -->
 <header>
 <div class="top-bar">
 <div class="page-wrap top-bar-inner">
     <div class="brand">
         <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
-            <img src="Asstes/logo.png" alt="HuddersHub logo">
+            <img src="assets/logo.png" alt="HuddersHub logo">
             <span class="brand-text">HuddersHub</span>
         </a>
     </div>
@@ -340,13 +236,13 @@ FOOTER
         <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
     </div>
     <div class="actions">
-        <span class="action-btn" id="loginBtn" style="cursor: pointer;">
+        <span class="action-btn">
             <span class="material-icons-outlined" style="font-size: 24px;">person</span>
-            <span id="loginBtnText">Login/Signup</span>
+            <span>Login / Signup</span>
         </span>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge moon" href="#" style="font-size: 20px;"><span class="material-icons-outlined">dark_mode</span></a>
+        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">0</span></a>
+        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span></a>
+        <a class="icon-with-badge" href="#"><span class="material-icons-outlined">dark_mode</span></a>
     </div>
 </div>
 </div>
@@ -354,31 +250,23 @@ FOOTER
 <div class="page-wrap">
     <div class="nav-list">
         <a href="index.html" class="nav-item primary"><span class="material-icons-outlined" style="font-size: 18px;">home</span>Home</a>
-        <span class="nav-separator"></span>
+        <span style="width:1px;height:24px;background:var(--border-light);margin:0 6px;display:inline-block;"></span>
         <div class="categories-wrapper">
             <span class="nav-item"><span class="material-icons-outlined" style="font-size: 18px;">menu</span>Categories</span>
             <div class="categories-dropdown">
-                <div class="dropdown-section"><div class="dropdown-section-title">Browse by Shop</div><div class="dropdown-divider"></div>
-                <a href="butcher.html" class="dropdown-item">Butcher</a>
-                <a href="greengrocer.html" class="dropdown-item">Greengrocer</a>
-                <a href="fishmonger.html" class="dropdown-item">Fishmonger</a>
-                <a href="bakery.html" class="dropdown-item">Bakery</a>
-                <a href="delicatessen.html" class="dropdown-item">Delicatessen</a>
+                <div class="dropdown-section">
+                    <div class="dropdown-section-title">Browse by Shop</div>
+                    <div class="dropdown-divider"></div>
+                    <a href="butcher.html" class="dropdown-item">Butcher</a>
+                    <a href="greengrocer.html" class="dropdown-item">Greengrocer</a>
+                    <a href="bakery.html" class="dropdown-item">Bakery</a>
+                    <a href="delicatessen.html" class="dropdown-item">Delicatessen</a>
                 </div>
-                <div class="dropdown-section"><div class="dropdown-section-title">Browse by Type</div><div class="dropdown-divider"></div>
-                <a href="category.html?type=meat-poultry" class="dropdown-item">Meat & Poultry</a>
-                <a href="category.html?type=fish-seafood" class="dropdown-item">Fish & Seafood</a>
-                <a href="category.html?type=fruits-veg" class="dropdown-item">Fruits & Veg</a>
-                <a href="category.html?type=bakery-items" class="dropdown-item">Bakery Items</a>
-                <a href="category.html?type=deli-foods" class="dropdown-item">Deli Foods</a>
-                </div>
-                <div class="dropdown-divider"></div>
-                <a href="all-categories.html" class="dropdown-item all-categories">All Categories</a>
             </div>
         </div>
-        <span class="nav-separator"></span>
+        <span style="width:1px;height:24px;background:var(--border-light);margin:0 6px;display:inline-block;"></span>
         <a href="about.html" class="nav-item">About</a>
-        <span class="nav-separator"></span>
+        <span style="width:1px;height:24px;background:var(--border-light);margin:0 6px;display:inline-block;"></span>
         <a href="contact.html" class="nav-item">Contact</a>
     </div>
 </div>
@@ -390,17 +278,18 @@ FOOTER
 <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
 <div class="cart-header"><h3>Your cart</h3><button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button></div>
 <div class="cart-body">
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Bell Pepper</h4><p class="cart-meta">Greengrocer · Qty 2</p></div><span class="cart-price">£1.80</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Broccoli</h4><p class="cart-meta">Greengrocer · Qty 1</p></div><span class="cart-price">£0.90</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">1</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-empty" style="display:none;">Your cart is empty.</div>
+    <div class="cart-empty">Your cart is empty.</div>
 </div>
-<div class="cart-footer"><div class="cart-total"><span>Total</span><span class="cart-total-value">£2.70</span></div><div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div></div>
+<div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span class="cart-total-value">&pound;0.00</span></div>
+    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout &rarr;</button></div>
+</div>
 </aside>
 
-<!-- MAIN LOGIN CONTENT -->
+<!-- MAIN LOGIN -->
 <main class="login-wrapper">
 <div class="page-wrap login-container">
-    <!-- LEFT: Branding / Info Panel -->
+    <!-- LEFT: Branding Panel -->
     <div class="login-brand-side">
         <div class="brand-top">
             <h1>Welcome back,<br>to HuddersHub</h1>
@@ -409,7 +298,7 @@ FOOTER
         <div class="brand-bottom">
             <div class="feature-row">
                 <div class="feature-icon"><span class="material-icons-outlined">local_shipping</span></div>
-                <span>Click & Collect made simple</span>
+                <span>Click &amp; Collect made simple</span>
             </div>
             <div class="feature-row">
                 <div class="feature-icon"><span class="material-icons-outlined">verified</span></div>
@@ -417,7 +306,7 @@ FOOTER
             </div>
             <div class="feature-row">
                 <div class="feature-icon"><span class="material-icons-outlined">history</span></div>
-                <span>Order history & quick reorders</span>
+                <span>Order history &amp; quick reorders</span>
             </div>
         </div>
     </div>
@@ -430,12 +319,21 @@ FOOTER
         </div>
 
         <form class="login-form" id="loginForm" novalidate>
+
+            <!-- API-level error banner (wrong email/password) -->
+            <div class="api-error-banner" id="apiBanner">
+                <span class="material-icons-outlined">error_outline</span>
+                <span id="apiBannerMsg">Invalid email or password. Please try again.</span>
+            </div>
+
             <div class="form-group">
                 <label class="form-label" for="email">Email address</label>
                 <div class="form-input-wrap">
                     <input class="form-input" type="email" id="email" placeholder="name@example.com" required autocomplete="email">
                 </div>
-                <div class="form-error-msg" id="emailError"><span class="material-icons-outlined">error_outline</span>Please enter a valid email address.</div>
+                <div class="form-error-msg" id="emailError">
+                    <span class="material-icons-outlined">error_outline</span>Please enter a valid email address.
+                </div>
             </div>
 
             <div class="form-group">
@@ -446,7 +344,9 @@ FOOTER
                         <span class="material-icons-outlined" id="pwIcon">visibility_off</span>
                     </button>
                 </div>
-                <div class="form-error-msg" id="passError"><span class="material-icons-outlined">error_outline</span>Password must be at least 6 characters.</div>
+                <div class="form-error-msg" id="passError">
+                    <span class="material-icons-outlined">error_outline</span>Password must be at least 6 characters.
+                </div>
             </div>
 
             <div class="form-extras">
@@ -464,8 +364,12 @@ FOOTER
             <div class="divider-row"><span>or continue with</span></div>
 
             <div class="social-row">
-                <button type="button" class="social-btn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google"> Google</button>
-                <button type="button" class="social-btn"><span class="material-icons-outlined" style="font-size: 20px;">apple</span> Apple</button>
+                <button type="button" class="social-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google"> Google
+                </button>
+                <button type="button" class="social-btn">
+                    <span class="material-icons-outlined" style="font-size: 20px;">apple</span> Apple
+                </button>
             </div>
 
             <p class="signup-prompt">Don't have an account? <a href="signup.html" class="signup-link">Create one</a></p>
@@ -481,9 +385,9 @@ FOOTER
         <h3>Join the HuddersHub Community</h3>
         <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
     </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
+    <div style="display:flex;gap:12px;align-items:center;">
+        <a href="login.html" style="padding:12px 24px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-weight:600;text-decoration:none;border-radius:4px;">Log In</a>
+        <a href="signup.html" style="padding:12px 24px;background:#FF5E3A;border:none;color:#fff;font-weight:600;text-decoration:none;border-radius:4px;">Register Now</a>
     </div>
 </div>
 <div class="page-wrap footer-grid">
@@ -502,27 +406,24 @@ FOOTER
         <a href="category.html?type=butcher">The Butcher</a>
         <a href="category.html?type=bakery">Bakery</a>
         <a href="category.html?type=delicatessen">Delicatessen</a>
-        <a href="category.html?type=dairy">Dairy & Eggs</a>
+        <a href="category.html?type=dairy">Dairy &amp; Eggs</a>
     </div>
     <div class="footer-col">
         <h4>Company</h4>
         <a href="about.html">About HuddersHub</a>
         <a href="register-trader.html">Become a Trader</a>
         <a href="faq.html">Help Center</a>
-        <a href="refund.html">Returns & Refunds</a>
+        <a href="refund.html">Returns &amp; Refunds</a>
     </div>
     <div class="footer-col">
         <h4>Contact</h4>
         <p><span class="material-icons-outlined" style="font-size:16px;">location_on</span> Huddersfield, UK</p>
         <p><span class="material-icons-outlined" style="font-size:16px;">mail</span> support@huddershub.test</p>
         <p><span class="material-icons-outlined" style="font-size:16px;">phone</span> +44 1484 000 000</p>
-        
     </div>
 </div>
 <div class="page-wrap footer-bottom">
-    <div class="footer-bottom-left">
-        <span>&copy; 2026 HuddersHub. All rights reserved.</span>
-    </div>
+    <div class="footer-bottom-left"><span>&copy; 2026 HuddersHub. All rights reserved.</span></div>
     <div class="footer-bottom-links">
         <a href="privacy.html">Privacy Policy</a>
         <a href="terms.html">Terms of Service</a>
@@ -531,96 +432,69 @@ FOOTER
 </footer>
 
 <script>
-// HEADER SCROLL EFFECT
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('header');
-    if (window.scrollY > 50) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+// ── HEADER SCROLL ─────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+    document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-// CATEGORIES DROPDOWN
+// ── CATEGORIES DROPDOWN ───────────────────────────────────────────────────
 document.querySelectorAll('.categories-wrapper').forEach(wrapper => {
-    const dropdown = wrapper.querySelector('.categories-dropdown');
-    wrapper.addEventListener('mouseenter', () => { dropdown.style.display='block'; setTimeout(()=>{dropdown.style.transform='translateY(0)';dropdown.style.opacity='1';},10); });
-    wrapper.addEventListener('mouseleave', () => { dropdown.style.transform='translateY(-8px)'; dropdown.style.opacity='0'; setTimeout(()=>{dropdown.style.display='none';},200); });
+    const dd = wrapper.querySelector('.categories-dropdown');
+    wrapper.addEventListener('mouseenter', () => { dd.style.display = 'block'; setTimeout(() => { dd.style.transform = 'translateY(0)'; dd.style.opacity = '1'; }, 10); });
+    wrapper.addEventListener('mouseleave', () => { dd.style.transform = 'translateY(-8px)'; dd.style.opacity = '0'; setTimeout(() => { dd.style.display = 'none'; }, 200); });
 });
 
-// CART DRAWER
+// ── CART DRAWER ───────────────────────────────────────────────────────────
 const cartTrigger = document.getElementById('cartTrigger');
-const cartDrawer = document.getElementById('cartDrawer');
+const cartDrawer  = document.getElementById('cartDrawer');
 const cartOverlay = document.getElementById('cartOverlay');
-const cartClose = document.getElementById('cartClose');
-function formatMoney(value) { return '£' + value.toFixed(2); }
-function updateCartTotals() {
-    if (!cartDrawer) return;
-    const items = cartDrawer.querySelectorAll('.cart-item');
-    let total = 0;
-    items.forEach(item => {
-        const price = parseFloat(item.dataset.price || '0');
-        const qtyEl = item.querySelector('.qty-val');
-        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
-        const priceEl = item.querySelector('.cart-price');
-        if (priceEl) priceEl.textContent = formatMoney(price * qty);
-        total += price * qty;
-    });
-    const totalEl = cartDrawer.querySelector('.cart-total-value');
-    if (totalEl) totalEl.textContent = formatMoney(total);
-    const emptyEl = cartDrawer.querySelector('.cart-empty');
-    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
-}
-function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+const cartClose   = document.getElementById('cartClose');
+function openCart()  { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
 if (cartTrigger) cartTrigger.addEventListener('click', e => { e.preventDefault(); openCart(); });
-if (cartDrawer) {
-    cartDrawer.addEventListener('click', e => {
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const item = qtyBtn.closest('.cart-item');
-            const qtyEl = item?.querySelector('.qty-val');
-            if (!item || !qtyEl) return;
-            let qty = parseInt(qtyEl.textContent, 10) || 1;
-            qty += qtyBtn.dataset.action === 'increase' ? 1 : -1;
-            qty = Math.max(1, qty);
-            qtyEl.textContent = qty; updateCartTotals(); return;
-        }
-        const removeBtn = e.target.closest('.cart-remove');
-        if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartTotals(); }
-    });
-}
 if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-if (cartClose) cartClose.addEventListener('click', closeCart);
+if (cartClose)   cartClose.addEventListener('click', closeCart);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
-updateCartTotals();
 
-// LOGIN FORM LOGIC
-const pwInput = document.getElementById('password');
-const pwIcon = document.getElementById('pwIcon');
-const togglePwBtn = document.querySelector('.toggle-password');
-if (togglePwBtn) {
-    togglePwBtn.addEventListener('click', () => {
-        const isPass = pwInput.type === 'password';
-        pwInput.type = isPass ? 'text' : 'password';
-        pwIcon.textContent = isPass ? 'visibility' : 'visibility_off';
-    });
-}
+// ── PASSWORD TOGGLE ───────────────────────────────────────────────────────
+const pwInput  = document.getElementById('password');
+const pwIcon   = document.getElementById('pwIcon');
+document.querySelector('.toggle-password').addEventListener('click', () => {
+    const show = pwInput.type === 'password';
+    pwInput.type  = show ? 'text' : 'password';
+    pwIcon.textContent = show ? 'visibility' : 'visibility_off';
+});
 
-const loginForm = document.getElementById('loginForm');
-const emailInput = document.getElementById('email');
+// ── LOGIN FORM — real API fetch ───────────────────────────────────────────
+const loginForm      = document.getElementById('loginForm');
+const emailInput     = document.getElementById('email');
 const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-const emailError = document.getElementById('emailError');
-const passError = document.getElementById('passError');
+const emailError     = document.getElementById('emailError');
+const passError      = document.getElementById('passError');
+const apiBanner      = document.getElementById('apiBanner');
+const apiBannerMsg   = document.getElementById('apiBannerMsg');
 
-function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    let valid = true;
-    
-    // Reset
+function resetErrors() {
     emailInput.classList.remove('error');
     pwInput.classList.remove('error');
     emailError.classList.remove('visible');
     passError.classList.remove('visible');
+    apiBanner.classList.remove('visible');
+}
 
+function setLoading(on) {
+    loginSubmitBtn.disabled = on;
+    document.getElementById('loginBtnTextInner').textContent = on ? 'Logging in...' : 'Log in';
+    document.getElementById('loginBtnArrow').style.display   = on ? 'none' : '';
+}
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    resetErrors();
+
+    let valid = true;
     if (!validateEmail(emailInput.value.trim())) {
         emailInput.classList.add('error');
         emailError.classList.add('visible');
@@ -631,23 +505,51 @@ loginForm.addEventListener('submit', function(e) {
         passError.classList.add('visible');
         valid = false;
     }
-
-    if (valid) {
-        loginSubmitBtn.disabled = true;
-        document.getElementById('loginBtnTextInner').textContent = 'Logging in...';
-        document.getElementById('loginBtnArrow').style.display = 'none';
-        
-        // Simulate API call
-        setTimeout(() => {
-            window.location.href = 'index.html'; // Redirect to homepage on success
-        }, 1500);
-    } else {
-        // Focus first invalid field
-        if (emailInput.classList.contains('error')) emailInput.focus();
-        else pwInput.focus();
+    if (!valid) {
+        (emailInput.classList.contains('error') ? emailInput : pwInput).focus();
+        return;
     }
+
+    setLoading(true);
+
+    // ── Real API call to your PHP login endpoint ──────────────────────────
+    fetch('../api/auth/login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email:    emailInput.value.trim(),
+            password: pwInput.value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // ── Save the real user data from the API response ─────────────
+            // The PHP returns: user_id, name (firstname), email, role
+            sessionStorage.setItem('user_id',   data.user_id);
+            sessionStorage.setItem('user_name',  data.name);
+            sessionStorage.setItem('user_email', data.email);
+            sessionStorage.setItem('user_role',  data.role);
+
+            // Redirect to previous page if available, else homepage
+            const returnTo = sessionStorage.getItem('returnTo') || 'index.html';
+            sessionStorage.removeItem('returnTo');
+            window.location.href = returnTo;
+        } else {
+            // Wrong credentials — show banner
+            apiBannerMsg.textContent = data.message || 'Invalid email or password. Please try again.';
+            apiBanner.classList.add('visible');
+            setLoading(false);
+            pwInput.value = '';
+            pwInput.focus();
+        }
+    })
+    .catch(() => {
+        apiBannerMsg.textContent = 'Connection error. Make sure Apache and Oracle are running.';
+        apiBanner.classList.add('visible');
+        setLoading(false);
+    });
 });
 </script>
 </body>
 </html>
-
