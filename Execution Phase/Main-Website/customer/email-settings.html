@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HuddersHub - Email Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    :root{--orange:#FF5E3A;--orange-dark:#E3472C;--green:#0F260B;--bg:#F7F6F3;--line:#DCE3DA;--muted:#5E6A63}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+    .header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line)}
+    .header-inner{height:68px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+    .brand img{width:42px;height:42px}.brand span{font-family:'Google Sans Flex',sans-serif;font-style:italic;font-size:26px;font-weight:700;color:var(--green)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:24px 0}
+    .side,.card{background:#fff;border:1px solid var(--line)}
+    .side{padding:18px;height:max-content}
+    .profile-chip{display:flex;gap:10px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+    .avatar{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;background:#f3f5f2}
+    .name{font-weight:700}
+    .mail{font-size:13px;color:var(--muted)}
+    .menu{display:grid;gap:8px}.menu a{text-decoration:none;color:#1e2a1c;font-size:14px;line-height:1.35;font-weight:600;padding:10px 12px;border:1px solid transparent}
+    .menu a:visited{color:#1e2a1c}
+    .menu a.active,.menu a:hover{border-color:var(--line);background:#f7faf6;font-weight:600}
+    .menu a.logout{margin-top:6px;border-top:1px solid var(--line);padding-top:14px;color:#b42318}
+    .card{padding:20px}
+    h1{font-size:24px;margin-bottom:4px}
+    .sub{font-size:14px;color:var(--muted);margin-bottom:14px}
+    .set{border:1px solid var(--line);padding:14px;margin-bottom:10px;background:#fcfdfb}
+    .row{display:flex;justify-content:space-between;gap:14px;align-items:center}
+    .ttl{font-weight:700;margin-bottom:3px}.txt{font-size:13px;color:#415247}
+    .toggle{width:50px;height:28px;border-radius:18px;background:#d9e2d7;position:relative}
+    .toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+    .toggle.on{background:#88c07c}.toggle.on::after{left:25px}
+    .btns{display:flex;gap:10px;margin-top:14px}
+    .btn{height:42px;padding:0 16px;border:none;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--orange);color:#fff}.btn-primary:hover{background:var(--orange-dark)}
+    .btn-muted{background:#eef3ed;color:#14310f}
+    @media (max-width:980px){.layout{grid-template-columns:1fr}}
+    @media (max-width:640px){.header-inner{height:62px}.brand span{font-size:22px}.row{align-items:flex-start}.btns{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../public/index.html"><img src="../public/assets/logo.png" alt="HuddersHub logo"><span>HuddersHub</span></a>
+      <a href="profile.html" style="text-decoration:none;color:#0f260b;font-weight:600;">Back to Account</a>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="side">
+      <div class="profile-chip">
+        <div class="avatar"><span class="material-icons-outlined">person</span></div>
+        <div>
+          <p class="name">John Smith</p>
+          <p class="mail">john.smith@email.com</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="profile.html">Profile</a>
+        <a href="orders.html">My Orders</a>
+        <a href="addresses.html">Saved Addresses</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="change-password.html">Change Password</a>
+        <a class="active" href="email-settings.html">Email Settings</a>
+        <a class="logout" href="../api/auth/logout.php">Logout</a>
+      </nav>
+    </aside>
+    <section class="card">
+      <h1>Email Settings</h1>
+      <p class="sub">Control which notifications and updates you receive.</p>
+
+      <div class="set"><div class="row"><div><p class="ttl">Order updates</p><p class="txt">Receive email when order status changes.</p></div><span class="toggle on" aria-hidden="true"></span></div></div>
+      <div class="set"><div class="row"><div><p class="ttl">Promotions and offers</p><p class="txt">Get deals from your favorite local traders.</p></div><span class="toggle on" aria-hidden="true"></span></div></div>
+      <div class="set"><div class="row"><div><p class="ttl">Weekly newsletter</p><p class="txt">Receive curated products and food tips every week.</p></div><span class="toggle" aria-hidden="true"></span></div></div>
+      <div class="set"><div class="row"><div><p class="ttl">Security alerts</p><p class="txt">Important account and login activity notices.</p></div><span class="toggle on" aria-hidden="true"></span></div></div>
+
+      <div class="btns">
+        <button class="btn btn-primary" type="button">Save Preferences</button>
+        <button class="btn btn-muted" type="button">Reset to Default</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
