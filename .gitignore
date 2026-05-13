@@ -1,0 +1,5 @@
+# Ignore the file containing the password
+Execution Phase/Main-Website/config/mail_config.php
+
+# Ignore the vendor folder (it's too big for GitHub)
+Execution Phase/Main-Website/vendor/
