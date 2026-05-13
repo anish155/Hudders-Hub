@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Trader Dashboard | Reports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ========================================================================
+CSS VARIABLES - HuddersHub Design System
+======================================================================== */
+:root {
+  --primary-orange: #FF5E3A;
+  --primary-orange-light: #FF8C70;
+  --primary-orange-dark: #E3472C;
+  --primary-green: #0F260B;
+  --primary-green-light: rgba(15, 38, 11, 0.14);
+  --primary-green-dark: #0B1C08;
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F6F3;
+  --bg-gray: #F2F4F1;
+  --border-light: #DCE3DA;
+  --text-black: #0B140A;
+  --text-dark-gray: #1E2A1C;
+  --text-medium-gray: #5E6A63;
+  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-black);
+  background: linear-gradient(180deg, #F7F6F3 0%, #EEF1EC 100%);
+  min-height: 100vh;
+}
+
+/* ========================================================================
+TOP NAVBAR
+======================================================================== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  height: 60px;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 100;
+}
+
+.top-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-nav-logo img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.top-nav-logo span {
+  font-family: 'Google Sans Flex', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--primary-green);
+}
+
+.top-nav-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-black);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--transition-smooth);
+  color: var(--text-medium-gray);
+  position: relative;
+}
+
+.top-nav-icon:hover {
+  background: var(--primary-green-light);
+  color: var(--primary-green);
+}
+
+.top-nav-icon .material-icons-outlined {
+  font-size: 22px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: var(--primary-orange);
+  border-radius: 50%;
+  border: 2px solid var(--bg-white);
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--bg-gray);
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark-gray);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.user-pill:hover {
+  background: var(--primary-green-light);
+}
+
+.user-pill .material-icons-outlined {
+  font-size: 18px;
+}
+
+/* ========================================================================
+SIDEBAR
+======================================================================== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--primary-green);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow-y: auto;
+}
+
+.sidebar-profile {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-avatar .material-icons-outlined {
+  font-size: 32px;
+  color: #FFFFFF;
+}
+
+.sidebar-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sidebar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ADE80;
+}
+
+.sidebar-nav {
+  padding: 16px 0;
+  flex: 1;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.sidebar-nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.sidebar-nav-item .material-icons-outlined {
+  font-size: 20px;
+}
+
+.sidebar-nav-item.logout {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.sidebar-nav-item.logout:hover {
+  color: var(--primary-orange-light);
+  background: rgba(255, 94, 58, 0.1);
+}
+
+.sidebar-report-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-report-group summary {
+  list-style: none;
+}
+
+.sidebar-report-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.sidebar-report-sublist {
+  list-style: none;
+  padding-left: 18px;
+  margin-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.sidebar-report-group[open] .sidebar-report-sublist {
+  max-height: 180px;
+  opacity: 1;
+  margin-top: 6px;
+}
+
+.sidebar-report-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-report-link:hover,
+.sidebar-report-link.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+}
+
+.sidebar-report-caret {
+  margin-left: auto;
+  transition: transform 0.25s ease;
+  font-size: 18px;
+}
+
+.sidebar-report-group[open] .sidebar-report-caret {
+  transform: rotate(180deg);
+}
+
+/* ========================================================================
+MAIN CONTENT
+======================================================================== */
+.main-content {
+  margin-left: 260px;
+  margin-top: 60px;
+  padding: 32px;
+  min-height: calc(100vh - 60px);
+  width: calc(100% - 260px);
+  max-width: 1100px;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-black);
+}
+
+/* Welcome Section */
+.welcome-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.welcome-text {
+  font-size: 14px;
+  color: var(--text-medium-gray);
+  margin-bottom: 4px;
+}
+
+.welcome-text strong {
+  color: var(--text-dark-gray);
+}
+
+.shop-name {
+  font-weight: 700;
+  color: var(--text-black);
+}
+
+.report-hero {
+  background: linear-gradient(120deg, #0F260B 0%, #163915 55%, #1D4B1C 100%);
+  color: #FFFFFF;
+  border-radius: 8px;
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.report-hero-kicker {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 6px;
+}
+
+.report-hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.report-hero-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 14px 16px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.summary-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.summary-trend {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.summary-trend.positive {
+  color: #CAED95;
+}
+
+.summary-trend.neutral {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Finance Section */
+.finance-section {
+  margin-bottom: 24px;
+}
+
+.finance-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.finance-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  position: relative;
+  display: inline-block;
+}
+
+.finance-header h2::before,
+.finance-header h2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.finance-header h2::before {
+  right: calc(100% + 16px);
+}
+
+.finance-header h2::after {
+  left: calc(100% + 16px);
+}
+
+.finance-week {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-medium-gray);
+  margin-bottom: 4px;
+}
+
+.finance-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-medium-gray);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.panel {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Finance Table */
+.finance-table-wrap {
+  max-width: 500px;
+  margin: 0 auto 16px;
+  overflow-x: auto;
+}
+
+.finance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.finance-table th {
+  background: var(--bg-gray);
+  padding: 10px 16px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  border-bottom: 2px solid var(--border-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+}
+
+.finance-table th:first-child {
+  text-align: left;
+}
+
+.finance-table td {
+  padding: 10px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-dark-gray);
+}
+
+.finance-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.finance-table tfoot td {
+  font-weight: 700;
+  background: var(--bg-gray);
+  border-top: 2px solid var(--border-light);
+  color: var(--text-black);
+}
+
+.finance-table .earned {
+  font-weight: 600;
+  color: var(--primary-green);
+}
+
+/* Action Buttons */
+.finance-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-white);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark-gray);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  border-radius: 0;
+}
+
+.action-btn:hover {
+  background: var(--primary-green);
+  color: #fff;
+  border-color: var(--primary-green);
+}
+
+.action-btn .material-icons-outlined {
+  font-size: 16px;
+}
+
+/* Graph Section */
+.graph-section {
+  margin-bottom: 24px;
+}
+
+.graph-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.graph-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark-gray);
+  position: relative;
+  display: inline-block;
+}
+
+.graph-header h2::before,
+.graph-header h2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60px;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.graph-header h2::before {
+  right: calc(100% + 16px);
+}
+
+.graph-header h2::after {
+  left: calc(100% + 16px);
+}
+
+.chart-container {
+  padding: 10px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ========================================================================
+RESPONSIVE
+======================================================================== */
+@media (max-width: 900px) {
+  body {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    left: -280px;
+    transition: left 0.3s ease;
+  }
+  .sidebar.open {
+    left: 0;
+  }
+  .main-content {
+    margin-left: 0;
+  }
+  .top-nav {
+    left: 0;
+  }
+  .sidebar-toggle {
+    display: grid;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 300;
+    width: 44px;
+    height: 44px;
+    border-radius: 0;
+    background: var(--primary-green);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    place-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 20px 16px;
+  }
+  .finance-table th,
+  .finance-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .chart-container {
+    padding: 6px;
+  }
+}
+
+.sidebar-toggle {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 150;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+</style>
+</head>
+<body>
+<script>
+  window.location.replace('report.html?type=weekly');
+</script>
+
+<!-- Sidebar Toggle (Mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+  <span class="material-icons-outlined">menu</span>
+</button>
+
+<!-- Sidebar Overlay (Mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ============================================
+     SIDEBAR
+     ============================================ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar">
+      <span class="material-icons-outlined">person</span>
+    </div>
+    <div class="sidebar-name">John Doe</div>
+    <div class="sidebar-status">
+      <span class="status-dot"></span>
+      Status: Active
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="sidebar-nav-list">
+      <li>
+        <a href="dashboard.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">dashboard</span>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="products.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">inventory_2</span>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="orders.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">receipt_long</span>
+          Orders
+        </a>
+      </li>
+      <li>
+        <a href="finance.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">account_balance_wallet</span>
+          Finance
+        </a>
+      </li>
+      <li>
+        <details class="sidebar-report-group" open>
+          <summary class="sidebar-nav-item active">
+            <span class="material-icons-outlined">analytics</span>
+            Reports
+            <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+          </summary>
+          <ul class="sidebar-report-sublist">
+            <li><a href="report.html?type=daily" class="sidebar-report-link">Daily</a></li>
+            <li><a href="report.html?type=weekly" class="sidebar-report-link active">Weekly</a></li>
+            <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <a href="profile.html" class="sidebar-nav-item">
+          <span class="material-icons-outlined">settings</span>
+          Profile
+        </a>
+      </li>
+      <li>
+        <a href="../api/auth/logout.php" class="sidebar-nav-item logout">
+          <span class="material-icons-outlined">logout</span>
+          Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- ============================================
+     TOP NAVBAR
+     ============================================ -->
+<header class="top-nav">
+  <div class="top-nav-left">
+    <div class="top-nav-logo">
+      <img src="../public/assets/logo.png" alt="HuddersHub">
+      <span>HuddersHub</span>
+    </div>
+  </div>
+  <div class="top-nav-title">Trader Dashboard</div>
+  <div class="top-nav-right">
+    <button class="top-nav-icon" aria-label="Notifications">
+      <span class="material-icons-outlined">notifications_none</span>
+      <span class="notification-badge"></span>
+    </button>
+    <div class="user-pill">
+      <span class="material-icons-outlined">account_circle</span>
+      <span>John</span>
+      <span class="material-icons-outlined" style="font-size: 16px;">expand_more</span>
+    </div>
+    <button class="top-nav-icon" aria-label="Dark mode">
+      <span class="material-icons-outlined">dark_mode</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================================
+     MAIN CONTENT
+     ============================================ -->
+<main class="main-content">
+  <!-- Page Title -->
+  <div class="page-header">
+    <h1>Weekly Report</h1>
+  </div>
+
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <p class="welcome-text">Welcome back, <strong>John!</strong></p>
+    <p class="shop-name">John meat shop</p>
+  </div>
+
+  <div class="report-hero">
+    <div>
+      <p class="report-hero-kicker">Week of 13 May - 19 May</p>
+      <h2 class="report-hero-title">Weekly performance overview</h2>
+      <p class="report-hero-subtitle">Tracking collected orders and earnings.</p>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <span class="summary-label">Total orders</span>
+        <span class="summary-value">55</span>
+        <span class="summary-trend positive">+12% vs last week</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Collected</span>
+        <span class="summary-value">55</span>
+        <span class="summary-trend neutral">100% collection rate</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Total earned</span>
+        <span class="summary-value">£660</span>
+        <span class="summary-trend positive">+8% vs last week</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Finance Section -->
+  <div class="finance-section">
+    <div class="finance-header">
+      <h2>Weekly Finance</h2>
+    </div>
+    <p class="finance-week">Week for: 13 May - 19 May 2026</p>
+    <p class="finance-note">Only includes collected orders</p>
+
+    <div class="panel">
+      <!-- Finance Table -->
+      <div class="finance-table-wrap">
+        <table class="finance-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Orders</th>
+              <th>Collected</th>
+              <th>Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mon</td>
+              <td>0</td>
+              <td>0</td>
+              <td class="earned">£0</td>
+            </tr>
+            <tr>
+              <td>Tue</td>
+              <td>10</td>
+              <td>10</td>
+              <td class="earned">£120</td>
+            </tr>
+            <tr>
+              <td>Wed</td>
+              <td>0</td>
+              <td>0</td>
+              <td class="earned">£0</td>
+            </tr>
+            <tr>
+              <td>Thu</td>
+              <td>25</td>
+              <td>25</td>
+              <td class="earned">£300</td>
+            </tr>
+            <tr>
+              <td>Fri</td>
+              <td>20</td>
+              <td>20</td>
+              <td class="earned">£240</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td>55</td>
+              <td>55</td>
+              <td class="earned">£660</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="finance-actions">
+        <button class="action-btn" id="printBtn">
+          <span class="material-icons-outlined">print</span>
+          Print
+        </button>
+        <button class="action-btn" id="downloadBtn">
+          <span class="material-icons-outlined">download</span>
+          Download
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Graph Section -->
+  <div class="graph-section">
+    <div class="graph-header">
+      <h2>Weekly graph</h2>
+    </div>
+    <div class="panel">
+      <div class="chart-container">
+        <canvas id="weeklyChart"></canvas>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Sidebar Toggle (Mobile)
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  sidebarOverlay.classList.toggle('active');
+});
+
+sidebarOverlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('active');
+});
+
+// Active nav item click
+document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+  });
+});
+
+// Weekly Chart using Chart.js
+const ctx = document.getElementById('weeklyChart').getContext('2d');
+
+// Create gradient for the line
+const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+gradient.addColorStop(0, 'rgba(15, 38, 11, 0.15)');
+gradient.addColorStop(1, 'rgba(15, 38, 11, 0)');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    datasets: [{
+      label: 'Earned (£)',
+      data: [0, 120, 0, 300, 240, 180, 150],
+      borderColor: '#0F260B',
+      backgroundColor: gradient,
+      borderWidth: 2.5,
+      pointBackgroundColor: '#0F260B',
+      pointBorderColor: '#FFFFFF',
+      pointBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 13,
+            weight: '600'
+          },
+          color: '#1E2A1C'
+        }
+      },
+      tooltip: {
+        backgroundColor: '#0F260B',
+        titleFont: {
+          family: "'Plus Jakarta Sans', sans-serif",
+          size: 13,
+          weight: '600'
+        },
+        bodyFont: {
+          family: "'Plus Jakarta Sans', sans-serif",
+          size: 12
+        },
+        padding: 12,
+        cornerRadius: 0,
+        displayColors: false,
+        callbacks: {
+          label: function(context) {
+            return '£' + context.parsed.y;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(220, 227, 218, 0.5)',
+          drawBorder: false
+        },
+        ticks: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 12
+          },
+          color: '#5E6A63',
+          callback: function(value) {
+            return '£' + value;
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            family: "'Plus Jakarta Sans', sans-serif",
+            size: 12,
+            weight: '600'
+          },
+          color: '#1E2A1C'
+        }
+      }
+    }
+  }
+});
+
+// Print Button
+document.getElementById('printBtn').addEventListener('click', function() {
+  window.print();
+});
+
+// Download Button (CSV)
+document.getElementById('downloadBtn').addEventListener('click', function() {
+  const csvContent = "Day,Orders,Collected,Earned\nMon,0,0,0\nTue,10,10,120\nWed,0,0,0\nThu,25,25,300\nFri,20,20,240\nTotal,55,55,660";
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'weekly_finance_report.csv';
+  a.click();
+  window.URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
+

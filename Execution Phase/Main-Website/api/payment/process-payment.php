@@ -1,61 +1,75 @@
 <?php
+error_reporting(0);
+ini_set('display_errors', 0);
 session_start();
 require_once '../../config/database.php';
 require_once '../../vendor/autoload.php';
-
 use PHPMailer\PHPMailer\PHPMailer;
 
-$txn_id = $_POST['txn_id'] ?? $_GET['txn_id'] ?? 'TXN_' . time();
-$payment_status = $_POST['payment_status'] ?? 'Completed';
-$mc_gross = $_POST['mc_gross'] ?? 0;
+$custom  = $_REQUEST['custom'] ?? null;
+$order   = $_SESSION['pending_order'] ?? null;
 
-$order = $_SESSION['pending_order'] ?? null;
-
-if (!$order && isset($_POST['custom'])) {
-    $parts = explode('|', $_POST['custom']);
-    if (count($parts) == 2) {
-        $order = ['order_id' => $parts[0], 'user_id' => $parts[1], 'amount' => $mc_gross];
+if ($custom) {
+    $parts = explode('|', $custom);
+    if (count($parts) >= 2) {
+        if ($order) {
+            $order['order_id'] = $parts[0];
+            $order['user_id']  = $parts[1];
+        } else {
+            $order = [
+                'order_id'   => $parts[0],
+                'user_id'    => $parts[1],
+                'amount'     => $_REQUEST['amt'] ?? 0,
+                'product_id' => $parts[2] ?? null,
+                'quantity'   => $parts[3] ?? 1
+            ];
+        }
     }
 }
 
-if ($order) {
-    $order_id = $order['order_id'];
-    $user_id = $order['user_id'];
-    $amount = $order['amount'] ?: $mc_gross;
+$txn_id   = $_REQUEST['txn_id'] ?? 'TXN_' . time();
+$mc_gross = $_REQUEST['mc_gross'] ?? 0;
+$order_id = null;
+$amount   = 0;
 
-    // Update order to Completed
+if ($order) {
+    $order_id   = $order['order_id'];
+    $user_id    = $order['user_id'];
+    $amount     = $order['amount'] ?: $mc_gross;
+    $product_id = $order['product_id'];
+    $quantity   = $order['quantity'];
+
+    // 1. Update order status
     $upd = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Completed' WHERE order_id = :oid");
     oci_bind_by_name($upd, ':oid', $order_id);
     oci_execute($upd, OCI_NO_AUTO_COMMIT);
 
-    // Get next payment_id
-    $pidq = oci_parse($conn, "SELECT NVL(MAX(payment_id),0)+1 AS new_id FROM PAYMENT");
-    oci_execute($pidq);
-    $pidrow = oci_fetch_assoc($pidq);
-    $payment_id = $pidrow['NEW_ID'];
+    // 2. INSERT payment
+    $pins = oci_parse($conn, "
+        INSERT INTO PAYMENT (PAYMENT_ID, ORDER_ID, PAYMENT_DATE, AMOUNT, METHOD, STATUS, USER_ID)
+        VALUES (
+            NVL((SELECT MAX(payment_id) FROM PAYMENT), 0) + 1,
+            :oid, SYSDATE, :amt, 'PayPal', 'Completed', :user_id
+        )
+    ");
+    oci_bind_by_name($pins, ':oid',     $order_id);
+    oci_bind_by_name($pins, ':amt',     $amount);
+    oci_bind_by_name($pins, ':user_id', $user_id);
+    oci_execute($pins, OCI_NO_AUTO_COMMIT);
 
-    // Insert payment record
-    $psql = "INSERT INTO PAYMENT VALUES (:pid, :amount, 'PayPal', 'Completed', SYSDATE, :oid, :uid)";
-    $pstmt = oci_parse($conn, $psql);
-    oci_bind_by_name($pstmt, ':pid', $payment_id);
-    oci_bind_by_name($pstmt, ':amount', $amount);
-    oci_bind_by_name($pstmt, ':oid', $order_id);
-    oci_bind_by_name($pstmt, ':uid', $user_id);
-    oci_execute($pstmt, OCI_NO_AUTO_COMMIT);
-
-    // Reduce product stock
-    if (isset($order['product_id']) && isset($order['quantity'])) {
+    // 3. Reduce stock
+    if ($product_id && $quantity) {
         $stk = oci_parse($conn, "UPDATE PRODUCT SET stock = stock - :qty WHERE product_id = :pid");
-        oci_bind_by_name($stk, ':qty', $order['quantity']);
-        oci_bind_by_name($stk, ':pid', $order['product_id']);
+        oci_bind_by_name($stk, ':qty', $quantity);
+        oci_bind_by_name($stk, ':pid', $product_id);
         oci_execute($stk, OCI_NO_AUTO_COMMIT);
     }
 
     oci_commit($conn);
 
-    // Send confirmation email
-    $eq = oci_parse($conn, "SELECT email, firstname FROM HUDDER_USER WHERE user_id = :uid");
-    oci_bind_by_name($eq, ':uid', $user_id);
+    // 4. Send confirmation email
+    $eq = oci_parse($conn, "SELECT email, firstname FROM HUDDER_USER WHERE user_id = :user_id");
+    oci_bind_by_name($eq, ':user_id', $user_id);
     oci_execute($eq);
     $user = oci_fetch_assoc($eq);
 
@@ -63,12 +77,12 @@ if ($order) {
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'anishtandukar3@gmail.com';
-            $mail->Password = 'kpephxqowoztvlgk';
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'anishtandukar3@gmail.com';
+            $mail->Password   = 'kpephxqowoztvlgk';
             $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
+            $mail->Port       = 587;
             $mail->setFrom('anishtandukar3@gmail.com', 'HuddersHub');
             $mail->addAddress($user['EMAIL'], $user['FIRSTNAME']);
             $mail->Subject = 'Order Confirmed - HuddersHub #' . $order_id;
@@ -85,9 +99,7 @@ if ($order) {
                 </div>
             ";
             $mail->send();
-        } catch (Exception $e) {
-            // Email failed but payment succeeded
-        }
+        } catch (Exception $e) {}
     }
 
     unset($_SESSION['pending_order']);
@@ -108,7 +120,6 @@ if ($order) {
     p { color: #5E6A63; font-size: 15px; margin-bottom: 8px; }
     .order-id { font-size: 18px; font-weight: 700; color: #0F260B; background: #F7F6F3; padding: 10px 20px; display: inline-block; margin: 16px 0; }
     .btn { display: inline-block; padding: 12px 28px; background: #0F260B; color: #fff; text-decoration: none; font-weight: 700; margin-top: 20px; }
-    .btn-orange { background: #FF5E3A; margin-left: 10px; }
 </style>
 </head>
 <body>
@@ -116,9 +127,9 @@ if ($order) {
     <div class="icon"><span class="material-icons-outlined">check_circle</span></div>
     <h2>Payment Successful!</h2>
     <p>Thank you for your order. Your payment has been confirmed.</p>
-    <?php if ($order): ?>
-    <div class="order-id">Order #<?php echo $order['order_id']; ?></div>
-    <p><strong>Amount:</strong> £<?php echo number_format($order['amount'], 2); ?></p>
+    <?php if ($order_id): ?>
+    <div class="order-id">Order #<?php echo htmlspecialchars($order_id); ?></div>
+    <p><strong>Amount:</strong> £<?php echo number_format($amount, 2); ?></p>
     <?php endif; ?>
     <p style="font-size:13px;color:#9CA3AF;">A confirmation email has been sent to you.</p>
     <br>

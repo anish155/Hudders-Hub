@@ -10,7 +10,10 @@ if (!$order) {
 $paypalURL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 $paypalID  = 'sb-ynhsr50703047@business.example.com';
 
-$successURL = 'http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/payment/process-payment.php';
+// Build custom value with all 4 fields
+$custom_val = $order['order_id'] . '|' . $order['user_id'] . '|' . $order['product_id'] . '|' . $order['quantity'];
+
+$successURL = 'http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/payment/process-payment.php?custom=' . urlencode($custom_val) . '&amt=' . $order['amount'];
 $cancelURL  = 'http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/payment/cancel.php';
 ?>
 <form id="paypalForm" action="<?php echo $paypalURL; ?>" method="post">
@@ -21,7 +24,7 @@ $cancelURL  = 'http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/p
     <input type="hidden" name="amount" value="<?php echo $order['amount']; ?>">
     <input type="hidden" name="currency_code" value="GBP">
     <input type="hidden" name="quantity" value="1">
-    <input type="hidden" name="custom" value="<?php echo $order['order_id'] . '|' . $order['user_id']; ?>">
+    <input type="hidden" name="custom" value="<?php echo $custom_val; ?>">
     <input type="hidden" name="return" value="<?php echo $successURL; ?>">
     <input type="hidden" name="cancel_return" value="<?php echo $cancelURL; ?>">
 </form>

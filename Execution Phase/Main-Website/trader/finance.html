@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HuddersHub - Trader Dashboard | Products</title>
+<title>HuddersHub - Trader Dashboard | Finance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -738,7 +738,7 @@ body {
           </a>
         </li>
         <li>
-          <a href="products.html" class="sidebar-nav-item active">
+          <a href="products.html" class="sidebar-nav-item">
             <span class="material-icons-outlined">inventory_2</span>
             Products
           </a>
@@ -750,7 +750,7 @@ body {
           </a>
         </li>
         <li>
-          <a href="finance.html" class="sidebar-nav-item">
+          <a href="finance.html" class="sidebar-nav-item active">
             <span class="material-icons-outlined">account_balance_wallet</span>
             Finance
           </a>
@@ -813,115 +813,72 @@ body {
        MAIN CONTENT
        ============================================ -->
   <main class="main-content">
-    <h1 class="page-title">Products</h1>
+    <h1 class="page-title">Finance</h1>
 
     <div class="products-section">
-      <!-- Section Header -->
       <div class="section-header">
         <span class="section-header-line"></span>
-        <h2>My products</h2>
+        <h2>Payouts and balance</h2>
         <span class="section-header-line"></span>
       </div>
 
-      <!-- Table Toolbar -->
       <div class="table-toolbar">
-        <input type="text" class="search-input" placeholder="Search" id="searchInput">
+        <input type="text" class="search-input" placeholder="Search payouts" id="searchInput">
         <div class="shop-name">
           <span class="material-icons-outlined">storefront</span>
           John's meat shop
         </div>
       </div>
 
-      <!-- Products Table -->
-      <table class="products-table" id="productsTable">
+      <table class="products-table" id="financeTable">
         <thead>
           <tr>
-            <th>#Id</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Reference</th>
+            <th>Amount</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><span class="product-id">#001</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 100</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">50</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td>May 09, 2026</td>
+            <td class="payout-type">Weekly payout</td>
+            <td><span class="payout-ref">#PO-7841</span></td>
+            <td>£ 642.10</td>
+            <td>Processed</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">receipt</span> Details</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#002</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 250</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot out-of-stock"></span>
-                <span class="stock-qty zero">0</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td>May 05, 2026</td>
+            <td class="payout-type">Refunds</td>
+            <td><span class="payout-ref">#RF-233</span></td>
+            <td>-£ 32.00</td>
+            <td>Completed</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">receipt</span> Details</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#003</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 300</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot low-stock"></span>
-                <span class="stock-qty">4</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td>May 03, 2026</td>
+            <td class="payout-type">Weekly payout</td>
+            <td><span class="payout-ref">#PO-7834</span></td>
+            <td>£ 588.90</td>
+            <td>Processing</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">receipt</span> Details</button></td>
           </tr>
           <tr>
-            <td><span class="product-id">#004</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 500/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">66</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
-          </tr>
-          <tr>
-            <td><span class="product-id">#005</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 700/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">22</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
-          </tr>
-          <tr>
-            <td><span class="product-id">#006</span></td>
-            <td class="product-name">Product name</td>
-            <td><span class="product-price">£ 700/Kg</span></td>
-            <td>
-              <div class="stock-cell">
-                <span class="stock-dot in-stock"></span>
-                <span class="stock-qty">22</span>
-              </div>
-            </td>
-            <td><button class="edit-btn"><span class="material-icons-outlined">edit</span> Edit</button></td>
+            <td>May 01, 2026</td>
+            <td class="payout-type">Service fee</td>
+            <td><span class="payout-ref">#SF-128</span></td>
+            <td>-£ 18.40</td>
+            <td>Settled</td>
+            <td><button class="edit-btn"><span class="material-icons-outlined">receipt</span> Details</button></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Table Footer -->
       <div class="table-footer">
-        <div class="total-products">[Total products <strong>18</strong>]</div>
+        <div class="total-products">[Total payouts <strong>12</strong>]</div>
 
         <div class="pagination">
           <button class="page-btn disabled" aria-label="Previous">
@@ -929,38 +886,12 @@ body {
           </button>
           <button class="page-btn active">1</button>
           <button class="page-btn">2</button>
-          <button class="page-btn">3</button>
           <button class="page-btn" aria-label="Next">
             <span class="material-icons-outlined">chevron_right</span>
           </button>
         </div>
 
-        <div class="showing-info">[Showing 1-6]</div>
-      </div>
-
-      <!-- Stock Legend -->
-      <div class="stock-legend">
-        <span class="legend-title">Stock Legend:</span>
-        <div class="legend-item">
-          <span class="stock-dot in-stock"></span>
-          <span>In stock</span>
-        </div>
-        <div class="legend-item">
-          <span class="stock-dot low-stock"></span>
-          <span>Low Stock</span>
-        </div>
-        <div class="legend-item">
-          <span class="stock-dot out-of-stock"></span>
-          <span>Out of Stock</span>
-        </div>
-      </div>
-
-      <!-- Add Product -->
-      <div class="add-product-wrap">
-        <button class="add-product-btn" id="addProductBtn">
-          <span class="material-icons-outlined">add_circle_outline</span>
-          Add new product
-        </button>
+        <div class="showing-info">[Showing 1-4]</div>
       </div>
     </div>
   </main>
@@ -992,16 +923,16 @@ body {
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');
-    const table = document.getElementById('productsTable');
+    const table = document.getElementById('financeTable');
 
     searchInput.addEventListener('input', function() {
       const query = this.value.toLowerCase();
       const rows = table.querySelectorAll('tbody tr');
 
       rows.forEach(row => {
-        const name = row.querySelector('.product-name').textContent.toLowerCase();
-        const id = row.querySelector('.product-id').textContent.toLowerCase();
-        if (name.includes(query) || id.includes(query)) {
+        const type = row.querySelector('.payout-type').textContent.toLowerCase();
+        const ref = row.querySelector('.payout-ref').textContent.toLowerCase();
+        if (type.includes(query) || ref.includes(query)) {
           row.style.display = '';
         } else {
           row.style.display = 'none';
@@ -1018,19 +949,13 @@ body {
       });
     });
 
-    // Edit button click
+    // Payout details button
     document.querySelectorAll('.edit-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         const row = this.closest('tr');
-        const id = row.querySelector('.product-id').textContent;
-        const name = row.querySelector('.product-name').textContent;
-        alert(`Edit product ${id} - ${name}`);
+        const ref = row.querySelector('.payout-ref').textContent;
+        alert(`Open payout details for ${ref}`);
       });
-    });
-
-    // Add product button
-    document.getElementById('addProductBtn').addEventListener('click', function() {
-      alert('Open Add New Product form/modal');
     });
   </script>
 </body>

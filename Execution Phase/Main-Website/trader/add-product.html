@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Trader Dashboard | Add Product</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+:root {
+  --primary-green: #0F260B;
+  --primary-green-dark: #0B1C08;
+  --primary-green-light: rgba(15, 38, 11, 0.14);
+  --primary-orange: #FF5E3A;
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F6F3;
+  --bg-gray: #F2F4F1;
+  --border-light: #DCE3DA;
+  --text-black: #0B140A;
+  --text-dark-gray: #1E2A1C;
+  --text-medium-gray: #5E6A63;
+  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-black);
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  height: 60px;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 100;
+}
+.top-nav-left, .top-nav-logo { display: flex; align-items: center; gap: 10px; }
+.top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
+.top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
+.top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
+.top-nav-right { display: flex; align-items: center; gap: 8px; }
+.top-nav-icon { width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); }
+.top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
+.top-nav-icon .material-icons-outlined { font-size: 22px; }
+.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); font-size: 13px; font-weight: 600; color: var(--text-dark-gray); }
+
+.sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #fff; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
+.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.15); text-align: center; }
+.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255,255,255,0.3); }
+.sidebar-avatar .material-icons-outlined { font-size: 32px; color: #fff; }
+.sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.7); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
+.sidebar-nav { padding: 16px 0; flex: 1; }
+.sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); }
+.sidebar-nav-item:hover, .sidebar-nav-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+.sidebar-nav-item.logout { color: rgba(255,255,255,0.5); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+.sidebar-report-group { display: flex; flex-direction: column; }
+.sidebar-report-group summary { list-style: none; }
+.sidebar-report-group summary::-webkit-details-marker { display: none; }
+.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255,255,255,0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+.sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
+.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; }
+.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255,255,255,0.12); color: #fff; }
+.sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
+.sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+
+.main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); }
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 28px; font-weight: 800; }
+.card { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); padding: 24px; max-width: 900px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full-width { grid-column: span 2; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); }
+.form-input, .form-textarea, .form-select { padding: 10px 12px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 14px; color: var(--text-black); font-family: inherit; transition: var(--transition-smooth); width: 100%; }
+.form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light); }
+.form-textarea { min-height: 90px; resize: vertical; }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.btn { padding: 10px 24px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition-smooth); display: inline-flex; align-items: center; gap: 8px; font-family: inherit; }
+.btn-primary { background: var(--primary-green); color: #fff; }
+.btn-primary:hover { background: var(--primary-green-dark); }
+.btn-secondary { background: var(--bg-gray); color: var(--text-dark-gray); border: 1px solid var(--border-light); }
+.btn-secondary:hover { background: var(--border-light); }
+
+@media (max-width: 900px) {
+  .sidebar { position: fixed; left: -280px; top: 0; width: 260px; z-index: 1000; transition: left 0.3s ease; }
+  .sidebar.open { left: 0; }
+  .top-nav { left: 0; }
+  .main-content { margin-left: 0; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full-width { grid-column: span 1; }
+  .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 1100; width: 44px; height: 44px; border: none; background: var(--primary-green); color: #fff; place-items: center; cursor: pointer; }
+}
+.sidebar-toggle { display: none; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 900; }
+.sidebar-overlay.active { display: block; }
+</style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu"><span class="material-icons-outlined">menu</span></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
+    <div class="sidebar-name">John Doe</div>
+    <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
+  </div>
+  <nav class="sidebar-nav">
+    <ul class="sidebar-nav-list">
+      <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+      <li><a href="products.html" class="sidebar-nav-item active"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+      <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+      <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
+      <li>
+        <details class="sidebar-report-group">
+          <summary class="sidebar-nav-item"><span class="material-icons-outlined">analytics</span>Reports<span class="material-icons-outlined sidebar-report-caret">expand_more</span></summary>
+          <ul class="sidebar-report-sublist">
+            <li><a href="report.html?type=daily" class="sidebar-report-link">Daily</a></li>
+            <li><a href="report.html?type=weekly" class="sidebar-report-link">Weekly</a></li>
+            <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
+      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+    </ul>
+  </nav>
+</aside>
+<header class="top-nav">
+  <div class="top-nav-left">
+    <div class="top-nav-logo"><img src="../public/assets/logo.png" alt="HuddersHub"><span>HuddersHub</span></div>
+  </div>
+  <div class="top-nav-title">Trader Dashboard</div>
+  <div class="top-nav-right">
+    <button class="top-nav-icon" aria-label="Notifications"><span class="material-icons-outlined">notifications_none</span></button>
+    <div class="user-pill"><span class="material-icons-outlined">person</span><span>John</span></div>
+    <button class="top-nav-icon" aria-label="Dark mode"><span class="material-icons-outlined">dark_mode</span></button>
+  </div>
+</header>
+<main class="main-content">
+  <div class="page-header"><h1>Add Product</h1></div>
+  <div class="card">
+    <form id="addProductForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="productName">Product name</label>
+          <input id="productName" class="form-input" type="text" placeholder="e.g. Organic Chicken Breast" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="productPrice">Price</label>
+          <input id="productPrice" class="form-input" type="number" min="0" step="0.01" placeholder="0.00" required>
+        </div>
+        <div class="form-group full-width">
+          <label class="form-label" for="productDescription">Description</label>
+          <textarea id="productDescription" class="form-textarea" placeholder="Describe your product" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="productCategory">Category</label>
+          <select id="productCategory" class="form-select" required>
+            <option value="">Select category...</option>
+            <option>Butcher</option>
+            <option>Bakery</option>
+            <option>Greengrocer</option>
+            <option>Fishmonger</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="stock">Stock</label>
+          <input id="stock" class="form-input" type="number" min="0" placeholder="e.g. 100" required>
+        </div>
+        <div class="form-group full-width">
+          <label class="form-label" for="imageUrl">Image URL</label>
+          <input id="imageUrl" class="form-input" type="url" placeholder="https://...">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+        <button type="submit" class="btn btn-primary"><span class="material-icons-outlined">save</span>Save Product</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script>
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
+sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+  });
+});
+document.getElementById('addProductForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert('Product saved successfully');
+});
+</script>
+</body>
+</html>
