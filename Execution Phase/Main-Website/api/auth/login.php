@@ -1,113 +1,56 @@
 <?php
-// Suppress PHP warnings so they don't break JSON output
 error_reporting(0);
 ini_set('display_errors', 0);
-
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
 session_start();
 require_once '../../config/database.php';
 
-$response = ['success' => false, 'message' => ''];
+$data = json_decode(file_get_contents('php://input'), true);
 
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $response['message'] = 'Invalid request method. Only POST is allowed.';
-    echo json_encode($response);
-    exit;
-}
+try {
+    $email = trim($data['email']);
+    $password = $data['password'];
+    $requested_role = strtolower($data['role']);
 
-// Get JSON input
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
+    $sql = "SELECT user_id, firstname, user_password, user_role FROM HUDDER_USER WHERE email = :em";
+    $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ':em', $email);
+    oci_execute($stmt);
+    $user = oci_fetch_assoc($stmt);
 
-if (!$data || !isset($data['email']) || !isset($data['password']) || !isset($data['role'])) {
-    echo json_encode(['success' => false, 'message' => 'Email, password and role are required']);
-    exit;
-}
+    if (!$user) throw new Exception("Invalid email or password.");
 
-$email        = trim($data['email']);
-$password     = $data['password'];
-$requested_role = strtolower(trim($data['role'])); // 'customer' or 'trader'
+    // Verify Password
+    $db_pass = $user['USER_PASSWORD'];
+    $valid = (strpos($db_pass, '$2y$') === 0) ? password_verify($password, $db_pass) : ($password === $db_pass);
+    if (!$valid) throw new Exception("Invalid email or password.");
 
-// Basic role whitelist
-if (!in_array($requested_role, ['customer', 'trader'])) {
-    echo json_encode(['success' => false, 'message' => 'Invalid role selected']);
-    exit;
-}
-
-// Fetch the user
-$sql = "SELECT user_id, firstname, lastname, email, user_role 
-        FROM HUDDER_USER 
-        WHERE email = :email AND user_password = :password";
-
-$stmt = oci_parse($conn, $sql);
-oci_bind_by_name($stmt, ':email',    $email);
-oci_bind_by_name($stmt, ':password', $password);
-oci_execute($stmt);
-
-$row = oci_fetch_assoc($stmt);
-oci_free_statement($stmt);
-
-if (!$row) {
-    echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
-    oci_close($conn);
-    exit;
-}
-
-$actual_role = strtolower($row['USER_ROLE']);
-
-// Role mismatch — tell the frontend which tab to use
-if ($actual_role !== $requested_role) {
-    echo json_encode([
-        'success'       => false,
-        'role_mismatch' => true,
-        'actual_role'   => $actual_role,
-        'message'       => 'This account is registered as a ' . $actual_role . '. Please use the ' . ucfirst($actual_role) . ' tab.'
-    ]);
-    oci_close($conn);
-    exit;
-}
-
-// For traders: check approval status
-$trader_status = null;
-if ($actual_role === 'trader') {
-    $sql2  = "SELECT status FROM TRADER WHERE user_id = :trader_user_id";
-    $stmt2 = oci_parse($conn, $sql2);
-    $trader_user_id = $row['USER_ID'];
-    oci_bind_by_name($stmt2, ':trader_user_id', $trader_user_id);
-    oci_execute($stmt2);
-    $trow  = oci_fetch_assoc($stmt2);
-    oci_free_statement($stmt2);
-    $trader_status = $trow ? strtolower($trow['STATUS']) : 'pending';
-
-    if ($trader_status !== 'active') {
-        echo json_encode([
-            'success'        => false,
-            'trader_pending' => true,
-            'message'        => 'Your trader account is awaiting admin approval.'
-        ]);
-        oci_close($conn);
-        exit;
+    // Check Role
+    if (strtolower($user['USER_ROLE']) !== $requested_role) {
+        throw new Exception("Account type mismatch. Please use the " . $user['USER_ROLE'] . " tab.");
     }
-}
 
-// All good — create session
-$_SESSION['user_id']   = $row['USER_ID'];
-$_SESSION['firstname'] = $row['FIRSTNAME'];
-$_SESSION['email']     = $row['EMAIL'];
-$_SESSION['role']      = $actual_role;
+    // Trader check
+    if ($requested_role === 'trader') {
+        $t_sql = "SELECT status FROM TRADER WHERE user_id = :uid";
+        $t_stmt = oci_parse($conn, $t_sql);
+        oci_bind_by_name($t_stmt, ':uid', $user['USER_ID']);
+        oci_execute($t_stmt);
+        $trow = oci_fetch_assoc($t_stmt);
+        if ($trow && strtolower($trow['STATUS']) === 'pending') {
+            echo json_encode(['success' => false, 'trader_pending' => true]);
+            exit;
+        }
+    }
 
-echo json_encode([
-    'success' => true,
-    'user_id' => $row['USER_ID'],
-    'name'    => $row['FIRSTNAME'],
-    'email'   => $row['EMAIL'],
-    'role'    => $actual_role
+    echo json_encode([
+    'success' => true, 
+    'name'    => $user['FIRSTNAME'], 
+    'role'    => $user['USER_ROLE'],
+    'user_id' => $user['USER_ID']  // <--- ADD THIS LINE
 ]);
 
-oci_close($conn);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+}
 ?>

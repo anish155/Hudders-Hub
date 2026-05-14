@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -666,38 +666,55 @@ window.addEventListener('scroll', function () {
 
 /* ── USER DROPDOWN ──────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
-    const name = sessionStorage.getItem('user_name');
+     const name = localStorage.getItem('userName');
     if (name) {
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('userDropdownWrap').style.display = 'block';
-        document.getElementById('userGreeting').textContent = 'Hi, ' + name;
+        // If logged in, hide "Login/Signup" and show "Hi, Name"
+        const loginBtn = document.getElementById('loginBtn');
+        const userDropdownWrap = document.getElementById('userDropdownWrap');
+        const userGreeting = document.getElementById('userGreeting');
+        
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userDropdownWrap) userDropdownWrap.style.display = 'block';
+        if (userGreeting) userGreeting.textContent = 'Hi, ' + name;
+    }
+ const dropdownBtn = document.getElementById('userDropdownBtn');
+    const dropdownMenu = document.getElementById('userDropdown');
+    const chevron = document.getElementById('dropChevron');
+
+    if (dropdownBtn) {
+        dropdownBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            // This adds/removes the "open" class which your CSS uses to show the menu
+            dropdownMenu.classList.toggle('open');
+            if (chevron) {
+                chevron.textContent = dropdownMenu.classList.contains('open') ? 'expand_less' : 'expand_more';
+            }
+        });
     }
 
-    document.getElementById('userDropdownBtn').addEventListener('click', function (e) {
-        e.stopPropagation();
-        const dd = document.getElementById('userDropdown');
-        const chevron = document.getElementById('dropChevron');
-        dd.classList.toggle('open');
-        chevron.textContent = dd.classList.contains('open') ? 'expand_less' : 'expand_more';
-    });
-
+    // 3. Close the menu if the user clicks anywhere else on the page
     document.addEventListener('click', function () {
-        const dd = document.getElementById('userDropdown');
-        const chevron = document.getElementById('dropChevron');
-        if (dd && dd.classList.contains('open')) {
-            dd.classList.remove('open');
-            chevron.textContent = 'expand_more';
+        if (dropdownMenu && dropdownMenu.classList.contains('open')) {
+            dropdownMenu.classList.remove('open');
+            if (chevron) chevron.textContent = 'expand_more';
         }
     });
 
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-        fetch('api/auth/logout.php', { method: 'POST' })
-            .finally(function () {
-                sessionStorage.clear();
-                window.location.href = 'index.html';
-            });
-    });
+    // 4. Logout Logic
+        const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            fetch('api/auth/logout.php', { method: 'POST' })
+                .finally(function () {
+                    sessionStorage.clear();
+                    window.location.href = 'index.html';
+                });
+        });
+    }
 });
+    
 
 /* ── FAVOURITES ─────────────────────────────────────────────────────────── */
 document.querySelectorAll('.favorite-btn').forEach(btn => {
