@@ -11,12 +11,18 @@ header('Access-Control-Allow-Headers: Content-Type');
 session_start();
 require_once '../../config/database.php';
 
+$response = ['success' => false, 'message' => ''];
+
+// Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    $response['message'] = 'Invalid request method. Only POST is allowed.';
+    echo json_encode($response);
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
+// Get JSON input
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
 if (!$data || !isset($data['email']) || !isset($data['password']) || !isset($data['role'])) {
     echo json_encode(['success' => false, 'message' => 'Email, password and role are required']);

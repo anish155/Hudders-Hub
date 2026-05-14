@@ -635,7 +635,11 @@ const pendingBanner  = document.getElementById('pendingBanner');
 
 function validateEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 
-function resetErrors() {
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+    
+    // Reset
     emailInput.classList.remove('error');
     pwInput.classList.remove('error');
     emailError.classList.remove('visible');
@@ -665,116 +669,22 @@ loginForm.addEventListener('submit', function(e) {
         passError.classList.add('visible');
         valid = false;
     }
-    if (!valid) {
-        (emailInput.classList.contains('error') ? emailInput : pwInput).focus();
-        return;
-    }
 
-    setLoading(true);
-
-    fetch('../api/auth/login.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email:    emailInput.value.trim(),
-            password: pwInput.value,
-            role:     currentRole
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        setLoading(false);
-
-        if (data.success) {
-            sessionStorage.setItem('user_id',    data.user_id);
-            sessionStorage.setItem('user_name',  data.name);
-            sessionStorage.setItem('user_email', data.email);
-            sessionStorage.setItem('user_role',  data.role);
-
-            const returnTo = sessionStorage.getItem('returnTo');
-            sessionStorage.removeItem('returnTo');
-
-            if (returnTo) {
-                window.location.href = returnTo;
-            } else if (data.role === 'trader') {
-                window.location.href = 'trader-dashboard.html';
-            } else {
-                window.location.href = 'index.html';
-            }
-
-        } else if (data.trader_pending) {
-            pendingBanner.classList.add('visible');
-            pwInput.value = '';
-
-        } else if (data.role_mismatch) {
-            apiBannerMsg.textContent = data.message;
-            apiBanner.classList.add('visible');
-            switchRole(data.actual_role);
-
-        } else {
-            apiBannerMsg.textContent = data.message || 'Invalid email or password. Please try again.';
-            apiBanner.classList.add('visible');
-            pwInput.value = '';
-            pwInput.focus();
-        }
-    })
-    .catch(() => {
-        setLoading(false);
-        apiBannerMsg.textContent = 'Connection error. Make sure Apache and Oracle are running.';
-        apiBanner.classList.add('visible');
-    });
-});
-
-// ── USER DROPDOWN ─────────────────────────────────────────────────────────
-function initUserMenu() {
-    const name = sessionStorage.getItem('user_name');
-
-    if (name) {
-        const loginBtn = document.getElementById('loginBtn');
-        const dropWrap = document.getElementById('userDropdownWrap');
-        const greeting = document.getElementById('userGreeting');
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (dropWrap)  dropWrap.style.display = 'block';
-        if (greeting)  greeting.textContent   = 'Hi, ' + name;
-    }
-}
-
-// Toggle dropdown open/close
-const userDropdownBtn = document.getElementById('userDropdownBtn');
-if (userDropdownBtn) {
-    userDropdownBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const dd      = document.getElementById('userDropdown');
-        const chevron = document.getElementById('dropChevron');
-        dd.classList.toggle('open');
-        chevron.textContent = dd.classList.contains('open') ? 'expand_less' : 'expand_more';
-    });
-}
-
-// Close when clicking outside
-document.addEventListener('click', function() {
-    const dd = document.getElementById('userDropdown');
-    const chevron = document.getElementById('dropChevron');
-    if (dd && dd.classList.contains('open')) {
-        dd.classList.remove('open');
-        if (chevron) chevron.textContent = 'expand_more';
+    if (valid) {
+        loginSubmitBtn.disabled = true;
+        document.getElementById('loginBtnTextInner').textContent = 'Logging in...';
+        document.getElementById('loginBtnArrow').style.display = 'none';
+        
+        // Simulate API call
+        setTimeout(() => {
+            window.location.href = 'index.html'; // Redirect to homepage on success
+        }, 1500);
+    } else {
+        // Focus first invalid field
+        if (emailInput.classList.contains('error')) emailInput.focus();
+        else pwInput.focus();
     }
 });
-
-// Logout
-const logoutBtn = document.getElementById('logoutBtn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', function() {
-        fetch('../api/auth/logout.php', { method: 'POST' })
-            .finally(() => {
-                sessionStorage.clear();
-                window.location.href = 'login.html';
-            });
-    });
-}
-
-// Run on page load
-initUserMenu();
 </script>
 </body>
 </html>

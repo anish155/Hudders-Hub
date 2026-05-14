@@ -1,6 +1,6 @@
 <?php
-$username = 'HUDDERS_HUB';
-$password = 'huddershub123';
+$username = 'MYWORKSPACE1';
+$password = '9815085801@#aA';
 $connection_string = 'localhost:1521/XEPDB1';
 
 $conn = oci_connect($username, $password, $connection_string);
