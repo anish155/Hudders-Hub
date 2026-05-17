@@ -31,9 +31,6 @@ session_unset();
 session_destroy();
 
 // Return success response
-echo json_encode([
-    'success' => true,
-    'message' => 'You have been logged out successfully.'
-]);
+header('Location: ../../public/login.html');
 exit;
 ?>

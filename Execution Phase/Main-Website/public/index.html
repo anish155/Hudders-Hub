@@ -659,6 +659,12 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 </footer>
 
 <script>
+ 
+ const userRole = localStorage.getItem('userRole');
+if (userRole === 'trader') {
+    window.location.href = '../trader/dashboard.html';
+}
+
 /* ── SCROLL ─────────────────────────────────────────────────────────────── */
 window.addEventListener('scroll', function () {
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);

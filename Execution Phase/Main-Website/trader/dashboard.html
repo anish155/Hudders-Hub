@@ -547,7 +547,7 @@ body {
           </a>
         </li>
         <li>
-          <a href="../api/auth/logout.php" class="sidebar-nav-item logout">
+          <a href="#" onclick="handleLogout()" class="sidebar-nav-item logout">
             <span class="material-icons-outlined">logout</span>
             Logout
           </a>
@@ -583,129 +583,99 @@ body {
 </div>
 
 <script>
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebarToggle');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
-const contentArea = document.getElementById('contentArea');
 
-sidebarToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
-  sidebarOverlay.classList.toggle('active');
-});
+// Auth guard
+const userId = localStorage.getItem('user_id');
+const userRole = localStorage.getItem('userRole');
+if (!userId || userRole !== 'trader') {
+    window.location.href = '../public/login.html';
+}
 
-sidebarOverlay.addEventListener('click', () => {
-  sidebar.classList.remove('open');
-  sidebarOverlay.classList.remove('active');
-});
-
-document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
-  item.addEventListener('click', () => {
-    if (window.innerWidth <= 900) {
-      sidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('active');
-    }
-  });
-});
+function handleLogout() {
+    localStorage.clear();
+    window.location.href = '../public/login.html';
+}
 
 function formatCurrency(amount) {
-  return '£' + parseFloat(amount).toFixed(2);
+    return '£' + parseFloat(amount || 0).toFixed(2);
 }
 
 function getStatusClass(status) {
-  const s = (status || '').toLowerCase();
-  if (s.includes('pending')) return 'pending';
-  if (s.includes('process')) return 'processing';
-  if (s.includes('complete')) return 'completed';
-  if (s.includes('await')) return 'awaiting';
-  if (s.includes('cancel')) return 'cancelled';
-  return 'pending';
+    const s = (status || '').toLowerCase();
+    if (s.includes('pending')) return 'pending';
+    if (s.includes('process')) return 'processing';
+    if (s.includes('complete')) return 'completed';
+    if (s.includes('cancel')) return 'cancelled';
+    return 'pending';
 }
-
-function getDayName(dateStr) {
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const d = new Date(dateStr);
-  return days[d.getDay()];
-}
-
-const mockStats = {
-  total_orders: 54,
-  orders_today: 8,
-  weekly_earnings: 1200,
-  total_products: 22
-};
-
-const mockOrders = [
-  { id: 'ORD-1051', customer: 'John Smith', items: 3, total: 24.50, status: 'Pending', date: '2026-05-12' },
-  { id: 'ORD-1052', customer: 'Sarah Johnson', items: 2, total: 15.00, status: 'Completed', date: '2026-05-12' },
-  { id: 'ORD-1053', customer: 'Mike Brown', items: 5, total: 42.75, status: 'Processing', date: '2026-05-12' },
-  { id: 'ORD-1054', customer: 'Emma Wilson', items: 1, total: 8.99, status: 'Pending', date: '2026-05-12' },
-  { id: 'ORD-1055', customer: 'David Lee', items: 4, total: 31.20, status: 'Completed', date: '2026-05-12' }
-];
 
 function loadDashboard() {
-  const todayCount = mockOrders.length;
-  const weeklyFormatted = mockStats.weekly_earnings >= 1000 
-    ? '£' + (mockStats.weekly_earnings / 1000).toFixed(1) + 'k' 
-    : formatCurrency(mockStats.weekly_earnings);
+    fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            contentArea.innerHTML = `<p style="color:red;">Error: ${data.message}</p>`;
+            return;
+        }
 
-  contentArea.innerHTML = `
-    <section class="welcome-section">
-      <h1 class="welcome-title">Welcome back, John Farmer!</h1>
-      <p class="welcome-shop">Green Valley Farm</p>
-    </section>
+        const stats = data.stats;
+        const weeklyFormatted = stats.weekly_revenue >= 1000
+            ? '£' + (stats.weekly_revenue / 1000).toFixed(1) + 'k'
+            : formatCurrency(stats.weekly_revenue);
 
-    <section class="stats-section">
-      <div class="stats-label">Quick stats</div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value">${mockStats.total_orders}</div>
-          <div class="stat-label">Total orders</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${String(todayCount).padStart(2, '0')}</div>
-          <div class="stat-label">Total orders today</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${weeklyFormatted}</div>
-          <div class="stat-label">This week</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">${mockStats.total_products}</div>
-          <div class="stat-label">Total products</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="orders-section">
-      <div class="orders-header">
-        <h2 class="orders-title">Today's Orders</h2>
-        <span class="orders-count">${todayCount} order${todayCount !== 1 ? 's' : ''}</span>
-      </div>
-      <div class="order-cards" id="orderCards">
-        ${mockOrders.map(order => `
-          <div class="order-card">
-            <div class="order-card-header">
-              <span class="order-id">${order.id}</span>
-              <span class="order-status ${getStatusClass(order.status)}">${order.status}</span>
-              <span class="order-time">${getDayName(order.date)}</span>
-            </div>
-            <div class="order-items">
-              <div class="order-item">
-                <span class="order-item-name">${order.customer}</span>
-                <div class="order-item-details">
-                  <span class="order-item-qty">${order.items} item${order.items !== 1 ? 's' : ''}</span>
+        contentArea.innerHTML = `
+            <section class="welcome-section">
+                <h1 class="welcome-title">Welcome back, ${data.firstname} ${data.lastname}!</h1>
+                <p class="welcome-shop">${data.shop_name}</p>
+            </section>
+            <section class="stats-section">
+                <div class="stats-label">Quick stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">${stats.total_orders}</div><div class="stat-label">Total orders</div></div>
+                    <div class="stat-card"><div class="stat-value">${String(stats.orders_today).padStart(2,'0')}</div><div class="stat-label">Orders today</div></div>
+                    <div class="stat-card"><div class="stat-value">${weeklyFormatted}</div><div class="stat-label">This week</div></div>
+                    <div class="stat-card"><div class="stat-value">${stats.total_products}</div><div class="stat-label">Total products</div></div>
                 </div>
-              </div>
-            </div>
-            <div class="order-total">
-              <span class="order-total-label">Order total</span>
-              <span class="order-total-value">${formatCurrency(order.total)}</span>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </section>
-  `;
+            </section>
+            <section class="orders-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">Today's Orders</h2>
+                    <span class="orders-count">${data.orders.length} order${data.orders.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="order-cards">
+                    ${data.orders.length === 0
+                        ? `<div class="empty-state"><span class="material-icons-outlined">inbox</span><p>No orders today</p></div>`
+                        : data.orders.map(order => `
+                            <div class="order-card">
+                                <div class="order-card-header">
+                                    <span class="order-id">${order.id}</span>
+                                    <span class="order-status ${getStatusClass(order.status)}">${order.status}</span>
+                                    <span class="order-time">${order.time}</span>
+                                </div>
+                                <div class="order-items">
+                                    <div class="order-item">
+                                        <span class="order-item-name">${order.customer}</span>
+                                        <span class="order-item-qty">${order.items} item${order.items !== 1 ? 's' : ''}</span>
+                                    </div>
+                                </div>
+                                <div class="order-total">
+                                    <span class="order-total-label">Order total</span>
+                                    <span class="order-total-value">${formatCurrency(order.total)}</span>
+                                </div>
+                            </div>`).join('')
+                    }
+                </div>
+            </section>
+        `;
+
+        // Update sidebar name
+        document.querySelector('.sidebar-name').textContent = `${data.firstname} ${data.lastname}`;
+        document.querySelector('.sidebar-status').innerHTML = `<span class="status-dot"></span>Status: ${data.trader_status}`;
+    })
+    .catch(err => {
+        contentArea.innerHTML = `<p style="color:red;">Failed to load dashboard.</p>`;
+        console.error(err);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);

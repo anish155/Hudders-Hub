@@ -12,7 +12,7 @@ try {
     $password = $data['password'];
     $requested_role = strtolower($data['role']);
 
-    $sql = "SELECT user_id, firstname, user_password, user_role FROM HUDDER_USER WHERE email = :em";
+    $sql = "SELECT user_id, firstname, lastname, user_password, user_role FROM HUDDER_USER WHERE email = :em";
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':em', $email);
     oci_execute($stmt);
@@ -43,11 +43,13 @@ try {
         }
     }
 
-    echo json_encode([
-    'success' => true, 
-    'name'    => $user['FIRSTNAME'], 
-    'role'    => $user['USER_ROLE'],
-    'user_id' => $user['USER_ID']  // <--- ADD THIS LINE
+echo json_encode([
+    'success'   => true, 
+    'name'      => $user['FIRSTNAME'], 
+    'role'      => $user['USER_ROLE'],
+    'user_id'   => $user['USER_ID'],
+    'firstname' => $user['FIRSTNAME'],  
+    'lastname'  => $user['LASTNAME'],   
 ]);
 
 } catch (Exception $e) {

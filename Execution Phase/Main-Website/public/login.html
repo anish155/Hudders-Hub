@@ -258,11 +258,18 @@ loginForm.addEventListener('submit', function(e) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                localStorage.setItem('userName', data.name);
-                localStorage.setItem('user_id', data.user_id); 
-                localStorage.setItem('userRole', data.role);
-                window.location.href = 'index.html';
-            } else {
+    localStorage.setItem('userName',   data.name);
+    localStorage.setItem('user_id',    data.user_id); 
+    localStorage.setItem('userRole',   data.role);
+    localStorage.setItem('firstname',  data.firstname);  // ADD
+    localStorage.setItem('lastname',   data.lastname);   // ADD
+
+    if (data.role === 'trader') {
+        window.location.href = '../trader/dashboard.html';
+    } else {
+        window.location.href = 'index.html';
+    }
+} else {
                 loginSubmitBtn.disabled = false;
                 document.getElementById('loginBtnText').textContent = 'Log in';
                 if (data.trader_pending) document.getElementById('pendingBanner').classList.add('visible');
