@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -545,7 +545,7 @@ header.scrolled .nav-bar {
             <span class="material-icons-outlined">shopping_cart</span>
             <span class="badge">3</span>
         </a>
-        <a class="icon-with-badge" href="wishlist.html" aria-label="Wishlist">
+        <a class="icon-with-badge" href="../customer/wishlist.html" aria-label="Wishlist">
             <span class="material-icons-outlined">favorite_border</span>
             <span class="badge">5</span>
         </a>
@@ -751,12 +751,8 @@ header.scrolled .nav-bar {
 <footer class="site-footer">
 <div class="page-wrap footer-newsletter">
     <div class="newsletter-content">
-        <h3>Join the HuddersHub Community</h3>
-        <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
-    </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
+        <h3>Fresh from local farms to your table</h3>
+        <p>"Quality you can taste, community you can feel."</p>
     </div>
 </div>
 <div class="page-wrap footer-grid">
@@ -904,13 +900,59 @@ document.addEventListener('keydown', function(e) {
 
 updateCartTotals();
 
+// =========================================================================
+// USER GREETING
+// =========================================================================
+function loadUserGreeting() {
+  const gText = document.getElementById('userGreetingText');
+  const btnText = document.getElementById('loginBtnText');
+  const uid = sessionStorage.getItem('user_id');
+  const cached = (sessionStorage.getItem('userName') || '').trim();
+
+  function applyGreeting(name) {
+    const full = name || cached || 'User';
+    const text = 'Hi, ' + full;
+    if (gText) gText.textContent = text;
+    if (btnText) btnText.textContent = text;
+  }
+
+  if (!uid) {
+    if (gText) gText.textContent = 'Welcome';
+    if (btnText) btnText.textContent = 'Login/Signup';
+    return;
+  }
+
+  if (cached) { applyGreeting(cached); return; }
+
+  try {
+    fetch('../api/customer/get-profile.php?user_id=' + uid)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.data) {
+          const f = (d.data.FIRSTNAME || '').trim();
+          const l = (d.data.LASTNAME || '').trim();
+          const full = [f, l].filter(Boolean).join(' ') || 'User';
+          sessionStorage.setItem('userName', full);
+          applyGreeting(full);
+          // Also update greeting if the loginBtn was already swapped to a user-menu
+          const greetingEl = document.querySelector('.user-menu span:last-child');
+          if (greetingEl) greetingEl.textContent = 'Hi, ' + full;
+        }
+      });
+  } catch (err) {}
+}
+loadUserGreeting();
+
 const loginBtn = document.getElementById('loginBtn');
 if (loginBtn) {
     loginBtn.addEventListener('click', function() {
+        const uid  = sessionStorage.getItem('user_id');
+        const name = sessionStorage.getItem('userName') || '';
+        const greeting = uid && name ? 'Hi, ' + name : 'Welcome';
         loginBtn.outerHTML = `
-            <a class="user-menu" href="account.html">
+            <a class="user-menu" href="../customer/profile.html">
                 <span class="material-icons-outlined" style="font-size: 24px;">account_circle</span>
-                <span>Welcome, John Doe</span>
+                <span>${greeting}</span>
             </a>
         `;
     });

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Logging Out - HuddersHub</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --orange: #ff5e3a;
+                --orange-dark: #e3472c;
+                --green: #0f260b;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Plus Jakarta Sans", sans-serif;
+                min-height: 100vh;
+                background: linear-gradient(
+                    135deg,
+                    #0f260b 0%,
+                    #1a3a1c 50%,
+                    #0f260b 100%
+                );
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+            .container {
+                text-align: center;
+                animation: fadeIn 0.8s ease-out;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .icon-wrap {
+                width: 140px;
+                height: 140px;
+                background: linear-gradient(135deg, #ff5e3a 0%, #e3472c 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 32px;
+                box-shadow: 0 25px 60px rgba(255, 94, 58, 0.5);
+            }
+            .icon-wrap .material-icons-outlined {
+                font-size: 64px;
+                color: #fff;
+            }
+            h1 {
+                font-family: "Google Sans Flex", sans-serif;
+                font-size: 48px;
+                font-weight: 700;
+                font-style: italic;
+                color: #fff;
+                margin-bottom: 16px;
+            }
+            p {
+                font-size: 20px;
+                color: rgba(255, 255, 255, 0.8);
+                margin-bottom: 40px;
+            }
+            .countdown {
+                display: inline-flex;
+                align-items: center;
+                gap: 20px;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(20px);
+                padding: 24px 40px;
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .count {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 64px;
+                height: 64px;
+                background: linear-gradient(135deg, #ff5e3a 0%, #e3472c 100%);
+                color: #fff;
+                border-radius: 16px;
+                font-size: 32px;
+                font-weight: 800;
+            }
+            .countdown-text {
+                font-size: 18px;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+            }
+            .hint {
+                margin-top: 32px;
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+            .hint a {
+                color: #ff5e3a;
+                text-decoration: none;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="icon-wrap">
+                <span class="material-icons-outlined">logout</span>
+            </div>
+            <h1>Goodbye!</h1>
+            <p>
+                You've been successfully logged out.<br />Taking you back to
+                home in...
+            </p>
+            <div class="countdown">
+                <div class="count" id="count">3</div>
+                <span class="countdown-text">seconds</span>
+            </div>
+            <p class="hint">
+                Not redirecting? <a href="index.html">Click here</a>
+            </p>
+        </div>
+
+        <script>
+            // Immediately clear everything - no waiting for API
+            sessionStorage.clear();
+
+            // Clear all cookies
+            var cookies = document.cookie.split(";");
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie =
+                    name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            }
+
+            console.log("All data cleared");
+
+            let seconds = 3;
+            const countEl = document.getElementById("count");
+
+            const t = setInterval(() => {
+                seconds -= 1;
+                countEl.textContent = String(seconds);
+                if (seconds <= 0) {
+                    clearInterval(t);
+                    window.location.href = "index.html";
+                }
+            }, 1000);
+        </script>
+    </body>
+</html>

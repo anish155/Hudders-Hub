@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resend Verification - HuddersHub</title>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F7F6F3; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; }
+        input { width: 100%; padding: 14px; border: 1px solid #DCE3DA; border-radius: 6px; font-size: 16px; margin-bottom: 15px; }
+        button { width: 100%; padding: 14px; background: #FF5E3A; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        button:hover { background: #E3472C; }
+        button:disabled { background: #9CA3AF; }
+        .success { color: #10B981; }
+        .error { color: #EF4444; margin-top: 10px; }
+        a { color: #FF5E3A; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Resend Verification Email</h2>
+        <p style="color:#5E6A63; margin-bottom:20px;">Enter your email to resend the verification link.</p>
+        <form id="resendForm">
+            <input type="email" id="email" placeholder="Your email address" required>
+            <button type="submit" id="submitBtn">Send Verification Email</button>
+        </form>
+        <p id="result" class="success" style="margin-top:15px;"></p>
+        <p style="margin-top:15px;"><a href="login.html">Back to Login</a></p>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const emailParam = params.get('email');
+        if (emailParam) document.getElementById('email').value = emailParam;
+
+        document.getElementById('resendForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            const res = await fetch('../api/auth/resend-verification.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: document.getElementById('email').value })
+            });
+            const data = await res.json();
+            
+            const result = document.getElementById('result');
+            if (data.success) {
+                result.className = 'success';
+                result.textContent = data.message;
+            } else {
+                result.className = 'error';
+                result.textContent = data.message;
+            }
+            btn.disabled = false;
+            btn.textContent = 'Send Verification Email';
+        });
+    </script>
+</body>
+</html>

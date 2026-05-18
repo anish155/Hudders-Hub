@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuddersHub - Trader Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0F260B;
+            --primary-orange: #FF5E3A;
+            --bg-light: #F7F6F3;
+            --bg-white: #FFFFFF;
+            --border-light: #DCE3DA;
+            --text-black: #0B140A;
+            --text-medium: #5E6A63;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-light); }
+        .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--primary-green); color: white; height: 100vh; position: sticky; top: 0; }
+        .sidebar-profile { padding: 28px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-avatar { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 12px; }
+        .sidebar-name { font-weight: 700; }
+        .sidebar-role { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .sidebar-nav-list { list-style: none; padding: 16px 12px; }
+        .sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.2s; background: none; border: none; cursor: pointer; width: 100%; text-align: left; font-size: inherit; font-family: inherit; }
+        .sidebar-nav-item:hover, .sidebar-nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .main-content { padding: 28px; }
+        .top-nav { background: white; border-bottom: 1px solid var(--border-light); padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .product-card { background: white; border: 1px solid var(--border-light); padding: 16px; }
+        .product-img { width: 100%; height: 140px; background: var(--bg-light); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .product-name { font-weight: 600; font-size: 15px; }
+        .product-price { color: var(--primary-green); font-weight: 700; margin-top: 4px; }
+        .product-stock { font-size: 12px; color: var(--text-medium); margin-top: 2px; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-top: 6px; }
+        .status-active   { background: #D1FAE5; color: #065F46; }
+        .status-pending  { background: #FEF3C7; color: #92400E; }
+        .sidebar-toggle { display: none; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; left: -280px; z-index: 200; }
+            .sidebar.open { left: 0; }
+            .sidebar-toggle { display: block; position: fixed; bottom: 20px; right: 20px; background: var(--primary-green); color: white; border: none; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 300; }
+        }
+    </style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="sidebar-avatar"><span class="material-icons-outlined">storefront</span></div>
+            <div class="sidebar-name" id="sidebarName">Loading&hellip;</div>
+            <div class="sidebar-role">Trader</div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="sidebar-nav-list">
+                <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+                <li><a href="products.html" class="sidebar-nav-item active"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+                <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+                <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">payments</span>Finance</a></li>
+                <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">manage_accounts</span>Profile</a></li>
+                <li><button onclick="handleLogout()" class="sidebar-nav-item"><span class="material-icons-outlined">logout</span>Logout</button></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <div>HuddersHub Trader</div>
+            <div id="topNavName"></div>
+        </header>
+        <h1 style="margin-bottom: 20px;">My Products</h1>
+        <div id="productList" class="product-grid" style="color:var(--text-medium);">Loading&hellip;</div>
+    </main>
+</div>
+<script>
+    const userId = sessionStorage.getItem('user_id');
+    if (!userId || sessionStorage.getItem('userRole') !== 'trader') window.location.href = '../public/login.html';
+    function handleLogout() { sessionStorage.clear(); window.location.href = '../public/login.html'; }
+    document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+    async function loadProducts() {
+        try {
+            const res = await fetch(`../api/trader/get-products.php?user_id=${userId}`);
+            const data = await res.json();
+            const grid = document.getElementById('productList');
+            if (!data.success) { grid.innerHTML = '<p>Failed to load products.</p>'; return; }
+            const products = data.data || data.products || [];
+            if (!products.length) { grid.innerHTML = '<p>No products yet. Add your first product!</p>'; return; }
+            grid.innerHTML = products.map(p => `<div class="product-card">
+                <div class="product-img"><span class="material-icons-outlined" style="color:#ccc;font-size:40px;">image</span></div>
+                <div class="product-name">${p.name || ''}</div>
+                <div class="product-price">&pound;${typeof p.price==='number'? p.price.toFixed(2) : p.price}</div>
+                <div class="product-stock">Stock: ${p.stock ?? '-'}</div>
+                <span class="status-badge ${(p.status||'').toLowerCase()==='active' ? 'status-active' : 'status-pending'}">${p.status || 'Pending'}</span>
+            </div>`).join('');
+        } catch { document.getElementById('productList').innerHTML = 'Error loading products.'; }
+    }
+    loadProducts();
+</script>
+</body>
+</html>

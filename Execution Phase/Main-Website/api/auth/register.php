@@ -1,166 +1,147 @@
 <?php
-/**
- * Customer Registration API
- * Endpoint: POST /api/auth/register.php
- * Inserts into HUDDER_USER and CUSTOMER tables
- */
+// Suppress warnings to keep JSON output clean
+error_reporting(0);
+ini_set('display_errors', 0);
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
-
+require_once '../../config/config.php';
 require_once '../../config/database.php';
 
-$response = ['success' => false, 'message' => ''];
-
-// Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $response['message'] = 'Invalid request method. Only POST is allowed.';
-    echo json_encode($response);
-    exit;
-}
-
-// Get JSON input
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-// Validate JSON decoding
 if (!$data) {
-    $response['message'] = 'Invalid JSON input.';
-    echo json_encode($response);
-    exit;
-}
-
-// Required fields
-$required = ['firstname', 'lastname', 'email', 'password'];
-foreach ($required as $field) {
-    if (empty($data[$field])) {
-        $response['message'] = ucfirst($field) . ' is required.';
-        echo json_encode($response);
-        exit;
-    }
-}
-
-// Extract and sanitize data
-$firstname = trim($data['firstname']);
-$lastname  = trim($data['lastname']);
-$email     = trim($data['email']);
-$password  = $data['password'];
-$phone     = !empty($data['phone_number']) ? trim($data['phone_number']) : '';
-$address   = !empty($data['address']) ? trim($data['address']) : '';
-$dob       = !empty($data['date_of_birth']) ? $data['date_of_birth'] : '';
-$gender    = !empty($data['gender']) ? trim($data['gender']) : '';
-
-// Validate email format
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $response['message'] = 'Invalid email format.';
-    echo json_encode($response);
-    exit;
-}
-
-// Validate password length
-if (strlen($password) < 6) {
-    $response['message'] = 'Password must be at least 6 characters long.';
-    echo json_encode($response);
+    echo json_encode(['success' => false, 'message' => 'No data received']);
     exit;
 }
 
 try {
-    // Check if email already exists
-    $checkSql = "SELECT COUNT(*) AS CNT FROM HUDDERS_USER WHERE email = :email";
+    $fname = trim($data['firstname']);
+    $lname = trim($data['lastname']);
+    $email = trim($data['email']);
+    $pass  = $data['password'];
+    $role  = strtolower(trim($data['user_role'] ?? 'customer'));
+    
+    $phone   = trim($data['phone_number'] ?? '');
+    $address = trim($data['address'] ?? '');
+    $dob     = $data['date_of_birth'] ?? ''; 
+    $gender  = trim($data['gender'] ?? '');
+
+    // 1. CHECK IF EMAIL ALREADY EXISTS
+    $checkSql = "SELECT COUNT(*) AS CNT FROM HUDDER_USER WHERE email = :em";
     $checkStmt = oci_parse($conn, $checkSql);
-    oci_bind_by_name($checkStmt, ':email', $email);
+    oci_bind_by_name($checkStmt, ':em', $email);
     oci_execute($checkStmt);
     $checkRow = oci_fetch_assoc($checkStmt);
     oci_free_statement($checkStmt);
 
-    if ($checkRow && $checkRow['CNT'] > 0) {
-        $response['message'] = 'An account with this email already exists.';
-        echo json_encode($response);
-        exit;
+    if ($checkRow['CNT'] > 0) {
+        throw new Exception("The email '$email' is already registered. Please login.");
     }
 
-    // Get next user_id
-    $idq = oci_parse($conn, "SELECT NVL(MAX(user_id),0)+1 AS new_id FROM HUDDERS_USER");
-    oci_execute($idq);
-    $idrow = oci_fetch_assoc($idq);
-    $user_id = $idrow['NEW_ID'];
-    oci_free_statement($idq);
-
-    // Hash the password using bcrypt
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-    // Insert into HUDDERS_USER
-    $insertSql = "INSERT INTO HUDDERS_USER (";
-        user_id, firstname, lastname, email, user_password,
-        user_role, phone_number, address, date_of_birth, gender
-    ) VALUES (
-        :user_id, :firstname, :lastname, :email, :password,
-        'customer', :phone, :address, TO_DATE(:dob, 'YYYY-MM-DD'), :gender
-    )";
-
-    $insertStmt = oci_parse($conn, $insertSql);
-    oci_bind_by_name($insertStmt, ':user_id', $user_id);
-    oci_bind_by_name($insertStmt, ':firstname', $firstname);
-    oci_bind_by_name($insertStmt, ':lastname', $lastname);
-    oci_bind_by_name($insertStmt, ':email', $email);
-    oci_bind_by_name($insertStmt, ':password', $hashedPassword);
-    oci_bind_by_name($insertStmt, ':phone', $phone);
-    oci_bind_by_name($insertStmt, ':address', $address);
-    oci_bind_by_name($insertStmt, ':dob', $dob);
-    oci_bind_by_name($insertStmt, ':gender', $gender);
-
-    $insertResult = oci_execute($insertStmt, OCI_NO_AUTO_COMMIT);
-    oci_free_statement($insertStmt);
-
-    if (!$insertResult) {
-        $e = oci_error($insertStmt);
-        oci_rollback($conn);
-        $response['message'] = 'Failed to create user account.';
-        if ($e) {
-            $response['message'] .= ' Error: ' . $e['message'];
-        }
-        echo json_encode($response);
-        exit;
+    // 2. Get max user_id and sync sequence to avoid ORA-00001
+    $maxQ = oci_parse($conn, "SELECT NVL(MAX(user_id),0) AS max_id FROM HUDDER_USER");
+    oci_execute($maxQ);
+    $maxRow = oci_fetch_assoc($maxQ);
+    $maxId = (int)$maxRow['MAX_ID'];
+    oci_free_statement($maxQ);
+    $syncQ = oci_parse($conn, "SELECT seq_Hudder_user.NEXTVAL FROM DUAL");
+    oci_execute($syncQ);
+    $seqRow = oci_fetch_assoc($syncQ);
+    $seqVal = (int)$seqRow['NEXTVAL'];
+    oci_free_statement($syncQ);
+    if ($seqVal <= $maxId) {
+        $diff = $maxId - $seqVal + 100;
+        $alterSql = "ALTER SEQUENCE seq_Hudder_user INCREMENT BY " . $diff;
+        $alterStmt = oci_parse($conn, $alterSql);
+        @oci_execute($alterStmt);
+        oci_free_statement($alterStmt);
+        $advStmt = oci_parse($conn, "SELECT seq_Hudder_user.NEXTVAL FROM DUAL");
+        @oci_execute($advStmt);
+        oci_free_statement($advStmt);
+        $resetStmt = oci_parse($conn, "ALTER SEQUENCE seq_Hudder_user INCREMENT BY 1");
+        @oci_execute($resetStmt);
+        oci_free_statement($resetStmt);
     }
 
-    // Get next customer_id
-    $cidq = oci_parse($conn, "SELECT NVL(MAX(customer_id),0)+1 AS new_id FROM CUSTOMER");
-    oci_execute($cidq);
-    $cidrow = oci_fetch_assoc($cidq);
-    $customer_id = $cidrow['NEW_ID'];
-    oci_free_statement($cidq);
+    // 3. INSERT INTO HUDDER_USER with sequence
+    $sql = "INSERT INTO HUDDER_USER (
+                user_id, firstname, lastname, email, user_password, 
+                user_role, phone_number, address, date_of_birth, gender
+            ) VALUES (
+                seq_Hudder_user.NEXTVAL, :f_name, :l_name, :e_mail, :p_word, 
+                :role, :phone, :addr, TO_DATE(:dob, 'YYYY-MM-DD'), :gender
+            )";
+    
+    $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ':f_name', $fname);
+    oci_bind_by_name($stmt, ':l_name', $lname);
+    oci_bind_by_name($stmt, ':e_mail', $email);
+    oci_bind_by_name($stmt, ':p_word', $pass);
+    oci_bind_by_name($stmt, ':role', $role);
+    oci_bind_by_name($stmt, ':phone', $phone);
+    oci_bind_by_name($stmt, ':addr', $address);
+    oci_bind_by_name($stmt, ':gender', $gender);
+    
+    // Bind DOB - if empty, Oracle handles it better as a null variable
+    $dob_val = !empty($dob) ? $dob : null;
+    oci_bind_by_name($stmt, ':dob', $dob_val);
 
-    // Insert into CUSTOMER
-    $cstmt = oci_parse($conn, "INSERT INTO CUSTOMER (customer_id, user_id) VALUES (:cid, :uid)");
-    oci_bind_by_name($cstmt, ':cid', $customer_id);
-    oci_bind_by_name($cstmt, ':uid', $user_id);
-    $customerResult = oci_execute($cstmt, OCI_NO_AUTO_COMMIT);
-    oci_free_statement($cstmt);
-
-    if (!$customerResult) {
-        oci_rollback($conn);
-        $response['message'] = 'Failed to create customer profile.';
-        echo json_encode($response);
-        exit;
+    if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+        $e = oci_error($stmt);
+        throw new Exception("Hudder_User Error: " . $e['message']);
     }
+    oci_free_statement($stmt);
 
-    // Commit the transaction
+    // Get the new user_id from sequence AFTER insert
+    $id_stmt = oci_parse($conn, "SELECT seq_Hudder_user.CURRVAL AS NEWID FROM DUAL");
+    oci_execute($id_stmt);
+    $row = oci_fetch_assoc($id_stmt);
+    $new_uid = $row['NEWID'];
+    oci_free_statement($id_stmt);
+
+    // 4. INSERT INTO CUSTOMER with customer_id via max+1
+    $maxCq = oci_parse($conn, "SELECT NVL(MAX(customer_id),0)+1 AS new_id FROM CUSTOMER");
+    oci_execute($maxCq);
+    $maxCRow = oci_fetch_assoc($maxCq);
+    $newCid = (int)$maxCRow['NEW_ID'];
+    oci_free_statement($maxCq);
+    $c_sql = "INSERT INTO CUSTOMER (customer_id, user_id) VALUES (:cid, :u_id_cust)";
+    $c_stmt = oci_parse($conn, $c_sql);
+    oci_bind_by_name($c_stmt, ':cid', $newCid);
+    oci_bind_by_name($c_stmt, ':u_id_cust', $new_uid);
+
+    if (!oci_execute($c_stmt, OCI_NO_AUTO_COMMIT)) {
+        $e = oci_error($c_stmt);
+        throw new Exception("Customer Table Error: " . $e['message']);
+    }
+    oci_free_statement($c_stmt);
+
+    // 5. Generate verification token
+    $token = bin2hex(random_bytes(32));
+    $token_stmt = oci_parse($conn, "UPDATE HUDDER_USER SET verification_token = :token WHERE user_id = :user_id");
+    oci_bind_by_name($token_stmt, ':token', $token);
+    oci_bind_by_name($token_stmt, ':user_id', $new_uid);
+    oci_execute($token_stmt, OCI_NO_AUTO_COMMIT);
+    oci_free_statement($token_stmt);
+
+    // 6. COMMIT TRANSACTION
     oci_commit($conn);
-
-    $response['success'] = true;
-    $response['message'] = 'Registration successful! You can now log in.';
-    $response['user_id'] = $user_id;
+    
+    // 7. Send verification email
+    $verify_link = BASE_URL . '/public/verify-email.html?token=' . $token . '&email=' . urlencode($email);
+    
+    // Include email sending (mock for now - returns link in response)
+    echo json_encode([
+        'success' => true, 
+        'message' => "Welcome $fname! Account created. Please check your email to verify your account.",
+        'verification_link' => $verify_link // Remove in production - for testing only
+    ]);
 
 } catch (Exception $e) {
-    oci_rollback($conn);
-    $response['message'] = 'An error occurred during registration: ' . $e->getMessage();
+    if (isset($conn)) oci_rollback($conn);
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 } finally {
-    if (isset($conn)) {
-        oci_close($conn);
-    }
+    if (isset($conn)) oci_close($conn);
 }
-
-echo json_encode($response);
 ?>

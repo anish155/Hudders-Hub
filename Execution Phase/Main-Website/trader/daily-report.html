@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Report - HuddersHub Trader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0F260B;
+            --primary-green-dark: #0B1C08;
+            --primary-green-light: rgba(15, 38, 11, 0.08);
+            --primary-orange: #FF5E3A;
+            --primary-orange-dark: #E3472C;
+            --bg-white: #FFFFFF;
+            --bg-light: #F7F6F3;
+            --bg-gray: #F2F4F1;
+            --border-light: #DCE3DA;
+            --text-black: #0B140A;
+            --text-dark-gray: #1E2A1C;
+            --text-medium-gray: #5E6A63;
+            --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-black);
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #FFFFFF; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
+        .sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
+        .sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
+        .sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
+        .sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
+        .sidebar-nav { padding: 16px 0; flex: 1; }
+        .sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+        .sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); }
+        .sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
+        .sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
+        .sidebar-nav-item .material-icons-outlined { font-size: 20px; }
+        .sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
+        .sidebar-nav-item.logout:hover { color: var(--primary-orange); background: rgba(255, 94, 58, 0.1); }
+        .sidebar-report-group { display: flex; flex-direction: column; }
+        .sidebar-report-group summary { list-style: none; }
+        .sidebar-report-group summary::-webkit-details-marker { display: none; }
+        .sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+        .sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
+        .sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+        .sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+        .sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
+        .sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+
+        .top-nav { position: fixed; top: 0; left: 260px; right: 0; height: 60px; background: var(--bg-white); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 100; }
+        .top-nav-logo { display: flex; align-items: center; gap: 10px; }
+        .top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
+        .top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
+        .top-nav-right { display: flex; align-items: center; gap: 8px; }
+        .top-nav-icon { width: 40px; height: 40px; border-radius: 0; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
+        .top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
+        .top-nav-icon .material-icons-outlined { font-size: 22px; }
+        .notification-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--primary-orange); border-radius: 50%; border: 2px solid var(--bg-white); }
+        .user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); border-radius: 0; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; }
+        .user-pill:hover { background: var(--primary-green-light); }
+        .user-pill .material-icons-outlined { font-size: 18px; }
+
+        .main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); width: calc(100% - 260px); }
+        .page-header { margin-bottom: 28px; }
+        .page-title { font-size: 28px; font-weight: 800; color: var(--text-black); }
+
+        /* Controls */
+        .controls { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); padding: 16px 20px; margin-bottom: 28px; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .control-group { display: flex; flex-direction: column; gap: 6px; }
+        .control-group label { font-size: 12px; font-weight: 700; color: var(--text-medium-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+        .date-picker { padding: 8px 14px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 14px; color: var(--text-black); font-family: inherit; transition: var(--transition-smooth); }
+        .date-picker:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 0; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; transition: var(--transition-smooth); border: none; }
+        .btn-primary { background: var(--primary-green); color: #FFFFFF; }
+        .btn-primary:hover { background: var(--primary-green-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .btn-secondary { background: var(--bg-gray); color: var(--text-dark-gray); border: 1px solid var(--border-light); }
+        .btn-secondary:hover { background: var(--border-light); }
+        .btn-orange { background: var(--primary-orange); color: white; }
+        .btn-orange:hover { background: var(--primary-orange-dark); }
+
+        /* Stats */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); border-radius: 0; padding: 20px 24px; }
+        .stat-label { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); margin-bottom: 4px; }
+        .stat-value { font-size: 28px; font-weight: 800; color: var(--text-black); }
+
+        /* Slot sections */
+        .slot-section { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); border-radius: 0; margin-bottom: 20px; overflow: hidden; }
+        .slot-header { display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid var(--border-light); }
+        .slot-header-line { flex: 1; height: 1px; background: var(--border-light); }
+        .slot-title { font-size: 20px; font-weight: 700; color: var(--text-black); white-space: nowrap; }
+        .slot-count { font-size: 14px; font-weight: 600; color: var(--text-medium-gray); white-space: nowrap; }
+
+        .order-table { width: 100%; border-collapse: collapse; }
+        .order-table thead { background: var(--bg-gray); }
+        .order-table th { padding: 10px 24px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-medium-gray); border-bottom: 1px solid var(--border-light); }
+        .order-table td { padding: 12px 24px; font-size: 14px; color: var(--text-dark-gray); border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+        .order-table tbody tr:last-child td { border-bottom: none; }
+        .order-table tbody tr:hover { background: var(--primary-green-light); }
+        .order-num { font-weight: 700; color: var(--text-black); }
+
+        /* Badge */
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .status-badge.pending    { background: #FEF3C7; color: #92400E; }
+        .status-badge.completed  { background: #D1FAE5; color: #065F46; }
+        .status-badge.cancelled  { background: #FEE2E2; color: #991B1B; }
+        .status-badge.delivered  { background: #DBEAFE; color: #1E40AF; }
+        .status-badge.preparing  { background: #FFF7ED; color: #9A3412; }
+
+        /* Labels */
+        .labels-section { margin-top: 32px; }
+        .labels-section h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--text-black); }
+        .labels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .label-card { border: 2px dashed var(--border-light); border-radius: 0; padding: 20px; background: var(--bg-white); page-break-inside: avoid; transition: var(--transition-smooth); }
+        .label-card:hover { border-color: var(--primary-green); }
+        .label-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; color: var(--primary-green); display: flex; align-items: center; gap: 6px; }
+        .label-card p { font-size: 13px; color: var(--text-dark-gray); margin: 5px 0; }
+        .label-card .label-meta { border-top: 1px solid var(--border-light); margin-top: 10px; padding-top: 8px; }
+        .label-card .label-slot { font-size: 12px; font-weight: 700; color: var(--primary-orange); }
+
+        /* Empty / Loading */
+        .empty-state { text-align: center; padding: 48px; background: var(--bg-white); border: 1px solid var(--border-light); color: var(--text-medium-gray); }
+        .empty-state .material-icons-outlined { font-size: 48px; display: block; margin-bottom: 12px; color: var(--border-light); }
+
+        .sidebar-toggle { display: none; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
+        .sidebar-overlay.active { display: block; }
+
+        @media print {
+            .sidebar, .top-nav, .controls, .print-actions, .no-print { display: none !important; }
+            .main-content { padding: 0; margin: 0; width: 100%; }
+            .slot-section { break-inside: avoid; }
+            .label-card { border: 1px solid #ccc; break-inside: avoid; }
+            body { background: #fff; }
+        }
+        @media (max-width: 900px) {
+            .sidebar { left: -280px; transition: left 0.3s ease; }
+            .sidebar.open { left: 0; }
+            .main-content { margin-left: 0; width: 100%; }
+            .top-nav { left: 0; }
+            .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; border-radius: 0; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
+            .order-table { font-size: 13px; }
+            .order-table th, .order-table td { padding: 8px 12px; }
+        }
+    }
+
+    /* ── FAB ─────────────────────────────────────────────────────────── */
+    .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+    .fab:active { transform:translateY(0) scale(0.97); }
+    .fab .material-icons-outlined { font-size:28px; line-height:1; }
+    </style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+    <span class="material-icons-outlined">menu</span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-profile">
+        <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
+        <div class="sidebar-name" id="sidebarName">Loading...</div>
+        <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
+    </div>
+    <nav class="sidebar-nav">
+        <ul class="sidebar-nav-list">
+            <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+            <li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+            <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+            <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
+            <li>
+                <details class="sidebar-report-group" open>
+                    <summary class="sidebar-nav-item">
+                        <span class="material-icons-outlined">analytics</span>Reports
+                        <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+                    </summary>
+                    <ul class="sidebar-report-sublist">
+                        <li><a href="report.html?type=daily"   class="sidebar-report-link"><span class="material-icons-outlined">today</span>Daily</a></li>
+                        <li><a href="report.html?type=weekly"  class="sidebar-report-link"><span class="material-icons-outlined">calendar_view_week</span>Weekly</a></li>
+                        <li><a href="report.html?type=monthly" class="sidebar-report-link"><span class="material-icons-outlined">calendar_month</span>Monthly</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
+            <li><a href="#" onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<header class="top-nav">
+    <div class="top-nav-logo">
+        <img src="../public/assets/logo.png" alt="HuddersHub">
+        <span>HuddersHub</span>
+    </div>
+    <div class="top-nav-right">
+        <div class="user-pill">
+            <span class="material-icons-outlined">person</span>
+            <span id="topNavName">…</span>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <a href="add-product.html" class="fab" title="Add new product">
+        <span class="material-icons-outlined">add</span>
+    </a>
+    <div class="page-header">
+        <h1 class="page-title">Daily Report</h1>
+    </div>
+
+    <div class="controls no-print">
+        <div class="control-group">
+            <label>Select Date</label>
+            <input type="date" id="reportDate" class="date-picker">
+        </div>
+        <button class="btn btn-primary" id="generateBtn">
+            <span class="material-icons-outlined">summarize</span>
+            Generate Report
+        </button>
+        <button class="btn btn-secondary" onclick="window.print()">
+            <span class="material-icons-outlined">print</span>
+            Print Report
+        </button>
+        <button class="btn btn-secondary" onclick="exportToCSV()">
+            <span class="material-icons-outlined">download</span>
+            Export CSV
+        </button>
+        <button class="btn btn-orange" id="printLabelsBtn">
+            <span class="material-icons-outlined">local_printshop</span>
+            Print Labels
+        </button>
+        <button class="btn btn-orange" id="downloadPdfBtn" style="display:none;">
+            <span class="material-icons-outlined">picture_as_pdf</span>
+            Download PDF
+        </button>
+    </div>
+
+    <div id="reportContent">
+        <div class="empty-state">
+            <span class="material-icons-outlined">event</span>
+            <p>Select a date and click Generate Report</p>
+        </div>
+    </div>
+</main>
+
+<!-- jsPDF for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+// ── Auth guard ──────────────────────────────────────────────────────────────
+const userId   = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+if (!userId)  window.location.href = '../public/login.html';
+if (!userRole || userRole.toLowerCase() !== 'trader') window.location.href = '../public/login.html';
+
+function handleLogout() {
+    fetch('../api/auth/logout.php', { method: 'POST' })
+        .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
+        .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+}
+
+// ── Sidebar / overlay ───────────────────────────────────────────────────────
+const sidebar        = document.getElementById('sidebar');
+const sidebarToggle  = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
+sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+
+// ── Load trader identity ─────────────────────────────────────────────────────
+(function loadTraderInfo() {
+    fetch('../api/trader/get-profile.php?user_id=' + userId)
+        .then(r => r.json())
+        .then(d => {
+            if (d.success && d.data) {
+                const name = (d.data.firstname || '') + ' ' + (d.data.lastname || '');
+                document.getElementById('sidebarName').textContent = name || 'Trader';
+                document.getElementById('topNavName').textContent   = d.data.firstname || '';
+            }
+        })
+        .catch(() => {});
+})();
+
+// ── Report state ────────────────────────────────────────────────────────────
+let currentReportData = null;
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('reportDate').value = today;
+
+function formatCurrency(v) {
+    return '£' + parseFloat(v || 0).toFixed(2);
+}
+
+function statusClass(s) {
+    return (s || '').toLowerCase().replace(/\s+/g, '');
+}
+
+// ── Report generator ─────────────────────────────────────────────────────────
+function generateReport() {
+    const date  = document.getElementById('reportDate').value;
+    const btn   = document.getElementById('generateBtn');
+    if (!date) { alert('Please select a date'); return; }
+
+    btn.disabled = true;
+    document.getElementById('reportContent').innerHTML =
+        '<div class="empty-state"><span class="material-icons-outlined" style="animation:spin 1s ease infinite">refresh</span><p>Loading report…</p></div>';
+
+    fetch(`../api/trader/get-daily-report.php?user_id=${userId}&date=${date}`)
+        .then(r => r.json())
+        .then(data => {
+            btn.disabled = false;
+            if (!data.success) {
+                document.getElementById('reportContent').innerHTML =
+                    `<div class="empty-state"><span class="material-icons-outlined">error</span><p>${data.message || 'Failed to load report'}</p></div>`;
+                return;
+            }
+            currentReportData = data;
+            renderReport(data);
+        })
+        .catch(() => {
+            btn.disabled = false;
+            document.getElementById('reportContent').innerHTML =
+                '<div class="empty-state"><span class="material-icons-outlined">wifi_off</span><p>Network error. Please try again.</p></div>';
+        });
+}
+
+function renderReport(data) {
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    let slotsHtml   = '';
+    let labelsHtml  = '';
+
+    for (const slot of slotNames) {
+        const orders = data.slots[slot] || [];
+        if (orders.length === 0) continue;
+
+        // ── Slot section ─────────────────────────────────────────────────────
+        slotsHtml += `
+        <div class="slot-section">
+            <div class="slot-header">
+                <span class="slot-title">🕐 ${slot}</span>
+                <span class="slot-header-line"></span>
+                <span class="slot-count">${orders.length} order${orders.length !== 1 ? 's' : ''}</span>
+            </div>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Customer ID</th>
+                        <th>Products</th>
+                        <th>Slot</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+        orders.forEach(o => {
+            const sc = statusClass(o.status);
+            slotsHtml += `
+                <tr>
+                    <td><span class="order-num">${o.order_num}</span></td>
+                    <td>${o.customer_name}</td>
+                    <td>#CUS-${String(o.customer_id).padStart(4, '0')}</td>
+                    <td>${o.products.map(p => `${p.name} x${p.quantity}`).join(', ')}</td>
+                    <td>${o.collection_slot || slot}</td>
+                    <td>${formatCurrency(o.total)}</td>
+                    <td><span class="status-badge ${sc}">${o.status || '—'}</span></td>
+                </tr>`;
+        });
+        slotsHtml += `</tbody></table></div>`;
+
+        // ── Labels for this slot ─────────────────────────────────────────────
+        orders.forEach(o => {
+            labelsHtml += `
+            <div class="label-card">
+                <h4><span class="material-icons-outlined">inventory_2</span> ${o.order_num}</h4>
+                <p><strong>Customer:</strong> ${o.customer_name}</p>
+                <p><strong>Customer ID:</strong> #CUS-${String(o.customer_id).padStart(4, '0')}</p>
+                <p><strong>Slot:</strong> <span class="label-slot">${o.collection_slot || slot}</span></p>
+                <p><strong>Status:</strong> ${o.status || '—'}</p>
+                <div class="label-meta">
+                    <p><strong>Products:</strong> ${o.products.map(p => `${p.name} (x${p.quantity})`).join(', ')}</p>
+                    <p><strong>Total:</strong> ${formatCurrency(o.total)}</p>
+                </div>
+            </div>`;
+        });
+    }
+
+    if (!slotsHtml) {
+        document.getElementById('reportContent').innerHTML =
+            `<div class="empty-state"><span class="material-icons-outlined">inbox</span><p>No orders found for ${data.date}</p></div>`;
+        document.getElementById('downloadPdfBtn').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('reportContent').innerHTML = `
+        <div style="margin-bottom: 16px; font-size: 14px; font-weight: 600; color: var(--text-medium-gray);">
+            <span><strong>Date:</strong> ${data.date}</span>
+            <span style="margin: 0 16px;">|</span>
+            <span><strong>Orders:</strong> ${data.total_orders}</span>
+            <span style="margin: 0 16px;">|</span>
+            <span><strong>Revenue:</strong> ${formatCurrency(data.total_revenue)}</span>
+        </div>
+        ${slotsHtml}
+        <div class="labels-section">
+            <h2>Order Labels</h2>
+            <div class="labels-grid" id="labelsGrid">${labelsHtml}</div>
+            <div class="print-actions no-print" style="display:flex;gap:12px;margin-top:20px;">
+                <button class="btn btn-orange" id="printLabelsBtn2">
+                    <span class="material-icons-outlined">local_printshop</span>Print All Labels
+                </button>
+            </div>
+        </div>
+        <button class="btn btn-orange no-print" id="downloadPdfBtn"
+                style="margin-top:16px;">
+            <span class="material-icons-outlined">picture_as_pdf</span>
+            Download Report as PDF
+        </button>
+    `;
+
+    // Wire up dynamic buttons
+    document.getElementById('printLabelsBtn2').addEventListener('click', printLabels);
+    document.getElementById('downloadPdfBtn').addEventListener('click', printToPDF);
+}
+
+// ── Confirmation shortcut for window.print() ─────────────────────────────────
+// (not used — we skip to keep browser native print dialog)
+
+// ── CSV export ───────────────────────────────────────────────────────────────
+function exportToCSV() {
+    if (!currentReportData || !currentReportData.slots) {
+        alert('No data to export. Please generate a report first.');
+        return;
+    }
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    let csv = '"Order #","Customer Name","Customer ID","Slot","Products","Total","Status"\n';
+    for (const slot of slotNames) {
+        const orders = currentReportData.slots[slot] || [];
+        for (const o of orders) {
+            const products    = o.products.map(p => `${escCsv(p.name)} x${p.quantity}`).join('; ');
+            const csvName     = escCsv(o.customer_name);
+            const csvOrder    = escCsv(o.order_num);
+            csv += `${csvOrder},${csvName},"#CUS-${String(o.customer_id).padStart(4,'0')}","${slot}","${products}",${o.total},${o.status}\n`;
+        }
+    }
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `daily_report_${currentReportData.date}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function escCsv(s) {
+    if (s.indexOf('"') !== -1) return '"' + s.replace(/"/g, '""') + '"';
+    return '"' + s + '"';
+}
+
+// ── Print labels (new window) ────────────────────────────────────────────────
+function printLabels() {
+    const grid = document.getElementById('labelsGrid');
+    if (!grid || grid.children.length === 0) { alert('No labels to print'); return; }
+
+    const date = document.getElementById('reportDate').value;
+    const win  = window.open('', '_blank', 'width=800,height=600');
+    win.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Order Labels – ${date}</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; padding: 16px; background: #fff; }
+    .labels-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .label-card { border: 2px dashed #ccc; border-radius: 0; padding: 16px; page-break-inside: avoid; }
+    .label-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #0F260B; }
+    .label-card p   { font-size: 12px; margin: 4px 0; color: #333; }
+    .label-meta     { border-top: 1px solid #ddd; margin-top: 8px; padding-top: 6px; }
+    .label-slot     { background: #FF5E3A; color: #fff; padding: 2px 6px; font-size: 11px; font-weight: 700; }
+    @media print {
+        body { padding: 0; }
+        .label-card { border: 1px solid #aaa; }
+        @page { size: auto; margin: 10mm; }
+    }
+</style>
+</head>
+<body>
+<div class="labels-grid">${grid.innerHTML}</div>
+<script>window.onload = () => { window.print(); setTimeout(() => window.close(), 800); };<\/script>
+</body>
+</html>`);
+    win.document.close();
+}
+
+// ── PDF export via jsPDF ─────────────────────────────────────────────────────
+function printToPDF() {
+    if (!currentReportData) return;
+    const { jsPDF } = window.jspdf;
+    const doc   = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    let y       = 14;
+    const margin = 14;
+    const lineH    = 6;
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+
+    // ── Title ───────────────────────────────────────────────────────────────
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    doc.text('Daily Order Report', margin, y);
+    y += 8;
+
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Date: ${currentReportData.date}  |  Orders: ${currentReportData.total_orders}  |  Revenue: ${formatCurrency(currentReportData.total_revenue)}`, margin, y);
+    y += 10;
+
+    for (const slot of slotNames) {
+        const orders = currentReportData.slots[slot] || [];
+        if (orders.length === 0) continue;
+
+        // New page if tight on space
+        if (y > 240) { doc.addPage(); y = 14; }
+
+        // ── Slot heading ─────────────────────────────────────────────────────
+        doc.setFillColor(240, 244, 241);
+        doc.rect(margin, y - 4, pageW - margin * 2, 9, 'F');
+        doc.setFontSize(13);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(15, 38, 11);
+        doc.text(`Slot: ${slot}  (${orders.length} order${orders.length !== 1 ? 's' : ''})`, margin + 3, y + 3);
+        doc.setTextColor(0);
+        y += 12;
+
+        // ── Column headers ───────────────────────────────────────────────────
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(94, 106, 99);
+        const cols = { order: 0, cust: 34, id: 82, products: 110, slot: 148, total: 164, status: 182 };
+        doc.text('Order #', margin + cols.order, y);
+        doc.text('Customer', margin + cols.cust, y);
+        doc.text('Cust ID',   margin + cols.id,   y);
+        doc.text('Products',  margin + cols.products, y);
+        doc.text('Slot',      margin + cols.slot, y);
+        doc.text('Total',     margin + cols.total, y);
+        doc.text('Status',    margin + cols.status, y);
+        doc.setTextColor(0);
+        y += lineH;
+
+        // ── Row entries ─────────────────────────────────────────────────────
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        for (let i = 0; i < orders.length; i++) {
+            const o = orders[i];
+            if (y > 270) { doc.addPage(); y = 14; }
+
+            const productsText = o.products.map(p => `${p.name} x${p.quantity}`).join(', ');
+            const row = [
+                o.order_num,
+                o.customer_name,
+                `#CUS-${String(o.customer_id).padStart(4, '0')}`,
+                clipStr(doc, productsText, 80),
+                o.collection_slot || slot,
+                formatCurrency(o.total),
+                o.status
+            ];
+            [cols.order, cols.cust, cols.id, cols.products, cols.slot, cols.total, cols.status].forEach((cx, ci) => {
+                doc.text(String(row[ci]), margin + cx, y);
+            });
+            y += lineH;
+        }
+        y += 5;
+    }
+
+    // ── Save ─────────────────────────────────────────────────────────────────
+    const isoDate = currentReportData.date;
+    doc.save(`daily_report_${isoDate}.pdf`);
+}
+
+/**
+ * Clip a long string so it fits on one line inside the PDF column allocation.
+ * Returns the truncated string with … if it overflows.
+ */
+function clipStr(doc, text, maxPx) {
+    const { width } = doc.getFont('helvetica') ? { width: doc.getFont('helvetica').meta.fontWeight } : {};
+    if (doc.getTextWidth(text) <= (maxPx || 50)) return text;
+    let truncated = text;
+    while (truncated.length > 0 && doc.getTextWidth(truncated + '…') > (maxPx || 50)) {
+        truncated = truncated.slice(0, -1);
+    }
+    return truncated + '…';
+}
+
+// ── Events ───────────────────────────────────────────────────────────────────
+document.getElementById('generateBtn').addEventListener('click', generateReport);
+document.getElementById('reportDate').addEventListener('change', generateReport);
+
+// Auto-generate report for today on first load
+window.addEventListener('DOMContentLoaded', generateReport);
+</script>
+</body>
+</html>

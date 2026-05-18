@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    function fillIdentityFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (fullName) document.querySelector('.name').textContent = fullName;
+      if (email) document.querySelector('.mail').textContent = email;
+    }
+
+  <title>HuddersHub - Order Detail</title>
+      fillIdentityFromLocalCache();
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+        const res = await fetch('../api/customer/get-profile.php', {
+          credentials: 'same-origin'
+        });
+
+        if (res.status === 401) {
+          window.location.href = '../public/login.html';
+          return;
+        }
+
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+          const firstName = user.FIRSTNAME || user.firstname || '';
+          const lastName = user.LASTNAME || user.lastname || '';
+          const email = user.EMAIL || user.email || '-';
+          const name = (firstName + ' ' + lastName).trim() || 'Customer';
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    .header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line)}
+    .header-inner{height:68px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+    .brand img{width:42px;height:42px}.brand span{font-family:'Google Sans Flex',sans-serif;font-style:italic;font-size:26px;font-weight:700;color:var(--green)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:24px 0}
+    .side{background:#fff;border:1px solid var(--line);padding:18px;height:max-content}
+    .profile-chip{display:flex;gap:10px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+    .avatar{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;background:#f3f5f2}
+    .name{font-weight:700}
+    .mail{font-size:13px;color:var(--muted)}
+    .menu{display:grid;gap:8px}
+    .menu a{padding:10px 12px;text-decoration:none;color:#1e2a1c;font-size:14px;line-height:1.35;font-weight:600;border:1px solid transparent}
+    .menu a:visited{color:#1e2a1c}
+    .menu a.active,.menu a:hover{border-color:var(--line);background:#f7faf6;font-weight:600}
+    .menu a.logout{margin-top:6px;border-top:1px solid var(--line);padding-top:14px;color:#b42318}
+    .page{display:grid;gap:14px}
+    .card{background:#fff;border:1px solid var(--line);padding:18px}
+    .head{display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap}
+    h1{font-size:24px;margin-bottom:5px}
+    .sub{font-size:14px;color:var(--muted)}
+    .badge{display:inline-block;background:#D1FAE5;color:#065F46;font-size:11px;font-weight:700;padding:4px 8px;text-transform:uppercase}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .block{border:1px solid var(--line);padding:12px;background:#fcfdfb}
+    .block h3{font-size:14px;text-transform:uppercase;color:#385041;margin-bottom:8px}
+    .block p{font-size:14px;line-height:1.55;color:#1f2d22}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-top:1px solid var(--line);text-align:left;font-size:14px}
+    th{font-size:12px;text-transform:uppercase;color:#5e6a63}
+    .right{text-align:right}
+    .total{font-weight:800;color:var(--green)}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{height:40px;padding:0 14px;border:none;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+    .btn-orange{background:var(--orange);color:#fff}.btn-green{background:#eef3ed;color:#14310f}
+    @media (max-width:760px){
+      .header-inner{height:62px}.brand span{font-size:22px}
+      .layout{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      table,thead,tbody,th,td,tr{display:block}
+      thead{display:none}
+      tr{border:1px solid var(--line);margin-bottom:8px}
+      td{border-top:none;border-bottom:1px solid #edf1ec}
+      td:last-child{border-bottom:none}
+      td::before{content:attr(data-label);display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:#5e6a63;margin-bottom:3px}
+      .right{text-align:left}
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../public/index.html"><img src="../public/assets/logo.png" alt="HuddersHub logo"><span>HuddersHub</span></a>
+      <a href="orders.html" style="text-decoration:none;color:#0f260b;font-weight:600;">Back to Orders</a>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="side">
+      <div class="profile-chip">
+        <div class="avatar"><span class="material-icons-outlined">person</span></div>
+        <div>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="profile.html">Profile</a>
+        <a class="active" href="orders.html">My Orders</a>
+        <a href="addresses.html">Saved Addresses</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="change-password.html">Change Password</a>
+        <a href="email-settings.html">Email Settings</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
+      </nav>
+    </aside>
+
+    <div class="page">
+    <section class="card head">
+      <div>
+        <h1>Order #HDR-1032</h1>
+        <p class="sub">Placed on 12 May 2026 at 10:32 AM</p>
+      </div>
+      <span class="badge">Completed</span>
+    </section>
+
+    <section class="grid">
+      <article class="card block">
+        <h3>Pickup Details</h3>
+        <p>Hudders Butchers<br>45 Market Street, Huddersfield<br>Pickup Slot: 13 May 2026, 2:00 PM - 3:00 PM</p>
+      </article>
+      <article class="card block">
+        <h3>Billing Address</h3>
+        <p>Loading...<br>12 Green Street, Marsh<br>Huddersfield, HD1 4AB<br>+44 7700 900123</p>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2 style="font-size:20px;margin-bottom:8px;">Items Ordered</h2>
+      <table>
+        <thead><tr><th>Product</th><th>Qty</th><th class="right">Price</th><th class="right">Subtotal</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Product">Fresh Chicken Breast</td><td data-label="Qty">2</td><td data-label="Price" class="right">GBP 6.50</td><td data-label="Subtotal" class="right">GBP 13.00</td></tr>
+          <tr><td data-label="Product">Lean Beef Mince</td><td data-label="Qty">1</td><td data-label="Price" class="right">GBP 8.20</td><td data-label="Subtotal" class="right">GBP 8.20</td></tr>
+          <tr><td data-label="Product">Dry Aged Steak</td><td data-label="Qty">1</td><td data-label="Price" class="right">GBP 9.00</td><td data-label="Subtotal" class="right">GBP 9.00</td></tr>
+          <tr><td data-label="Product" colspan="3" class="right"><strong>Total</strong></td><td data-label="Subtotal" class="right total">GBP 30.20</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <div class="btns">
+        <button class="btn btn-orange" id="reorderBtn" onclick="reorderItems()">Reorder Items</button>
+        <button class="btn btn-orange" id="cancelBtn" onclick="cancelOrder()">Cancel Order</button>
+        <a class="btn btn-green" id="invoiceLink" href="../public/invoice.html">Download Invoice</a>
+      </div>
+    </section>
+    </div>
+  </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id');
+
+    async function loadProfileIdentity() {
+      const userId = sessionStorage.getItem('user_id');
+      if (!userId) {
+        fillIdentityFromLocalCache();
+        return;
+      }
+      
+      try {
+        const res = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        const data = await res.json();
+        if (data.success && data.data) {
+          const user = data.data;
+          const displayName = ((user.FIRSTNAME || '') + ' ' + (user.LASTNAME || '')).trim() || 'Customer';
+          document.querySelector('.name').textContent = displayName;
+          document.querySelector('.mail').textContent = user.EMAIL || '-';
+
+          const billingBlock = document.querySelectorAll('.block p')[1];
+          if (billingBlock) {
+            const lines = billingBlock.innerHTML.split('<br>');
+            lines[0] = displayName;
+            billingBlock.innerHTML = lines.join('<br>');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading profile identity:', err);
+        fillIdentityFromLocalCache();
+      }
+    }
+
+    async function loadOrderDetail() {
+      if (!orderId) {
+        document.querySelector('.page').innerHTML = '<p style="color:red;padding:20px;">Order not found. <a href="orders.html">Back to orders</a></p>';
+        return;
+      }
+      try {
+        const res = await fetch('../api/orders/get-order.php?order_id=' + orderId);
+        const data = await res.json();
+        if (data.success && data.data) {
+          renderOrder(data.data);
+        } else {
+          document.querySelector('.page').innerHTML = '<p style="color:red;padding:20px;">Order not found.</p>';
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderOrder(order) {
+      document.querySelector('h1').textContent = 'Order #HDR-' + order.ORDER_ID;
+      document.querySelector('.sub').textContent = 'Placed on ' + new Date(order.ORDER_DATE).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) + ' at ' + (order.ORDER_TIME || '');
+      
+      const badge = document.querySelector('.badge');
+      badge.textContent = order.STATUS;
+      if (order.STATUS === 'Pending') badge.style.background = '#FEF3C7';
+      else if (order.STATUS === 'Cancelled') badge.style.background = '#fee2e2';
+      else badge.style.background = '#D1FAE5';
+      
+      // Pickup details
+      if (order.SLOT_DATE) {
+        document.querySelector('.block').innerHTML = '<h3>Pickup Details</h3><p>Collection: ' + new Date(order.SLOT_DATE).toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'}) + '<br>Time: ' + (order.SLOT_TIME || '10:00 - 13:00') + '<br>Location: ' + (order.LOCATION || 'Queensgate Market Hall') + '</p>';
+      }
+      
+      // Products table
+      const tbody = document.querySelector('tbody');
+      let html = '';
+      let total = 0;
+      if (order.PRODUCTS) {
+        order.PRODUCTS.forEach(p => {
+          html += '<tr><td data-label="Product">' + p.NAME + '</td><td data-label="Qty">' + p.QUANTITY + '</td><td data-label="Price" class="right">GBP ' + parseFloat(p.UNIT_PRICE).toFixed(2) + '</td><td data-label="Subtotal" class="right">GBP ' + parseFloat(p.SUBTOTAL).toFixed(2) + '</td></tr>';
+          total += parseFloat(p.SUBTOTAL);
+        });
+      }
+      html += '<tr><td data-label="Product" colspan="3" class="right"><strong>Total</strong></td><td data-label="Subtotal" class="right total">GBP ' + total.toFixed(2) + '</td></tr>';
+      tbody.innerHTML = html;
+      
+      // Update invoice link
+      document.getElementById('invoiceLink').href = '../public/invoice.html?order_id=' + order.ORDER_ID;
+      
+      // Show/hide buttons based on status
+      if (order.STATUS === 'Pending') {
+        document.getElementById('cancelBtn').style.display = 'inline-flex';
+      } else {
+        document.getElementById('cancelBtn').style.display = 'none';
+      }
+    }
+
+    async function cancelOrder() {
+      if (!confirm('Are you sure you want to cancel this order?')) return;
+      try {
+        const res = await fetch('../api/orders/cancel-order.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_id: orderId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Order cancelled successfully');
+          location.reload();
+        } else {
+          alert(data.error || 'Failed to cancel order');
+        }
+      } catch (err) {
+        alert('Error cancelling order');
+      }
+    }
+
+    async function reorderItems() {
+      const btn = document.getElementById('reorderBtn');
+      btn.textContent = 'Adding...';
+      btn.disabled = true;
+      
+      try {
+        const res = await fetch('../api/orders/get-order.php?order_id=' + orderId);
+        const data = await res.json();
+        if (data.success && data.data.PRODUCTS) {
+          for (const p of data.data.PRODUCTS) {
+            await fetch('../api/cart/add-to-cart.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ product_id: p.PRODUCT_ID, quantity: p.QUANTITY })
+            });
+          }
+          alert('Items added to cart!');
+          window.location.href = '../public/cart.html';
+        }
+      } catch (err) {
+        alert('Error reordering');
+        btn.textContent = 'Reorder Items';
+        btn.disabled = false;
+      }
+    }
+
+    loadProfileIdentity();
+    loadOrderDetail();
+  </script>
+</body>
+</html>

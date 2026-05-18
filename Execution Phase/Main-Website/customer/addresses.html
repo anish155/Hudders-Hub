@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HuddersHub - Saved Addresses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    :root{--orange:#FF5E3A;--orange-dark:#E3472C;--green:#0F260B;--bg:#F7F6F3;--line:#DCE3DA;--muted:#5E6A63}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+    .header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:2}
+    .header-inner{height:72px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+    .brand img{width:42px;height:42px}
+    .brand span{font-family:'Google Sans Flex',sans-serif;font-style:italic;font-size:26px;font-weight:700;color:var(--green)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:24px 0}
+    .side,.card{background:#fff;border:1px solid var(--line)}
+    .side{padding:18px;height:max-content}
+    .profile-chip{display:flex;gap:10px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+    .avatar{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;background:#f3f5f2}
+    .name{font-weight:700}
+    .mail{font-size:13px;color:var(--muted)}
+    .menu{display:grid;gap:8px}
+    .menu a{padding:10px 12px;text-decoration:none;color:#1e2a1c;font-size:14px;line-height:1.35;font-weight:600;border:1px solid transparent}
+    .menu a:visited{color:#1e2a1c}
+    .menu a.active,.menu a:hover{border-color:var(--line);background:#f7faf6;font-weight:600}
+    .menu a.logout{margin-top:6px;border-top:1px solid var(--line);padding-top:14px;color:#b42318}
+    .content{display:grid;gap:18px}
+    .card{padding:20px}
+    .title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}
+    .title h1{font-size:24px}
+    .sub{font-size:14px;color:var(--muted)}
+    .add-btn{height:40px;padding:0 14px;border:none;background:var(--orange);color:#fff;font-weight:700;cursor:pointer}
+    .add-btn:hover{background:var(--orange-dark)}
+    .address-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .address-item{border:1px solid var(--line);padding:14px;background:#fcfdfb}
+    .tag{display:inline-block;font-size:12px;font-weight:700;color:#0f260b;background:#e7f4e3;padding:4px 8px;margin-bottom:10px}
+    .address-item h3{font-size:16px;margin-bottom:5px}
+    .address-item p{font-size:14px;color:#334136;line-height:1.5}
+    .actions{display:flex;gap:10px;margin-top:12px}
+    .text-btn{border:none;background:transparent;font-size:13px;font-weight:700;color:#ff5e3a;cursor:pointer}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:grid;gap:6px}
+    label{font-size:13px;font-weight:600}
+    input,select{height:42px;border:1px solid var(--line);padding:0 11px;font:inherit}
+    .full{grid-column:1/-1}
+    .btn-row{display:flex;gap:10px;margin-top:12px}
+    .btn{height:40px;padding:0 16px;border:none;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--orange);color:#fff}
+    .btn-secondary{background:#eef3ed;color:#163512}
+    @media (max-width:980px){.layout{grid-template-columns:1fr}}
+    @media (max-width:720px){.address-grid,.form-grid{grid-template-columns:1fr}.header-inner{height:64px}.brand span{font-size:22px}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../public/index.html">
+        <img src="../public/assets/logo.png" alt="HuddersHub logo">
+        <span>HuddersHub</span>
+      </a>
+      <a href="profile.html" style="text-decoration:none;color:#0F260B;font-weight:600;">My Account</a>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="side">
+      <div class="profile-chip">
+        <div class="avatar"><span class="material-icons-outlined">person</span></div>
+        <div>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="profile.html">Profile</a>
+        <a href="orders.html">My Orders</a>
+        <a class="active" href="addresses.html">Saved Addresses</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="change-password.html">Change Password</a>
+        <a href="email-settings.html">Email Settings</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
+      </nav>
+    </aside>
+
+    <section class="content">
+      <article class="card">
+        <div class="title">
+          <div>
+            <h1>Saved Addresses</h1>
+            <p class="sub">Manage your pickup and delivery addresses.</p>
+          </div>
+          <button class="add-btn" type="button">Add New Address</button>
+        </div>
+        <div class="address-grid" id="addrList">
+          <div class="address-item">
+            <p style="color:#5E6A63;">Loading addresses...</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2 style="font-size:20px;margin-bottom:12px;">Add / Edit Address</h2>
+        <form class="form-grid">
+          <div class="field"><label for="label">Address Label</label><input id="label" type="text" placeholder="Home / Work"></div>
+          <div class="field"><label for="fullname">Full Name</label><input id="fullname" type="text" placeholder="John Smith"></div>
+          <div class="field full"><label for="line1">Address Line</label><input id="line1" type="text" placeholder="Street and house number"></div>
+          <div class="field"><label for="city">City</label><input id="city" type="text" placeholder="Huddersfield"></div>
+          <div class="field"><label for="postcode">Postcode</label><input id="postcode" type="text" placeholder="HD1 4AB"></div>
+          <div class="field"><label for="country">Country</label><select id="country"><option>United Kingdom</option></select></div>
+          <div class="field"><label for="phone">Phone Number</label><input id="phone" type="tel" placeholder="+44 7700 900123"></div>
+          <div class="btn-row full">
+            <button class="btn btn-primary" type="submit">Save Address</button>
+            <button class="btn btn-secondary" type="button">Cancel</button>
+          </div>
+        </form>
+      </article>
+    </section>
+  </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    function fillIdentityFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (fullName) document.querySelector('.name').textContent = fullName;
+      if (email) document.querySelector('.mail').textContent = email;
+    }
+
+    async function loadProfile() {
+      fillIdentityFromLocalCache();
+      const userId = sessionStorage.getItem('user_id');
+      if (!userId) return;
+
+      try {
+        const res = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        const data = await res.json();
+        if (data.success) {
+          const u = data.data;
+          const firstName = u.FIRSTNAME || u.firstname || '';
+          const lastName = u.LASTNAME || u.lastname || '';
+          const email = u.EMAIL || u.email || '';
+          document.querySelector('.name').textContent = (firstName + ' ' + lastName).trim() || 'Customer';
+          document.querySelector('.mail').textContent = email || '-';
+        }
+      } catch (err) {
+        console.error(err);
+        fillIdentityFromLocalCache();
+      }
+    }
+
+    async function loadAddresses() {
+      try {
+        const res = await fetch('../api/customer/get-addresses.php');
+        const data = await res.json();
+        if (data.success) {
+          const addr = data.data.ADDRESS;
+          if (addr) {
+            document.getElementById('addrList').innerHTML = `
+              <div class="address-item">
+                <span class="tag">Saved</span>
+                <h3>Address</h3>
+                <p>${addr.replace(/\n/g, '<br>')}</p>
+                <div class="actions">
+                  <button class="text-btn" onclick="editAddr()">Edit</button>
+                  <button class="text-btn" onclick="deleteAddr()">Remove</button>
+                </div>
+              </div>`;
+          }
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function saveAddr(e) {
+      e.preventDefault();
+      const addr = document.getElementById('line1').value;
+      if (!addr) return alert('Please enter an address');
+
+      try {
+        const res = await fetch('../api/customer/add-address.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: addr })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Address saved!');
+          loadAddresses();
+          e.target.reset();
+        } else {
+          alert(data.error || 'Error saving address');
+        }
+      } catch (err) { alert('Error connecting'); }
+    }
+
+    function editAddr() {
+      document.getElementById('line1').focus();
+    }
+
+    async function deleteAddr() {
+      if (!confirm('Delete this address?')) return;
+      try {
+        const res = await fetch('../api/customer/delete-address.php', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert('Address deleted');
+          loadAddresses();
+        } else {
+          alert(data.error);
+        }
+      } catch (err) { alert('Error'); }
+    }
+
+    loadProfile();
+    loadAddresses();
+    document.querySelector('form').addEventListener('submit', saveAddr);
+  </script>
+</body>
+</html>

@@ -10,9 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <style>
-/* ========================================================================
-GLOBAL VARIABLES & RESET
-======================================================================== */
 :root {
     --primary-orange: #FF5E3A;
     --primary-orange-light: #FF8C70;
@@ -53,400 +50,129 @@ img { max-width: 100%; height: auto; display: block; }
 a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
 button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
 
-/* ========================================================================
-HEADER & NAV STYLES
-======================================================================== */
-header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth);
-}
+/* HEADER */
+header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth); }
 header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .top-bar { background: rgba(255,255,255,0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
-header.scrolled .top-bar { padding: 10px 0; }
-header.scrolled .brand img { width: 42px; height: 42px; }
-header.scrolled .brand-text { font-size: 30px; }
 .page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .top-bar-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
 .brand { display: flex; align-items: center; gap: 14px; }
-.brand img { width: 56px; height: 56px; object-fit: contain; transition: var(--transition-smooth); }
+.brand img { width: 56px; height: 56px; object-fit: contain; }
 .brand-text { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 36px; color: #0F260B; }
-.search-wrap { display: flex; align-items: center; gap: 12px; }
-.search-bar { position: relative; flex: 1; min-width: 280px; }
-.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; border-radius: 0; }
-.search-bar input:focus { border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(255,94,58,.22); }
-.search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #1B2419; opacity: .55; }
+.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; }
 .actions { display: flex; align-items: center; gap: 16px; }
-.user-menu, .action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: var(--radius-sm); }
-.user-menu { color: var(--text-black); }
-.user-menu:hover, .action-btn:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.action-btn { color: var(--text-medium-gray); }
-.icon-with-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 6px; color: var(--text-black); }
-.icon-with-badge:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.icon-with-badge .material-icons-outlined { font-size: 24px; }
-.badge { position: absolute; top: 0; right: 0; background: var(--badge-bg); color: #fff; padding: 2px 5px; font-size: 10px; font-weight: 600; min-width: 16px; text-align: center; }
-.nav-bar { background: #F1F3F0; border-bottom: 1px solid var(--border-light); padding: 10px 0; transition: var(--transition-smooth); }
-header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
-.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-medium-gray); }
-.breadcrumb a { color: var(--text-dark-gray); }
-.breadcrumb a:hover { color: var(--primary-green); }
-.breadcrumb-sep { color: #9AA19A; }
-.breadcrumb-current { color: var(--primary-green); font-weight: 600; }
-.categories-wrapper { position: relative; }
-.categories-dropdown {
-    position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-lg); padding: 0; min-width: 240px; display: none; z-index: 1000;
-    transform: translateY(-8px); opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease;
-}
-.categories-wrapper:hover .categories-dropdown, .categories-dropdown:hover { display: block; transform: translateY(0); opacity: 1; }
-.dropdown-section { padding: 12px 0; }
-.dropdown-section-title { padding: 8px 16px; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.8px; }
-.dropdown-divider { height: 1px; background: var(--border-light); margin: 8px 16px; }
-.dropdown-item { display: block; padding: 10px 16px; color: var(--text-black); text-decoration: none; font-size: 14px; border-left: 3px solid transparent; transition: var(--transition-smooth); }
-.dropdown-item:hover { background: rgba(15,38,11,.08); border-left-color: var(--primary-green); }
+.action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; padding: 8px 12px; }
+
+/* NAV */
+.nav-bar { background: #F1F3F0; border-bottom: 1px solid var(--border-light); padding: 10px 0; }
 .nav-list { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.nav-item { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 0; text-decoration: none; color: var(--text-black); font-size: 15px; }
-.nav-item.primary { background: transparent; color: #0F260B; font-weight: 600; }
-.nav-item.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #0F260B; }
-.nav-separator { width: 1px; height: 24px; background: var(--border-light); margin: 0 6px; display: inline-block; }
+.nav-item { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; text-decoration: none; color: var(--text-black); font-size: 15px; }
 
-/* ========================================================================
-CART DRAWER
-======================================================================== */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1200; }
-.cart-overlay.open { opacity: 1; visibility: visible; }
-.cart-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); background: #fff; box-shadow: -16px 0 40px rgba(15,38,11,.18); transform: translateX(100%); transition: var(--transition-smooth); z-index: 1300; display: flex; flex-direction: column; }
-.cart-drawer.open { transform: translateX(0); }
-.cart-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
-.cart-header h3 { font-size: 20px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-close { border: none; background: transparent; font-size: 20px; color: var(--text-dark-gray); }
-.cart-body { padding: 18px 22px; flex: 1; display: grid; gap: 14px; align-content: start; overflow-y: auto; }
-.cart-item { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: flex-start; border: 1px solid var(--border-light); padding: 12px; background: #fff; box-shadow: var(--shadow-sm); }
-.cart-item img { width: 56px; height: 56px; object-fit: cover; background: var(--bg-gray); }
-.cart-item-details { display: grid; gap: 10px; }
-.cart-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.cart-item h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-dark-gray); }
-.cart-item p { font-size: 12px; color: var(--text-medium-gray); }
-.cart-price { font-weight: 700; color: var(--primary-orange); font-size: 14px; white-space: nowrap; }
-.cart-item-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.cart-qty { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-gray); padding: 6px 10px; }
-.cart-qty button { border: none; background: #fff; width: 22px; height: 22px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-dark-gray); box-shadow: var(--shadow-sm); }
-.cart-qty .qty-val { font-size: 12px; font-weight: 700; min-width: 12px; text-align: center; }
-.cart-remove { border: none; background: transparent; color: var(--text-medium-gray); font-size: 12px; cursor: pointer; text-decoration: underline; }
-.cart-footer { border-top: 1px solid var(--border-light); padding: 16px 22px 20px; display: grid; gap: 12px; }
-.cart-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-.cart-link { font-size: 13px; color: var(--text-medium-gray); text-decoration: none; border-bottom: 1px solid var(--border-light); }
-.cart-link:hover { color: var(--primary-green); border-bottom-color: var(--primary-green); }
-.cart-checkout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(255,94,58,.28); }
+/* LOGIN PAGE */
+.login-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0 60px; }
+.login-container { width: 100%; max-width: 1000px; background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-lg); display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+.login-brand-side { background: linear-gradient(135deg, #0F260B 0%, #143d12 100%); color: #FFFFFF; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+.brand-top h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+.feature-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.feature-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.15); display: grid; place-items: center; color: #CAED95; }
 
-/* ========================================================================
-LOGIN PAGE STYLES
-======================================================================== */
-.login-wrapper {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0 60px;
-}
-.login-container {
-    width: 100%;
-    max-width: 1000px;
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    box-shadow: var(--shadow-lg);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
-}
-.login-brand-side {
-    background: linear-gradient(135deg, #0F260B 0%, #143d12 100%);
-    color: #FFFFFF;
-    padding: 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-}
-.login-brand-side::before {
-    content: '';
-    position: absolute;
-    top: -50px; right: -50px;
-    width: 300px; height: 300px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50%;
-}
-.login-brand-side::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: -80px;
-    width: 400px; height: 400px;
-    background: rgba(255,94,58,0.15);
-    border-radius: 50%;
-}
-.brand-top { position: relative; z-index: 2; }
-.brand-top h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
-.brand-top p { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.6; }
-.brand-bottom { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 16px; }
-.feature-row { display: flex; align-items: center; gap: 12px; }
-.feature-icon {
-    width: 36px; height: 36px; border-radius: 0; background: rgba(255,255,255,0.15);
-    display: grid; place-items: center; color: #CAED95;
-}
-.feature-row span { font-size: 14px; font-weight: 500; }
+/* FORM SIDE */
 .login-form-side { padding: 48px; }
-.login-header { margin-bottom: 32px; }
+.role-tabs { display: flex; background: #F2F4F1; border: 1px solid var(--border-light); padding: 4px; gap: 4px; margin-bottom: 28px; }
+.role-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border: none; background: transparent; font-weight: 600; color: var(--text-medium-gray); cursor: pointer; }
+.role-tab.active { background: var(--primary-green); color: #fff; }
+
 .login-header h2 { font-size: 32px; font-weight: 800; color: var(--text-dark-gray); margin-bottom: 8px; }
-.login-header p { font-size: 15px; color: var(--text-medium-gray); }
-.login-form { display: flex; flex-direction: column; gap: 20px; }
-.form-group { position: relative; }
+.form-group { margin-bottom: 20px; position: relative; }
 .form-label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark-gray); margin-bottom: 8px; }
-.form-input-wrap { position: relative; display: flex; align-items: center; }
-.form-input {
-    width: 100%; padding: 14px 16px; height: 48px;
-    border: 1px solid var(--border-light); background: #FAFBF8;
-    font-size: 15px; color: var(--text-black); outline: none; transition: var(--transition-smooth);
-}
-.form-input:focus { border-color: var(--primary-orange); background: #fff; box-shadow: 0 0 0 3px rgba(255,94,58,0.15); }
-.form-input::placeholder { color: #8A948A; }
-.form-input.error { border-color: #EF4444; background: #FEF2F2; }
-.toggle-password {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    border: none; background: transparent; color: var(--text-medium-gray); padding: 4px; cursor: pointer;
-}
-.toggle-password:hover { color: var(--text-dark-gray); }
-.form-extras { display: flex; justify-content: space-between; align-items: center; margin-top: -4px; }
+.form-input { width: 100%; padding: 14px 16px; height: 48px; border: 1px solid var(--border-light); background: #FAFBF8; outline: none; }
+.form-input.error { border-color: #EF4444; }
+.form-extras { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; margin-bottom: 20px;}
 .remember-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: var(--text-medium-gray); }
 .remember-check input { accent-color: var(--primary-green); width: 16px; height: 16px; cursor: pointer; }
 .forgot-link { font-size: 14px; font-weight: 600; color: var(--primary-orange); }
-.forgot-link:hover { color: var(--primary-orange-dark); text-decoration: underline; }
-.login-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; height: 48px; padding: 0 24px;
-    background: var(--primary-green); color: #fff; border: none;
-    font-size: 16px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth);
-}
-.login-btn:hover { background: var(--primary-green-dark); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(15,38,11,0.25); }
-.login-btn:active { transform: translateY(0); }
-.login-btn:disabled { background: #9CA3AF; cursor: not-allowed; transform: none; box-shadow: none; }
-.divider-row { display: flex; align-items: center; gap: 16px; margin: 4px 0; }
-.divider-row::before, .divider-row::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
-.divider-row span { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); }
-.social-row { display: flex; gap: 12px; }
-.social-btn {
-    flex: 1; height: 48px; border: 1px solid var(--border-light); background: #FAFBF8;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    font-size: 14px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth);
-}
-.social-btn:hover { background: #fff; border-color: var(--primary-green); box-shadow: 0 4px 12px rgba(15,38,11,0.08); }
-.signup-prompt { text-align: center; font-size: 14px; color: var(--text-medium-gray); margin-top: 8px; }
-.signup-link { font-weight: 600; color: var(--primary-green); }
-.signup-link:hover { color: var(--primary-orange); }
-.form-error-msg { font-size: 13px; color: #EF4444; margin-top: 6px; display: none; align-items: center; gap: 4px; }
-.form-error-msg.visible { display: flex; }
-.form-error-msg .material-icons-outlined { font-size: 16px; }
 
-@media (max-width: 900px) {
-    .top-bar-inner { grid-template-columns: 1fr; }
-    .search-wrap { width: 100%; }
-    .actions { justify-content: space-between; flex-wrap: wrap; }
-    .login-container { grid-template-columns: 1fr; }
-    .login-brand-side { display: none; }
-}
-@media (max-width: 640px) {
-    .login-form-side { padding: 28px 20px; }
-    .login-header h2 { font-size: 26px; }
-    .social-row { flex-direction: column; }
-    .footer-grid { grid-template-columns: 1fr; }
-}
+.login-btn { width: 100%; height: 48px; background: var(--primary-green); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+.api-error-banner { display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 12px 16px; font-size: 14px; align-items: center; gap: 8px; margin-bottom: 15px; }
+.pending-banner { display: none; background: #FEF3C7; border: 2px solid #F59E0B; color: #92400E; padding: 20px; font-size: 15px; align-items: flex-start; gap: 12px; margin-bottom: 15px; border-radius: 8px; }
+.visible { display: flex !important; }
+.form-error-msg { font-size: 13px; color: #EF4444; margin-top: 6px; display: none; }
 
-/* ========================================================================
-FOOTER
-======================================================================== */
-.site-footer { 
-    background-color: #0b0f0b;
-    background-image: 
-        radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%),
-        linear-gradient(135deg, #1a2219 0%, #050705 100%);
-    color: #FFFFFF; 
-    padding: 64px 0 24px; 
-    margin-top: auto; 
-    position: relative;
-    overflow: hidden;
-}
-.site-footer a { transition: color 0.3s; }
-.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1;}
-.newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
-.newsletter-form { display: flex; gap: 12px; width: 100%; max-width: 400px; }
-.newsletter-form input { flex: 1; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; font-size: 14px; outline: none; }
-.newsletter-form input:focus { border-color: #FF5E3A; background: rgba(255,255,255,0.1); }
-.newsletter-form button { padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; cursor: pointer; border-radius: 4px; transition: background 0.3s; white-space: nowrap; }
-.newsletter-form button:hover { opacity: 0.9; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; align-items: start; position: relative; z-index: 1; }
-.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.footer-brand img { width: 56px; height: 56px; object-fit: contain; }
+/* FOOTER */
+.site-footer { background-color: #0b0f0b; background-image: radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%), radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%), linear-gradient(135deg, #1a2219 0%, #050705 100%); color: #FFFFFF; padding: 64px 0 24px; margin-top: auto; position: relative; overflow: hidden; }
+.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; }
 .brand-name { font-weight: 700; font-style: italic; font-size: 28px; }
-.footer-tagline { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
-.footer-slogan { font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #CAED95; margin-bottom: 24px;}
-.social-links { display: flex; gap: 16px; margin-bottom: 24px; }
-.social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; color: #fff; text-decoration: none;}
-.social-links a:hover { background: #FF5E3A; transform: translateY(-2px); }
-.footer-col h4 { font-size: 16px; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; font-weight: 700; }
-.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
-.footer-col a:hover { color: #FF5E3A; padding-left: 4px; }
-.footer-col p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
-.payment-methods { display: flex; gap: 12px; margin-top: 20px; opacity: 0.7; }
-.payment-methods .material-icons-outlined { font-size: 28px; }
-.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative;}
-.footer-bottom-left { color: rgba(255,255,255,0.6); font-size: 13px; }
-.footer-bottom-links { display: flex; gap: 24px; }
-.footer-bottom-links a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
-.footer-bottom-links a:hover { color: #fff; }
+.footer-col h4 { font-size: 16px; margin-bottom: 20px; text-transform: uppercase; color: #fff; font-weight: 700; }
+.footer-col a { display: block; color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 12px; }
+.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
 
-/* Responsive */
-@media (max-width: 960px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .footer-brand { grid-column: span 2; margin-bottom: 24px; margin-right: 0;}
-}
-@media (max-width: 768px) {
-    .footer-newsletter { flex-direction: column; align-items: flex-start; }
-    .newsletter-form { max-width: 100%; }
-    .footer-bottom { flex-direction: column; gap: 16px; align-items: center; text-align: center; }
-}
-@media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-brand { grid-column: span 1; }
-    .footer-bottom-links { justify-content: center; gap: 12px; }
-}
-@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; } }
+@media (max-width: 900px) { .login-container { grid-template-columns: 1fr; } .login-brand-side { display: none; } }
 </style>
 </head>
 <body>
 
-<!-- HEADER START -->
 <header>
 <div class="top-bar">
 <div class="page-wrap top-bar-inner">
     <div class="brand">
         <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
-            <img src="Asstes/logo.png" alt="HuddersHub logo">
+            <img src="assets/logo.png" alt="Logo">
             <span class="brand-text">HuddersHub</span>
         </a>
     </div>
-    <div class="search-wrap">
-        <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
-    </div>
-    <div class="actions">
-        <span class="action-btn" id="loginBtn" style="cursor: pointer;">
-            <span class="material-icons-outlined" style="font-size: 24px;">person</span>
-            <span id="loginBtnText">Login/Signup</span>
-        </span>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge moon" href="#" style="font-size: 20px;"><span class="material-icons-outlined">dark_mode</span></a>
-    </div>
+    <div style="flex:1; margin: 0 40px;"><input type="text" placeholder="Search" style="width:100%; padding:8px; border:1px solid #ddd;"></div>
+    <div class="actions"><a href="signup.html" class="action-btn">Register</a></div>
 </div>
 </div>
-<nav class="nav-bar">
-<div class="page-wrap">
-    <div class="nav-list">
-        <a href="index.html" class="nav-item primary"><span class="material-icons-outlined" style="font-size: 18px;">home</span>Home</a>
-        <span class="nav-separator"></span>
-        <div class="categories-wrapper">
-            <span class="nav-item"><span class="material-icons-outlined" style="font-size: 18px;">menu</span>Categories</span>
-            <div class="categories-dropdown">
-                <div class="dropdown-section"><div class="dropdown-section-title">Browse by Shop</div><div class="dropdown-divider"></div>
-                <a href="butcher.html" class="dropdown-item">Butcher</a>
-                <a href="greengrocer.html" class="dropdown-item">Greengrocer</a>
-                <a href="fishmonger.html" class="dropdown-item">Fishmonger</a>
-                <a href="bakery.html" class="dropdown-item">Bakery</a>
-                <a href="delicatessen.html" class="dropdown-item">Delicatessen</a>
-                </div>
-                <div class="dropdown-section"><div class="dropdown-section-title">Browse by Type</div><div class="dropdown-divider"></div>
-                <a href="category.html?type=meat-poultry" class="dropdown-item">Meat & Poultry</a>
-                <a href="category.html?type=fish-seafood" class="dropdown-item">Fish & Seafood</a>
-                <a href="category.html?type=fruits-veg" class="dropdown-item">Fruits & Veg</a>
-                <a href="category.html?type=bakery-items" class="dropdown-item">Bakery Items</a>
-                <a href="category.html?type=deli-foods" class="dropdown-item">Deli Foods</a>
-                </div>
-                <div class="dropdown-divider"></div>
-                <a href="all-categories.html" class="dropdown-item all-categories">All Categories</a>
-            </div>
-        </div>
-        <span class="nav-separator"></span>
-        <a href="about.html" class="nav-item">About</a>
-        <span class="nav-separator"></span>
-        <a href="contact.html" class="nav-item">Contact</a>
-    </div>
-</div>
-</nav>
 </header>
 
-<!-- CART DRAWER -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-<div class="cart-header"><h3>Your cart</h3><button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button></div>
-<div class="cart-body">
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Bell Pepper</h4><p class="cart-meta">Greengrocer · Qty 2</p></div><span class="cart-price">£1.80</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Broccoli</h4><p class="cart-meta">Greengrocer · Qty 1</p></div><span class="cart-price">£0.90</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">1</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-empty" style="display:none;">Your cart is empty.</div>
-</div>
-<div class="cart-footer"><div class="cart-total"><span>Total</span><span class="cart-total-value">£2.70</span></div><div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div></div>
-</aside>
-
-<!-- MAIN LOGIN CONTENT -->
 <main class="login-wrapper">
 <div class="page-wrap login-container">
-    <!-- LEFT: Branding / Info Panel -->
     <div class="login-brand-side">
         <div class="brand-top">
-            <h1>Welcome back,<br>to HuddersHub</h1>
-            <p>Access your local marketplace. Track orders, save favourites, and enjoy a seamless checkout experience.</p>
+            <h1 id="brandTitle">Welcome back,<br>to HuddersHub</h1>
+            <p id="brandDesc">Access your local marketplace. Track orders, save favourites, and enjoy a seamless checkout experience.</p>
         </div>
         <div class="brand-bottom">
-            <div class="feature-row">
-                <div class="feature-icon"><span class="material-icons-outlined">local_shipping</span></div>
-                <span>Click & Collect made simple</span>
-            </div>
-            <div class="feature-row">
-                <div class="feature-icon"><span class="material-icons-outlined">verified</span></div>
-                <span>Trusted local traders only</span>
-            </div>
-            <div class="feature-row">
-                <div class="feature-icon"><span class="material-icons-outlined">history</span></div>
-                <span>Order history & quick reorders</span>
-            </div>
+            <div class="feature-row"><div class="feature-icon"><span class="material-icons-outlined">local_shipping</span></div><span>Click & Collect made simple</span></div>
+            <div class="feature-row"><div class="feature-icon"><span class="material-icons-outlined">verified</span></div><span>Trusted local traders only</span></div>
         </div>
     </div>
 
-    <!-- RIGHT: Login Form -->
     <div class="login-form-side">
-        <div class="login-header">
-            <h2>Log in to your account</h2>
-            <p>Enter your details to access your personalised hub.</p>
+        <div class="role-tabs">
+            <button class="role-tab active" id="tabCustomer" onclick="switchRole('customer')">Customer</button>
+            <button class="role-tab" id="tabTrader" onclick="switchRole('trader')">Trader</button>
         </div>
 
-        <form class="login-form" id="loginForm" novalidate>
-            <div class="form-group">
-                <label class="form-label" for="email">Email address</label>
-                <div class="form-input-wrap">
-                    <input class="form-input" type="email" id="email" placeholder="name@example.com" required autocomplete="email">
-                </div>
-                <div class="form-error-msg" id="emailError"><span class="material-icons-outlined">error_outline</span>Please enter a valid email address.</div>
+        <div class="login-header">
+            <h2 id="formTitle">Log in to your account</h2>
+        </div>
+
+        <form id="loginForm" novalidate>
+            <div class="api-error-banner" id="apiBanner">
+                <span class="material-icons-outlined">error_outline</span>
+                <span id="apiBannerMsg">Invalid credentials.</span>
+            </div>
+<div class="pending-banner" id="pendingBanner" style="text-align:center; flex-direction:column; align-items:center;">
+                <span class="material-icons-outlined" style="font-size:48px; margin-bottom:10px;">pending_actions</span>
+                <div><strong style="font-size:18px;">Application Pending</strong><br><span style="font-size:14px;">Your trader account is awaiting admin approval.<br>You'll be able to access the dashboard once approved.</span></div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <div class="form-input-wrap">
-                    <input class="form-input" type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                    <button class="toggle-password" type="button" aria-label="Toggle password visibility">
-                        <span class="material-icons-outlined" id="pwIcon">visibility_off</span>
-                    </button>
+                <label class="form-label">Email address</label>
+                <input class="form-input" type="email" id="email" placeholder="name@example.com" required>
+                <div class="form-error-msg" id="emailError">Valid email required.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div style="position:relative;">
+                    <input class="form-input" type="password" id="password" placeholder="Enter password" required>
+                    <button type="button" id="togglePw" style="position:absolute; right:12px; top:12px; border:none; background:none; cursor:pointer;"><span class="material-icons-outlined" id="pwIcon">visibility_off</span></button>
                 </div>
-                <div class="form-error-msg" id="passError"><span class="material-icons-outlined">error_outline</span>Password must be at least 6 characters.</div>
+                <div class="form-error-msg" id="passError">Password required.</div>
             </div>
 
             <div class="form-extras">
@@ -456,229 +182,114 @@ FOOTER
                 <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
             </div>
 
-            <button type="submit" class="login-btn" id="loginSubmitBtn">
-                <span id="loginBtnTextInner">Log in</span>
-                <span class="material-icons-outlined" id="loginBtnArrow">arrow_forward</span>
-            </button>
-
-            <div class="divider-row"><span>or continue with</span></div>
-
-            <div class="social-row">
-                <button type="button" class="social-btn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google"> Google</button>
-                <button type="button" class="social-btn"><span class="material-icons-outlined" style="font-size: 20px;">apple</span> Apple</button>
-            </div>
-
-            <p class="signup-prompt">Don't have an account? <a href="signup.html" class="signup-link">Create one</a></p>
+            <button type="submit" class="login-btn" id="loginSubmitBtn"><span id="loginBtnText">Log in</span></button>
+            <p style="text-align:center; margin-top:20px; font-size:14px;">Don't have an account? <a href="signup.html" style="color:var(--primary-green); font-weight:700;">Sign up</a></p>
         </form>
     </div>
 </div>
 </main>
 
-<!-- FOOTER -->
 <footer class="site-footer">
 <div class="page-wrap footer-newsletter">
-    <div class="newsletter-content">
-        <h3>Join the HuddersHub Community</h3>
-        <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
-    </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
-    </div>
+    <div class="newsletter-content"><h3>Join the Community</h3><p>Shop local, eat fresh.</p></div>
+    <div><a href="signup.html" style="padding:12px 24px; background:#FF5E3A; color:#fff; font-weight:600;">Register Now</a></div>
 </div>
 <div class="page-wrap footer-grid">
-    <div class="footer-brand">
-        <div class="brand-row"><img src="assets/logo.png" alt="HuddersHub logo"><span class="brand-name">HuddersHub</span></div>
-        <p class="footer-tagline">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
-        <p class="footer-slogan">Eat Fresh. Buy Local.</p>
-        <div class="social-links">
-            <a href="#" aria-label="Facebook"><span class="material-icons-outlined">facebook</span></a>
-            <a href="#" aria-label="Instagram"><span class="material-icons-outlined">camera_alt</span></a>
-        </div>
-    </div>
-    <div class="footer-col">
-        <h4>Shop</h4>
-        <a href="category.html?type=greengrocer">Green Grocer</a>
-        <a href="category.html?type=butcher">The Butcher</a>
-        <a href="category.html?type=bakery">Bakery</a>
-        <a href="category.html?type=delicatessen">Delicatessen</a>
-        <a href="category.html?type=dairy">Dairy & Eggs</a>
-    </div>
-    <div class="footer-col">
-        <h4>Company</h4>
-        <a href="about.html">About HuddersHub</a>
-        <a href="register-trader.html">Become a Trader</a>
-        <a href="faq.html">Help Center</a>
-        <a href="refund.html">Returns & Refunds</a>
-    </div>
-    <div class="footer-col">
-        <h4>Contact</h4>
-        <p><span class="material-icons-outlined" style="font-size:16px;">location_on</span> Huddersfield, UK</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">mail</span> support@huddershub.test</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">phone</span> +44 1484 000 000</p>
-        
-    </div>
+    <div class="footer-brand"><span class="brand-name">HuddersHub</span><p>Local food, trusted traders.</p></div>
+    <div class="footer-col"><h4>Shop</h4><a href="category.html?type=greengrocer">Greengrocer</a><a href="category.html?type=butcher">Butcher</a><a href="category.html?type=bakery">Bakery</a></div>
+    <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="register-trader.html">Become a Trader</a><a href="faq.html">Help Center</a></div>
+    <div class="footer-col"><h4>Contact</h4><p>Huddersfield, UK</p><p>support@huddershub.test</p></div>
 </div>
-<div class="page-wrap footer-bottom">
-    <div class="footer-bottom-left">
-        <span>&copy; 2026 HuddersHub. All rights reserved.</span>
-    </div>
-    <div class="footer-bottom-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-    </div>
-</div>
+<div class="page-wrap footer-bottom"><span>&copy; 2026 HuddersHub. All rights reserved.</span><div style="display:flex; gap:20px;"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div>
 </footer>
 
 <script>
-// HEADER SCROLL EFFECT
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('header');
-    if (window.scrollY > 50) header.classList.add('scrolled'); else header.classList.remove('scrolled');
-});
-
-// CATEGORIES DROPDOWN
-document.querySelectorAll('.categories-wrapper').forEach(wrapper => {
-    const dropdown = wrapper.querySelector('.categories-dropdown');
-    wrapper.addEventListener('mouseenter', () => { dropdown.style.display='block'; setTimeout(()=>{dropdown.style.transform='translateY(0)';dropdown.style.opacity='1';},10); });
-    wrapper.addEventListener('mouseleave', () => { dropdown.style.transform='translateY(-8px)'; dropdown.style.opacity='0'; setTimeout(()=>{dropdown.style.display='none';},200); });
-});
-
-// CART DRAWER
-const cartTrigger = document.getElementById('cartTrigger');
-const cartDrawer = document.getElementById('cartDrawer');
-const cartOverlay = document.getElementById('cartOverlay');
-const cartClose = document.getElementById('cartClose');
-function formatMoney(value) { return '£' + value.toFixed(2); }
-function updateCartTotals() {
-    if (!cartDrawer) return;
-    const items = cartDrawer.querySelectorAll('.cart-item');
-    let total = 0;
-    items.forEach(item => {
-        const price = parseFloat(item.dataset.price || '0');
-        const qtyEl = item.querySelector('.qty-val');
-        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
-        const priceEl = item.querySelector('.cart-price');
-        if (priceEl) priceEl.textContent = formatMoney(price * qty);
-        total += price * qty;
-    });
-    const totalEl = cartDrawer.querySelector('.cart-total-value');
-    if (totalEl) totalEl.textContent = formatMoney(total);
-    const emptyEl = cartDrawer.querySelector('.cart-empty');
-    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
-}
-function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
-if (cartTrigger) cartTrigger.addEventListener('click', e => { e.preventDefault(); openCart(); });
-if (cartDrawer) {
-    cartDrawer.addEventListener('click', e => {
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const item = qtyBtn.closest('.cart-item');
-            const qtyEl = item?.querySelector('.qty-val');
-            if (!item || !qtyEl) return;
-            let qty = parseInt(qtyEl.textContent, 10) || 1;
-            qty += qtyBtn.dataset.action === 'increase' ? 1 : -1;
-            qty = Math.max(1, qty);
-            qtyEl.textContent = qty; updateCartTotals(); return;
-        }
-        const removeBtn = e.target.closest('.cart-remove');
-        if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartTotals(); }
-    });
-}
-if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-if (cartClose) cartClose.addEventListener('click', closeCart);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
-updateCartTotals();
-
-// LOGIN FORM LOGIC
-const pwInput = document.getElementById('password');
-const pwIcon = document.getElementById('pwIcon');
-const togglePwBtn = document.querySelector('.toggle-password');
-if (togglePwBtn) {
-    togglePwBtn.addEventListener('click', () => {
-        const isPass = pwInput.type === 'password';
-        pwInput.type = isPass ? 'text' : 'password';
-        pwIcon.textContent = isPass ? 'visibility' : 'visibility_off';
-    });
-}
-
+let currentRole = 'customer';
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
+const pwInput = document.getElementById('password');
 const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-const emailError = document.getElementById('emailError');
-const passError = document.getElementById('passError');
 
-function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function switchRole(role) {
+    currentRole = role;
+    document.getElementById('tabCustomer').classList.toggle('active', role === 'customer');
+    document.getElementById('tabTrader').classList.toggle('active', role === 'trader');
+    document.getElementById('formTitle').textContent = role === 'trader' ? 'Trader Login' : 'Log in to your account';
+    resetUI();
+}
 
-loginForm.addEventListener('submit', async function(e) {
+function resetUI() {
+    document.getElementById('apiBanner').classList.remove('visible');
+    document.getElementById('pendingBanner').classList.remove('visible');
+    document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+    document.querySelectorAll('.form-error-msg').forEach(m => m.classList.remove('visible'));
+}
+
+document.getElementById('togglePw').addEventListener('click', () => {
+    const isPass = pwInput.type === 'password';
+    pwInput.type = isPass ? 'text' : 'password';
+    document.getElementById('pwIcon').textContent = isPass ? 'visibility' : 'visibility_off';
+});
+
+loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
+    resetUI();
+
+    const email = emailInput.value.trim();
+    const password = pwInput.value;
     let valid = true;
 
-    // Reset errors
-    emailInput.classList.remove('error');
-    pwInput.classList.remove('error');
-    emailError.classList.remove('visible');
-    passError.classList.remove('visible');
-
-    if (!validateEmail(emailInput.value.trim())) {
-        emailInput.classList.add('error');
-        emailError.classList.add('visible');
-        valid = false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailInput.classList.add('error'); document.getElementById('emailError').classList.add('visible'); valid = false;
     }
-    if (pwInput.value.length < 6) {
-        pwInput.classList.add('error');
-        passError.classList.add('visible');
-        valid = false;
+    if (password.length < 1) {
+        pwInput.classList.add('error'); document.getElementById('passError').classList.add('visible'); valid = false;
     }
 
-    if (!valid) {
-        if (emailInput.classList.contains('error')) emailInput.focus();
-        else pwInput.focus();
-        return;
-    }
+    if (valid) {
+        loginSubmitBtn.disabled = true;
+        document.getElementById('loginBtnText').textContent = 'Connecting...';
 
-    // Prepare UI: disable button and show loading state
-    loginSubmitBtn.disabled = true;
-    const originalText = document.getElementById('loginBtnTextInner').textContent;
-    document.getElementById('loginBtnTextInner').textContent = 'Logging in...';
-    document.getElementById('loginBtnArrow').style.display = 'none';
-
-    try {
-        const response = await fetch('../api/auth/login.php', {
+        fetch('../api/auth/login.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: emailInput.value.trim(),
-                password: pwInput.value
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            // Store user info in localStorage for UI purposes
-            localStorage.setItem('hudders_user', JSON.stringify(data.user));
-            // Redirect based on role
-            const redirect = data.redirect || 'index.html';
-            window.location.href = redirect;
-        } else {
+            body: JSON.stringify({ email, password, role: currentRole })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const fullName = [data.name, data.lastname].filter(Boolean).join(' ').trim();
+                sessionStorage.setItem('userName', fullName || data.name || 'User');
+                sessionStorage.setItem('user_id', data.user_id); 
+                sessionStorage.setItem('userRole', data.role);
+                sessionStorage.setItem('userEmail', data.email || '');
+                
+                // Redirect based on role
+                if (data.role && data.role.toLowerCase() === 'trader') {
+                    window.location.href = '../trader/dashboard.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } else {
+                loginSubmitBtn.disabled = false;
+                document.getElementById('loginBtnText').textContent = 'Log in';
+                if (data.trader_pending) document.getElementById('pendingBanner').classList.add('visible');
+                else if (data.email_not_verified) {
+                    document.getElementById('apiBanner').classList.add('visible');
+                    document.getElementById('apiBannerMsg').innerHTML = data.message + ' <a href="resend-verification.html?email=' + encodeURIComponent(email) + '" style="color:#FF5E3A;font-weight:600;">Resend verification email</a>';
+                } else {
+                    document.getElementById('apiBanner').classList.add('visible');
+                    document.getElementById('apiBannerMsg').textContent = data.message;
+                }
+            }
+        })
+        .catch(err => {
+            alert('Server error.');
             loginSubmitBtn.disabled = false;
-            document.getElementById('loginBtnTextInner').textContent = originalText;
-            document.getElementById('loginBtnArrow').style.display = '';
-            // Show generic error (reuse email error container for API messages)
-            emailError.textContent = data.message || 'Login failed. Please try again.';
-            emailError.classList.add('visible');
-        }
-    } catch (err) {
-        loginSubmitBtn.disabled = false;
-        document.getElementById('loginBtnTextInner').textContent = originalText;
-        document.getElementById('loginBtnArrow').style.display = '';
-        emailError.textContent = 'Network error. Please check your connection.';
-        emailError.classList.add('visible');
+            document.getElementById('loginBtnText').textContent = 'Log in';
+        });
     }
 });
 </script>
 </body>
 </html>
-

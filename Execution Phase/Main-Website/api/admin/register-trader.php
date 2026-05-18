@@ -3,6 +3,11 @@ ini_set('display_errors', 0);
 error_reporting(0);
 header('Content-Type: application/json');
 require_once '../../config/database.php';
+require_once '../../config/mail_config.php'; // ✅ Secure Credentials
+require_once '../../vendor/autoload.php';    // ✅ PHPMailer
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -12,21 +17,20 @@ if (!$data) {
 }
 
 $firstname = $data['firstname'];
-$lastname = $data['lastname'];
-$email = $data['email'];
-$password = $data['password'];
-$phone = $data['phone_number'] ?? '';
-$address = $data['address'] ?? '';
-$dob = $data['date_of_birth'] ?? '1990-01-01';
-$gender = $data['gender'] ?? 'Prefer not to say';
+$lastname  = $data['lastname'];
+$email     = $data['email'];
+$password  = $data['password'];
+$phone     = $data['phone_number']  ?? '';
+$address   = $data['address']       ?? '';
+$dob       = $data['date_of_birth'] ?? '1990-01-01';
+$gender    = $data['gender']        ?? 'Prefer not to say';
 
 if (!$conn) {
-    $e = oci_error();
-    echo json_encode(['success' => false, 'message' => 'DB connection failed: ' . $e['message']]);
+    echo json_encode(['success' => false, 'message' => 'DB connection failed']);
     exit;
 }
 
-// Check email
+// 1. Check if email already exists
 $check = oci_parse($conn, "SELECT COUNT(*) AS CNT FROM HUDDER_USER WHERE email = :email");
 oci_bind_by_name($check, ':email', $email);
 oci_execute($check);
@@ -36,49 +40,86 @@ if ($row['CNT'] > 0) {
     exit;
 }
 
-// Insert user
-$sql = "INSERT INTO HUDDER_USER (firstname, lastname, email, user_password, user_role, phone_number, address, date_of_birth, gender)
-        VALUES (:firstname, :lastname, :email, :password, 'trader', :phone, :address, TO_DATE(:dob,'YYYY-MM-DD'), :gender)";
-$stmt = oci_parse($conn, $sql);
-oci_bind_by_name($stmt, ':firstname', $firstname);
-oci_bind_by_name($stmt, ':lastname', $lastname);
-oci_bind_by_name($stmt, ':email', $email);
-oci_bind_by_name($stmt, ':password', $password);
-oci_bind_by_name($stmt, ':phone', $phone);
-oci_bind_by_name($stmt, ':address', $address);
-oci_bind_by_name($stmt, ':dob', $dob);
-oci_bind_by_name($stmt, ':gender', $gender);
+try {
+    // 2. Get next user_id
+    $idq = oci_parse($conn, "SELECT NVL(MAX(user_id),0)+1 AS new_id FROM HUDDER_USER");
+    oci_execute($idq);
+    $idrow   = oci_fetch_assoc($idq);
+    $user_id = $idrow['NEW_ID'];
 
-if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
-    $e = oci_error($stmt);
-    echo json_encode(['success' => false, 'message' => 'User insert failed: ' . $e['message']]);
-    exit;
-}
+    // 3. Insert user
+    $sql  = "INSERT INTO HUDDER_USER (user_id, firstname, lastname, email, user_password, user_role, phone_number, address, date_of_birth, gender) 
+             VALUES (:u_id, :fn, :ln, :em, :pw, 'trader', :ph, :adr, TO_DATE(:dob,'YYYY-MM-DD'), :gen)";
+    $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ':u_id', $user_id);
+    oci_bind_by_name($stmt, ':fn',   $firstname);
+    oci_bind_by_name($stmt, ':ln',   $lastname);
+    oci_bind_by_name($stmt, ':em',   $email);
+    oci_bind_by_name($stmt, ':pw',   $password);
+    oci_bind_by_name($stmt, ':ph',   $phone);
+    oci_bind_by_name($stmt, ':adr',  $address);
+    oci_bind_by_name($stmt, ':dob',  $dob);
+    oci_bind_by_name($stmt, ':gen',  $gender);
 
-// Get the user_id just inserted
-$idq = oci_parse($conn, "SELECT user_id FROM HUDDER_USER WHERE email = :email");
-oci_bind_by_name($idq, ':email', $email);
-oci_execute($idq, OCI_NO_AUTO_COMMIT);
-$idrow = oci_fetch_assoc($idq);
-$user_id = $idrow['USER_ID'];
+    if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+        $e = oci_error($stmt);
+        throw new Exception("User Table: " . $e['message']);
+    }
 
-if (!$user_id) {
+    // 4. Get next trader_id
+    $tidq   = oci_parse($conn, "SELECT NVL(MAX(trader_id),0)+1 AS new_id FROM TRADER");
+    oci_execute($tidq);
+    $tidrow    = oci_fetch_assoc($tidq);
+    $trader_id = $tidrow['NEW_ID'];
+
+    // 5. Insert trader
+    $tstmt = oci_parse($conn, "INSERT INTO TRADER (trader_id, user_id, status) VALUES (:tid, :u_id, 'Pending')");
+    oci_bind_by_name($tstmt, ':tid',  $trader_id);
+    oci_bind_by_name($tstmt, ':u_id', $user_id);
+
+    if (!oci_execute($tstmt, OCI_NO_AUTO_COMMIT)) {
+        $e = oci_error($tstmt);
+        throw new Exception("Trader Table: " . $e['message']);
+    }
+
+    // 6. COMMIT ALL
+    oci_commit($conn);
+
+    // ✅ 7. SEND EMAIL CONFIRMATION
+    if (class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = MAIL_USER; 
+            $mail->Password   = MAIL_PASS; 
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+
+            $mail->setFrom(MAIL_USER, 'HuddersHub');
+            $mail->addAddress($email, $firstname);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Application Received - HuddersHub';
+            $mail->Body    = "
+                <div style='font-family: sans-serif; padding: 20px; border: 1px solid #eee;'>
+                    <h2 style='color: #0F260B;'>Hi $firstname,</h2>
+                    <p>Thanks for applying to be a trader on HuddersHub!</p>
+                    <p>Your application is currently <strong>Pending Review</strong>. We will notify you once you are approved.</p>
+                </div>";
+
+            $mail->send();
+        } catch (Exception $e) {
+            // Log error but don't stop the success response
+            error_log("Email failed: " . $mail->ErrorInfo);
+        }
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Trader registration submitted successfully!']);
+
+} catch (Exception $e) {
     oci_rollback($conn);
-    echo json_encode(['success' => false, 'message' => 'Could not retrieve user_id after insert']);
-    exit;
+    echo json_encode(['success' => false, 'message' => 'Registration Error: ' . $e->getMessage()]);
 }
-
-// Insert trader
-$tstmt = oci_parse($conn, "INSERT INTO TRADER (user_id, status) VALUES (:user_id, 'Pending')");
-oci_bind_by_name($tstmt, ':user_id', $user_id);
-
-if (!oci_execute($tstmt, OCI_NO_AUTO_COMMIT)) {
-    $e = oci_error($tstmt);
-    oci_rollback($conn);
-    echo json_encode(['success' => false, 'message' => 'Trader insert failed: ' . $e['message']]);
-    exit;
-}
-
-oci_commit($conn);
-echo json_encode(['success' => true, 'message' => 'Trader registration submitted. Awaiting admin approval.']);
 ?>

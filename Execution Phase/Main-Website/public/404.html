@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -259,7 +259,10 @@ FOOTER
     overflow: hidden;
 }
 .site-footer a { transition: color 0.3s; }
-.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1;}
+.footer-newsletter { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1; text-align: center; }
+.newsletter-content { text-align: center; width: 100%; }
+.newsletter-content h3 { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 20px; margin-top: 4px; }
 .newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
 .newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
 .newsletter-form { display: flex; gap: 12px; width: 100%; max-width: 400px; }
@@ -339,9 +342,9 @@ FOOTER
         </div>
     </div>
     <div class="actions">
-        <a class="user-menu" href="account.html"><span class="material-icons-outlined">account_circle</span><span>Welcome, John</span></a>
+        <a class="user-menu" href="../customer/profile.html"><span class="material-icons-outlined">account_circle</span><span id="userGreetingText">Welcome</span></a>
         <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
+        <a class="icon-with-badge" href="../customer/wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
         <a class="icon-with-badge" href="#"><span class="material-icons-outlined">dark_mode</span></a>
     </div>
 </div>
@@ -364,13 +367,13 @@ FOOTER
     <div class="cart-item" data-price="6.50" data-category="Butcher">
         <img src="assets/Item-image/chickenbreast.png" alt="Chicken">
         <div class="cart-item-details">
-            <div class="cart-item-top"><div><h4>Fresh chicken breast</h4><p class="cart-meta">Butcher · Qty 2</p></div><span class="cart-price">£13.00</span></div>
+            <div class="cart-item-top"><div><h4>Fresh chicken breast</h4><p class="cart-meta">Butcher � Qty 2</p></div><span class="cart-price">�13.00</span></div>
             <div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div>
         </div>
     </div>
     <div class="cart-empty" style="display:none;">Your cart is empty.</div>
 </div>
-<div class="cart-footer"><div class="cart-total"><span>Total</span><span class="cart-total-value">£13.00</span></div><div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div></div>
+<div class="cart-footer"><div class="cart-total"><span>Total</span><span class="cart-total-value">�13.00</span></div><div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout ?</button></div></div>
 </aside>
 
 <!-- MAIN 404 CONTENT -->
@@ -426,12 +429,8 @@ FOOTER
 <footer class="site-footer">
 <div class="page-wrap footer-newsletter">
     <div class="newsletter-content">
-        <h3>Join the HuddersHub Community</h3>
-        <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
-    </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
+        <h3>Fresh from local farms to your table</h3>
+        <p>"Quality you can taste, community you can feel."</p>
     </div>
 </div>
 <div class="page-wrap footer-grid">
@@ -492,7 +491,7 @@ const cartDrawer = document.getElementById('cartDrawer');
 const cartOverlay = document.getElementById('cartOverlay');
 const cartClose = document.getElementById('cartClose');
 
-function formatMoney(value) { return '£' + value.toFixed(2); }
+function formatMoney(value) { return '�' + value.toFixed(2); }
 function updateCartTotals() {
     if (!cartDrawer) return;
     const items = cartDrawer.querySelectorAll('.cart-item');
@@ -505,7 +504,7 @@ function updateCartTotals() {
         const priceEl = item.querySelector('.cart-price');
         const metaEl = item.querySelector('.cart-meta');
         if (priceEl) priceEl.textContent = formatMoney(lineTotal);
-        if (metaEl) metaEl.textContent = (item.dataset.category || 'Item') + ' · Qty ' + qty;
+        if (metaEl) metaEl.textContent = (item.dataset.category || 'Item') + ' � Qty ' + qty;
         total += lineTotal;
     });
     const totalEl = cartDrawer.querySelector('.cart-total-value');
@@ -540,7 +539,34 @@ if (cartClose) cartClose.addEventListener('click', closeCart);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
 updateCartTotals();
 
-// Search redirect simulation
+// =========================================================================
+// USER GREETING
+// =========================================================================
+function loadUserGreeting() {
+  const el = document.getElementById('userGreetingText');
+  if (!el) return;
+  const uid = sessionStorage.getItem('user_id');
+  if (!uid) { el.textContent = 'Welcome'; return; }
+
+  const cached = (sessionStorage.getItem('userName') || '').trim();
+  if (cached) { el.textContent = 'Hi, ' + cached; }
+
+  try {
+    fetch('../api/customer/get-profile.php?user_id=' + uid)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && d.data) {
+          const f = (d.data.FIRSTNAME || '').trim();
+          const l = (d.data.LASTNAME || '').trim();
+          const full = [f, l].filter(Boolean).join(' ') || 'User';
+          el.textContent = 'Hi, ' + full;
+          sessionStorage.setItem('userName', full);
+        }
+      });
+  } catch (err) {}
+}
+loadUserGreeting();
+</script>
 document.getElementById('errorSearch').addEventListener('keydown', e => {
     if (e.key === 'Enter' && e.target.value.trim()) {
         window.location.href = `index.html?q=${encodeURIComponent(e.target.value.trim())}`;

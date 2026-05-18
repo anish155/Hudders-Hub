@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Trader Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+:root {
+  --primary-orange: #FF5E3A;
+  --primary-orange-light: #FF8C70;
+  --primary-orange-dark: #E3472C;
+  --primary-green: #0F260B;
+  --primary-green-light: rgba(15, 38, 11, 0.14);
+  --primary-green-dark: #0B1C08;
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F6F3;
+  --bg-gray: #F2F4F1;
+  --border-light: #DCE3DA;
+  --text-black: #0B140A;
+  --text-dark-gray: #1E2A1C;
+  --text-medium-gray: #5E6A63;
+  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); background: var(--bg-light); line-height: 1.6; min-height: 100vh; display: flex; }
+
+.sidebar { background: var(--primary-green); color: #FFFFFF; padding: 0; position: fixed; top: 0; left: 0; width: 260px; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; z-index: 100; }
+.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
+.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
+.sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
+.sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
+.sidebar-nav { padding: 16px 0; flex: 1; }
+.sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; }
+.sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
+.sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
+.sidebar-nav-item .material-icons-outlined { font-size: 20px; }
+.sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
+.sidebar-nav-item.logout:hover { color: var(--primary-orange-light); background: rgba(255, 94, 58, 0.1); }
+.sidebar-report-group { display: flex; flex-direction: column; }
+.sidebar-report-group summary { list-style: none; }
+.sidebar-report-group summary::-webkit-details-marker { display: none; }
+.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+.sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
+.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
+.sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+
+.main-content { padding: 32px; max-width: 1000px; background: var(--bg-light); min-height: 100vh; margin-left: 260px; flex: 1; }
+.main-header { margin-bottom: 32px; }
+.main-header h1 { font-size: 28px; font-weight: 700; color: var(--text-black); }
+
+.card { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: 0; padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+.card-title { font-size: 18px; font-weight: 700; color: var(--text-dark-gray); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+.card-title .material-icons-outlined { font-size: 22px; margin-right: 8px; vertical-align: middle; color: var(--primary-green); }
+
+.profile-header-section { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 24px; }
+.profile-photo-wrapper { position: relative; width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: var(--bg-gray); border: 2px solid var(--border-light); flex-shrink: 0; }
+.profile-photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.profile-photo-placeholder .material-icons-outlined { font-size: 48px; color: #9AA19A; }
+.profile-photo-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 10px; text-align: center; padding: 4px 0; cursor: pointer; display: none; }
+.profile-photo-wrapper:hover .profile-photo-overlay { display: block; }
+
+.btn-upload { background: var(--bg-gray); border: 1px solid var(--border-light); padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); display: flex; align-items: center; gap: 6px; }
+.btn-upload:hover { background: var(--border-light); }
+.btn-upload .material-icons-outlined { font-size: 16px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full-width { grid-column: span 2; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); }
+.form-input, .form-textarea, .form-select { padding: 10px 12px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 14px; color: var(--text-black); font-family: inherit; transition: var(--transition-smooth); width: 100%; }
+.form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light); }
+.form-textarea { min-height: 80px; resize: vertical; }
+
+.password-wrapper { position: relative; }
+.password-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-medium-gray); }
+.password-toggle:hover { color: var(--primary-green); }
+
+.shop-hours-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+.shop-hour-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.shop-hour-label { font-size: 12px; font-weight: 600; color: var(--text-dark-gray); }
+.checkbox-custom { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary-green); }
+
+.notification-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.notification-item { display: flex; align-items: center; gap: 12px; }
+.notification-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-gray); display: grid; place-items: center; color: var(--primary-green); }
+.notification-icon .material-icons-outlined { font-size: 18px; }
+.notification-text { font-size: 14px; color: var(--text-dark-gray); }
+
+.action-bar { display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border-light); margin-top: 24px; }
+.btn { padding: 10px 24px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: var(--transition-smooth); }
+.btn-primary { background: var(--primary-green); color: #fff; }
+.btn-primary:hover { background: var(--primary-green-dark); }
+.btn-secondary { background: var(--bg-gray); color: var(--text-dark-gray); border: 1px solid var(--border-light); }
+.btn-secondary:hover { background: var(--border-light); }
+
+.loading-spinner { display: flex; justify-content: center; align-items: center; padding: 60px; }
+.loading-spinner .material-icons-outlined { font-size: 40px; color: var(--primary-green); animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.toast { position: fixed; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 10px; padding: 14px 24px; font-size: 14px; font-weight: 600; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        /* ── FAB ─────────────────────────────────────────────────────────── */
+        .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+        .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+        .fab:active { transform:translateY(0) scale(0.97); }
+        .fab .material-icons-outlined { font-size:28px; line-height:1; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-success { background: var(--primary-green); color: #fff; }
+.toast-error { background: var(--primary-orange); color: #fff; }
+
+.sidebar-toggle { display: none; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 90; }
+.sidebar-overlay.active { display: block; }
+
+@media (max-width: 900px) {
+  body { display: flex; }
+  .sidebar { position: fixed; left: -280px; top: 0; width: 260px; z-index: 200; transition: left 0.3s ease; }
+  .sidebar.open { left: 0; }
+  .main-content { margin-left: 0; padding: 60px 20px 20px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full-width { grid-column: span 1; }
+  .shop-hours-grid { grid-template-columns: repeat(4, 1fr); }
+  .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
+}
+
+@media (max-width: 600px) {
+  .shop-hours-grid { grid-template-columns: repeat(3, 1fr); }
+  .profile-header-section { flex-direction: column; align-items: center; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+  <span class="material-icons-outlined">menu</span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
+    <div class="sidebar-name" id="sidebarName">John Doe</div>
+    <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
+  </div>
+  <nav class="sidebar-nav">
+    <ul class="sidebar-nav-list">
+      <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+      <li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+      <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+      <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
+      <li>
+        <details class="sidebar-report-group">
+          <summary class="sidebar-nav-item">
+            <span class="material-icons-outlined">analytics</span>Reports
+            <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+          </summary>
+          <ul class="sidebar-report-sublist">
+            <li><a href="report.html?type=daily" class="sidebar-report-link">Daily</a></li>
+            <li><a href="report.html?type=weekly" class="sidebar-report-link">Weekly</a></li>
+            <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="profile.html" class="sidebar-nav-item active"><span class="material-icons-outlined">settings</span>Profile</a></li>
+      <li><a href="#" onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<main class="main-content" id="mainContent">
+    <a href="add-product.html" class="fab" title="Add new product">
+        <span class="material-icons-outlined">add</span>
+    </a>
+    <div class="main-header">
+    <h1>Profile</h1>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <span class="material-icons-outlined">manage_accounts</span>
+      Profile Setting
+    </div>
+    <div class="profile-header-section">
+      <div class="profile-photo-wrapper">
+        <div class="profile-photo-placeholder">
+          <span class="material-icons-outlined">camera_alt</span>
+        </div>
+        <div class="profile-photo-overlay">Upload</div>
+      </div>
+      <div>
+        <button class="btn-upload" type="button">
+          <span class="material-icons-outlined">cloud_upload</span>
+          Upload Photo
+        </button>
+      </div>
+    </div>
+
+    <form id="profileForm">
+      <div class="card-title" style="margin-top: 12px;">
+        <span class="material-icons-outlined">storefront</span>
+        Shop Details
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Shop Name</label>
+          <input type="text" class="form-input" id="shopName" placeholder="Enter your shop name" value="John Meat Shop">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shop Type</label>
+          <select class="form-select" id="shopType">
+            <option value="">Select type...</option>
+            <option value="Butcher" selected>Butcher</option>
+            <option value="Greengrocer">Greengrocer</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Fishmonger">Fishmonger</option>
+            <option value="Delicatessen">Delicatessen</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="shopDescription" placeholder="Describe your shop...">Fresh local meat since 2010. We pride ourselves on quality produce from local farms.</textarea>
+        </div>
+      </div>
+
+      <div class="card-title">
+        <span class="material-icons-outlined">person_outline</span>
+        Owner Details
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Owner Name</label>
+          <input type="text" class="form-input" id="ownerName" placeholder="Enter owner name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Shop Address</label>
+          <input type="text" class="form-input" id="shopAddress" placeholder="Enter shop address">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="email" placeholder="Enter email" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" id="phone" placeholder="Enter phone number">
+        </div>
+      </div>
+
+      <div class="card-title">
+        <span class="material-icons-outlined">schedule</span>
+        Shop Hours
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label class="form-label">Collection Days</label>
+      </div>
+      <div class="shop-hours-grid">
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="day-WEDNESDAY"><span class="shop-hour-label">Wed</span></div>
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="day-THURSDAY"><span class="shop-hour-label">Thu</span></div>
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="day-FRIDAY"><span class="shop-hour-label">Fri</span></div>
+      </div>
+
+      <div class="card-title">
+        <span class="material-icons-outlined">lock</span>
+        Change Password
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Current Password</label>
+          <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-input" id="newPassword" placeholder="Enter new password">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password">
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn btn-secondary" onclick="changePassword()" style="margin-top:24px;">Update Password</button>
+        </div>
+      </div>
+
+      <div class="card-title">
+        <span class="material-icons-outlined">notifications</span>
+        Email Notifications
+      </div>
+      <div class="shop-hours-grid">
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="notifNewOrder" checked><span class="shop-hour-label">New Orders</span></div>
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="notifDaily"><span class="shop-hour-label">Daily Report</span></div>
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="notifWeekly" checked><span class="shop-hour-label">Weekly Finance</span></div>
+        <div class="shop-hour-item"><input type="checkbox" class="checkbox-custom" id="notifMonthly" checked><span class="shop-hour-label">Monthly Report</span></div>
+      </div>
+
+      <div class="card-title">
+        <span class="material-icons-outlined">image</span>
+        Shop Logo
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;">
+        <div id="shopLogoPreview" style="width:100px;height:100px;background:var(--bg-gray);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+          <span class="material-icons-outlined" style="font-size:40px;color:var(--text-medium);">store</span>
+        </div>
+        <div>
+          <input type="url" class="form-input" id="shopLogoUrl" placeholder="Enter logo URL">
+          <small style="color:var(--text-medium);">Paste an image URL for your logo</small>
+        </div>
+      </div>
+
+      <div class="card-title" style="color:#dc3545;">
+        <span class="material-icons-outlined">dangerous</span>
+        Danger Zone
+      </div>
+      <button type="button" class="btn btn-danger" onclick="deleteAccount()" style="background:#dc3545;color:white;">
+        <span class="material-icons-outlined">delete_forever</span>
+        Delete Account
+      </button>
+
+      <div class="action-bar">
+        <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<div class="toast toast-success" id="successToast">
+  <span class="material-icons-outlined">check_circle</span>
+  <span>Profile saved successfully!</span>
+</div>
+
+<div class="toast toast-error" id="errorToast">
+  <span class="material-icons-outlined">error</span>
+  <span id="toastMessage">An error occurred.</span>
+</div>
+
+<script>
+const userId = parseInt(sessionStorage.getItem('user_id') || '0');
+const userRole = sessionStorage.getItem('userRole') || '';
+
+if (!userId) {
+    window.location.href = '../public/login.html';
+} else if (!userRole || userRole.toLowerCase() !== 'trader') {
+    window.location.href = '../public/login.html';
+}
+
+function handleLogout() {
+    fetch('../api/auth/logout.php', { method: 'POST' })
+        .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
+        .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+}
+
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const successToast = document.getElementById('successToast');
+const errorToast = document.getElementById('errorToast');
+const toastMessage = document.getElementById('toastMessage');
+
+sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
+sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
+  item.addEventListener('click', () => { if (window.innerWidth <= 900) { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); } });
+});
+
+// Load profile data
+console.log('Loading profile for user:', userId);
+fetch(`../api/trader/get-profile.php?user_id=${userId}`)
+    .then(r => {
+        console.log('Profile API response status:', r.status);
+        return r.json();
+    })
+    .then(data => {
+        console.log('Profile API data:', data);
+        if (data.success) {
+            const p = data.data;
+            document.getElementById('shopName').value = p.shop_name || '';
+            document.getElementById('shopDescription').value = p.shop_description || '';
+            document.getElementById('shopAddress').value = p.location || '';
+            document.getElementById('ownerName').value = (p.firstname || '') + ' ' + (p.lastname || '');
+            document.getElementById('email').value = p.email || '';
+            document.getElementById('phone').value = p.phone || '';
+            // Update sidebar name
+            const sidebarNameEl = document.getElementById('sidebarName');
+            if (sidebarNameEl) sidebarNameEl.textContent = (p.firstname || '') + ' ' + (p.lastname || '');
+        } else {
+            console.error('Profile load failed:', data.message);
+        }
+    })
+    .catch(err => { console.error('Profile fetch error:', err); });
+
+function showSuccessToast(message) {
+  successToast.querySelector('span:last-child').textContent = message;
+  successToast.classList.add('show');
+  setTimeout(() => successToast.classList.remove('show'), 4000);
+}
+
+function showErrorToast(message) {
+  toastMessage.textContent = message;
+  errorToast.classList.add('show');
+  setTimeout(() => errorToast.classList.remove('show'), 4000);
+}
+
+async function saveSection(action, data) {
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+    
+    try {
+        const response = await fetch('../api/trader/update-profile.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, action: action, ...data })
+        });
+        const result = await response.json();
+        if (result.success) {
+            showSuccessToast(result.message);
+            return true;
+        } else {
+            showErrorToast(result.message);
+            return false;
+        }
+    } catch (err) {
+        showErrorToast('Failed to save');
+        return false;
+    } finally {
+        saveBtn.textContent = 'Save Changes';
+        saveBtn.disabled = false;
+    }
+}
+
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  // Get form values
+  const ownerName = document.getElementById('ownerName').value.split(' ');
+  const firstname = ownerName[0] || '';
+  const lastname = ownerName.slice(1).join(' ') || '';
+  
+  // Save owner details
+  await saveSection('update_owner', {
+    firstname: firstname,
+    lastname: lastname,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    address: document.getElementById('shopAddress').value
+  });
+  
+  // Save shop details (note: logo_url not supported by API)
+  await saveSection('update_shop', {
+    shop_name: document.getElementById('shopName').value,
+    shop_description: document.getElementById('shopDescription').value,
+    location: document.getElementById('shopAddress').value
+  });
+  
+  // Save collection days
+  await saveSection('update_collection_days', {
+    wednesday: document.getElementById('day-WEDNESDAY').checked,
+    thursday: document.getElementById('day-THURSDAY').checked,
+    friday: document.getElementById('day-FRIDAY').checked
+  });
+  
+  // Save notifications
+  await saveSection('update_notifications', {
+    new_order: document.getElementById('notifNewOrder').checked,
+    daily_report: document.getElementById('notifDaily').checked,
+    weekly_finance: document.getElementById('notifWeekly').checked,
+    monthly_report: document.getElementById('notifMonthly').checked
+  });
+});
+
+async function changePassword() {
+    const current = document.getElementById('currentPassword').value;
+    const newPass = document.getElementById('newPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    
+    if (!current || !newPass || !confirm) {
+        showErrorToast('Please fill all password fields');
+        return;
+    }
+    if (newPass !== confirm) {
+        showErrorToast('New passwords do not match');
+        return;
+    }
+    if (newPass.length < 6) {
+        showErrorToast('Password must be at least 6 characters');
+        return;
+    }
+    
+    await saveSection('update_password', { new_password: newPass });
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+}
+
+async function deleteAccount() {
+    if (!confirm('⚠️ WARNING: This will delete your account and all products permanently. This cannot be undone! Are you sure?')) return;
+    if (!confirm('Are you REALLY sure? All your data will be lost forever!')) return;
+    
+    const success = await saveSection('delete_account', {});
+    if (success) {
+        sessionStorage.clear();
+        window.location.href = '../public/login.html';
+    }
+}
+</script>
+</body>
+</html>

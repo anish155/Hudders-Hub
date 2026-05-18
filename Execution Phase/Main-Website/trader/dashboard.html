@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HuddersHub - Trader Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+:root {
+  --primary-orange: #FF5E3A;
+  --primary-orange-light: #FF8C70;
+  --primary-orange-dark: #E3472C;
+  --primary-green: #0F260B;
+  --primary-green-light: rgba(15, 38, 11, 0.14);
+  --primary-green-dark: #0B1C08;
+  --bg-white: #FFFFFF;
+  --bg-light: #F7F6F3;
+  --bg-gray: #F2F4F1;
+  --border-light: #DCE3DA;
+  --text-black: #0B140A;
+  --text-dark-gray: #1E2A1C;
+  --text-medium-gray: #5E6A63;
+  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-black);
+  background: var(--bg-light);
+  line-height: 1.6;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: var(--primary-green);
+  color: #FFFFFF;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-profile {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+}
+
+.sidebar-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-avatar .material-icons-outlined {
+  font-size: 32px;
+  color: #FFFFFF;
+}
+
+.sidebar-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sidebar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ADE80;
+}
+
+.sidebar-nav {
+  padding: 16px 0;
+  flex: 1;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.sidebar-nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.sidebar-nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.sidebar-nav-item .material-icons-outlined {
+  font-size: 20px;
+}
+
+.sidebar-nav-item.logout {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+}
+
+.sidebar-nav-item.logout:hover {
+  color: var(--primary-orange-light);
+  background: rgba(255, 94, 58, 0.1);
+}
+
+.sidebar-report-group { display: flex; flex-direction: column; }
+.sidebar-report-group summary { list-style: none; }
+.sidebar-report-group summary::-webkit-details-marker { display: none; }
+.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+.sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
+.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
+.sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+
+.main-content {
+  background: var(--bg-light);
+  min-height: 100vh;
+}
+
+.top-nav {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 28px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.top-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-nav-logo img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.top-nav-logo span {
+  font-family: 'Google Sans Flex', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--primary-green);
+}
+
+.top-nav-title {
+  font-size: 14px;
+  color: var(--text-medium-gray);
+  font-weight: 500;
+}
+
+.top-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--transition-smooth);
+  color: var(--text-medium-gray);
+}
+
+.top-nav-icon:hover {
+  background: var(--primary-green-light);
+  color: var(--primary-green);
+}
+
+.top-nav-icon .material-icons-outlined {
+  font-size: 22px;
+}
+
+.content-area {
+  padding: 28px;
+  max-width: 1100px;
+}
+
+.welcome-section {
+  margin-bottom: 28px;
+}
+
+.welcome-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-black);
+  margin-bottom: 4px;
+}
+
+.welcome-shop {
+  font-size: 14px;
+  color: var(--text-medium-gray);
+}
+
+.stats-section {
+  margin-bottom: 28px;
+}
+
+.stats-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-medium-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  padding: 20px;
+  transition: var(--transition-smooth);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary-green);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--primary-green);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-medium-gray);
+  font-weight: 500;
+}
+
+.orders-section {
+  margin-bottom: 28px;
+}
+
+.orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.orders-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-black);
+}
+
+.orders-count {
+  font-size: 13px;
+  color: var(--text-medium-gray);
+  font-weight: 500;
+}
+
+.order-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.order-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.order-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--bg-gray);
+  border-bottom: 1px solid var(--border-light);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.order-id {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-black);
+}
+
+.order-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.order-status.pending { background: #FEF3C7; color: #92400E; }
+.order-status.processing { background: #DBEAFE; color: #1E40AF; }
+.order-status.completed { background: #D1FAE5; color: #065F46; }
+.order-status.awaiting { background: #F3E8FF; color: #6B21A8; }
+.order-status.cancelled { background: #FEE2E2; color: #991B1B; }
+
+.order-time {
+  font-size: 12px;
+  color: var(--text-medium-gray);
+  font-weight: 500;
+}
+
+.order-items {
+  padding: 0;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+.order-item-name {
+  font-weight: 500;
+  color: var(--text-dark-gray);
+}
+
+.order-item-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.order-item-qty {
+  color: var(--text-medium-gray);
+  font-weight: 500;
+}
+
+.order-item-price {
+  font-weight: 700;
+  color: var(--primary-green);
+  min-width: 60px;
+  text-align: right;
+}
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--bg-gray);
+  border-top: 1px solid var(--border-light);
+}
+
+.order-total-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-medium-gray);
+}
+
+.order-total-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--primary-green);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-medium-gray);
+}
+
+.empty-state .material-icons-outlined {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.sidebar-toggle { display: none; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 90; }
+.sidebar-overlay.active { display: block; }
+
+@media (max-width: 900px) {
+  .dashboard-layout { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; left: -280px; top: 0; width: 260px; z-index: 1000; transition: left 0.3s ease; }
+  .sidebar.open { left: 0; }
+  .sidebar-toggle { display: grid; position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--primary-green); color: #fff; border: none; cursor: pointer; z-index: 1000; box-shadow: var(--shadow-md); place-items: center; }
+  .sidebar-toggle .material-icons-outlined { font-size: 24px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .content-area { padding: 20px 16px; }
+}
+
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .top-nav-title { display: none; }
+  }
+
+  /* ── FAB ─────────────────────────────────────────────────────────── */
+  .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+  .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+  .fab:active { transform:translateY(0) scale(0.97); }
+  .fab .material-icons-outlined { font-size:28px; line-height:1; }
+}
+</style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
+  <span class="material-icons-outlined">menu</span>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="dashboard-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar">
+        <span class="material-icons-outlined">person</span>
+      </div>
+      <div class="sidebar-name">Loading...</div>
+      <div class="sidebar-status">
+        <span class="status-dot"></span>
+        Status: Active
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul class="sidebar-nav-list">
+        <li>
+          <a href="dashboard.html" class="sidebar-nav-item active">
+            <span class="material-icons-outlined">dashboard</span>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="products.html" class="sidebar-nav-item">
+            <span class="material-icons-outlined">inventory_2</span>
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="orders.html" class="sidebar-nav-item">
+            <span class="material-icons-outlined">receipt_long</span>
+            Orders
+          </a>
+        </li>
+        <li>
+          <a href="finance.html" class="sidebar-nav-item">
+            <span class="material-icons-outlined">account_balance_wallet</span>
+            Finance
+          </a>
+        </li>
+        <li>
+          <details class="sidebar-report-group">
+            <summary class="sidebar-nav-item">
+              <span class="material-icons-outlined">analytics</span>
+              Reports
+              <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+            </summary>
+            <ul class="sidebar-report-sublist">
+              <li><a href="report.html?type=daily" class="sidebar-report-link">Daily</a></li>
+              <li><a href="report.html?type=weekly" class="sidebar-report-link">Weekly</a></li>
+              <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <a href="profile.html" class="sidebar-nav-item">
+            <span class="material-icons-outlined">settings</span>
+            Profile
+          </a>
+        </li>
+        <li>
+          <a href="#" onclick="handleLogout()" class="sidebar-nav-item logout">
+            <span class="material-icons-outlined">logout</span>
+            Logout
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <a href="add-product.html" class="fab" title="Add new product">
+      <span class="material-icons-outlined">add</span>
+    </a>
+    <header class="top-nav">
+      <div class="top-nav-left">
+        <div class="top-nav-logo">
+          <img src="../public/assets/logo.png" alt="HuddersHub">
+          <span>HuddersHub</span>
+        </div>
+        <span class="top-nav-title">Trader Dashboard</span>
+      </div>
+      <div class="top-nav-right">
+        <button class="top-nav-icon" aria-label="Notifications">
+          <span class="material-icons-outlined">notifications_none</span>
+        </button>
+        <button class="top-nav-icon" aria-label="Profile">
+          <span class="material-icons-outlined">account_circle</span>
+        </button>
+        <button class="top-nav-icon" aria-label="Dark mode">
+          <span class="material-icons-outlined">dark_mode</span>
+        </button>
+      </div>
+    </header>
+
+<style>
+.status-select { padding: 4px 8px; border-radius: 4px; border: none; font-size: 12px; cursor: pointer; }
+.status-select.Pending { background: #fff3cd; color: #856404; }
+.status-select.Preparing { background: #dbeafe; color: #1e40af; }
+.status-select.Ready { background: #d1fae5; color: #065f46; }
+.status-select.Collected { background: #e0e7ff; color: #3730a3; }
+.status-select.Cancelled { background: #f8d7da; color: #721c24; }
+.order-customer { font-size: 13px; color: var(--text-medium-gray); margin: 8px 0; padding: 0 12px; }
+.order-collection { font-size: 12px; color: var(--primary-green); background: var(--primary-green-light); padding: 8px 12px; margin: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; }
+.alerts-section, .reviews-section { margin: 24px 0; padding: 0 24px; }
+.alerts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.alert-card { background: white; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); }
+.alert-card.out-of-stock { border-left: 4px solid #dc3545; }
+.alert-card.low-stock { border-left: 4px solid #ffc107; }
+.alert-info { display: flex; flex-direction: column; }
+.alert-name { font-weight: 600; font-size: 14px; }
+.alert-stock { font-size: 12px; color: #dc3545; }
+.alert-btn { background: var(--primary-orange); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.reviews-list { display: flex; flex-direction: column; gap: 12px; }
+.review-card { background: white; border-radius: 8px; padding: 16px; box-shadow: var(--shadow-sm); }
+.review-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.review-product { font-weight: 600; font-size: 14px; }
+.review-rating { color: #ffc107; }
+.review-body { font-size: 14px; color: var(--text-medium-gray); margin-bottom: 8px; }
+.review-footer { font-size: 12px; color: #999; }
+</style>
+
+        <div class="content-area" id="dashboardContent"></div>
+  </main>
+</div>
+
+<script>
+
+// Auth guard - only traders allowed
+const userId = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+if (!userId) {
+    window.location.href = '../public/login.html';
+} else if (!userRole || userRole.toLowerCase() !== 'trader') {
+    window.location.href = '../public/login.html';
+}
+
+function handleLogout() {
+    fetch('../api/auth/logout.php', { method: 'POST' })
+        .then(() => {
+            sessionStorage.clear();
+            window.location.href = '../public/login.html';
+        })
+        .catch(() => {
+            sessionStorage.clear();
+            window.location.href = '../public/login.html';
+        });
+}
+
+function formatCurrency(amount) {
+    return '£' + parseFloat(amount || 0).toFixed(2);
+}
+
+function getStatusClass(status) {
+    const s = (status || '');
+    if (s === 'Pending') return 'Pending';
+    if (s === 'Preparing') return 'Preparing';
+    if (s === 'Ready') return 'Ready';
+    if (s === 'Collected') return 'Collected';
+    if (s === 'Cancelled') return 'Cancelled';
+    return 'Pending';
+}
+
+function loadDashboard() {
+    fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            dashboardContent.innerHTML = `<p style="color:red;">Error: ${data.message}</p>`;
+            return;
+        }
+
+        const stats = data.stats;
+        const weeklyFormatted = stats.weekly_revenue >= 1000
+            ? '£' + (stats.weekly_revenue / 1000).toFixed(1) + 'k'
+            : formatCurrency(stats.weekly_revenue);
+
+        dashboardContent.innerHTML = `
+            <section class="stats-section">
+                <div class="stats-label">Quick stats</div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-value">${stats.total_orders}</div><div class="stat-label">Total orders</div></div>
+                    <div class="stat-card"><div class="stat-value">${String(stats.orders_today).padStart(2,'0')}</div><div class="stat-label">Orders today</div></div>
+                    <div class="stat-card"><div class="stat-value">${weeklyFormatted}</div><div class="stat-label">This week</div></div>
+                    <div class="stat-card"><div class="stat-value">${stats.total_products}</div><div class="stat-label">Total products</div></div>
+                </div>
+            </section>
+            <section class="orders-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">Today's Orders</h2>
+                    <span class="orders-count">${data.orders.length} order${data.orders.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="order-cards">
+                    ${data.orders.length === 0
+                        ? `<div class="empty-state"><span class="material-icons-outlined">inbox</span><p>No orders today</p></div>`
+                        : data.orders.map(order => `
+                            <div class="order-card">
+                                <div class="order-card-header">
+                                    <span class="order-id">${order.id}</span>
+                                    <select class="status-select ${getStatusClass(order.status)}" onchange="updateOrderStatus(${order.order_id}, this.value)">
+                                        <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Preparing" ${order.status === 'Preparing' ? 'selected' : ''}>Preparing</option>
+                                        <option value="Ready" ${order.status === 'Ready' ? 'selected' : ''}>Ready</option>
+                                        <option value="Collected" ${order.status === 'Collected' ? 'selected' : ''}>Collected</option>
+                                        <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                    </select>
+                                    <span class="order-time">${order.time}</span>
+                                </div>
+                                <div class="order-customer">Customer: ${order.customer}</div>
+                                ${order.status_updated_at ? `<div class="order-status-time" style="font-size:11px;color:var(--text-medium-gray);padding:0 12px 4px;">Status updated: ${order.status_updated_at}</div>` : ''}
+                                <div class="order-items">
+                                    ${order.products.map(p => `
+                                        <div class="order-item">
+                                            <span class="order-item-name">${p.name}</span>
+                                            <span class="order-item-qty">x${p.quantity} (${formatCurrency(p.price)})</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${order.collection && order.collection.date ? `
+                                    <div class="order-collection">
+                                        <span class="material-icons-outlined">schedule</span>
+                                        Collection: ${order.collection.date} ${order.collection.time} at ${order.collection.location || 'Shop'}
+                                    </div>
+                                ` : ''}
+                                <div class="order-total">
+                                    <span class="order-total-label">Order total</span>
+                                    <span class="order-total-value">${formatCurrency(order.total)}</span>
+                                </div>
+                            </div>`).join('')
+                    }
+                </div>
+            </section>
+
+            <!-- Low Stock Alerts -->
+            ${data.low_stock && data.low_stock.length > 0 ? `
+            <section class="alerts-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">⚠️ Low Stock Alerts</h2>
+                </div>
+                <div class="alerts-grid">
+                    ${data.low_stock.map(item => `
+                        <div class="alert-card ${item.stock === 0 ? 'out-of-stock' : 'low-stock'}">
+                            <div class="alert-info">
+                                <span class="alert-name">${item.name}</span>
+                                <span class="alert-stock">${item.stock === 0 ? 'Out of stock!' : 'Only ' + item.stock + ' left'}</span>
+                            </div>
+                            <button class="alert-btn" onclick="quickUpdateStock(${item.id})">Update Stock</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+            ` : ''}
+
+            <!-- Recent Reviews -->
+            ${data.reviews && data.reviews.length > 0 ? `
+            <section class="reviews-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">📝 Recent Reviews</h2>
+                </div>
+                <div class="reviews-list">
+                    ${data.reviews.map(r => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span class="review-product">${r.product}</span>
+                                <span class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+                            </div>
+                            <div class="review-body">${r.comment || 'No comment'}</div>
+                            <div class="review-footer">${r.customer}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+            ` : ''}
+        `;
+
+        // Update sidebar name
+        document.querySelector('.sidebar-name').textContent = data.firstname || data.email || 'Trader';
+        document.querySelector('.sidebar-status').innerHTML = `<span class="status-dot"></span>Status: ${data.trader_status}`;
+    })
+    .catch(err => {
+        dashboardContent.innerHTML = `<p style="color:red;">Failed to load dashboard.</p>`;
+        console.error(err);
+    });
+}
+
+function updateOrderStatus(orderId, newStatus) {
+    fetch('../api/trader/update-order-status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, order_id: orderId, status: newStatus })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            loadDashboard();
+        } else {
+            alert('Failed to update status: ' + data.message);
+        }
+    })
+    .catch(() => alert('Error updating status'));
+}
+
+function quickUpdateStock(productId) {
+    const newStock = prompt('Enter new stock quantity:');
+    if (newStock !== null && !isNaN(newStock)) {
+        fetch('../api/trader/update-product-stock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, product_id: productId, stock: parseInt(newStock) })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                loadDashboard();
+            } else {
+                alert('Failed to update stock: ' + data.message);
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+</body>
+</html>

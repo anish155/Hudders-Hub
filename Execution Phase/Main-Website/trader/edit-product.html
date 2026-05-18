@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HuddersHub - Edit Product</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --primary-green: #0f260b;
+                --primary-green-dark: #0b1c08;
+                --primary-green-light: rgba(15, 38, 11, 0.08);
+                --primary-orange: #ff5e3a;
+                --primary-orange-dark: #e3472c;
+                --accent-green: #caed95;
+                --bg-white: #ffffff;
+                --bg-light: #f7f6f3;
+                --bg-gray: #f2f4f1;
+                --border-light: #dce3da;
+                --text-black: #0b140a;
+                --text-dark-gray: #1e2a1c;
+                --text-medium-gray: #5e6a63;
+                --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+                --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+                --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Plus Jakarta Sans", sans-serif;
+                color: var(--text-black);
+                background: var(--bg-light);
+                min-height: 100vh;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 260px;
+                height: 100vh;
+                background: var(--primary-green);
+                color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                z-index: 200;
+                overflow-y: auto;
+            }
+            .sidebar-profile {
+                padding: 28px 20px 24px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                text-align: center;
+            }
+            .sidebar-avatar {
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.15);
+                display: grid;
+                place-items: center;
+                margin: 0 auto 12px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+            .sidebar-avatar .material-icons-outlined {
+                font-size: 32px;
+                color: #ffffff;
+            }
+            .sidebar-name {
+                font-size: 16px;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+            .sidebar-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #4ade80;
+            }
+            .sidebar-nav {
+                padding: 16px 0;
+                flex: 1;
+            }
+            .sidebar-nav-list {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                padding: 0 12px;
+            }
+            .sidebar-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                transition: var(--transition-smooth);
+                cursor: pointer;
+            }
+            .sidebar-nav-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #ffffff;
+            }
+            .sidebar-nav-item.active {
+                background: rgba(255, 255, 255, 0.15);
+                color: #ffffff;
+                font-weight: 600;
+            }
+            .sidebar-nav-item .material-icons-outlined {
+                font-size: 20px;
+            }
+            .sidebar-nav-item.logout {
+                color: rgba(255, 255, 255, 0.5);
+                margin-top: 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: 20px;
+            }
+            .sidebar-nav-item.logout:hover {
+                color: var(--primary-orange);
+                background: rgba(255, 94, 58, 0.1);
+            }
+            .sidebar-report-group {
+                display: flex;
+                flex-direction: column;
+            }
+            .sidebar-report-group summary {
+                list-style: none;
+            }
+            .sidebar-report-group summary::-webkit-details-marker {
+                display: none;
+            }
+            .sidebar-report-sublist {
+                list-style: none;
+                padding-left: 18px;
+                margin-left: 28px;
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transition:
+                    max-height 0.3s ease,
+                    opacity 0.3s ease,
+                    margin-top 0.3s ease;
+            }
+            .sidebar-report-group[open] .sidebar-report-sublist {
+                max-height: 180px;
+                opacity: 1;
+                margin-top: 6px;
+            }
+            .sidebar-report-link {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 16px;
+                color: rgba(255, 255, 255, 0.65);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: var(--transition-smooth);
+            }
+            .sidebar-report-link:hover,
+            .sidebar-report-link.active {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            .sidebar-report-caret {
+                margin-left: auto;
+                transition: transform 0.25s ease;
+                font-size: 18px;
+            }
+            .sidebar-report-group[open] .sidebar-report-caret {
+                transform: rotate(180deg);
+            }
+
+            .top-nav {
+                position: fixed;
+                top: 0;
+                left: 260px;
+                right: 0;
+                height: 60px;
+                background: var(--bg-white);
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 28px;
+                z-index: 100;
+            }
+            .top-nav-logo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .top-nav-logo img {
+                width: 36px;
+                height: 36px;
+                object-fit: contain;
+            }
+            .top-nav-logo span {
+                font-weight: 700;
+                font-style: italic;
+                font-size: 22px;
+                color: var(--primary-green);
+            }
+            .top-nav-right {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .top-nav-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 0;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                display: grid;
+                place-items: center;
+                transition: var(--transition-smooth);
+                color: var(--text-medium-gray);
+                position: relative;
+            }
+            .top-nav-icon:hover {
+                background: var(--primary-green-light);
+                color: var(--primary-green);
+            }
+            .top-nav-icon .material-icons-outlined {
+                font-size: 22px;
+            }
+            .user-pill {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 14px;
+                background: var(--bg-gray);
+                border-radius: 0;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-dark-gray);
+                cursor: pointer;
+            }
+
+            .main-content {
+                margin-left: 260px;
+                margin-top: 60px;
+                padding: 32px;
+                min-height: calc(100vh - 60px);
+                width: calc(100% - 260px);
+            }
+            .page-header {
+                margin-bottom: 24px;
+            }
+            .page-header h1 {
+                font-size: 28px;
+                font-weight: 800;
+                color: var(--text-black);
+            }
+
+            .tabs-header {
+                display: flex;
+                align-items: center;
+                gap: 0;
+                margin-bottom: 24px;
+                border-bottom: 2px solid var(--border-light);
+            }
+            .tab-item {
+                padding: 12px 24px;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+                text-decoration: none;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -2px;
+                transition: var(--transition-smooth);
+                cursor: pointer;
+            }
+            .tab-item:hover {
+                color: var(--primary-green);
+            }
+            .tab-item.active {
+                color: var(--primary-green);
+                border-bottom-color: var(--primary-green);
+            }
+
+            .product-id-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: var(--bg-gray);
+                border: 1px solid var(--border-light);
+                padding: 6px 14px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-dark-gray);
+                margin-bottom: 24px;
+            }
+            .product-id-badge .material-icons-outlined {
+                font-size: 16px;
+                color: var(--primary-green);
+            }
+
+            .form-card {
+                background: var(--bg-white);
+                border: 1px solid var(--border-light);
+                box-shadow: var(--shadow-sm);
+                padding: 28px;
+                max-width: 800px;
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .form-group.full-width {
+                grid-column: span 2;
+            }
+            .form-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+            }
+            .form-input,
+            .form-textarea,
+            .form-select {
+                padding: 10px 12px;
+                border: 1px solid var(--border-light);
+                background: var(--bg-white);
+                font-size: 14px;
+                color: var(--text-black);
+                font-family: inherit;
+                transition: var(--transition-smooth);
+                width: 100%;
+                border-radius: 0;
+            }
+            .form-input:focus,
+            .form-textarea:focus,
+            .form-select:focus {
+                outline: none;
+                border-color: var(--primary-green);
+                box-shadow: 0 0 0 3px var(--primary-green-light);
+            }
+            .form-textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
+            .select-wrapper {
+                position: relative;
+            }
+            .select-wrapper .select-arrow {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+                color: var(--text-medium-gray);
+                pointer-events: none;
+            }
+            .form-select {
+                appearance: none;
+                padding-right: 40px;
+                cursor: pointer;
+                border-radius: 0;
+            }
+
+            .allergy-section {
+                margin-top: 8px;
+            }
+            .allergy-label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--primary-orange-dark);
+                margin-bottom: 12px;
+            }
+            .allergy-label .material-icons-outlined {
+                font-size: 18px;
+                color: var(--primary-orange);
+            }
+
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                margin-top: 24px;
+                padding-top: 24px;
+                border-top: 1px solid var(--border-light);
+            }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 24px;
+                border-radius: 0;
+                font-size: 14px;
+                font-weight: 600;
+                font-family: inherit;
+                cursor: pointer;
+                transition: var(--transition-smooth);
+                border: none;
+            }
+            .btn-primary {
+                background: var(--primary-green);
+                color: #ffffff;
+            }
+            .btn-primary:hover {
+                background: var(--primary-green-dark);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+            .btn-primary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+            .btn-secondary {
+                background: var(--bg-gray);
+                color: var(--text-dark-gray);
+                border: 1px solid var(--border-light);
+            }
+            .btn-secondary:hover {
+                background: var(--border-light);
+            }
+
+            /* ── FAB ─────────────────────────────────────────────────────────── */
+            .fab {
+                position: fixed;
+                bottom: 32px;
+                right: 32px;
+                width: 56px;
+                height: 56px;
+                background: var(--primary-green);
+                color: #fff;
+                border: none;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                box-shadow: 0 4px 16px rgba(15, 38, 11, 0.35);
+                text-decoration: none;
+                z-index: 999;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .fab:hover {
+                background: var(--primary-orange);
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 6px 22px rgba(255, 94, 58, 0.4);
+            }
+            .fab:active {
+                transform: translateY(0) scale(0.97);
+            }
+            .fab .material-icons-outlined {
+                font-size: 28px;
+                line-height: 1;
+            }
+
+            .toast {
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 24px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 9999;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+            }
+            .toast.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .toast-success {
+                background: var(--primary-green);
+                color: #fff;
+            }
+            .toast-error {
+                background: var(--primary-orange);
+                color: #fff;
+            }
+
+            .form-input.error,
+            .form-textarea.error,
+            .form-select.error {
+                border-color: var(--primary-orange);
+                background: #fef2f2;
+            }
+            .error-message {
+                font-size: 12px;
+                color: var(--primary-orange);
+                margin-top: 4px;
+                display: none;
+            }
+            .form-group.has-error .error-message {
+                display: block;
+            }
+
+            .dietary-group {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+                margin-top: 4px;
+            }
+            .dietary-group label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 14px;
+                color: var(--text-dark-gray);
+                cursor: pointer;
+            }
+
+            /* Images */
+            .image-row-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+                display: block;
+                margin-bottom: 8px;
+            }
+            .drop-area {
+                border: 2px dashed var(--border-light);
+                border-radius: 0;
+                padding: 28px 20px;
+                text-align: center;
+                cursor: pointer;
+                transition: var(--transition-smooth);
+            }
+            .drop-area:hover {
+                border-color: var(--primary-green);
+                background: var(--primary-green-light);
+            }
+            .drop-area .material-icons-outlined {
+                font-size: 36px;
+                color: var(--text-medium-gray);
+                display: block;
+                margin-bottom: 6px;
+            }
+            .drop-area .drop-text {
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .drop-area .drop-hint {
+                font-size: 12px;
+                color: var(--text-medium-gray);
+                margin-top: 4px;
+            }
+            #newImageInput {
+                display: none;
+            }
+            .image-preview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .preview-wrapper {
+                position: relative;
+                width: 80px;
+                height: 80px;
+                flex-shrink: 0;
+            }
+            .preview-img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border: 1px solid var(--border-light);
+                display: block;
+            }
+            .remove-img-btn {
+                position: absolute;
+                top: -7px;
+                right: -7px;
+                background: var(--primary-orange);
+                color: #fff;
+                border: none;
+                width: 20px;
+                height: 20px;
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                font-size: 14px;
+            }
+            .remove-img-btn:hover {
+                background: var(--primary-orange-dark);
+            }
+            .images-heading {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+                margin-bottom: 8px;
+            }
+
+            .sidebar-toggle {
+                display: none;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 150;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            @media (max-width: 900px) {
+                .sidebar {
+                    left: -280px;
+                    transition: left 0.3s ease;
+                }
+                .sidebar.open {
+                    left: 0;
+                }
+                .main-content {
+                    margin-left: 0;
+                    width: 100%;
+                }
+                .top-nav {
+                    left: 0;
+                }
+                .sidebar-toggle {
+                    display: grid;
+                    position: fixed;
+                    top: 10px;
+                    left: 10px;
+                    z-index: 300;
+                    width: 44px;
+                    height: 44px;
+                    background: var(--primary-green);
+                    color: #fff;
+                    border: none;
+                    cursor: pointer;
+                    place-items: center;
+                }
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+                .form-group.full-width {
+                    grid-column: span 1;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .form-card {
+                    padding: 20px;
+                }
+                .form-actions {
+                    flex-direction: column-reverse;
+                }
+                .form-actions .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Open menu"
+        >
+            <span class="material-icons-outlined">menu</span>
+        </button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar">
+                    <span class="material-icons-outlined">person</span>
+                </div>
+                <div class="sidebar-name" id="sidebarName">Loading...</div>
+                <div class="sidebar-status">
+                    <span class="status-dot"></span>Status: Active
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="sidebar-nav-list">
+                    <li>
+                        <a href="dashboard.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >dashboard</span
+                            >Dashboard</a
+                        >
+                    </li>
+                    <li>
+                        <a href="products.html" class="sidebar-nav-item active"
+                            ><span class="material-icons-outlined"
+                                >inventory_2</span
+                            >Products</a
+                        >
+                    </li>
+                    <li>
+                        <a href="orders.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >receipt_long</span
+                            >Orders</a
+                        >
+                    </li>
+                    <li>
+                        <a href="finance.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >account_balance_wallet</span
+                            >Finance</a
+                        >
+                    </li>
+                    <li>
+                        <details class="sidebar-report-group">
+                            <summary class="sidebar-nav-item">
+                                <span class="material-icons-outlined"
+                                    >analytics</span
+                                >Reports
+                                <span
+                                    class="material-icons-outlined sidebar-report-caret"
+                                    >expand_more</span
+                                >
+                            </summary>
+                            <ul class="sidebar-report-sublist">
+                                <li>
+                                    <a
+                                        href="report.html?type=daily"
+                                        class="sidebar-report-link"
+                                        >Daily</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        href="report.html?type=weekly"
+                                        class="sidebar-report-link"
+                                        >Weekly</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        href="report.html?type=monthly"
+                                        class="sidebar-report-link"
+                                        >Monthly</a
+                                    >
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >settings</span
+                            >Profile</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            onclick="handleLogout()"
+                            class="sidebar-nav-item logout"
+                            ><span class="material-icons-outlined">logout</span
+                            >Logout</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <header class="top-nav">
+            <div class="top-nav-logo">
+                <img src="../public/assets/logo.png" alt="HuddersHub" />
+                <span>HuddersHub</span>
+            </div>
+            <div class="top-nav-right">
+                <div class="user-pill">
+                    <span class="material-icons-outlined">person</span
+                    ><span id="topNavName">...</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <a href="add-product.html" class="fab" title="Add new product">
+                <span class="material-icons-outlined">add</span>
+            </a>
+            <div class="page-header">
+                <h1>Products</h1>
+            </div>
+
+            <div class="tabs-header">
+                <a href="products.html" class="tab-item">My products</a>
+                <a href="#" class="tab-item active">Edit product</a>
+            </div>
+
+            <!-- Loading state -->
+            <div
+                id="loadingState"
+                style="
+                    text-align: center;
+                    padding: 60px;
+                    color: var(--text-medium-gray);
+                "
+            >
+                <span
+                    class="material-icons-outlined"
+                    style="
+                        font-size: 48px;
+                        display: block;
+                        margin-bottom: 12px;
+                        animation: spin 1s linear infinite;
+                    "
+                    >refresh</span
+                >
+                <p>Loading product data…</p>
+            </div>
+
+            <!-- Form card -->
+            <div class="form-card" id="formCard" style="display: none">
+                <form id="editProductForm" enctype="multipart/form-data">
+                    <input type="hidden" id="productId" name="product_id" />
+
+                    <div class="form-grid">
+                        <!-- Product name -->
+                        <div class="form-group">
+                            <label class="form-label" for="productName"
+                                >Product Name *</label
+                            >
+                            <input
+                                type="text"
+                                id="productName"
+                                name="name"
+                                class="form-input"
+                                required
+                            />
+                            <span class="error-message"
+                                >Product name is required</span
+                            >
+                        </div>
+
+                        <!-- Price -->
+                        <div class="form-group">
+                            <label class="form-label" for="price"
+                                >Price (£) *</label
+                            >
+                            <div style="position: relative">
+                                <span
+                                    style="
+                                        position: absolute;
+                                        left: 12px;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        color: var(--text-medium-gray);
+                                        font-weight: 600;
+                                        pointer-events: none;
+                                    "
+                                    >£</span
+                                >
+                                <input
+                                    type="number"
+                                    id="price"
+                                    name="price"
+                                    class="form-input"
+                                    step="0.01"
+                                    min="0"
+                                    style="padding-left: 28px"
+                                    required
+                                />
+                            </div>
+                            <span class="error-message"
+                                >Valid price is required</span
+                            >
+                        </div>
+
+                        <!-- Discount -->
+                        <div class="form-group">
+                            <label class="form-label" for="discountPercent"
+                                >Discount %
+                                <span
+                                    style="
+                                        color: #5e6a63;
+                                        font-weight: 400;
+                                        font-size: 12px;
+                                    "
+                                    >(optional, 0 = no discount)</span
+                                ></label
+                            >
+                            <div style="position: relative">
+                                <input
+                                    type="number"
+                                    id="discountPercent"
+                                    name="discountPercent"
+                                    class="form-input"
+                                    min="0"
+                                    max="90"
+                                    step="1"
+                                    value="0"
+                                    placeholder="e.g. 15"
+                                />
+                                <span
+                                    style="
+                                        position: absolute;
+                                        right: 12px;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        font-size: 14px;
+                                        color: #5e6a63;
+                                        pointer-events: none;
+                                    "
+                                    >%</span
+                                >
+                            </div>
+                            <span
+                                class="help-text"
+                                style="
+                                    font-size: 11px;
+                                    color: #5e6a63;
+                                    margin-top: 4px;
+                                    display: block;
+                                "
+                                >Enter a whole number between 1–90 to apply a
+                                discount badge on the product card. Leave as 0
+                                for no discount.</span
+                            >
+                        </div>
+                        <div
+                            class="form-group"
+                            id="discountExpiryGroup"
+                            style="display: none"
+                        >
+                            <label class="form-label" for="discountExpiry"
+                                >Discount valid until</label
+                            >
+                            <input
+                                type="date"
+                                id="discountExpiry"
+                                name="discountExpiry"
+                                class="form-input"
+                            />
+                            <span
+                                class="help-text"
+                                style="
+                                    font-size: 11px;
+                                    color: #5e6a63;
+                                    margin-top: 4px;
+                                    display: block;
+                                "
+                                >Leave blank to default to 30 days from
+                                today.</span
+                            >
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="productDescription"
+                                >Product Description (intro)</label
+                            >
+                            <textarea
+                                id="productDescription"
+                                name="description"
+                                class="form-textarea"
+                                rows="3"
+                                placeholder="Brief intro — e.g. 'Crisp, vibrant spinach leaves with a clean earthy flavour...'"
+                            ></textarea>
+                            <span
+                                class="help-text"
+                                style="font-size: 11px; color: #5e6a63"
+                                >This appears as the main intro paragraph on the
+                                product page.</span
+                            >
+                        </div>
+
+                        <!-- Rich description cards -->
+                        <div class="form-group full-width">
+                            <label
+                                class="form-label"
+                                style="
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #0f260b;
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="
+                                        font-size: 18px;
+                                        vertical-align: middle;
+                                        margin-right: 6px;
+                                    "
+                                    >auto_awesome</span
+                                >
+                                Product Details (shown as cards on product page)
+                            </label>
+                            <div
+                                style="
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr;
+                                    gap: 16px;
+                                "
+                            >
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="appearanceAroma"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >visibility</span
+                                        >
+                                        Appearance &amp; Aroma
+                                    </label>
+                                    <textarea
+                                        id="appearanceAroma"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Describe colour, sheen, texture appearance and aroma..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="textureFlavour"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >restaurant</span
+                                        >
+                                        Texture &amp; Flavour
+                                    </label>
+                                    <textarea
+                                        id="textureFlavour"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Describe the taste and texture profile..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="culinaryVersatility"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >soup_kitchen</span
+                                        >
+                                        Culinary Versatility
+                                    </label>
+                                    <textarea
+                                        id="culinaryVersatility"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="How can this product be used? Recipes, cooking methods..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="nutritionalHighlights"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >health_and_safety</span
+                                        >
+                                        Nutritional Highlights
+                                    </label>
+                                    <textarea
+                                        id="nutritionalHighlights"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Key nutrients, vitamins, health benefits..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="growingSourcing"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >nature</span
+                                        >
+                                        Growing &amp; Sourcing
+                                    </label>
+                                    <textarea
+                                        id="growingSourcing"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Where is it sourced? Farming method, region..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="allergenicInfoDetail"
+                                        style="color: #e3472c"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                                color: #ff5e3a;
+                                            "
+                                            >info_outline</span
+                                        >
+                                        Allergenic Information (detailed)
+                                    </label>
+                                    <textarea
+                                        id="allergenicInfoDetail"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Full allergen details, preparation facility warnings..."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-group">
+                            <label class="form-label" for="category"
+                                >Category</label
+                            >
+                            <div class="select-wrapper">
+                                <select
+                                    id="category"
+                                    name="category"
+                                    class="form-select"
+                                >
+                                    <option value="">Select category…</option>
+                                </select>
+                                <span
+                                    class="material-icons-outlined select-arrow"
+                                    >expand_more</span
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Quantity per item (unit) -->
+                        <div class="form-group">
+                            <label class="form-label" for="unit"
+                                >Quantity per item</label
+                            >
+                            <input
+                                type="text"
+                                id="unit"
+                                name="unit"
+                                class="form-input"
+                                placeholder="e.g. 500g, 1kg"
+                            />
+                        </div>
+
+                        <!-- Stock / Min / Max -->
+                        <div class="form-group full-width">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="stock"
+                                        >Stock Available *</label
+                                    >
+                                    <input
+                                        type="number"
+                                        id="stock"
+                                        name="stock"
+                                        class="form-input"
+                                        min="0"
+                                        required
+                                    />
+                                    <span class="error-message"
+                                        >Stock is required</span
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="minOrder"
+                                        >Minimum Order</label
+                                    >
+                                    <input
+                                        type="number"
+                                        id="minOrder"
+                                        name="min_order"
+                                        class="form-input"
+                                        min="1"
+                                        value="1"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="maxOrder"
+                                        >Maximum Order</label
+                                    >
+                                    <input
+                                        type="number"
+                                        id="maxOrder"
+                                        name="max_order"
+                                        class="form-input"
+                                        min="1"
+                                        value="50"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Allergen info -->
+                        <div class="form-group full-width">
+                            <label
+                                class="form-label"
+                                style="
+                                    color: var(--primary-orange-dark);
+                                    font-weight: 600;
+                                "
+                            >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="
+                                        font-size: 18px;
+                                        color: var(--primary-orange);
+                                        vertical-align: middle;
+                                        margin-right: 4px;
+                                    "
+                                    >warning</span
+                                >
+                                Allergen Information
+                            </label>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="contains"
+                                        >Contains</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="contains"
+                                        name="contains"
+                                        class="form-input"
+                                        placeholder="e.g. Gluten, Dairy"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="mayContain"
+                                        >May Contain</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="mayContain"
+                                        name="may_contain"
+                                        class="form-input"
+                                        placeholder="e.g. Traces of nuts"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dietary tags -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Dietary Tags</label>
+                            <div class="dietary-group" id="dietaryGroup">
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Vegetarian"
+                                    />
+                                    Vegetarian</label
+                                >
+                                <label
+                                    ><input type="checkbox" value="Vegan" />
+                                    Vegan</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Gluten Free"
+                                    />
+                                    Gluten Free</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Dairy Free"
+                                    />
+                                    Dairy Free</label
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Existing images -->
+                        <div class="form-group full-width">
+                            <span class="images-heading">Current Images</span>
+                            <div
+                                id="existingImages"
+                                class="image-preview"
+                            ></div>
+                        </div>
+
+                        <!-- New images -->
+                        <div class="form-group full-width">
+                            <span class="images-heading"
+                                >Add New Images
+                                <span style="font-weight: 400; font-size: 12px"
+                                    >(up to 5 total)</span
+                                ></span
+                            >
+                            <div class="drop-area" id="dropArea">
+                                <span class="material-icons-outlined"
+                                    >add_photo_alternate</span
+                                >
+                                <div class="drop-text">
+                                    Click or drag images here to add
+                                </div>
+                                <div class="drop-hint">
+                                    JPG, PNG — up to 5 images total
+                                </div>
+                            </div>
+                            <input
+                                type="file"
+                                id="newImageInput"
+                                multiple
+                                accept="image/jpeg,image/png,image/jpg"
+                            />
+                            <div
+                                id="newImagePreview"
+                                class="image-preview"
+                            ></div>
+                        </div>
+                    </div>
+                    <!-- /form-grid -->
+
+                    <div class="form-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="window.location.href = 'products.html'"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitBtn"
+                        >
+                            <span class="material-icons-outlined">save</span>
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <div class="toast toast-success" id="successToast">
+            <span class="material-icons-outlined">check_circle</span>
+            <span id="toastSuccessText">Product updated!</span>
+        </div>
+        <div class="toast toast-error" id="errorToast">
+            <span class="material-icons-outlined">error</span>
+            <span id="toastErrorText">An error occurred.</span>
+        </div>
+
+        <script>
+            // ── Auth guard ──────────────────────────────────────────────────────────────
+            const userId = sessionStorage.getItem("user_id");
+            const userRole = sessionStorage.getItem("userRole");
+
+            if (!userId) window.location.href = "../public/login.html";
+            if (!userRole || userRole.toLowerCase() !== "trader")
+                window.location.href = "../public/login.html";
+
+            function handleLogout() {
+                fetch("../api/auth/logout.php", { method: "POST" })
+                    .then(() => {
+                        sessionStorage.clear();
+                        window.location.href = "../public/login.html";
+                    })
+                    .catch(() => {
+                        sessionStorage.clear();
+                        window.location.href = "../public/login.html";
+                    });
+            }
+
+            // ── Sidebar / overlay ───────────────────────────────────────────────────────
+            const sidebar = document.getElementById("sidebar");
+            const sidebarToggle = document.getElementById("sidebarToggle");
+            const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+            sidebarToggle.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
+                sidebarOverlay.classList.toggle("active");
+            });
+            sidebarOverlay.addEventListener("click", () => {
+                sidebar.classList.remove("open");
+                sidebarOverlay.classList.remove("active");
+            });
+
+            // ── Tabs ────────────────────────────────────────────────────────────────────
+            document
+                .querySelectorAll(".tab-item")
+                .forEach((t) =>
+                    t.addEventListener("click", (e) => e.preventDefault()),
+                );
+
+            // ── Category presets per shop type ──────────────────────────────────────────
+            const CATEGORY_PRESETS = {
+                Butcher: ["Beef", "Chicken", "Lamb", "Pork", "Other Meats"],
+                Greengrocer: [
+                    "Fruits",
+                    "Vegetables",
+                    "Herbs",
+                    "Salad",
+                    "Other Produce",
+                ],
+                Fishmonger: [
+                    "Fresh Fish",
+                    "Shellfish",
+                    "Smoked Fish",
+                    "Frozen Seafood",
+                ],
+                Bakery: [
+                    "Bread",
+                    "Cakes",
+                    "Pastries",
+                    "Cookies",
+                    "Other Baked Goods",
+                ],
+                Delicatessen: [
+                    "Cheeses",
+                    "Cold Cuts",
+                    "Dips",
+                    "Olives",
+                    "Other Deli",
+                ],
+            };
+
+            function populateCategories(shopType) {
+                const list =
+                    CATEGORY_PRESETS[shopType] || CATEGORY_PRESETS["Butcher"];
+                const select = document.getElementById("category");
+                select.innerHTML = '<option value="">Select category…</option>';
+                list.forEach((cat) => {
+                    const opt = document.createElement("option");
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    select.appendChild(opt);
+                });
+            }
+
+            // ── Load trader info & shop type ─────────────────────────────────────────────
+            async function loadTraderInfo() {
+                try {
+                    const res = await fetch(
+                        "../api/trader/get-profile.php?user_id=" + userId,
+                    );
+                    const d = await res.json();
+                    if (d.success && d.data) {
+                        document.getElementById("sidebarName").textContent =
+                            (d.data.firstname || "") +
+                            " " +
+                            (d.data.lastname || "");
+                        document.getElementById("topNavName").textContent =
+                            d.data.firstname || "";
+                        populateCategories(d.data.shop_type || "Butcher");
+                    } else {
+                        populateCategories("Butcher");
+                    }
+                } catch (_) {
+                    populateCategories("Butcher");
+                }
+            }
+            loadTraderInfo();
+
+            // ── URL helpers ─────────────────────────────────────────────────────────────
+            function getProductId() {
+                return new URLSearchParams(window.location.search).get("id");
+            }
+
+            // ── Load product ─────────────────────────────────────────────────────────────
+            let productData = {};
+            let existingImages = [];
+            let newImageFiles = [];
+            let imagesToDelete = [];
+
+            function showToast(msg, type = "success") {
+                const toast =
+                    type === "error"
+                        ? document.getElementById("errorToast")
+                        : document.getElementById("successToast");
+                const textId =
+                    type === "error" ? "toastErrorText" : "toastSuccessText";
+                document.getElementById(textId).textContent = msg;
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 4000);
+            }
+
+            async function loadProduct() {
+                const productId = getProductId();
+                if (!productId) {
+                    window.location.href = "products.html";
+                    return;
+                }
+
+                const res = await fetch(
+                    "../api/trader/get-product.php?product_id=" +
+                        productId +
+                        "&user_id=" +
+                        userId,
+                );
+                const d = await res.json();
+
+                if (!d.success) {
+                    alert("Product not found");
+                    window.location.href = "products.html";
+                    return;
+                }
+
+                productData = d.product;
+                existingImages = productData.images || [];
+
+                // Fill form
+                document.getElementById("productId").value = productData.id;
+                document.getElementById("productName").value =
+                    productData.name || "";
+                document.getElementById("productDescription").value =
+                    productData.description || "";
+
+                // Pre-fill rich description fields from product_details JSON
+                const details = (() => {
+                    try {
+                        return JSON.parse(
+                            productData.product_details ||
+                                productData.PRODUCT_DETAILS ||
+                                "{}",
+                        );
+                    } catch (e) {
+                        return {};
+                    }
+                })();
+                document.getElementById("appearanceAroma").value =
+                    details.appearance_aroma || "";
+                document.getElementById("textureFlavour").value =
+                    details.texture_flavour || "";
+                document.getElementById("culinaryVersatility").value =
+                    details.culinary_versatility || "";
+                document.getElementById("nutritionalHighlights").value =
+                    details.nutritional_highlights || "";
+                document.getElementById("growingSourcing").value =
+                    details.growing_sourcing || "";
+                document.getElementById("allergenicInfoDetail").value =
+                    details.allergenic_info_detail || "";
+
+                document.getElementById("price").value = productData.price;
+                document.getElementById("stock").value = productData.stock;
+                document.getElementById("minOrder").value =
+                    productData.min_order || 1;
+                document.getElementById("maxOrder").value =
+                    productData.max_order || 50;
+                document.getElementById("unit").value = productData.unit || "";
+
+                // Split "Contains; May Contain"
+                let allergen = productData.allergen_info || "None";
+                let allergenParts = allergen.split(";");
+                document.getElementById("contains").value =
+                    allergenParts[0] === "None" ? "" : allergenParts[0].trim();
+                document.getElementById("mayContain").value = (
+                    allergenParts[1] || ""
+                ).trim();
+
+                // Dietary tags
+                const tags = (productData.dietary_tags || "")
+                    .split(",")
+                    .map((t) => t.trim());
+                document
+                    .querySelectorAll("#dietaryGroup input")
+                    .forEach((cb) => {
+                        cb.checked = tags.includes(cb.value);
+                    });
+
+                // Category
+                const catSel = document.getElementById("category");
+                if (productData.category) {
+                    for (let i = 0; i < catSel.options.length; i++) {
+                        if (catSel.options[i].value === productData.category) {
+                            catSel.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                // Discount
+                const discPctVal = productData.discount_percent || 0;
+                document.getElementById("discountPercent").value = discPctVal;
+                document.getElementById("discountExpiryGroup").style.display =
+                    discPctVal > 0 ? "block" : "none";
+
+                // Images
+                renderExistingImages();
+
+                // Done
+                document.getElementById("loadingState").style.display = "none";
+                document.getElementById("formCard").style.display = "block";
+            }
+
+            // ── Existing images ─────────────────────────────────────────────────────────
+            function renderExistingImages() {
+                const container = document.getElementById("existingImages");
+                container.innerHTML = "";
+                existingImages.forEach((img) => {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "preview-wrapper";
+                    wrapper.dataset.id = img.image_id;
+                    const imgEl = document.createElement("img");
+                    imgEl.src =
+                        "data:" +
+                        (img.mime_type || "image/jpeg") +
+                        ";base64," +
+                        img.image_data;
+                    imgEl.className = "preview-img";
+                    const rmBtn = document.createElement("button");
+                    rmBtn.type = "button";
+                    rmBtn.className = "remove-img-btn";
+                    rmBtn.innerHTML = "×";
+                    rmBtn.title = "Remove image";
+                    rmBtn.addEventListener("click", () => {
+                        imagesToDelete.push(img.image_id);
+                        wrapper.remove();
+                    });
+                    wrapper.appendChild(imgEl);
+                    wrapper.appendChild(rmBtn);
+                    container.appendChild(wrapper);
+                });
+            }
+
+            // ── New image drag & drop ────────────────────────────────────────────────────
+            const dropArea = document.getElementById("dropArea");
+            const newImageInput = document.getElementById("newImageInput");
+            const newPreviewBox = document.getElementById("newImagePreview");
+
+            dropArea.addEventListener("click", () => newImageInput.click());
+
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = "var(--primary-green)";
+                dropArea.style.background = "var(--primary-green-light)";
+            });
+            dropArea.addEventListener("dragleave", () => {
+                dropArea.style.borderColor = "";
+                dropArea.style.background = "";
+            });
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = "";
+                dropArea.style.background = "";
+                collectFiles(Array.from(e.dataTransfer.files));
+            });
+
+            newImageInput.addEventListener("change", (e) =>
+                collectFiles(Array.from(e.target.files)),
+            );
+
+            function collectFiles(files) {
+                // total = remaining existing + queued new + incoming files
+                const totalImages =
+                    existingImages.length + newImageFiles.length + files.length;
+                if (totalImages > 5) {
+                    showToast(
+                        "Maximum 5 images total across current and new images",
+                        "error",
+                    );
+                    return;
+                }
+                files.forEach((file) => {
+                    if (!file.type.startsWith("image/")) return;
+                    newImageFiles.push(file);
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const wrapper = document.createElement("div");
+                        wrapper.className = "preview-wrapper";
+                        const imgEl = document.createElement("img");
+                        imgEl.src = ev.target.result;
+                        imgEl.className = "preview-img";
+                        const rmBtn = document.createElement("button");
+                        rmBtn.type = "button";
+                        rmBtn.className = "remove-img-btn";
+                        rmBtn.innerHTML = "×";
+                        rmBtn.title = "Remove";
+                        rmBtn.addEventListener("click", () => {
+                            newImageFiles = newImageFiles.filter(
+                                (f) => f !== file,
+                            );
+                            wrapper.remove();
+                        });
+                        wrapper.appendChild(imgEl);
+                        wrapper.appendChild(rmBtn);
+                        newPreviewBox.appendChild(wrapper);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                newImageInput.value = "";
+            }
+
+            // ── Form submit ──────────────────────────────────────────────────────────────
+            const form = document.getElementById("editProductForm");
+            const submitBtn = document.getElementById("submitBtn");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                let valid = true;
+
+                const nameEl = document.getElementById("productName");
+                const priceEl = document.getElementById("price");
+                const stockEl = document.getElementById("stock");
+
+                if (!nameEl.value.trim()) {
+                    nameEl.classList.add("error");
+                    nameEl.closest(".form-group").classList.add("has-error");
+                    valid = false;
+                }
+                if (!priceEl.value || +priceEl.value <= 0) {
+                    priceEl.classList.add("error");
+                    priceEl.closest(".form-group").classList.add("has-error");
+                    valid = false;
+                }
+                if (stockEl.value === "" || +stockEl.value < 0) {
+                    stockEl.classList.add("error");
+                    stockEl.closest(".form-group").classList.add("has-error");
+                    valid = false;
+                }
+
+                if (!valid) {
+                    showToast("Please fix the errors above.", "error");
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    '<span class="material-icons-outlined">refresh</span> Saving…';
+
+                // Dietary tags
+                const dietaryTags = [];
+                document
+                    .querySelectorAll("#dietaryGroup input:checked")
+                    .forEach((cb) => dietaryTags.push(cb.value));
+
+                // Allergen info
+                const contains = document
+                    .getElementById("contains")
+                    .value.trim();
+                const mayContain = document
+                    .getElementById("mayContain")
+                    .value.trim();
+                const allergen =
+                    [contains, mayContain].filter(Boolean).join("; ") || "None";
+
+                // Build FormData
+                const fd = new FormData();
+                fd.append("user_id", userId);
+                fd.append("product_id", getProductId());
+                fd.append("name", nameEl.value.trim());
+                fd.append(
+                    "description",
+                    document.getElementById("productDescription").value.trim(),
+                );
+                fd.append(
+                    "appearance_aroma",
+                    document.getElementById("appearanceAroma").value,
+                );
+                fd.append(
+                    "texture_flavour",
+                    document.getElementById("textureFlavour").value,
+                );
+                fd.append(
+                    "culinary_versatility",
+                    document.getElementById("culinaryVersatility").value,
+                );
+                fd.append(
+                    "nutritional_highlights",
+                    document.getElementById("nutritionalHighlights").value,
+                );
+                fd.append(
+                    "growing_sourcing",
+                    document.getElementById("growingSourcing").value,
+                );
+                fd.append(
+                    "allergenic_info_detail",
+                    document.getElementById("allergenicInfoDetail").value,
+                );
+                fd.append("price", priceEl.value);
+                fd.append("stock", stockEl.value);
+                fd.append(
+                    "min_order",
+                    document.getElementById("minOrder").value,
+                );
+                fd.append(
+                    "max_order",
+                    document.getElementById("maxOrder").value,
+                );
+                fd.append("unit", document.getElementById("unit").value.trim());
+                fd.append(
+                    "category",
+                    document.getElementById("category").value,
+                );
+                fd.append("allergen_info", allergen);
+                fd.append("dietary_tags", dietaryTags.join(","));
+                const discPct =
+                    parseInt(
+                        document.getElementById("discountPercent").value,
+                    ) || 0;
+                fd.append("discount_percent", discPct);
+                if (discPct > 0) {
+                    const expiry =
+                        document.getElementById("discountExpiry").value;
+                    fd.append("discount_expiry", expiry || "");
+                }
+                if (imagesToDelete.length > 0)
+                    fd.append("delete_images", JSON.stringify(imagesToDelete));
+                newImageFiles.forEach((f) => fd.append("new_images[]", f));
+
+                try {
+                    const res = await fetch(
+                        "../api/trader/update-product.php",
+                        { method: "POST", body: fd },
+                    );
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast("Product updated successfully!");
+                        setTimeout(
+                            () => (window.location.href = "products.html"),
+                            1500,
+                        );
+                    } else {
+                        showToast(data.message || "Update failed", "error");
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML =
+                            '<span class="material-icons-outlined">save</span> Save Changes';
+                    }
+                } catch (_) {
+                    showToast("Network error. Please try again.", "error");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML =
+                        '<span class="material-icons-outlined">save</span> Save Changes';
+                }
+            });
+
+            // ── Discount expiry toggle ─────────────────────────────────────────────────
+            document
+                .getElementById("discountPercent")
+                .addEventListener("input", function () {
+                    const val = parseInt(this.value) || 0;
+                    document.getElementById(
+                        "discountExpiryGroup",
+                    ).style.display = val > 0 ? "block" : "none";
+                });
+
+            // ── Live error clear ────────────────────────────────────────────────────────
+            document
+                .querySelectorAll(".form-input, .form-textarea, .form-select")
+                .forEach((el) => {
+                    el.addEventListener("input", () => {
+                        el.classList.remove("error");
+                        el.closest(".form-group")?.classList.remove(
+                            "has-error",
+                        );
+                    });
+                    el.addEventListener("change", () => {
+                        el.classList.remove("error");
+                        el.closest(".form-group")?.classList.remove(
+                            "has-error",
+                        );
+                    });
+                });
+
+            // ── Kick off ────────────────────────────────────────────────────────────────
+            document.addEventListener("DOMContentLoaded", loadProduct);
+        </script>
+    </body>
+</html>

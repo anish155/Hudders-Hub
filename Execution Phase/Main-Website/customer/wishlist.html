@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HuddersHub - Wishlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+  <style>
+    :root{--orange:#FF5E3A;--orange-dark:#E3472C;--green:#0F260B;--bg:#F7F6F3;--line:#DCE3DA;--muted:#5E6A63}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+    .header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:2}
+    .header-inner{height:70px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+    .brand img{width:42px;height:42px}
+    .brand span{font-family:'Google Sans Flex',sans-serif;font-style:italic;font-size:26px;font-weight:700;color:var(--green)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:24px 0}
+    .side,.card{background:#fff;border:1px solid var(--line)}
+    .side{padding:18px;height:max-content}
+    .profile-chip{display:flex;gap:10px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+    .avatar{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;background:#f3f5f2}
+    .name{font-weight:700}
+    .mail{font-size:13px;color:var(--muted)}
+    .menu{display:grid;gap:8px}
+    .menu a{padding:10px 12px;text-decoration:none;color:#1e2a1c;font-size:14px;line-height:1.35;font-weight:600;border:1px solid transparent}
+    .menu a:visited{color:#1e2a1c}
+    .menu a.active,.menu a:hover{border-color:var(--line);background:#f7faf6;font-weight:600}
+    .menu a.logout{margin-top:6px;border-top:1px solid var(--line);padding-top:14px;color:#b42318}
+    .card{padding:20px}
+    .head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .head h1{font-size:24px}
+    .head p{color:var(--muted);font-size:14px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .item{border:1px solid var(--line);background:#fff;overflow:hidden}
+    .thumb{height:170px;background:#eef2ec;border-bottom:1px solid var(--line)}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .info{padding:12px;display:grid;gap:8px}
+    .shop{font-size:12px;color:var(--muted)}
+    .title{font-size:16px;font-weight:700}
+    .price{font-size:18px;color:var(--green);font-weight:800}
+    .actions{display:grid;grid-template-columns:1fr auto;gap:8px}
+    .btn{height:38px;border:none;cursor:pointer;font-weight:700}
+    .btn-add{background:var(--orange);color:#fff}
+    .btn-add:hover{background:var(--orange-dark)}
+    .btn-remove{background:#f0f4ef;color:#12300f;padding:0 10px}
+    @media (max-width:980px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:680px){.grid{grid-template-columns:1fr}.header-inner{height:64px}.brand span{font-size:22px}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../public/index.html">
+        <img src="../public/assets/logo.png" alt="HuddersHub logo">
+        <span>HuddersHub</span>
+      </a>
+      <a href="../public/cart.html" style="text-decoration:none;color:#0F260B;font-weight:600;">Go to Cart</a>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+    <aside class="side">
+      <div class="profile-chip">
+        <div class="avatar"><span class="material-icons-outlined">person</span></div>
+        <div>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href="profile.html">Profile</a>
+        <a href="orders.html">My Orders</a>
+        <a href="addresses.html">Saved Addresses</a>
+        <a class="active" href="wishlist.html">Wishlist</a>
+        <a href="change-password.html">Change Password</a>
+        <a href="email-settings.html">Email Settings</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
+      </nav>
+    </aside>
+
+    <section class="card">
+      <div class="head">
+        <div>
+          <h1>My Wishlist</h1>
+          <p>Keep products you love and move them to cart anytime.</p>
+        </div>
+      </div>
+      <div class="grid" id="wishlist-items">
+        <p style="color:#5E6A63;padding:20px;">Loading wishlist...</p>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    function fillIdentityFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (fullName) document.querySelector('.name').textContent = fullName;
+      if (email) document.querySelector('.mail').textContent = email;
+    }
+
+    async function loadProfileIdentity() {
+      fillIdentityFromLocalCache();
+      const userId = sessionStorage.getItem('user_id');
+      if (!userId) return;
+
+      try {
+        const res = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        const data = await res.json();
+        if (data.success && data.data) {
+          const user = data.data;
+          const firstName = user.FIRSTNAME || user.firstname || '';
+          const lastName = user.LASTNAME || user.lastname || '';
+          const email = user.EMAIL || user.email || '-';
+          document.querySelector('.name').textContent = (firstName + ' ' + lastName).trim() || 'Customer';
+          document.querySelector('.mail').textContent = email;
+        }
+      } catch (err) {
+        console.error('Error loading profile identity:', err);
+        fillIdentityFromLocalCache();
+      }
+    }
+
+    async function loadWishlist() {
+      try {
+        const res = await fetch('../api/customer/get-wishlist.php');
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+          renderWishlist(data.data);
+        } else {
+          document.getElementById('wishlist-items').innerHTML = '<p style="color:#5E6A63;padding:20px;">Your wishlist is empty. <a href="../public/index.html" style="color:#FF5E3A;">Browse products</a></p>';
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    function renderWishlist(items) {
+      const container = document.getElementById('wishlist-items');
+      let html = '';
+
+      // Category_image map: keys match lowercase shop_type / product name sub-strings
+      const imgMap = {
+        greengrocer:  'imgi_46_chinese-broccoli-vegetables_1203-6831.jpg',
+        butcher:      'fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg',
+        fishmonger:   'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        seafood:      'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        fish:         'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        bakery:       'imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg',
+        delicatessen: 'imgi_47_cheese-wood_573717-86.jpg',
+        egg:    'green-broccoli.jpg',              // best available for egg/vegetable
+        meat:   'fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg',
+        cheese: 'imgi_47_cheese-wood_573717-86.jpg',
+      };
+
+      items.forEach(item => {
+        const shopName = (item.SHOP_NAME || '').toLowerCase();
+        const name     = (item.NAME || '').toLowerCase();
+        let imgFile    = 'green-bell-pepper-isolated.jpg';
+
+        // Match against shop_name first, then product name
+        for (const [k, v] of Object.entries(imgMap)) {
+          if (shopName.includes(k) || name.includes(k)) { imgFile = v; break; }
+        }
+
+        html += `
+          <article class="item">
+            <div class="thumb"><img src="../public/assets/Item-image/${imgFile}" alt="${item.NAME}" onerror="this.src='../public/assets/Item-image/green-bell-pepper-isolated.jpg'"></div>
+            <div class="info">
+              <span class="shop">${item.SHOP_NAME || 'Shop'}</span>
+              <h3 class="title">${item.NAME}</h3>
+              <p class="price">GBP ${parseFloat(item.PRICE).toFixed(2)}</p>
+              <div class="actions">
+                <button class="btn btn-add" onclick="addToCart(${item.PRODUCT_ID})">Add to Cart</button>
+                <button class="btn btn-remove" onclick="removeWishlist(${item.PRODUCT_ID})">Remove</button>
+              </div>
+            </div>
+          </article>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function addToCart(productId) {
+      try {
+        const res = await fetch('../api/cart/add-to-cart.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, quantity: 1 })
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          alert('Server error (status ' + res.status + '). Try again.');
+          return;
+        }
+
+        if (data.success) {
+          alert('Added to cart!');
+          // refresh wishlist count badge on index.html if open
+          const wishCountEl = parent?.document?.getElementById?.('wishlistCount');
+          if (wishCountEl) { let c = parseInt(wishCountEl.textContent) || 0; wishCountEl.textContent = Math.max(0, c - 1); }
+        } else {
+          alert(data.error || 'Error adding to cart');
+        }
+      } catch (err) {
+        alert('Cannot reach server. Please try again.');
+      }
+    }
+
+    async function removeWishlist(productId) {
+      if (!confirm('Remove from wishlist?')) return;
+      try {
+        const res = await fetch('../api/customer/remove-wishlist.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId })
+        });
+        const data = await res.json();
+        if (data.success) loadWishlist();
+        else alert(data.error);
+      } catch (err) { alert('Error'); }
+    }
+
+    loadProfileIdentity();
+    loadWishlist();
+  </script>
+</body>
+</html>

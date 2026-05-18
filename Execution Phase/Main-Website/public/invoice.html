@@ -1,565 +1,1522 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HuddersHub - Invoice</title>
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-<!-- Material Icons -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HuddersHub - Invoice</title>
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+            rel="stylesheet"
+        />
+        <!-- Material Icons -->
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+        />
 
-<style>
-/* ========================================================================
+        <style>
+            /* ========================================================================
 CSS VARIABLES & RESET
 ======================================================================== */
-:root {
-  --primary-orange: #FF5E3A;
-  --primary-orange-light: #FF8C70;
-  --primary-orange-dark: #E3472C;
-  --primary-green: #0F260B;
-  --primary-green-light: rgba(15, 38, 11, 0.14);
-  --primary-green-dark: #0B1C08;
-  --bg-white: #FFFFFF;
-  --bg-light: #F7F6F3;
-  --bg-gray: #F2F4F1;
-  --border-light: #DCE3DA;
-  --bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
-  --text-black: #0B140A;
-  --text-dark-gray: #1E2A1C;
-  --text-medium-gray: #5E6A63;
-  --badge-bg: #0F260B;
-  --badge-text: #ffffff;
-  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
-  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
-  --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
-  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --radius-sm: 0;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Google Sans Flex', sans-serif;
-  font-weight: 500;
-  color: var(--text-black);
-  background: var(--bg-white);
-  padding-top: 140px;
-  line-height: 1.6;
-}
-img { max-width: 100%; height: auto; display: block; }
-a { text-decoration: none; color: inherit; transition: var(--transition-smooth); }
-button { font-family: inherit; transition: var(--transition-smooth); cursor: pointer; }
+            :root {
+                --primary-orange: #ff5e3a;
+                --primary-orange-light: #ff8c70;
+                --primary-orange-dark: #e3472c;
+                --primary-green: #0f260b;
+                --primary-green-light: rgba(15, 38, 11, 0.14);
+                --primary-green-dark: #0b1c08;
+                --bg-white: #ffffff;
+                --bg-light: #f7f6f3;
+                --bg-gray: #f2f4f1;
+                --border-light: #dce3da;
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #f8faf7 0%,
+                    #ffffff 100%
+                );
+                --text-black: #0b140a;
+                --text-dark-gray: #1e2a1c;
+                --text-medium-gray: #5e6a63;
+                --badge-bg: #0f260b;
+                --badge-text: #ffffff;
+                --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+                --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+                --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
+                --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+                --radius-sm: 0;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                font-family: "Google Sans Flex", sans-serif;
+                font-weight: 500;
+                color: var(--text-black);
+                background: var(--bg-white);
+                padding-top: 140px;
+                line-height: 1.6;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+                transition: var(--transition-smooth);
+            }
+            button {
+                font-family: inherit;
+                transition: var(--transition-smooth);
+                cursor: pointer;
+            }
 
-/* ========================================================================
+            /* ========================================================================
 HEADER & NAV
 ======================================================================== */
-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth);
-}
-header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
-.top-bar { background: rgba(255,255,255,0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
-header.scrolled .top-bar { padding: 10px 0; }
-header.scrolled .brand img { width: 42px; height: 42px; }
-header.scrolled .brand-text { font-size: 30px; }
-.page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.top-bar-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
-.brand { display: flex; align-items: center; gap: 14px; }
-.brand img { width: 56px; height: 56px; object-fit: contain; transition: var(--transition-smooth); }
-.brand-text { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 36px; color: var(--primary-green); }
-.search-wrap { display: flex; align-items: center; gap: 12px; }
-.search-bar { position: relative; flex: 1; min-width: 280px; }
-.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; border-radius: 0; }
-.search-bar input:focus { border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(255,94,58,.22); }
-.search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #1B2419; opacity: .55; }
-.actions { display: flex; align-items: center; gap: 16px; }
-.user-menu, .action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; cursor: pointer; padding: 8px 12px; }
-.user-menu { color: var(--text-black); }
-.user-menu:hover, .action-btn:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.action-btn { color: var(--text-medium-gray); }
-.icon-with-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 6px; color: var(--text-black); }
-.icon-with-badge:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.icon-with-badge .material-icons-outlined { font-size: 24px; }
-.badge { position: absolute; top: 0; right: 0; background: var(--badge-bg); color: #fff; padding: 2px 5px; font-size: 10px; font-weight: 600; min-width: 16px; text-align: center; }
-.nav-bar { background: #F1F3F0; border-bottom: 1px solid var(--border-light); padding: 10px 0; transition: var(--transition-smooth); }
-header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
-.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-medium-gray); }
-.breadcrumb a { color: var(--text-dark-gray); }
-.breadcrumb a:hover { color: var(--primary-green); }
-.breadcrumb-sep { color: #9AA19A; }
-.breadcrumb-current { color: var(--primary-green); font-weight: 600; }
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: var(--bg-gradient);
+                backdrop-filter: blur(12px);
+                transition: var(--transition-smooth);
+            }
+            header.scrolled {
+                box-shadow: var(--shadow-md);
+                background: var(--bg-white);
+            }
+            .top-bar {
+                background: rgba(255, 255, 255, 0.98);
+                border-bottom: 1px solid var(--border-light);
+                padding: 14px 0;
+                transition: var(--transition-smooth);
+            }
+            header.scrolled .top-bar {
+                padding: 10px 0;
+            }
+            header.scrolled .brand img {
+                width: 42px;
+                height: 42px;
+            }
+            header.scrolled .brand-text {
+                font-size: 30px;
+            }
+            .page-wrap {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 24px;
+            }
+            .top-bar-inner {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                gap: 18px;
+                align-items: center;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+            .brand img {
+                width: 56px;
+                height: 56px;
+                object-fit: contain;
+                transition: var(--transition-smooth);
+            }
+            .brand-text {
+                font-family: "Google Sans Flex", sans-serif;
+                font-weight: 700;
+                font-style: italic;
+                font-size: 36px;
+                color: var(--primary-green);
+            }
+            .search-wrap {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .search-bar {
+                position: relative;
+                flex: 1;
+                min-width: 280px;
+            }
+            .search-bar input {
+                width: 100%;
+                padding: 6px 44px 6px 14px;
+                height: 36px;
+                border: 1px solid #c8d1c6;
+                background: #fff;
+                font-size: 14px;
+                outline: none;
+                border-radius: 0;
+            }
+            .search-bar input:focus {
+                border-color: var(--primary-orange);
+                box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.22);
+            }
+            .search-icon {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 18px;
+                color: #1b2419;
+                opacity: 0.55;
+            }
+            .actions {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+            .user-menu,
+            .action-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                padding: 8px 12px;
+            }
+            .user-menu {
+                color: var(--text-black);
+            }
+            .user-menu:hover,
+            .action-btn:hover {
+                background: var(--primary-green-light);
+                color: var(--primary-green);
+            }
+            .action-btn {
+                color: var(--text-medium-gray);
+            }
+            .icon-with-badge {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 6px;
+                color: var(--text-black);
+            }
+            .icon-with-badge:hover {
+                background: var(--primary-green-light);
+                color: var(--primary-green);
+            }
+            .icon-with-badge .material-icons-outlined {
+                font-size: 24px;
+            }
+            .badge {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: var(--badge-bg);
+                color: #fff;
+                padding: 2px 5px;
+                font-size: 10px;
+                font-weight: 600;
+                min-width: 16px;
+                text-align: center;
+            }
+            .nav-bar {
+                background: #f1f3f0;
+                border-bottom: 1px solid var(--border-light);
+                padding: 10px 0;
+                transition: var(--transition-smooth);
+            }
+            header.scrolled .nav-bar {
+                padding: 8px 0;
+                background: #f3f4f6;
+            }
+            .breadcrumb {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: var(--text-medium-gray);
+            }
+            .breadcrumb a {
+                color: var(--text-dark-gray);
+            }
+            .breadcrumb a:hover {
+                color: var(--primary-green);
+            }
+            .breadcrumb-sep {
+                color: #9aa19a;
+            }
+            .breadcrumb-current {
+                color: var(--primary-green);
+                font-weight: 600;
+            }
 
-/* ========================================================================
+            /* ========================================================================
 CART DRAWER
 ======================================================================== */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1200; }
-.cart-overlay.open { opacity: 1; visibility: visible; }
-.cart-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); background: #fff; box-shadow: -16px 0 40px rgba(15,38,11,.18); transform: translateX(100%); transition: var(--transition-smooth); z-index: 1300; display: flex; flex-direction: column; }
-.cart-drawer.open { transform: translateX(0); }
-.cart-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
-.cart-header h3 { font-size: 20px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-close { border: none; background: transparent; font-size: 20px; color: var(--text-dark-gray); }
-.cart-body { padding: 18px 22px; flex: 1; display: grid; gap: 14px; align-content: start; overflow-y: auto; }
-.cart-item { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: flex-start; border: 1px solid var(--border-light); padding: 12px; background: #fff; box-shadow: var(--shadow-sm); }
-.cart-item img { width: 56px; height: 56px; object-fit: cover; background: var(--bg-gray); }
-.cart-item-details { display: grid; gap: 10px; }
-.cart-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.cart-item h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-dark-gray); }
-.cart-item p { font-size: 12px; color: var(--text-medium-gray); }
-.cart-price { font-weight: 700; color: var(--primary-orange); font-size: 14px; white-space: nowrap; }
-.cart-item-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.cart-qty { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-gray); padding: 6px 10px; }
-.cart-qty button { border: none; background: #fff; width: 22px; height: 22px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-dark-gray); box-shadow: var(--shadow-sm); }
-.cart-qty .qty-val { font-size: 12px; font-weight: 700; min-width: 12px; text-align: center; }
-.cart-remove { border: none; background: transparent; color: var(--text-medium-gray); font-size: 12px; cursor: pointer; text-decoration: underline; }
-.cart-footer { border-top: 1px solid var(--border-light); padding: 16px 22px 20px; display: grid; gap: 12px; }
-.cart-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-.cart-link { font-size: 13px; color: var(--text-medium-gray); text-decoration: none; border-bottom: 1px solid var(--border-light); }
-.cart-checkout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(255,94,58,.28); }
+            .cart-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.35);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition-smooth);
+                z-index: 1200;
+            }
+            .cart-overlay.open {
+                opacity: 1;
+                visibility: visible;
+            }
+            .cart-drawer {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100vh;
+                width: min(420px, 92vw);
+                background: #fff;
+                box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
+                transform: translateX(100%);
+                transition: var(--transition-smooth);
+                z-index: 1300;
+                display: flex;
+                flex-direction: column;
+            }
+            .cart-drawer.open {
+                transform: translateX(0);
+            }
+            .cart-header {
+                padding: 20px 22px 16px;
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .cart-header h3 {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--text-dark-gray);
+            }
+            .cart-close {
+                border: none;
+                background: transparent;
+                font-size: 20px;
+                color: var(--text-dark-gray);
+            }
+            .cart-body {
+                padding: 18px 22px;
+                flex: 1;
+                display: grid;
+                gap: 14px;
+                align-content: start;
+                overflow-y: auto;
+            }
+            .cart-item {
+                display: grid;
+                grid-template-columns: 64px 1fr;
+                gap: 14px;
+                align-items: flex-start;
+                border: 1px solid var(--border-light);
+                padding: 12px;
+                background: #fff;
+                box-shadow: var(--shadow-sm);
+            }
+            .cart-item img {
+                width: 56px;
+                height: 56px;
+                object-fit: cover;
+                background: var(--bg-gray);
+            }
+            .cart-item-details {
+                display: grid;
+                gap: 10px;
+            }
+            .cart-item-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .cart-item h4 {
+                font-size: 14px;
+                margin-bottom: 4px;
+                color: var(--text-dark-gray);
+            }
+            .cart-item p {
+                font-size: 12px;
+                color: var(--text-medium-gray);
+            }
+            .cart-price {
+                font-weight: 700;
+                color: var(--primary-orange);
+                font-size: 14px;
+                white-space: nowrap;
+            }
+            .cart-item-actions {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            .cart-qty {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--bg-gray);
+                padding: 6px 10px;
+            }
+            .cart-qty button {
+                border: none;
+                background: #fff;
+                width: 22px;
+                height: 22px;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+                color: var(--text-dark-gray);
+                box-shadow: var(--shadow-sm);
+            }
+            .cart-qty .qty-val {
+                font-size: 12px;
+                font-weight: 700;
+                min-width: 12px;
+                text-align: center;
+            }
+            .cart-remove {
+                border: none;
+                background: transparent;
+                color: var(--text-medium-gray);
+                font-size: 12px;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+            .cart-footer {
+                border-top: 1px solid var(--border-light);
+                padding: 16px 22px 20px;
+                display: grid;
+                gap: 12px;
+            }
+            .cart-total {
+                display: flex;
+                justify-content: space-between;
+                font-size: 14px;
+                font-weight: 700;
+                color: var(--text-dark-gray);
+            }
+            .cart-actions {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+            .cart-link {
+                font-size: 13px;
+                color: var(--text-medium-gray);
+                text-decoration: none;
+                border-bottom: 1px solid var(--border-light);
+            }
+            .cart-checkout {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border: none;
+                background: linear-gradient(
+                    135deg,
+                    var(--primary-orange) 0%,
+                    var(--primary-orange-light) 100%
+                );
+                color: #fff;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
+            }
 
-/* ========================================================================
+            /* ========================================================================
 INVOICE PAGE STYLES
 ======================================================================== */
-.invoice-page {
-  background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 55%, #F7F6F3 100%);
-  color: #0B140A;
-  padding-top: 24px;
-}
-.payment-strip { padding: 8px 0 6px; }
-.invoice-hero { padding: 24px 0 22px; }
-.invoice-hero h1 {
-  font-size: 48px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  position: relative;
-  padding-top: 16px;
-}
-.invoice-step {
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: #0F260B;
-  letter-spacing: 1px;
-}
-.invoice-content { padding: 12px 0 70px; }
-.payment-success {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
-  color: #FFFFFF;
-  padding: 16px 18px;
-  border-radius: 0;
-  box-shadow: 0 16px 32px rgba(15, 38, 11, 0.22);
-}
-.payment-success h2 { font-size: 22px; margin-bottom: 4px; }
-.payment-success p { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
-.success-icon {
-  width: 40px; height: 40px; border-radius: 0; background: rgba(255, 255, 255, 0.15);
-  display: grid; place-items: center; font-size: 18px; font-weight: 700;
-}
-.invoice-card {
-  background: #FFFFFF;
-  border: 1px dashed #D1D5DB;
-  border-radius: 0;
-  padding: 28px 26px;
-  box-shadow: 0 18px 34px rgba(15, 38, 11, 0.14);
-  font-family: "Courier New", monospace;
-  position: relative;
-}
-.invoice-card::before, .invoice-card::after {
-  content: '';
-  position: absolute;
-  left: 24px; right: 24px; height: 1px;
-  background: repeating-linear-gradient(to right, #D1D5DB, #D1D5DB 6px, transparent 6px, transparent 12px);
-}
-.invoice-card::before { top: 10px; }
-.invoice-card::after { bottom: 10px; }
-.invoice-header {
-  display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;
-  border-bottom: 1px solid #DCE3DA; padding-bottom: 18px; margin-bottom: 18px; padding-top: 6px;
-}
-.invoice-title-row { display: flex; align-items: center; gap: 12px; }
-.invoice-header h2 { font-size: 18px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-.invoice-header p { font-size: 12px; color: #5E6A63; margin-bottom: 4px; }
-.invoice-meta { display: grid; gap: 6px; font-size: 12px; color: #0B140A; text-align: right; }
-.invoice-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.invoice-table th, .invoice-table td { border-bottom: 1px dashed #D1D5DB; padding: 8px 4px; text-align: left; }
-.invoice-table th { background: transparent; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; }
-.invoice-table tfoot td { font-weight: 600; }
-.invoice-table .total-row td { font-weight: 700; color: #0F260B; border-bottom: none; }
-.invoice-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 18px; }
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px 24px; border-radius: 0; font-size: 16px; font-weight: 600;
-  font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none; text-decoration: none; line-height: 1;
-}
-.btn-primary { background: #FF5E3A; color: #FFFFFF; }
-.btn-primary:hover { background: #E3472C; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(255,94,58,0.28); }
-.btn-secondary { background: #E4F7C5; color: #0B140A; }
-.btn-secondary:hover { background: #D6F0A7; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(15,38,11,0.18); }
+            .invoice-page {
+                background: linear-gradient(
+                    180deg,
+                    #f7f6f3 0%,
+                    #ffffff 55%,
+                    #f7f6f3 100%
+                );
+                color: #0b140a;
+                padding-top: 24px;
+            }
+            .payment-strip {
+                padding: 8px 0 6px;
+            }
+            .invoice-hero {
+                padding: 24px 0 22px;
+            }
+            .invoice-hero h1 {
+                font-size: 48px;
+                letter-spacing: 0.6px;
+                text-transform: uppercase;
+                margin-bottom: 10px;
+                position: relative;
+                padding-top: 16px;
+            }
+            .invoice-step {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 16px;
+                font-weight: 700;
+                color: #0f260b;
+                letter-spacing: 1px;
+            }
+            .invoice-content {
+                padding: 12px 0 70px;
+            }
+            .payment-success {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                background: linear-gradient(
+                    135deg,
+                    #0f260b 0%,
+                    #143d12 55%,
+                    #1f5b1d 100%
+                );
+                color: #ffffff;
+                padding: 16px 18px;
+                border-radius: 0;
+                box-shadow: 0 16px 32px rgba(15, 38, 11, 0.22);
+            }
+            .payment-success h2 {
+                font-size: 22px;
+                margin-bottom: 4px;
+            }
+            .payment-success p {
+                font-size: 13px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .success-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 0;
+                background: rgba(255, 255, 255, 0.15);
+                display: grid;
+                place-items: center;
+                font-size: 18px;
+                font-weight: 700;
+            }
+            .invoice-card {
+                background: #ffffff;
+                border: 1px dashed #d1d5db;
+                border-radius: 0;
+                padding: 28px 26px;
+                box-shadow: 0 18px 34px rgba(15, 38, 11, 0.14);
+                font-family: "Courier New", monospace;
+                position: relative;
+            }
+            .invoice-card::before,
+            .invoice-card::after {
+                content: "";
+                position: absolute;
+                left: 24px;
+                right: 24px;
+                height: 1px;
+                background: repeating-linear-gradient(
+                    to right,
+                    #d1d5db,
+                    #d1d5db 6px,
+                    transparent 6px,
+                    transparent 12px
+                );
+            }
+            .invoice-card::before {
+                top: 10px;
+            }
+            .invoice-card::after {
+                bottom: 10px;
+            }
+            .invoice-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 20px;
+                border-bottom: 1px solid #dce3da;
+                padding-bottom: 18px;
+                margin-bottom: 18px;
+                padding-top: 6px;
+            }
+            .invoice-title-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .invoice-header h2 {
+                font-size: 18px;
+                margin-bottom: 6px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .invoice-header p {
+                font-size: 12px;
+                color: #5e6a63;
+                margin-bottom: 4px;
+            }
+            .invoice-meta {
+                display: grid;
+                gap: 6px;
+                font-size: 12px;
+                color: #0b140a;
+                text-align: right;
+            }
+            .invoice-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 12px;
+            }
+            .invoice-table th,
+            .invoice-table td {
+                border-bottom: 1px dashed #d1d5db;
+                padding: 8px 4px;
+                text-align: left;
+            }
+            .invoice-table th {
+                background: transparent;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+            }
+            .invoice-table tfoot td {
+                font-weight: 600;
+            }
+            .invoice-table .total-row td {
+                font-weight: 700;
+                color: #0f260b;
+                border-bottom: none;
+            }
+            .invoice-actions {
+                display: flex;
+                gap: 12px;
+                justify-content: flex-end;
+                margin-top: 18px;
+            }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px 24px;
+                border-radius: 0;
+                font-size: 16px;
+                font-weight: 600;
+                font-family: "Plus Jakarta Sans", sans-serif;
+                cursor: pointer;
+                transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                border: none;
+                text-decoration: none;
+                line-height: 1;
+            }
+            .btn-primary {
+                background: #ff5e3a;
+                color: #ffffff;
+            }
+            .btn-primary:hover {
+                background: #e3472c;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 18px rgba(255, 94, 58, 0.28);
+            }
+            .btn-secondary {
+                background: #e4f7c5;
+                color: #0b140a;
+            }
+            .btn-secondary:hover {
+                background: #d6f0a7;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 18px rgba(15, 38, 11, 0.18);
+            }
 
-@media (max-width: 900px) {
-  .top-bar-inner { grid-template-columns: 1fr; }
-  .search-wrap { width: 100%; }
-  .actions { justify-content: space-between; flex-wrap: wrap; }
-  .invoice-header { flex-direction: column; align-items: flex-start; }
-  .invoice-meta { text-align: left; }
-  .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; }
-  .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
-}
-@media (max-width: 640px) {
-  .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; }
-}
+            @media (max-width: 900px) {
+                .top-bar-inner {
+                    grid-template-columns: 1fr;
+                }
+                .search-wrap {
+                    width: 100%;
+                }
+                .actions {
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                }
+                .invoice-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .invoice-meta {
+                    text-align: left;
+                }
+                .footer-grid {
+                    display: grid;
+                    grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+                    gap: 28px;
+                    align-items: start;
+                    position: relative;
+                    z-index: 1;
+                }
+                .footer-bottom {
+                    flex-direction: column;
+                    gap: 6px;
+                    align-items: flex-start;
+                }
+            }
+            @media (max-width: 640px) {
+                .footer-grid {
+                    display: grid;
+                    grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+                    gap: 28px;
+                    align-items: start;
+                    position: relative;
+                    z-index: 1;
+                }
+            }
 
-/* ========================================================================
+            /* ========================================================================
 FOOTER STYLES
 ======================================================================== */
-.site-footer { 
-    background-color: #0b0f0b;
-    background-image: 
-        radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%),
-        linear-gradient(135deg, #1a2219 0%, #050705 100%);
-    color: #FFFFFF; 
-    padding: 64px 0 24px; 
-    margin-top: auto; 
-    position: relative;
-    overflow: hidden;
-}
-.site-footer a { transition: color 0.3s; }
-.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1;}
-.newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
-.newsletter-form { display: flex; gap: 12px; width: 100%; max-width: 400px; }
-.newsletter-form input { flex: 1; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; font-size: 14px; outline: none; }
-.newsletter-form input:focus { border-color: #FF5E3A; background: rgba(255,255,255,0.1); }
-.newsletter-form button { padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; cursor: pointer; border-radius: 4px; transition: background 0.3s; white-space: nowrap; }
-.newsletter-form button:hover { opacity: 0.9; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; align-items: start; position: relative; z-index: 1; }
-.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.footer-brand img { width: 56px; height: 56px; object-fit: contain; }
-.brand-name { font-weight: 700; font-style: italic; font-size: 28px; }
-.footer-tagline { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
-.footer-slogan { font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #CAED95; margin-bottom: 24px;}
-.social-links { display: flex; gap: 16px; margin-bottom: 24px; }
-.social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; color: #fff; text-decoration: none;}
-.social-links a:hover { background: #FF5E3A; transform: translateY(-2px); }
-.footer-col h4 { font-size: 16px; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; font-weight: 700; }
-.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
-.footer-col a:hover { color: #FF5E3A; padding-left: 4px; }
-.footer-col p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
-.payment-methods { display: flex; gap: 12px; margin-top: 20px; opacity: 0.7; }
-.payment-methods .material-icons-outlined { font-size: 28px; }
-.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative;}
-.footer-bottom-left { color: rgba(255,255,255,0.6); font-size: 13px; }
-.footer-bottom-links { display: flex; gap: 24px; }
-.footer-bottom-links a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
-.footer-bottom-links a:hover { color: #fff; }
+            .site-footer {
+                background-color: #0b0f0b;
+                background-image:
+                    radial-gradient(
+                        circle at 15% 0%,
+                        rgba(255, 94, 58, 0.08) 0%,
+                        transparent 35%
+                    ),
+                    radial-gradient(
+                        circle at 85% 100%,
+                        rgba(202, 237, 149, 0.06) 0%,
+                        transparent 35%
+                    ),
+                    linear-gradient(135deg, #1a2219 0%, #050705 100%);
+                color: #ffffff;
+                padding: 64px 0 24px;
+                margin-top: auto;
+                position: relative;
+                overflow: hidden;
+            }
+            .site-footer a {
+                transition: color 0.3s;
+            }
+            .footer-newsletter {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 24px;
+                padding-bottom: 40px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                margin-bottom: 40px;
+                position: relative;
+                z-index: 1;
+            }
+            .newsletter-content h3 {
+                font-size: 24px;
+                font-weight: 700;
+                color: #fff;
+                margin-bottom: 8px;
+            }
+            .newsletter-content p {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 15px;
+                margin-top: 4px;
+            }
+            .newsletter-form {
+                display: flex;
+                gap: 12px;
+                width: 100%;
+                max-width: 400px;
+            }
+            .newsletter-form input {
+                flex: 1;
+                padding: 12px 16px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: rgba(255, 255, 255, 0.05);
+                color: #fff;
+                border-radius: 4px;
+                font-size: 14px;
+                outline: none;
+            }
+            .newsletter-form input:focus {
+                border-color: #ff5e3a;
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .newsletter-form button {
+                padding: 12px 24px;
+                background: #ff5e3a;
+                border: none;
+                color: #fff;
+                font-weight: 600;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: background 0.3s;
+                white-space: nowrap;
+            }
+            .newsletter-form button:hover {
+                opacity: 0.9;
+            }
+            .footer-grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 1.2fr;
+                gap: 32px;
+                align-items: start;
+                position: relative;
+                z-index: 1;
+            }
+            .brand-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            .footer-brand img {
+                width: 56px;
+                height: 56px;
+                object-fit: contain;
+            }
+            .brand-name {
+                font-weight: 700;
+                font-style: italic;
+                font-size: 28px;
+            }
+            .footer-tagline {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 15px;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+            .footer-slogan {
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                color: #caed95;
+                margin-bottom: 24px;
+            }
+            .social-links {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+            .social-links a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                color: #fff;
+                text-decoration: none;
+            }
+            .social-links a:hover {
+                background: #ff5e3a;
+                transform: translateY(-2px);
+            }
+            .footer-col h4 {
+                font-size: 16px;
+                margin-bottom: 20px;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                color: #fff;
+                font-weight: 700;
+            }
+            .footer-col a {
+                display: block;
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+                font-size: 14px;
+                margin-bottom: 12px;
+            }
+            .footer-col a:hover {
+                color: #ff5e3a;
+                padding-left: 4px;
+            }
+            .footer-col p {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 14px;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 0;
+            }
+            .payment-methods {
+                display: flex;
+                gap: 12px;
+                margin-top: 20px;
+                opacity: 0.7;
+            }
+            .payment-methods .material-icons-outlined {
+                font-size: 28px;
+            }
+            .footer-bottom {
+                margin-top: 48px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: 24px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 1;
+                position: relative;
+            }
+            .footer-bottom-left {
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 13px;
+            }
+            .footer-bottom-links {
+                display: flex;
+                gap: 24px;
+            }
+            .footer-bottom-links a {
+                color: rgba(255, 255, 255, 0.6);
+                font-size: 13px;
+                text-decoration: none;
+            }
+            .footer-bottom-links a:hover {
+                color: #fff;
+            }
 
-/* Responsive */
-@media (max-width: 960px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .footer-brand { grid-column: span 2; margin-bottom: 24px; margin-right: 0;}
-}
-@media (max-width: 768px) {
-    .footer-newsletter { flex-direction: column; align-items: flex-start; }
-    .newsletter-form { max-width: 100%; }
-    .footer-bottom { flex-direction: column; gap: 16px; align-items: center; text-align: center; }
-}
-@media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-brand { grid-column: span 1; }
-    .footer-bottom-links { justify-content: center; gap: 12px; }
-}
-</style>
-</head>
-<body>
-
-<!-- =========================================================================
+            /* Responsive */
+            @media (max-width: 960px) {
+                .footer-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .footer-brand {
+                    grid-column: span 2;
+                    margin-bottom: 24px;
+                    margin-right: 0;
+                }
+            }
+            @media (max-width: 768px) {
+                .footer-newsletter {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .newsletter-form {
+                    max-width: 100%;
+                }
+                .footer-bottom {
+                    flex-direction: column;
+                    gap: 16px;
+                    align-items: center;
+                    text-align: center;
+                }
+            }
+            @media (max-width: 480px) {
+                .footer-grid {
+                    grid-template-columns: 1fr;
+                }
+                .footer-brand {
+                    grid-column: span 1;
+                }
+                .footer-bottom-links {
+                    justify-content: center;
+                    gap: 12px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- =========================================================================
 HEADER START
 ========================================================================= -->
-<header>
-<div class="top-bar">
-<div class="page-wrap top-bar-inner">
-    <div class="brand">
-        <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
-            <img src="Asstes/logo.png" alt="HuddersHub logo">
-            <span class="brand-text">HuddersHub</span>
-        </a>
-    </div>
-    <div class="search-wrap">
-        <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
-    </div>
-    <div class="actions">
-        <a class="user-menu" href="account.html"><span class="material-icons-outlined" style="font-size:24px;">account_circle</span><span>Welcome, John</span></a>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge" href="#"><span class="material-icons-outlined" style="font-size:20px;">dark_mode</span></a>
-    </div>
-</div>
-</div>
-<nav class="nav-bar">
-<div class="page-wrap">
-    <div class="breadcrumb">
-        <a href="index.html">Home</a><span class="breadcrumb-sep">/</span>
-        <a href="account.html">Account</a><span class="breadcrumb-sep">/</span>
-        <a href="cart.html">Cart</a><span class="breadcrumb-sep">/</span>
-        <a href="collection-slot.html">Collection</a><span class="breadcrumb-sep">/</span>
-        <a href="payment.html">Pay</a><span class="breadcrumb-sep">/</span>
-        <span class="breadcrumb-current">Invoice</span>
-    </div>
-</div>
-</nav>
-</header>
+        <header>
+            <div class="top-bar">
+                <div class="page-wrap top-bar-inner">
+                    <div class="brand">
+                        <a
+                            href="index.html"
+                            style="
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                            "
+                        >
+                            <img src="Asstes/logo.png" alt="HuddersHub logo" />
+                            <span class="brand-text">HuddersHub</span>
+                        </a>
+                    </div>
+                    <div class="search-wrap">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search" /><span
+                                class="search-icon material-icons-outlined"
+                                >search</span
+                            >
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <a class="user-menu" href="../customer/profile.html"
+                            ><span
+                                class="material-icons-outlined"
+                                style="font-size: 24px"
+                                >account_circle</span
+                            ><span id="userGreetingText">Welcome</span></a
+                        >
+                        <a
+                            class="icon-with-badge"
+                            href="cart.html"
+                            id="cartTrigger"
+                            ><span class="material-icons-outlined"
+                                >shopping_cart</span
+                            ><span class="badge">3</span></a
+                        >
+                        <a
+                            class="icon-with-badge"
+                            href="../customer/wishlist.html"
+                            ><span class="material-icons-outlined"
+                                >favorite_border</span
+                            ><span class="badge">5</span></a
+                        >
+                        <a class="icon-with-badge" href="#"
+                            ><span
+                                class="material-icons-outlined"
+                                style="font-size: 20px"
+                                >dark_mode</span
+                            ></a
+                        >
+                    </div>
+                </div>
+            </div>
+            <nav class="nav-bar">
+                <div class="page-wrap">
+                    <div class="breadcrumb">
+                        <a href="index.html">Home</a
+                        ><span class="breadcrumb-sep">/</span>
+                        <a href="../customer/profile.html">Account</a
+                        ><span class="breadcrumb-sep">/</span>
+                        <a href="cart.html">Cart</a
+                        ><span class="breadcrumb-sep">/</span>
+                        <a href="collection-slot.html">Collection</a
+                        ><span class="breadcrumb-sep">/</span>
+                        <a href="payment.html">Pay</a
+                        ><span class="breadcrumb-sep">/</span>
+                        <span class="breadcrumb-current">Invoice</span>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
-<!-- CART DRAWER -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-<div class="cart-header"><h3>Your cart</h3><button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button></div>
-<div class="cart-body">
-    <div class="cart-item" data-price="6.50" data-category="Butcher">
-        <img src="Asstes/Item-image/chickenbreast.png" alt="Chicken"><div class="cart-item-details">
-            <div class="cart-item-top"><div><h4>Fresh chicken breast</h4><p class="cart-meta">Butcher · Qty 2</p></div><span class="cart-price">£13.00</span></div>
-            <div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div>
-        </div>
-    </div>
-    <div class="cart-empty" style="display:none;">Your cart is empty.</div>
-</div>
-<div class="cart-footer">
-    <div class="cart-total"><span>Total</span><span class="cart-total-value">£13.00</span></div>
-    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div>
-</div>
-</aside>
+        <!-- CART DRAWER -->
+        <div class="cart-overlay" id="cartOverlay"></div>
+        <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+            <div class="cart-header">
+                <h3>Your cart</h3>
+                <button
+                    class="cart-close"
+                    id="cartClose"
+                    aria-label="Close cart"
+                >
+                    &times;
+                </button>
+            </div>
+            <div class="cart-body">
+                <div
+                    class="cart-item"
+                    data-price="6.50"
+                    data-category="Butcher"
+                >
+                    <img
+                        src="Asstes/Item-image/chickenbreast.png"
+                        alt="Chicken"
+                    />
+                    <div class="cart-item-details">
+                        <div class="cart-item-top">
+                            <div>
+                                <h4>Fresh chicken breast</h4>
+                                <p class="cart-meta">Butcher · Qty 2</p>
+                            </div>
+                            <span class="cart-price">£13.00</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="cart-qty">
+                                <button class="qty-btn" data-action="decrease">
+                                    -</button
+                                ><span class="qty-val">2</span
+                                ><button class="qty-btn" data-action="increase">
+                                    +
+                                </button>
+                            </div>
+                            <button class="cart-remove">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-empty" style="display: none">
+                    Your cart is empty.
+                </div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total</span
+                    ><span class="cart-total-value">£13.00</span>
+                </div>
+                <div class="cart-actions">
+                    <a class="cart-link" href="cart.html">Go to cart</a
+                    ><button class="cart-checkout">Checkout →</button>
+                </div>
+            </div>
+        </aside>
 
-<!-- =========================================================================
+        <!-- =========================================================================
 MAIN CONTENT
 ========================================================================= -->
-<main class="invoice-page">
-<section class="payment-strip">
-<div class="page-wrap">
-    <div class="payment-success">
-        <div class="success-icon">✓</div>
-        <div>
-            <h2>Payment successful</h2>
-            <p>Thank you for shopping local.</p>
-        </div>
-    </div>
-</div>
-</section>
-
-<section class="invoice-hero">
-<div class="page-wrap">
-    <div class="invoice-title">
-        <h1>
-            <span class="invoice-step">03</span>
-            Invoice
-        </h1>
-    </div>
-</div>
-</section>
-
-<section class="invoice-content">
-<div class="page-wrap">
-    <div class="invoice-card">
-        <div class="invoice-header">
-            <div>
-                <div class="invoice-title-row">
-                    <h2>Invoice #HH-2026-0412</h2>
+        <main class="invoice-page">
+            <section class="payment-strip">
+                <div class="page-wrap">
+                    <div class="payment-success">
+                        <div class="success-icon">✓</div>
+                        <div>
+                            <h2>Payment successful</h2>
+                            <p>Thank you for shopping local.</p>
+                        </div>
+                    </div>
                 </div>
-                <p>Date: April 12, 2026</p>
-                <p>Payment: PayPal</p>
-            </div>
-            <div class="invoice-meta">
-                <span>Trader: Hudders Butchers</span>
-                <span>Shop owners: A. Khan, S. Patel</span>
-                <span>Customer: Jamie Sutton</span>
-                <span>Collection: Wed 10:00-13:00</span>
-            </div>
-        </div>
-        <table class="invoice-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Unit price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Fresh chicken breast</td>
-                    <td>2</td>
-                    <td>GBP 6.50</td>
-                    <td>GBP 13.00</td>
-                </tr>
-                <tr>
-                    <td>Lamb mince</td>
-                    <td>1</td>
-                    <td>GBP 8.20</td>
-                    <td>GBP 8.20</td>
-                </tr>
-                <tr>
-                    <td>Dry aged steak</td>
-                    <td>3</td>
-                    <td>GBP 9.00</td>
-                    <td>GBP 27.00</td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">Subtotal</td>
-                    <td>GBP 48.20</td>
-                </tr>
-                <tr>
-                    <td colspan="3">Service fee</td>
-                    <td>GBP 2.40</td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="3">Total</td>
-                    <td>GBP 50.60</td>
-                </tr>
-            </tfoot>
-        </table>
-        <div class="invoice-actions">
-            <button class="btn btn-secondary" onclick="window.print()">Download</button>
-            <button class="btn btn-primary" onclick="window.location.href='index.html'">Shop more</button>
-        </div>
-    </div>
-</div>
-</section>
-</main>
+            </section>
 
-<!-- =========================================================================
+            <section class="invoice-hero">
+                <div class="page-wrap">
+                    <div class="invoice-title">
+                        <h1>
+                            <span class="invoice-step">03</span>
+                            Invoice
+                        </h1>
+                    </div>
+                </div>
+            </section>
+
+            <section class="invoice-content">
+                <div class="page-wrap">
+                    <div class="invoice-card" id="invoiceCard">
+                        <div class="invoice-header">
+                            <div>
+                                <div class="invoice-title-row">
+                                    <h2 id="invoiceNumber">Invoice #HH-...</h2>
+                                </div>
+                                <p id="invoiceDate">Date: —</p>
+                                <p id="invoicePayment">Payment: PayPal</p>
+                            </div>
+                            <div class="invoice-meta">
+                                <span id="invoiceShop">Shop: —</span>
+                                <span id="invoiceOrderId">Order: —</span>
+                                <span id="invoiceCustomer">Customer: —</span>
+                                <span id="invoiceCollection"
+                                    >Collection: —</span
+                                >
+                            </div>
+                        </div>
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Unit price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceItems">
+                                <tr>
+                                    <td
+                                        colspan="4"
+                                        style="
+                                            text-align: center;
+                                            padding: 20px;
+                                            color: #5e6a63;
+                                        "
+                                    >
+                                        Loading order details...
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Subtotal</td>
+                                    <td id="invoiceSubtotal">—</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Service fee</td>
+                                    <td>GBP 2.40</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="3">Total</td>
+                                    <td id="invoiceTotal">—</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="invoice-actions">
+                            <button
+                                class="btn btn-secondary"
+                                onclick="window.print()"
+                            >
+                                Print Invoice
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                onclick="window.location.href = 'index.html'"
+                            >
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- =========================================================================
 FOOTER
 ========================================================================= -->
-<footer class="site-footer">
-<div class="page-wrap footer-newsletter">
-    <div class="newsletter-content">
-        <h3>Join the HuddersHub Community</h3>
-        <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
-    </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
-    </div>
-</div>
-<div class="page-wrap footer-grid">
-    <div class="footer-brand">
-        <div class="brand-row"><img src="assets/logo.png" alt="HuddersHub logo"><span class="brand-name">HuddersHub</span></div>
-        <p class="footer-tagline">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
-        <p class="footer-slogan">Eat Fresh. Buy Local.</p>
-        <div class="social-links">
-            <a href="#" aria-label="Facebook"><span class="material-icons-outlined">facebook</span></a>
-            <a href="#" aria-label="Instagram"><span class="material-icons-outlined">camera_alt</span></a>
-        </div>
-    </div>
-    <div class="footer-col">
-        <h4>Shop</h4>
-        <a href="category.html?type=greengrocer">Green Grocer</a>
-        <a href="category.html?type=butcher">The Butcher</a>
-        <a href="category.html?type=bakery">Bakery</a>
-        <a href="category.html?type=delicatessen">Delicatessen</a>
-        <a href="category.html?type=dairy">Dairy & Eggs</a>
-    </div>
-    <div class="footer-col">
-        <h4>Company</h4>
-        <a href="about.html">About HuddersHub</a>
-        <a href="register-trader.html">Become a Trader</a>
-        <a href="faq.html">Help Center</a>
-        <a href="refund.html">Returns & Refunds</a>
-    </div>
-    <div class="footer-col">
-        <h4>Contact</h4>
-        <p><span class="material-icons-outlined" style="font-size:16px;">location_on</span> Huddersfield, UK</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">mail</span> support@huddershub.test</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">phone</span> +44 1484 000 000</p>
-        
-    </div>
-</div>
-<div class="page-wrap footer-bottom">
-    <div class="footer-bottom-left">
-        <span>&copy; 2026 HuddersHub. All rights reserved.</span>
-    </div>
-    <div class="footer-bottom-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-    </div>
-</div>
-</footer>
+        <footer class="site-footer">
+            <div class="page-wrap footer-newsletter">
+                <div class="newsletter-content">
+                    <h3>Fresh from local farms to your table</h3>
+                    <p>"Quality you can taste, community you can feel."</p>
+                </div>
+            </div>
+            <div class="page-wrap footer-grid">
+                <div class="footer-brand">
+                    <div class="brand-row">
+                        <img src="assets/logo.png" alt="HuddersHub logo" /><span
+                            class="brand-name"
+                            >HuddersHub</span
+                        >
+                    </div>
+                    <p class="footer-tagline">
+                        Local food, trusted traders, and fresh picks curated for
+                        Huddersfield.
+                    </p>
+                    <p class="footer-slogan">Eat Fresh. Buy Local.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"
+                            ><span class="material-icons-outlined"
+                                >facebook</span
+                            ></a
+                        >
+                        <a href="#" aria-label="Instagram"
+                            ><span class="material-icons-outlined"
+                                >camera_alt</span
+                            ></a
+                        >
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <a href="category.html?type=greengrocer">Green Grocer</a>
+                    <a href="category.html?type=butcher">The Butcher</a>
+                    <a href="category.html?type=bakery">Bakery</a>
+                    <a href="category.html?type=delicatessen">Delicatessen</a>
+                    <a href="category.html?type=dairy">Dairy & Eggs</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="about.html">About HuddersHub</a>
+                    <a href="register-trader.html">Become a Trader</a>
+                    <a href="faq.html">Help Center</a>
+                    <a href="refund.html">Returns & Refunds</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>
+                        <span
+                            class="material-icons-outlined"
+                            style="font-size: 16px"
+                            >location_on</span
+                        >
+                        Huddersfield, UK
+                    </p>
+                    <p>
+                        <span
+                            class="material-icons-outlined"
+                            style="font-size: 16px"
+                            >mail</span
+                        >
+                        support@huddershub.test
+                    </p>
+                    <p>
+                        <span
+                            class="material-icons-outlined"
+                            style="font-size: 16px"
+                            >phone</span
+                        >
+                        +44 1484 000 000
+                    </p>
+                </div>
+            </div>
+            <div class="page-wrap footer-bottom">
+                <div class="footer-bottom-left">
+                    <span>&copy; 2026 HuddersHub. All rights reserved.</span>
+                </div>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
 
-<!-- =========================================================================
+        <!-- =========================================================================
 JAVASCRIPT
 ========================================================================= -->
-<script>
-// Header scroll effect
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('header');
-    if (window.scrollY > 50) header.classList.add('scrolled'); else header.classList.remove('scrolled');
-});
+        <script>
+            // Header scroll effect
+            window.addEventListener("scroll", function () {
+                const header = document.querySelector("header");
+                if (window.scrollY > 50) header.classList.add("scrolled");
+                else header.classList.remove("scrolled");
+            });
 
-// Cart Drawer Logic
-const cartTrigger = document.getElementById('cartTrigger');
-const cartDrawer = document.getElementById('cartDrawer');
-const cartOverlay = document.getElementById('cartOverlay');
-const cartClose = document.getElementById('cartClose');
-function formatMoney(value) { return '£' + value.toFixed(2); }
-function updateCartTotals() {
-    if (!cartDrawer) return;
-    const items = cartDrawer.querySelectorAll('.cart-item');
-    let total = 0;
-    items.forEach(item => {
-        const price = parseFloat(item.dataset.price || '0');
-        const qtyEl = item.querySelector('.qty-val');
-        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
-        const lineTotal = price * qty;
-        const priceEl = item.querySelector('.cart-price');
-        if (priceEl) priceEl.textContent = formatMoney(lineTotal);
-        total += lineTotal;
-    });
-    const totalEl = cartDrawer.querySelector('.cart-total-value');
-    if (totalEl) totalEl.textContent = formatMoney(total);
-    const emptyEl = cartDrawer.querySelector('.cart-empty');
-    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
-    const badge = document.querySelector('#cartTrigger .badge');
-    if (badge) badge.textContent = items.length;
-}
-function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
-if (cartTrigger) cartTrigger.addEventListener('click', e => { e.preventDefault(); openCart(); });
-if (cartDrawer) {
-    cartDrawer.addEventListener('click', e => {
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const item = qtyBtn.closest('.cart-item');
-            const qtyEl = item?.querySelector('.qty-val');
-            if (!item || !qtyEl) return;
-            let qty = parseInt(qtyEl.textContent, 10) || 1;
-            qty += qtyBtn.dataset.action === 'increase' ? 1 : -1;
-            qty = Math.max(1, qty);
-            qtyEl.textContent = qty;
+            // LOAD INVOICE DATA
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get("order_id");
+
+            async function loadInvoice() {
+                if (!orderId) {
+                    document.querySelector(".invoice-card").innerHTML =
+                        '<p style="color:red;padding:20px;">Order not found. <a href="index.html">Go to homepage</a></p>';
+                    return;
+                }
+                try {
+                    const res = await fetch(
+                        "../api/orders/get-order.php?order_id=" + orderId,
+                    );
+                    const data = await res.json();
+                    if (data.success && data.data) {
+                        renderInvoice(data.data);
+                    } else {
+                        document.querySelector(".invoice-card").innerHTML =
+                            '<p style="color:red;padding:20px;">Order not found.</p>';
+                    }
+                } catch (err) {
+                    console.error("Error loading invoice:", err);
+                }
+            }
+
+            function renderInvoice(order) {
+                // Use IDs — no fragile CSS selectors
+                const num = document.getElementById("invoiceNumber");
+                const dateEl = document.getElementById("invoiceDate");
+                const payEl = document.getElementById("invoicePayment");
+                const shopEl = document.getElementById("invoiceShop");
+                const oidEl = document.getElementById("invoiceOrderId");
+                const custEl = document.getElementById("invoiceCustomer");
+                const collEl = document.getElementById("invoiceCollection");
+                const itemsTbody = document.getElementById("invoiceItems");
+                const subEl = document.getElementById("invoiceSubtotal");
+                const totEl = document.getElementById("invoiceTotal");
+
+                if (num) num.textContent = "Invoice #HH-" + order.ORDER_ID;
+                if (oidEl) oidEl.textContent = "Order #" + order.ORDER_ID;
+
+                // Date
+                if (dateEl && order.ORDER_DATE) {
+                    try {
+                        dateEl.textContent =
+                            "Date: " +
+                            new Date(order.ORDER_DATE).toLocaleDateString(
+                                "en-GB",
+                                {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                },
+                            );
+                    } catch (e) {
+                        dateEl.textContent = "Date: " + order.ORDER_DATE;
+                    }
+                }
+
+                // Payment method
+                if (payEl)
+                    payEl.textContent =
+                        "Payment: " + (order.PAYMENT_METHOD || "PayPal");
+
+                // Customer
+                const customerName =
+                    sessionStorage.getItem("userName") || "Customer";
+                if (custEl) custEl.textContent = "Customer: " + customerName;
+
+                // Shop (from first product if available)
+                if (shopEl) shopEl.textContent = "HuddersHub Market";
+
+                // Collection slot
+                if (collEl && order.SLOT_DATE) {
+                    const raw = order.SLOT_DATE;
+                    let display = raw;
+                    try {
+                        const d = new Date(raw);
+                        if (!isNaN(d))
+                            display = d.toLocaleDateString("en-GB", {
+                                weekday: "short",
+                                day: "numeric",
+                                month: "short",
+                            });
+                    } catch (e) {}
+                    collEl.textContent =
+                        "Collection: " +
+                        display +
+                        (order.SLOT_TIME ? "  " + order.SLOT_TIME : "");
+                }
+
+                // Products table
+                if (itemsTbody && order.PRODUCTS && order.PRODUCTS.length) {
+                    let html = "";
+                    let subtotalCalc = 0;
+                    order.PRODUCTS.forEach((p) => {
+                        const unitPrice = parseFloat(p.UNIT_PRICE || 0);
+                        const qty = parseInt(p.QUANTITY || 1);
+                        const lineTotal = parseFloat(
+                            p.SUBTOTAL || unitPrice * qty,
+                        );
+                        subtotalCalc += lineTotal;
+                        html +=
+                            "<tr><td>" +
+                            p.NAME +
+                            "</td><td>" +
+                            qty +
+                            "</td><td>GBP " +
+                            unitPrice.toFixed(2) +
+                            "</td><td>GBP " +
+                            lineTotal.toFixed(2) +
+                            "</td></tr>";
+                    });
+                    itemsTbody.innerHTML = html;
+
+                    const amount = parseFloat(
+                        order.AMOUNT || subtotalCalc + 2.4,
+                    );
+                    if (subEl)
+                        subEl.textContent = "GBP " + (amount - 2.4).toFixed(2);
+                    if (totEl) totEl.textContent = "GBP " + amount.toFixed(2);
+                } else if (itemsTbody) {
+                    itemsTbody.innerHTML =
+                        '<tr><td colspan="4" style="text-align:center;padding:16px;color:#5E6A63;">No items found.</td></tr>';
+                }
+            }
+
+            // Load on page load
+            loadInvoice();
+
+            // Cart Drawer Logic
+            const cartTrigger = document.getElementById("cartTrigger");
+            const cartDrawer = document.getElementById("cartDrawer");
+            const cartOverlay = document.getElementById("cartOverlay");
+            const cartClose = document.getElementById("cartClose");
+            function formatMoney(value) {
+                return "£" + value.toFixed(2);
+            }
+            function updateCartTotals() {
+                if (!cartDrawer) return;
+                const items = cartDrawer.querySelectorAll(".cart-item");
+                let total = 0;
+                items.forEach((item) => {
+                    const price = parseFloat(item.dataset.price || "0");
+                    const qtyEl = item.querySelector(".qty-val");
+                    const qty =
+                        parseInt(qtyEl ? qtyEl.textContent : "0", 10) || 0;
+                    const lineTotal = price * qty;
+                    const priceEl = item.querySelector(".cart-price");
+                    if (priceEl) priceEl.textContent = formatMoney(lineTotal);
+                    total += lineTotal;
+                });
+                const totalEl = cartDrawer.querySelector(".cart-total-value");
+                if (totalEl) totalEl.textContent = formatMoney(total);
+                const emptyEl = cartDrawer.querySelector(".cart-empty");
+                if (emptyEl)
+                    emptyEl.style.display = items.length ? "none" : "block";
+                const badge = document.querySelector("#cartTrigger .badge");
+                if (badge) badge.textContent = items.length;
+            }
+            function openCart() {
+                cartDrawer.classList.add("open");
+                cartOverlay.classList.add("open");
+                document.body.style.overflow = "hidden";
+            }
+            function closeCart() {
+                cartDrawer.classList.remove("open");
+                cartOverlay.classList.remove("open");
+                document.body.style.overflow = "";
+            }
+            if (cartTrigger)
+                cartTrigger.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    openCart();
+                });
+            if (cartDrawer) {
+                cartDrawer.addEventListener("click", (e) => {
+                    const qtyBtn = e.target.closest(".qty-btn");
+                    if (qtyBtn) {
+                        const item = qtyBtn.closest(".cart-item");
+                        const qtyEl = item?.querySelector(".qty-val");
+                        if (!item || !qtyEl) return;
+                        let qty = parseInt(qtyEl.textContent, 10) || 1;
+                        qty += qtyBtn.dataset.action === "increase" ? 1 : -1;
+                        qty = Math.max(1, qty);
+                        qtyEl.textContent = qty;
+                        updateCartTotals();
+                        return;
+                    }
+                    const removeBtn = e.target.closest(".cart-remove");
+                    if (removeBtn) {
+                        const item = removeBtn.closest(".cart-item");
+                        if (item) item.remove();
+                        updateCartTotals();
+                    }
+                });
+            }
+            if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
+            if (cartClose) cartClose.addEventListener("click", closeCart);
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeCart();
+            });
             updateCartTotals();
-            return;
-        }
-        const removeBtn = e.target.closest('.cart-remove');
-        if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartTotals(); }
-    });
-}
-if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-if (cartClose) cartClose.addEventListener('click', closeCart);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
-updateCartTotals();
-</script>
-</body>
+
+            // =========================================================================
+            // USER GREETING
+            // =========================================================================
+            function loadUserGreeting() {
+                const el = document.getElementById("userGreetingText");
+                if (!el) return;
+                const uid = sessionStorage.getItem("user_id");
+                if (!uid) {
+                    el.textContent = "Welcome";
+                    return;
+                }
+
+                const cached = (sessionStorage.getItem("userName") || "").trim();
+                if (cached) {
+                    el.textContent = "Hi, " + cached;
+                }
+
+                try {
+                    fetch("../api/customer/get-profile.php?user_id=" + uid)
+                        .then((r) => r.json())
+                        .then((d) => {
+                            if (d.success && d.data) {
+                                const f = (d.data.FIRSTNAME || "").trim();
+                                const l = (d.data.LASTNAME || "").trim();
+                                const full =
+                                    [f, l].filter(Boolean).join(" ") || "User";
+                                el.textContent = "Hi, " + full;
+                                sessionStorage.setItem("userName", full);
+                            }
+                        });
+                } catch (err) {}
+            }
+            loadUserGreeting();
+        </script>
+    </body>
 </html>
-
-
-

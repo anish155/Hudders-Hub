@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Sales Report - HuddersHub Trader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0F260B;
+            --primary-green-dark: #0B1C08;
+            --primary-green-light: rgba(15, 38, 11, 0.08);
+            --primary-orange: #FF5E3A;
+            --primary-orange-dark: #E3472C;
+            --bg-white: #FFFFFF;
+            --bg-light: #F7F6F3;
+            --bg-gray: #F2F4F1;
+            --border-light: #DCE3DA;
+            --text-black: #0B140A;
+            --text-dark-gray: #1E2A1C;
+            --text-medium-gray: #5E6A63;
+            --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-black);
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ─────────────────────────────────────────────────────────── */
+        .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #FFFFFF; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
+        .sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
+        .sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
+        .sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
+        .sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
+        .sidebar-nav { padding: 16px 0; flex: 1; }
+        .sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+        .sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: var(--transition-smooth); }
+        .sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
+        .sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
+        .sidebar-nav-item .material-icons-outlined { font-size: 20px; }
+        .sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
+        .sidebar-nav-item.logout:hover { color: var(--primary-orange); background: rgba(255, 94, 58, 0.1); }
+        .sidebar-report-group { display: flex; flex-direction: column; }
+        .sidebar-report-group summary { list-style: none; }
+        .sidebar-report-group summary::-webkit-details-marker { display: none; }
+        .sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+        .sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
+        .sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+        .sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+        .sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
+        .sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+
+        /* ── Top Nav ─────────────────────────────────────────────────────────── */
+        .top-nav { position: fixed; top: 0; left: 260px; right: 0; height: 60px; background: var(--bg-white); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 100; }
+        .top-nav-logo { display: flex; align-items: center; gap: 10px; }
+        .top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
+        .top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
+        .top-nav-right { display: flex; align-items: center; gap: 8px; }
+        .user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); border-radius: 0; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); }
+
+        /* ── Main content ─────────────────────────────────────────────────────── */
+        .main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); width: calc(100% - 260px); }
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 28px; font-weight: 800; color: var(--text-black); }
+
+        .controls { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); padding: 20px 24px; margin-bottom: 28px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
+        .control-left { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+        .month-nav { display: flex; align-items: center; gap: 12px; }
+        .month-nav button { padding: 10px 20px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); color: var(--text-dark-gray); font-family: inherit; }
+        .month-nav button:hover { background: var(--primary-green-light); border-color: var(--primary-green); color: var(--primary-green); }
+        .month-display { font-size: 16px; font-weight: 700; background: var(--bg-light); padding: 10px 24px; min-width: 200px; text-align: center; }
+        .sort-buttons { display: flex; gap: 8px; }
+        .sort-btn { padding: 8px 16px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition-smooth); color: var(--text-dark-gray); font-family: inherit; }
+        .sort-btn:hover {}
+        .sort-btn.active { background: var(--primary-green); color: #FFFFFF; border-color: var(--primary-green); }
+        .control-right { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 0; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; transition: var(--transition-smooth); border: none; }
+        .btn-primary { background: var(--primary-green); color: #FFFFFF; }
+        .btn-primary:hover { background: var(--primary-green-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+        .btn-secondary { background: var(--bg-gray); color: var(--text-dark-gray); border: 1px solid var(--border-light); }
+        .btn-secondary:hover { background: var(--border-light); }
+
+        /* ── Stats ───────────────────────────────────────────────────────────── */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); border-radius: 0; padding: 24px 28px; }
+        .stat-label { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+        .stat-value { font-size: 32px; font-weight: 800; color: var(--text-black); }
+
+        /* ── Section ─────────────────────────────────────────────────────────── */
+        .section { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); border-radius: 0; margin-bottom: 20px; overflow: hidden; }
+        .section-header { padding: 16px 24px; background: var(--bg-gray); border-bottom: 1px solid var(--border-light); font-size: 18px; font-weight: 700; color: var(--text-black); display: flex; align-items: center; gap: 8px; }
+        .section-header .material-icons-outlined { font-size: 20px; color: var(--primary-green); }
+
+        /* ── Tables ───────────────────────────────────────────────────────────── */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead { background: var(--bg-gray); }
+        .data-table th { padding: 12px 24px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-medium-gray); border-bottom: 1px solid var(--border-light); cursor: pointer; user-select: none; }
+        .data-table th:hover { background: var(--border-light); }
+        .data-table th .sort-arrow { font-size: 14px; margin-left: 4px; vertical-align: middle; color: var(--primary-orange); }
+        .data-table th.sorted .sort-arrow { color: var(--primary-green); }
+        .data-table td { padding: 14px 24px; font-size: 14px; color: var(--text-dark-gray); border-bottom: 1px solid var(--border-light); }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover { background: var(--primary-green-light); }
+        .data-table .money { font-weight: 700; color: var(--text-black); text-align: right; }
+        .data-table .num { text-align: right; font-weight: 600; }
+        .data-table tfoot td { font-weight: 700; background: var(--bg-gray); color: var(--text-black); }
+
+        /* ── Chart ────────────────────────────────────────────────────────────── */
+        .chart-wrap { padding: 24px; overflow-x: auto; }
+        .chart-container { display: flex; align-items: flex-end; gap: 16px; min-height: 260px; padding-bottom: 36px; flex-wrap: wrap; justify-content: center; }
+        .chart-col { display: flex; flex-direction: column; align-items: center; width: 56px; gap: 6px; flex-shrink: 0; }
+        .chart-bar-val { font-size: 11px; font-weight: 700; color: var(--primary-orange-dark); text-align: center; line-height: 1; white-space: nowrap; }
+        .chart-bar { width: 44px; border-radius: 6px 6px 0 0; background: var(--primary-orange); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: default; min-height: 4px; }
+        .chart-bar:hover { background: var(--primary-green); }
+        .chart-label { font-size: 11px; color: var(--text-medium-gray); text-align: center; line-height: 1.3; max-height: 34px; overflow: hidden; word-break: break-word; }
+        .chart-bar-placeholder { height: 4px !important; width: 44px; background: var(--border-light); border-radius: 6px 6px 0 0; }
+
+        /* ── Empty state ───────────────────────────────────────────────────────── */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-medium-gray); background: var(--bg-white); border: 1px solid var(--border-light); border-radius: 0; }
+        .empty-state .material-icons-outlined { font-size: 56px; display: block; margin-bottom: 16px; color: var(--border-light); }
+
+        /* ── Overlay / Toggle ─────────────────────────────────────────────────── */
+        .sidebar-toggle { display: none; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 150; }
+        .sidebar-overlay.active { display: block; }
+
+        /* ── Responsive ───────────────────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .sidebar { left: -280px; transition: left 0.3s ease; }
+            .sidebar.open { left: 0; }
+            .main-content { margin-left: 0; width: 100%; }
+            .top-nav { left: 0; }
+            .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; border-radius: 0; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .control-right { justify-content: center; }
+            .sort-buttons { justify-content: space-between; }
+            .data-table { font-size: 13px; }
+            .data-table th, .data-table td { padding: 10px 14px; }
+        }
+
+        @media (max-width: 600px) {
+            .month-nav { flex-direction: column; align-items: stretch; }
+            .month-nav button { width: 100%; }
+            .main-content { padding: 20px 14px; }
+            .stats-row { grid-template-columns: 1fr; }
+            .sort-buttons { flex-wrap: wrap; }
+        }
+
+        /* ── Print ───────────────────────────────────────────────────────────── */
+        @media print {
+            .sidebar, .top-nav, .controls, .no-print, .chart-bar-placeholder { display: none !important; }
+            .main-content { margin: 0; padding: 0; width: 100%; }
+            body { background: #fff; }
+            .section { break-inside: avoid; border: 1px solid #ccc; margin-bottom: 12px; }
+            .stat-card, .data-table th, .data-table tfoot td { background: #f5f5f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .chart-label { color: #444 !important; font-size: 10px !important; }
+        }
+    }
+
+    /* ── FAB ─────────────────────────────────────────────────────────── */
+    .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+    .fab:active { transform:translateY(0) scale(0.97); }
+    .fab .material-icons-outlined { font-size:28px; line-height:1; }
+    </style>
+</head>
+<body>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+    <span class="material-icons-outlined">menu</span>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-profile">
+        <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
+        <div class="sidebar-name" id="sidebarName">Loading…</div>
+        <div class="sidebar-status"><span class="status-dot"></span>Active</div>
+    </div>
+    <nav class="sidebar-nav">
+        <ul class="sidebar-nav-list">
+            <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+            <li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+            <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+            <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
+            <li>
+                <details class="sidebar-report-group">
+                    <summary class="sidebar-nav-item">
+                        <span class="material-icons-outlined">analytics</span>Reports
+                        <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
+                    </summary>
+                    <ul class="sidebar-report-sublist">
+                        <li><a href="report.html?type=daily"   class="sidebar-report-link">Daily</a></li>
+                        <li><a href="report.html?type=weekly"  class="sidebar-report-link">Weekly</a></li>
+                        <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
+            <li><a href="#" onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<header class="top-nav">
+    <div class="top-nav-logo">
+        <img src="../public/assets/logo.png" alt="HuddersHub">
+        <span>HuddersHub</span>
+    </div>
+    <div class="top-nav-right">
+        <div class="user-pill">
+            <span class="material-icons-outlined">person</span>
+            <span id="topNavName">…</span>
+        </div>
+    </div>
+</header>
+
+<main class="main-content">
+    <a href="add-product.html" class="fab" title="Add new product">
+        <span class="material-icons-outlined">add</span>
+    </a>
+    <div class="page-header">
+        <h1>Monthly Sales Report</h1>
+    </div>
+
+    <div class="controls no-print">
+        <div class="control-left">
+            <div class="month-nav">
+                <button onclick="changeMonth(-1)" aria-label="Previous month">❮ Previous</button>
+                <span class="month-display" id="monthDisplay">Loading…</span>
+                <button onclick="changeMonth(1)" aria-label="Next month">Next ❯</button>
+            </div>
+            <button class="btn btn-primary" id="generateBtn">
+                <span class="material-icons-outlined">summarize</span>
+                Generate
+            </button>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;">
+            <div class="sort-buttons" role="group" aria-label="Sort products">
+                <button class="sort-btn" id="sortNameBtn"    onclick="sortProducts('name')">📛 Name A-Z</button>
+                <button class="sort-btn" id="sortOrdersBtn"  onclick="sortProducts('orders')">📦 Orders</button>
+                <button class="sort-btn" id="sortIncomeBtn"  onclick="sortProducts('income')">💰 Income</button>
+            </div>
+            <button class="btn btn-secondary" onclick="window.print()">
+                <span class="material-icons-outlined">print</span>Print
+            </button>
+            <button class="btn btn-secondary" onclick="exportToCSV()">
+                <span class="material-icons-outlined">download</span>Export CSV
+            </button>
+        </div>
+    </div>
+
+    <div id="reportContent">
+        <div class="empty-state">
+            <span class="material-icons-outlined">calendar_month</span>
+            <p>Select a month and click Generate Report</p>
+        </div>
+    </div>
+</main>
+
+<script>
+// ── Auth guard ──────────────────────────────────────────────────────────────
+const userId   = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+if (!userId)  window.location.href = '../public/login.html';
+if (!userRole || userRole.toLowerCase() !== 'trader') window.location.href = '../public/login.html';
+
+function handleLogout() {
+    fetch('../api/auth/logout.php', { method: 'POST' })
+        .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
+        .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+}
+
+// ── Sidebar / overlay ───────────────────────────────────────────────────────
+const sidebar        = document.getElementById('sidebar');
+const sidebarToggle  = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
+sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+
+// ── Load trader identity ─────────────────────────────────────────────────────
+(function loadInfo() {
+    fetch('../api/trader/get-profile.php?user_id=' + userId)
+        .then(r => r.json())
+        .then(d => {
+            if (d.success && d.data) {
+                const n = (d.data.firstname || '') + ' ' + (d.data.lastname || '');
+                document.getElementById('sidebarName').textContent = n || 'Trader';
+                document.getElementById('topNavName').textContent   = d.data.firstname || '';
+            }
+        })
+        .catch(() => {});
+})();
+
+// ── State ───────────────────────────────────────────────────────────────────
+let currentMonth    = new Date();
+let allProducts     = [];
+let currentSort     = 'income';
+let isInitialLoad   = true;
+let isLoading       = false;
+
+currentMonth.setDate(1);
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function fmtMoney(v) { return '£' + parseFloat(v || 0).toFixed(2); }
+
+function updateMonthDisplay() {
+    const label = currentMonth.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    document.getElementById('monthDisplay').textContent = label;
+}
+
+function changeMonth(delta) {
+    if (isLoading) return;
+    currentMonth.setMonth(currentMonth.getMonth() + delta);
+    updateMonthDisplay();
+    generateReport();
+}
+
+function setLoadingSpin(btn) {
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="material-icons-outlined" style="animation:spin 1s linear infinite">refresh</span> Generating…`;
+    return function restore() {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+    };
+}
+
+// ── API ─────────────────────────────────────────────────────────────────────
+function generateReport() {
+    if (isLoading) return;
+    const year  = currentMonth.getFullYear();
+    const month = String(currentMonth.getMonth() + 1).padStart(2, '0');
+    const param = `${year}-${month}`;
+    const body  = document.getElementById('reportContent');
+
+    body.innerHTML = `<div class="empty-state"><span class="material-icons-outlined" style="animation:spin 1s ease infinite">refresh</span><p>Generating report…</p></div>`;
+
+    fetch(`../api/trader/get-monthly-report.php?user_id=${userId}&month=${param}`)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) {
+                body.innerHTML = `<div class="empty-state"><span class="material-icons-outlined">error</span><p>${data.message || 'Failed to load report'}</p></div>`;
+                return;
+            }
+            allProducts = data.products || [];
+            renderSummary(data.summary);
+            sortProducts('income');
+        })
+        .catch(() => {
+            body.innerHTML = `<div class="empty-state"><span class="material-icons-outlined">wifi_off</span><p>Network error. Please try again.</p></div>`;
+        });
+}
+
+// ── Summary ─────────────────────────────────────────────────────────────────
+function renderSummary(summary) {
+    const s = `
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Income</div>
+                <div class="stat-value">${fmtMoney(summary.total_income)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Orders</div>
+                <div class="stat-value">${summary.total_orders}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Products Sold</div>
+                <div class="stat-value">${summary.products_sold}</div>
+            </div>
+        </div>`;
+    // Will be inlined into full render cycle
+    window.__summaryHtml = s;
+}
+
+// ── Sort ─────────────────────────────────────────────────────────────────────
+function sortProducts(by) {
+    currentSort = by;
+
+    // Update active button
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    const idMap = { name: 'sortNameBtn', orders: 'sortOrdersBtn', income: 'sortIncomeBtn' };
+    document.getElementById(idMap[by] || 'sortIncomeBtn').classList.add('active');
+
+    // Sort
+    const sorted = [...allProducts];
+    if      (by === 'name')    sorted.sort((a, b) => a.name.localeCompare(b.name));
+    else if (by === 'orders')  sorted.sort((a, b) => b.orders - a.orders);
+    else                       sorted.sort((a, b) => b.income - a.income);
+
+    renderContent(sorted);
+}
+
+// ── Full render (called after sort or after data arrives) ────────────────────
+function renderContent(products) {
+    const summaryHtml = window.__summaryHtml || '';
+
+    // Table
+    let tRows = '', totalIncome = 0, totalOrders = 0, totalQty = 0;
+    products.forEach(p => {
+        tRows += `<tr>
+            <td>${p.name}</td>
+            <td class="num">${p.orders}</td>
+            <td class="num">${p.quantity}</td>
+            <td class="money">${fmtMoney(p.income)}</td>
+        </tr>`;
+        totalIncome += +p.income;
+        totalOrders += +p.orders;
+        totalQty    += +p.quantity;
+    });
+    const tfoot = `<tfoot><tr>
+        <td><strong>Total</strong></td>
+        <td class="num"><strong>${totalOrders}</strong></td>
+        <td class="num"><strong>${totalQty}</strong></td>
+        <td class="money"><strong>${fmtMoney(totalIncome)}</strong></td>
+    </tr></tfoot>`;
+
+    const tableHtml = `
+        <div class="section">
+            <div class="section-header"><span class="material-icons-outlined">inventory_2</span> Sales by Product</div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortProducts('name')">Product Name <span class="sort-arrow" id="arrowName">${currentSort === 'name' ? '▲' : ''}</span></th>
+                        <th onclick="sortProducts('orders')">Orders <span class="sort-arrow" id="arrowOrders">${currentSort === 'orders' ? '▲' : ''}</span></th>
+                        <th onclick="sortProducts('income')">Income <span class="sort-arrow" id="arrowIncome">${currentSort === 'income' ? '▲' : ''}</span></th>
+                    </tr>
+                </thead>
+                <tbody>${tRows}</tbody>
+                ${tfoot}
+            </table>
+        </div>`;
+
+    // Chart
+    const top10   = products.slice(0, 10);
+    const maxVal  = Math.max(...top10.map(p => p.income), 0.01);
+    let   cHtml   = `<div class="section">
+        <div class="section-header"><span class="material-icons-outlined">bar_chart</span> Top Products</div>
+        <div class="chart-wrap"><div class="chart-container">`;
+    if (top10.length === 0) {
+        cHtml += `<p style="color:var(--text-medium-gray)">No data to chart</p>`;
+    } else {
+        top10.forEach(p => {
+            const pct       = Math.max((p.income / maxVal) * 220, 4);
+            const label     = p.name.length > 14 ? p.name.substring(0, 12) + '…' : p.name;
+            cHtml += `<div class="chart-col">
+                <span class="chart-bar-val">${fmtMoney(p.income)}</span>
+                <div class="chart-bar" style="height:${pct}px;"></div>
+                <span class="chart-label">${label}</span>
+            </div>`;
+        });
+    }
+    cHtml += `</div></div></div>`;
+
+    document.getElementById('reportContent').innerHTML = summaryHtml + tableHtml + cHtml;
+}
+
+// ── CSV export ───────────────────────────────────────────────────────────────
+function exportToCSV() {
+    if (!allProducts || !allProducts.length) { alert('No data to export. Generate a report first.'); return; }
+
+    const label  = currentMonth.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    const sorted = [...allProducts];
+    if (currentSort === 'name')    sorted.sort((a, b) => a.name.localeCompare(b.name));
+    else if (currentSort === 'orders') sorted.sort((a, b) => b.orders - a.orders);
+    else                           sorted.sort((a, b) => b.income - a.income);
+
+    let csv = `"Monthly Sales Report – ${label}"\n\n`;
+    csv    += '"Product Name","Total Orders","Qty Sold","Income"\n';
+    sorted.forEach(p => {
+        csv += `"${p.name.replace(/"/g, '""')}",${p.orders},${p.quantity},${p.income}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `monthly_report_${currentMonth.getFullYear()}_${String(currentMonth.getMonth() + 1).padStart(2,'0')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+updateMonthDisplay();
+
+document.getElementById('generateBtn').addEventListener('click', function () {
+    if (isLoading) return;
+    const done = setLoadingSpin(this);
+    isLoading = true;
+    generateReport().then(() => { isLoading = false; done(); });
+});
+</script>
+</body>
+</html>

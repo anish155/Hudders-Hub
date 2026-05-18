@@ -1,21 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HuddersHub - Register as a Trader</title>
-<!-- Google Fonts -->
+<title>Become a Trader - HuddersHub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-<!-- Google Material Icons Outlined -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-
 <style>
-/* ========================================================================
-   GLOBAL RESET & VARIABLES
-   ======================================================================== */
 :root {
     --primary-orange: #FF5E3A;
     --primary-orange-light: #FF8C70;
@@ -27,422 +21,301 @@
     --bg-light: #F7F6F3;
     --bg-gray: #F2F4F1;
     --border-light: #DCE3DA;
-    --bg-gradient: linear-gradient(135deg, #F8FAF7 0%, #FFFFFF 100%);
     --text-black: #0B140A;
     --text-dark-gray: #1E2A1C;
     --text-medium-gray: #5E6A63;
-    --badge-bg: #0F260B;
-    --badge-text: #ffffff;
-    --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
-    --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
-    --shadow-lg: 0 18px 36px rgba(15, 38, 11, 0.16);
+    --shadow-sm: 0 10px 22px rgba(15, 38, 11, 0.12);
+    --shadow-md: 0 16px 32px rgba(15, 38, 11, 0.16);
     --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --radius-sm: 0;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
     color: var(--text-black);
-    background: var(--bg-light);
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 35%, #F7F6F3 100%);
     line-height: 1.6;
-    padding-top: 140px;
+    min-height: 100vh;
 }
-img { max-width: 100%; height: auto; display: block; }
 a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
 button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
 
-/* ========================================================================
-   HEADER & NAV STYLES
-   ======================================================================== */
-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg-gradient); backdrop-filter: blur(12px); transition: var(--transition-smooth); }
-header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
-.top-bar { background: rgba(255,255,255,0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
-header.scrolled .top-bar { padding: 10px 0; }
-header.scrolled .brand img { width: 42px; height: 42px; }
-header.scrolled .brand-text { font-size: 30px; }
-.page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.top-bar-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
-.brand { display: flex; align-items: center; gap: 14px; }
-.brand img { width: 56px; height: 56px; object-fit: contain; transition: var(--transition-smooth); }
-.brand-text { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 36px; color: #0F260B; }
-.search-wrap { display: flex; align-items: center; gap: 12px; }
-.search-bar { position: relative; flex: 1; min-width: 280px; }
-.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; border-radius: 0; }
-.search-bar input:focus { border-color: var(--primary-orange); box-shadow: 0 0 0 3px rgba(255,94,58,.22); }
-.search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #1B2419; opacity: .55; }
-.actions { display: flex; align-items: center; gap: 16px; }
-.user-menu, .action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; cursor: pointer; padding: 8px 12px; border-radius: var(--radius-sm); }
-.user-menu { color: var(--text-black); }
-.user-menu:hover, .action-btn:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.action-btn { color: var(--text-medium-gray); }
-.icon-with-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 6px; color: var(--text-black); }
-.icon-with-badge:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.icon-with-badge .material-icons-outlined { font-size: 24px; }
-.badge { position: absolute; top: 0; right: 0; background: var(--badge-bg); color: #fff; padding: 2px 5px; font-size: 10px; font-weight: 600; min-width: 16px; text-align: center; }
-.nav-bar { background: #F1F3F0; border-bottom: 1px solid var(--border-light); padding: 10px 0; transition: var(--transition-smooth); }
-header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
-.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-medium-gray); }
-.breadcrumb a { color: var(--text-dark-gray); }
-.breadcrumb a:hover { color: var(--primary-green); }
-.breadcrumb-sep { color: #9AA19A; }
-.breadcrumb-current { color: var(--primary-green); font-weight: 600; }
+.header { background: var(--bg-white); border-bottom: 1px solid var(--border-light); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+.header-content { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-family: 'Google Sans Flex', sans-serif; font-size: 28px; font-weight: 700; color: var(--primary-green); }
+.logo span { color: var(--primary-orange); }
+.header-links { display: flex; gap: 24px; align-items: center; }
+.header-links a { font-size: 14px; font-weight: 500; color: var(--text-dark-gray); }
+.header-links a:hover { color: var(--primary-orange); }
+.login-btn { background: var(--primary-orange); color: white; padding: 8px 20px; border-radius: 6px; font-weight: 600; }
+.login-btn:hover { background: var(--primary-orange-light); color: white; }
 
-/* ========================================================================
-   CART DRAWER
-   ======================================================================== */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); opacity: 0; visibility: hidden; transition: var(--transition-smooth); z-index: 1200; }
-.cart-overlay.open { opacity: 1; visibility: visible; }
-.cart-drawer { position: fixed; top: 0; right: 0; height: 100vh; width: min(420px, 92vw); background: #fff; box-shadow: -16px 0 40px rgba(15,38,11,.18); transform: translateX(100%); transition: var(--transition-smooth); z-index: 1300; display: flex; flex-direction: column; }
-.cart-drawer.open { transform: translateX(0); }
-.cart-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
-.cart-header h3 { font-size: 20px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-close { border: none; background: transparent; font-size: 20px; color: var(--text-dark-gray); }
-.cart-body { padding: 18px 22px; flex: 1; display: grid; gap: 14px; align-content: start; overflow-y: auto; }
-.cart-item { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: flex-start; border: 1px solid var(--border-light); padding: 12px; background: #fff; box-shadow: var(--shadow-sm); }
-.cart-item img { width: 56px; height: 56px; object-fit: cover; background: var(--bg-gray); }
-.cart-item-details { display: grid; gap: 10px; }
-.cart-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.cart-item h4 { font-size: 14px; margin-bottom: 4px; color: var(--text-dark-gray); }
-.cart-item p { font-size: 12px; color: var(--text-medium-gray); }
-.cart-price { font-weight: 700; color: var(--primary-orange); font-size: 14px; white-space: nowrap; }
-.cart-item-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.cart-qty { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-gray); padding: 6px 10px; }
-.cart-qty button { border: none; background: #fff; width: 22px; height: 22px; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--text-dark-gray); box-shadow: var(--shadow-sm); }
-.cart-qty .qty-val { font-size: 12px; font-weight: 700; min-width: 12px; text-align: center; }
-.cart-remove { border: none; background: transparent; color: var(--text-medium-gray); font-size: 12px; cursor: pointer; text-decoration: underline; }
-.cart-footer { border-top: 1px solid var(--border-light); padding: 16px 22px 20px; display: grid; gap: 12px; }
-.cart-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--text-dark-gray); }
-.cart-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-.cart-link { font-size: 13px; color: var(--text-medium-gray); text-decoration: none; border-bottom: 1px solid var(--border-light); }
-.cart-link:hover { color: var(--primary-green); border-bottom-color: var(--primary-green); }
-.cart-checkout { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: none; background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 22px rgba(255,94,58,.28); }
-.cart-empty { display: none; text-align: center; color: var(--text-medium-gray); padding: 24px 0; font-size: 13px; }
-
-/* ========================================================================
-   TRADER REGISTRATION PAGE STYLES
-   ======================================================================== */
-.trader-page { padding: 40px 0 80px; background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 45%, #F7F6F3 100%); }
-.trader-hero { text-align: center; margin-bottom: 48px; }
-.trader-hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; color: var(--text-dark-gray); margin-bottom: 12px; line-height: 1.15; }
-.trader-hero p { font-size: 16px; color: var(--text-medium-gray); max-width: 600px; margin: 0 auto; }
-
-.trader-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
-
-/* Form Card */
-.form-card { background: #fff; border: 1px solid var(--border-light); box-shadow: var(--shadow-md); padding: 32px; }
-.form-title { font-size: 22px; font-weight: 700; color: var(--text-dark-gray); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
-.form-title .material-icons-outlined { color: var(--primary-orange); font-size: 24px; }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-.form-group { margin-bottom: 20px; }
-.form-label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark-gray); margin-bottom: 8px; }
-.form-label .required { color: var(--primary-orange); margin-left: 2px; }
-.form-input, .form-select, .form-textarea {
-    width: 100%; padding: 14px 16px; height: 48px;
-    border: 1px solid var(--border-light); background: #FAFBF8;
-    font-size: 15px; color: var(--text-black); outline: none; transition: var(--transition-smooth); font-family: inherit;
-}
-.form-textarea { height: auto; min-height: 100px; resize: vertical; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary-orange); background: #fff; box-shadow: 0 0 0 3px rgba(255,94,58,.15); }
-.form-input::placeholder, .form-textarea::placeholder { color: #8A948A; }
-.form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%230F260B' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
-.form-error { font-size: 13px; color: #EF4444; margin-top: 6px; display: none; align-items: center; gap: 4px; }
-.form-error.visible { display: flex; }
-.form-error .material-icons-outlined { font-size: 16px; }
-.form-input.error, .form-select.error, .form-textarea.error { border-color: #EF4444; background: #FEF2F2; }
-
-/* Upload Zone */
-.upload-zone { border: 2px dashed var(--border-light); background: #FAFBF8; padding: 24px; text-align: center; cursor: pointer; transition: all .25s ease; position: relative; }
-.upload-zone:hover { border-color: var(--primary-orange); background: rgba(255,94,58,.04); }
-.upload-zone .material-icons-outlined { font-size: 36px; color: var(--text-medium-gray); margin-bottom: 8px; }
-.upload-zone p { font-size: 14px; color: var(--text-medium-gray); }
-.upload-zone span { font-size: 12px; color: #8A948A; }
-.file-name-display { margin-top: 8px; font-size: 14px; color: var(--primary-green); font-weight: 600; display: none; }
-
-/* Checkbox */
-.checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin: 24px 0; }
-.checkbox-row input[type="checkbox"] { margin-top: 3px; accent-color: var(--primary-green); width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
-.checkbox-row label { font-size: 14px; color: var(--text-dark-gray); cursor: pointer; line-height: 1.5; }
-.checkbox-row a { color: var(--primary-orange); text-decoration: underline; font-weight: 600; }
-
-/* Submit Button */
-.btn-submit { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 52px; padding: 0 24px; background: var(--primary-green); color: #fff; border: none; font-size: 17px; font-weight: 700; cursor: pointer; transition: all .25s ease; }
-.btn-submit:hover { background: var(--primary-green-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.btn-submit:active { transform: translateY(0); }
-.btn-submit:disabled { background: #9CA3AF; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* Sidebar */
-.sidebar-card { background: linear-gradient(135deg, #0F260B 0%, #143d12 100%); color: #fff; padding: 28px; position: sticky; top: 160px; border-radius: 0; box-shadow: var(--shadow-lg); }
-.sidebar-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.sidebar-title .material-icons-outlined { color: var(--primary-orange-light); }
-.benefit-list { display: grid; gap: 16px; list-style: none; margin-bottom: 28px; }
-.benefit-item { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5; }
-.benefit-icon { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.benefit-icon .material-icons-outlined { font-size: 18px; color: var(--primary-orange-light); }
-.sidebar-footer { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
-
-@media (max-width: 960px) {
-    .trader-layout { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-}
-@media (max-width: 768px) {
-    .top-bar-inner { grid-template-columns: 1fr; }
-    .search-wrap { width: 100%; }
-    .actions { justify-content: space-between; flex-wrap: wrap; }
-}
-
-/* ========================================================================
-   FOOTER
-   ======================================================================== */
-.site-footer { 
-    background-color: #0b0f0b;
-    background-image: 
-        radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%),
-        linear-gradient(135deg, #1a2219 0%, #050705 100%);
-    color: #FFFFFF; 
-    padding: 64px 0 24px; 
-    margin-top: auto; 
+/* HERO SECTION */
+.hero-section {
+    background: linear-gradient(135deg, #0F260B 0%, #1a3a1c 50%, #0F260B 100%);
+    padding: 80px 24px;
+    text-align: center;
     position: relative;
     overflow: hidden;
 }
-.site-footer a { transition: color 0.3s; }
-.footer-newsletter { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; position: relative; z-index: 1;}
-.newsletter-content h3 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 4px; }
-.newsletter-form { display: flex; gap: 12px; width: 100%; max-width: 400px; }
-.newsletter-form input { flex: 1; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; border-radius: 4px; font-size: 14px; outline: none; }
-.newsletter-form input:focus { border-color: #FF5E3A; background: rgba(255,255,255,0.1); }
-.newsletter-form button { padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; cursor: pointer; border-radius: 4px; transition: background 0.3s; white-space: nowrap; }
-.newsletter-form button:hover { opacity: 0.9; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; align-items: start; position: relative; z-index: 1; }
-.brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.footer-brand img { width: 56px; height: 56px; object-fit: contain; }
-.brand-name { font-weight: 700; font-style: italic; font-size: 28px; }
-.footer-tagline { color: rgba(255,255,255,0.8); font-size: 15px; line-height: 1.6; margin-bottom: 12px; }
-.footer-slogan { font-size: 14px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #CAED95; margin-bottom: 24px;}
-.social-links { display: flex; gap: 16px; margin-bottom: 24px; }
-.social-links a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.1); border-radius: 50%; color: #fff; text-decoration: none;}
-.social-links a:hover { background: #FF5E3A; transform: translateY(-2px); }
-.footer-col h4 { font-size: 16px; margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; color: #fff; font-weight: 700; }
-.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
-.footer-col a:hover { color: #FF5E3A; padding-left: 4px; }
-.footer-col p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
-.payment-methods { display: flex; gap: 12px; margin-top: 20px; opacity: 0.7; }
-.payment-methods .material-icons-outlined { font-size: 28px; }
-.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; z-index: 1; position: relative;}
-.footer-bottom-left { color: rgba(255,255,255,0.6); font-size: 13px; }
-.footer-bottom-links { display: flex; gap: 24px; }
-.footer-bottom-links a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
-.footer-bottom-links a:hover { color: #fff; }
+.hero-section::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,94,58,0.15) 0%, transparent 70%);
+    top: -150px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+}
+.hero-section::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(202,237,149,0.1) 0%, transparent 70%);
+    bottom: -100px;
+    left: -100px;
+    animation: float 6s ease-in-out infinite reverse;
+}
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 30px); }
+}
+.hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.hero-section h1 { font-family: 'Google Sans Flex', sans-serif; font-size: 48px; font-style: italic; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.hero-section p { font-size: 20px; color: rgba(255,255,255,0.8); line-height: 1.6; }
 
-/* Responsive */
-@media (max-width: 960px) {
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .footer-brand { grid-column: span 2; margin-bottom: 24px; margin-right: 0;}
+/* MAIN CONTENT */
+.main { max-width: 900px; margin: -40px auto 60px; padding: 0 24px; position: relative; z-index: 2; }
+
+.form-card { background: var(--bg-white); border-radius: 16px; padding: 40px; box-shadow: var(--shadow-md); }
+
+.form-section { margin-bottom: 32px; }
+.form-section-title { font-size: 18px; font-weight: 600; color: var(--primary-green); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.form-section-title .material-icons-outlined { font-size: 22px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full-width { grid-column: 1 / -1; }
+
+.form-label { display: block; font-size: 14px; font-weight: 500; color: var(--text-dark-gray); }
+.form-input, .form-select, .form-textarea {
+    width: 100%; padding: 14px 16px; font-size: 15px; font-family: inherit;
+    border: 1px solid var(--border-light); border-radius: 8px; background: var(--bg-white);
+    color: var(--text-black); transition: var(--transition-smooth);
 }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light);
+}
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* SHOP TYPE GRID */
+.shop-type-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; }
+.shop-type-option {
+    padding: 20px 12px; border: 2px solid var(--border-light); border-radius: 10px;
+    text-align: center; cursor: pointer; transition: var(--transition-smooth);
+    background: #fff;
+}
+.shop-type-option:hover { border-color: var(--primary-green-light); transform: translateY(-2px); }
+.shop-type-option.selected { border-color: var(--primary-green); background: var(--primary-green-light); }
+.shop-type-option .icon { font-size: 32px; margin-bottom: 8px; display: block; color: var(--primary-green); }
+.shop-type-option .label { font-weight: 600; font-size: 14px; color: var(--text-dark-gray); }
+
+/* TERMS */
+.terms-check { display: flex; align-items: flex-start; gap: 12px; margin: 24px 0; }
+.terms-check input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--primary-green); }
+.terms-check label { font-size: 14px; color: var(--text-medium-gray); }
+.terms-check a { color: var(--primary-orange); text-decoration: underline; }
+
+/* SUBMIT BUTTON */
+.submit-btn {
+    width: 100%; padding: 16px; font-size: 16px; font-weight: 600;
+    background: var(--primary-orange); color: white; border: none; border-radius: 8px;
+    cursor: pointer; transition: var(--transition-smooth); display: flex;
+    align-items: center; justify-content: center; gap: 8px;
+}
+.submit-btn:hover { background: var(--primary-orange-light); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,94,58,0.3); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.spinner { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* ALERT */
+.alert { padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; display: none; }
+.alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+.alert.visible { display: block; }
+
+/* LOGIN LINK */
+.login-link { text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-medium-gray); }
+.login-link a { color: var(--primary-orange); font-weight: 600; }
+
+/* FOOTER */
+.site-footer { background-color: #0b0f0b; color: #FFFFFF; padding: 64px 0 24px; margin-top: 60px; }
+.footer-newsletter { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 24px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 40px; text-align: center; }
+.newsletter-content { text-align: center; width: 100%; }
+.newsletter-content h3 { font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.newsletter-content p { color: rgba(255,255,255,0.7); font-size: 20px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 32px; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.footer-col h4 { font-size: 16px; margin-bottom: 20px; text-transform: uppercase; color: #fff; font-weight: 700; }
+.footer-col a { display: block; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-bottom: 12px; }
+.footer-col a:hover { color: var(--primary-orange); }
+.footer-bottom { margin-top: 48px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+
 @media (max-width: 768px) {
-    .footer-newsletter { flex-direction: column; align-items: flex-start; }
-    .newsletter-form { max-width: 100%; }
-    .footer-bottom { flex-direction: column; gap: 16px; align-items: center; text-align: center; }
+    .form-grid { grid-template-columns: 1fr; }
+    .shop-type-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-section h1 { font-size: 32px; }
+    .hero-section p { font-size: 16px; }
+    .form-card { padding: 24px; }
 }
-@media (max-width: 480px) {
-    .footer-grid { grid-template-columns: 1fr; }
-    .footer-brand { grid-column: span 1; }
-    .footer-bottom-links { justify-content: center; gap: 12px; }
-}
-@media (max-width: 900px) { .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; } .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; } }
-@media (max-width: 640px) { .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 28px; align-items: start; position: relative; z-index: 1; } }
 </style>
 </head>
 <body>
 
-<!-- ========================================================================
-     HEADER START
-     ======================================================================== -->
-<header>
-<div class="top-bar">
-<div class="page-wrap top-bar-inner">
-    <div class="brand">
-        <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
-            <img src="Asstes/logo.png" alt="HuddersHub logo">
-            <span class="brand-text">HuddersHub</span>
-        </a>
+<header class="header">
+    <div class="header-content">
+        <a href="index.html" class="logo">Hudders<span>Hub</span></a>
+        <div class="header-links">
+            <a href="login.html">Login</a>
+            <a href="login.html" class="login-btn">Sign In</a>
+        </div>
     </div>
-    <div class="search-wrap">
-        <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
-    </div>
-    <div class="actions">
-        <span class="action-btn" id="loginBtn" style="cursor: pointer;"><span class="material-icons-outlined" style="font-size: 24px;">person</span><span id="loginBtnText">Login/Signup</span></span>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge moon" href="#" style="font-size: 20px;"><span class="material-icons-outlined">dark_mode</span></a>
-    </div>
-</div>
-</div>
-<nav class="nav-bar">
-<div class="page-wrap">
-    <div class="breadcrumb">
-        <a href="index.html">Home</a><span class="breadcrumb-sep">/</span>
-        <a href="contact.html">Contact</a><span class="breadcrumb-sep">/</span>
-        <span class="breadcrumb-current">Register as Trader</span>
-    </div>
-</div>
-</nav>
 </header>
 
-<!-- CART DRAWER -->
-<div class="cart-overlay" id="cartOverlay"></div>
-<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-<div class="cart-header"><h3>Your cart</h3><button class="cart-close" id="cartClose" aria-label="Close cart">&times;</button></div>
-<div class="cart-body">
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Bell Pepper</h4><p class="cart-meta">Greengrocer · Qty 2</p></div><span class="cart-price">£1.80</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">2</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-item" data-price="0.90" data-category="Greengrocer"><img src="Asstes/Item-image/green-broccoli.jpg" alt="Green Broccoli"><div class="cart-item-details"><div class="cart-item-top"><div><h4>Green Broccoli</h4><p class="cart-meta">Greengrocer · Qty 1</p></div><span class="cart-price">£0.90</span></div><div class="cart-item-actions"><div class="cart-qty"><button class="qty-btn" data-action="decrease">-</button><span class="qty-val">1</span><button class="qty-btn" data-action="increase">+</button></div><button class="cart-remove">Remove</button></div></div></div>
-    <div class="cart-empty" style="display:none;">Your cart is empty.</div>
-</div>
-<div class="cart-footer">
-    <div class="cart-total"><span>Total</span><span class="cart-total-value">£2.70</span></div>
-    <div class="cart-actions"><a class="cart-link" href="cart.html">Go to cart</a><button class="cart-checkout">Checkout →</button></div>
-</div>
-</aside>
-
-<!-- ========================================================================
-     MAIN CONTENT
-     ======================================================================== -->
-<main class="trader-page">
-<div class="page-wrap">
-    <div class="trader-hero">
-        <h1>Sell Your Goods to <span style="color: var(--primary-orange);">Huddersfield</span></h1>
-        <p>Join our marketplace of trusted local traders. Manage your inventory, accept orders, and grow your business.</p>
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Start Selling on HuddersHub</h1>
+        <p>Join our marketplace and reach thousands of local customers looking for fresh, quality products.</p>
     </div>
+</section>
 
-    <div class="trader-layout">
-        <!-- LEFT: Form -->
-        <div class="form-card">
-            <div class="form-title"><span class="material-icons-outlined">storefront</span> Business Details</div>
-            <form id="traderForm" novalidate>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="businessName">Business Name <span class="required">*</span></label>
-                        <input class="form-input" type="text" id="businessName" placeholder="e.g. Huddersfield Butchers" required>
+<main class="main">
+    <div class="form-card">
+        <div id="alert" class="alert"></div>
+
+        <form id="registerForm">
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="material-icons-outlined">store</span>
+                    Shop Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label class="form-label" for="shop_type">Shop Type *</label>
+                        <input type="hidden" id="shop_type" name="shop_type" required>
+                        <div class="shop-type-grid" id="shopTypeGrid">
+                            <div class="shop-type-option" data-value="Butcher">
+                                <span class="icon material-icons-outlined">cut</span>
+                                <span class="label">Butcher</span>
+                            </div>
+                            <div class="shop-type-option" data-value="Greengrocer">
+                                <span class="icon material-icons-outlined">eco</span>
+                                <span class="label">Greengrocer</span>
+                            </div>
+                            <div class="shop-type-option" data-value="Fishmonger">
+                                <span class="icon material-icons-outlined">set_meal</span>
+                                <span class="label">Fishmonger</span>
+                            </div>
+                            <div class="shop-type-option" data-value="Bakery">
+                                <span class="icon material-icons-outlined">bakery_dining</span>
+                                <span class="label">Bakery</span>
+                            </div>
+                            <div class="shop-type-option" data-value="Delicatessen">
+                                <span class="icon material-icons-outlined">lunch_dining</span>
+                                <span class="label">Delicatessen</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="shop_name">Shop Name *</label>
+                        <input type="text" id="shop_name" class="form-input" placeholder="e.g., Smith's Fresh Meats" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="shop_description">Shop Description</label>
+                        <textarea id="shop_description" class="form-textarea" placeholder="Tell customers about your shop and what you sell..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="category">Category <span class="required">*</span></label>
-                        <select class="form-select" id="category" required>
-                            <option value="">Select type...</option>
-                            <option value="butcher">Butcher</option>
-                            <option value="bakery">Bakery</option>
-                            <option value="greengrocer">Greengrocer</option>
-                            <option value="fishmonger">Fishmonger</option>
-                            <option value="delicatessen">Delicatessen</option>
-                        </select>
-                        <div class="form-error" id="catError"><span class="material-icons-outlined">error_outline</span>Please select a category.</div>
+                        <label class="form-label" for="shop_location">Shop Location *</label>
+                        <input type="text" id="shop_location" class="form-input" placeholder="e.g., 123 Market Street, Huddersfield" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="description">Business Description <span class="required">*</span></label>
-                    <textarea class="form-textarea" id="description" placeholder="Tell us about your products and what makes your business special..." required></textarea>
-                    <div class="form-error" id="descError"><span class="material-icons-outlined">error_outline</span>Please provide a description.</div>
-                </div>
-
-                <div class="form-title"><span class="material-icons-outlined">person</span> Owner Information</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="ownerName">Full Name <span class="required">*</span></label>
-                        <input class="form-input" type="text" id="ownerName" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
-                        <input class="form-input" type="tel" id="phone" placeholder="+44 7700 900000" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="email">Business Email <span class="required">*</span></label>
-                    <input class="form-input" type="email" id="email" placeholder="name@business.com" required>
-                    <div class="form-error" id="emailError"><span class="material-icons-outlined">error_outline</span>Please enter a valid email.</div>
-                </div>
-
-                <div class="form-title"><span class="material-icons-outlined">upload_file</span> Documentation</div>
-                <div class="form-group">
-                    <label class="form-label">Trading License / ID <span class="required">*</span></label>
-                    <div class="upload-zone" id="uploadZone">
-                        <span class="material-icons-outlined">cloud_upload</span>
-                        <p>Click to upload or drag & drop</p>
-                        <span>PNG, JPG, PDF up to 5MB</span>
-                        <input type="file" id="fileInput" accept="image/*,.pdf" style="display:none;">
-                    </div>
-                    <div class="file-name-display" id="fileNameDisplay"></div>
-                </div>
-
-                <div class="checkbox-row">
-                    <input type="checkbox" id="agreeTerms" required>
-                    <label for="agreeTerms">I confirm that I am a registered trader in the UK and agree to the <a href="faq.html">Trader Terms of Service</a>.</label>
-                </div>
-                <div class="form-error" id="termsError"><span class="material-icons-outlined">error_outline</span>You must agree to the terms.</div>
-
-                <button type="submit" class="btn-submit" id="submitBtn">
-                    <span id="submitText">Submit Application</span>
-                    <span class="material-icons-outlined" id="submitIcon">arrow_forward</span>
-                </button>
-            </form>
-        </div>
-
-        <!-- RIGHT: Sidebar Info -->
-        <div class="sidebar-card">
-            <div class="sidebar-title"><span class="material-icons-outlined">emoji_events</span> Why trade with us?</div>
-            <ul class="benefit-list">
-                <li class="benefit-item">
-                    <div class="benefit-icon"><span class="material-icons-outlined">attach_money</span></div>
-                    <span><strong>Low Fees:</strong> Keep more of your profits with our competitive commission rates.</span>
-                </li>
-                <li class="benefit-item">
-                    <div class="benefit-icon"><span class="material-icons-outlined">group</span></div>
-                    <span><strong>Local Community:</strong> Reach thousands of Huddersfield shoppers looking for fresh local goods.</span>
-                </li>
-                <li class="benefit-item">
-                    <div class="benefit-icon"><span class="material-icons-outlined">schedule</span></div>
-                    <span><strong>Click & Collect:</strong> We handle the online orders; you just prepare and hand over.</span>
-                </li>
-                <li class="benefit-item">
-                    <div class="benefit-icon"><span class="material-icons-outlined">verified</span></div>
-                    <span><strong>Verified Sellers:</strong> Build trust with the 'Verified HuddersHub Trader' badge.</span>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <p>Need help with registration?</p>
-                <p style="margin-top: 4px;"><a href="mailto:traders@huddershub.test" style="color: var(--primary-orange-light); font-weight: 600;">traders@huddershub.test</a></p>
             </div>
-        </div>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="material-icons-outlined">person</span>
+                    Owner Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="firstname">First Name *</label>
+                        <input type="text" id="firstname" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lastname">Last Name *</label>
+                        <input type="text" id="lastname" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="phone_number">Phone Number</label>
+                        <input type="tel" id="phone_number" class="form-input" placeholder="e.g., 07700 900000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="address">Your Address</label>
+                        <input type="text" id="address" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">
+                    <span class="material-icons-outlined">lock</span>
+                    Account Security
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="password">Create Password *</label>
+                        <input type="password" id="password" class="form-input" minlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirm_password">Confirm Password *</label>
+                        <input type="password" id="confirm_password" class="form-input" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terms-check">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>. I understand that my application will be reviewed by an admin and may take 1-2 days to approve.</label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="material-icons-outlined">storefront</span>
+                Submit Application
+            </button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
     </div>
-</div>
 </main>
 
-<!-- ========================================================================
-     FOOTER
-     ======================================================================== -->
 <footer class="site-footer">
 <div class="page-wrap footer-newsletter">
     <div class="newsletter-content">
-        <h3>Join the HuddersHub Community</h3>
-        <p>Create an account to track orders, save your favorite local goods, and check out faster.</p>
-    </div>
-    <div class="newsletter-form" style="display: flex; gap: 12px; align-items: center; width: auto; max-width: none;">
-        <a href="login.html" style="padding: 12px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: all 0.3s; text-align: center;">Log In</a>
-        <a href="signup.html" style="padding: 12px 24px; background: #FF5E3A; border: none; color: #fff; font-weight: 600; text-decoration: none; border-radius: 4px; transition: background 0.3s; text-align: center;">Register Now</a>
+        <h3>Fresh from local farms to your table</h3>
+        <p>"Quality you can taste, community you can feel."</p>
     </div>
 </div>
-<div class="page-wrap footer-grid">
-    <div class="footer-brand">
-        <div class="brand-row"><img src="assets/logo.png" alt="HuddersHub logo"><span class="brand-name">HuddersHub</span></div>
-        <p class="footer-tagline">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
-        <p class="footer-slogan">Eat Fresh. Buy Local.</p>
-        <div class="social-links">
-            <a href="#" aria-label="Facebook"><span class="material-icons-outlined">facebook</span></a>
-            <a href="#" aria-label="Instagram"><span class="material-icons-outlined">camera_alt</span></a>
+<div class="footer-grid">
+    <div class="footer-col">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <span style="font-weight:700;font-style:italic;font-size:24px;">HuddersHub</span>
         </div>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;">Local food, trusted traders, and fresh picks curated for Huddersfield.</p>
     </div>
     <div class="footer-col">
         <h4>Shop</h4>
@@ -450,163 +323,102 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
         <a href="category.html?type=butcher">The Butcher</a>
         <a href="category.html?type=bakery">Bakery</a>
         <a href="category.html?type=delicatessen">Delicatessen</a>
-        <a href="category.html?type=dairy">Dairy & Eggs</a>
     </div>
     <div class="footer-col">
         <h4>Company</h4>
-        <a href="about.html">About HuddersHub</a>
-        <a href="register-trader.html">Become a Trader</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
         <a href="faq.html">Help Center</a>
-        <a href="refund.html">Returns & Refunds</a>
     </div>
     <div class="footer-col">
         <h4>Contact</h4>
-        <p><span class="material-icons-outlined" style="font-size:16px;">location_on</span> Huddersfield, UK</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">mail</span> support@huddershub.test</p>
-        <p><span class="material-icons-outlined" style="font-size:16px;">phone</span> +44 1484 000 000</p>
-        
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:8px;">Huddersfield, UK</p>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;">support@huddershub.test</p>
     </div>
 </div>
-<div class="page-wrap footer-bottom">
-    <div class="footer-bottom-left">
-        <span>&copy; 2026 HuddersHub. All rights reserved.</span>
-    </div>
-    <div class="footer-bottom-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-    </div>
+<div class="footer-bottom">
+    <span>&copy; 2026 HuddersHub. All rights reserved.</span>
 </div>
 </footer>
 
 <script>
-// HEADER SCROLL EFFECT
-window.addEventListener('scroll', () => {
-    const header = document.querySelector('header');
-    if (window.scrollY > 50) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+document.querySelectorAll('.shop-type-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+        document.querySelectorAll('.shop-type-option').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        document.getElementById('shop_type').value = opt.dataset.value;
+    });
 });
 
-// CART DRAWER
-const cartTrigger = document.getElementById('cartTrigger');
-const cartDrawer = document.getElementById('cartDrawer');
-const cartOverlay = document.getElementById('cartOverlay');
-const cartClose = document.getElementById('cartClose');
-function formatMoney(v) { return '£' + v.toFixed(2); }
-function updateCartTotals() {
-    if (!cartDrawer) return;
-    const items = cartDrawer.querySelectorAll('.cart-item');
-    let total = 0;
-    items.forEach(item => {
-        const price = parseFloat(item.dataset.price || '0');
-        const qtyEl = item.querySelector('.qty-val');
-        const qty = parseInt(qtyEl ? qtyEl.textContent : '0', 10) || 0;
-        const priceEl = item.querySelector('.cart-price');
-        if (priceEl) priceEl.textContent = formatMoney(price * qty);
-        total += price * qty;
-    });
-    const totalEl = cartDrawer.querySelector('.cart-total-value');
-    if (totalEl) totalEl.textContent = formatMoney(total);
-    const emptyEl = cartDrawer.querySelector('.cart-empty');
-    if (emptyEl) emptyEl.style.display = items.length ? 'none' : 'block';
-    const badge = document.querySelector('#cartTrigger .badge');
-    if (badge) badge.textContent = items.length;
-}
-function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); document.body.style.overflow = ''; }
-if (cartTrigger) cartTrigger.addEventListener('click', e => { e.preventDefault(); openCart(); });
-if (cartDrawer) {
-    cartDrawer.addEventListener('click', e => {
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-            const item = qtyBtn.closest('.cart-item');
-            const qtyEl = item?.querySelector('.qty-val');
-            if (!item || !qtyEl) return;
-            let qty = parseInt(qtyEl.textContent, 10) || 1;
-            qty += qtyBtn.dataset.action === 'increase' ? 1 : -1;
-            qty = Math.max(1, qty);
-            qtyEl.textContent = qty; updateCartTotals(); return;
-        }
-        const removeBtn = e.target.closest('.cart-remove');
-        if (removeBtn) { const item = removeBtn.closest('.cart-item'); if (item) item.remove(); updateCartTotals(); }
-    });
-}
-if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
-if (cartClose) cartClose.addEventListener('click', closeCart);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
-updateCartTotals();
-
-// CATEGORIES DROPDOWN
-document.querySelectorAll('.categories-wrapper').forEach(wrapper => {
-    const dropdown = wrapper.querySelector('.categories-dropdown');
-    wrapper.addEventListener('mouseenter', () => { dropdown.style.display = 'block'; setTimeout(() => { dropdown.style.transform = 'translateY(0)'; dropdown.style.opacity = '1'; }, 10); });
-    wrapper.addEventListener('mouseleave', () => { dropdown.style.transform = 'translateY(-8px)'; dropdown.style.opacity = '0'; setTimeout(() => { dropdown.style.display = 'none'; }, 200); });
-});
-
-// FORM VALIDATION
-const form = document.getElementById('traderForm');
-const emailInput = document.getElementById('email');
+const form = document.getElementById('registerForm');
+const alertBox = document.getElementById('alert');
 const submitBtn = document.getElementById('submitBtn');
 
-function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function showAlert(msg, type) {
+    alertBox.textContent = msg;
+    alertBox.className = 'alert ' + type + ' visible';
+}
 
-// Clear errors on input
-form.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
-    el.addEventListener('input', () => { el.classList.remove('error'); el.nextElementSibling?.classList.remove('visible'); });
-});
-
-// File Upload Logic
-const uploadZone = document.getElementById('uploadZone');
-const fileInput = document.getElementById('fileInput');
-const fileNameDisplay = document.getElementById('fileNameDisplay');
-uploadZone.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', () => {
-    if (fileInput.files.length) {
-        fileNameDisplay.textContent = 'Selected: ' + fileInput.files[0].name;
-        fileNameDisplay.style.display = 'block';
-        uploadZone.style.borderColor = 'var(--primary-green)';
-    }
-});
-
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    let valid = true;
-
-    // Reset errors
-    document.querySelectorAll('.form-error').forEach(el => el.classList.remove('visible'));
-    document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => el.classList.remove('error'));
-
-    // Category
-    const cat = document.getElementById('category');
-    if (!cat.value) { cat.classList.add('error'); document.getElementById('catError').classList.add('visible'); valid = false; }
-
-    // Description
-    const desc = document.getElementById('description');
-    if (!desc.value.trim()) { desc.classList.add('error'); document.getElementById('descError').classList.add('visible'); valid = false; }
-
-    // Email
-    if (!validateEmail(emailInput.value.trim())) { emailInput.classList.add('error'); document.getElementById('emailError').classList.add('visible'); valid = false; }
-
-    // Terms
-    const terms = document.getElementById('agreeTerms');
-    if (!terms.checked) { document.getElementById('termsError').classList.add('visible'); valid = false; }
-
-    if (!valid) {
-        const firstError = form.querySelector('.error');
-        if (firstError) firstError.focus();
+    
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    
+    if (password !== confirmPassword) {
+        showAlert('Passwords do not match!', 'error');
+        return;
+    }
+    
+    if (!document.getElementById('shop_type').value) {
+        showAlert('Please select a shop type!', 'error');
         return;
     }
 
-    // Simulate Submission
     submitBtn.disabled = true;
-    document.getElementById('submitText').textContent = 'Submitting...';
-    document.getElementById('submitIcon').style.display = 'none';
-    setTimeout(() => {
-        alert('Application submitted successfully! We will contact you shortly.');
-        window.location.href = 'index.html';
-    }, 1500);
+    submitBtn.innerHTML = '<span class="material-icons-outlined spinner">refresh</span> Submitting...';
+
+    const data = {
+        firstname: document.getElementById('firstname').value,
+        lastname: document.getElementById('lastname').value,
+        email: document.getElementById('email').value,
+        phone_number: document.getElementById('phone_number').value,
+        address: document.getElementById('address').value,
+        password: password,
+        shop_name: document.getElementById('shop_name').value,
+        shop_type: document.getElementById('shop_type').value,
+        shop_description: document.getElementById('shop_description').value,
+        shop_location: document.getElementById('shop_location').value
+    };
+
+    try {
+        console.log('Submitting data:', data);
+        const response = await fetch('../api/auth/register-trader.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        console.log('Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('Response data:', result);
+        
+        if (result.success) {
+            showAlert(result.message + ' You will be redirected to login...', 'success');
+            setTimeout(() => window.location.href = 'login.html', 3000);
+        } else {
+            showAlert(result.message, 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span class="material-icons-outlined">storefront</span> Submit Application';
+        }
+    } catch (err) {
+        console.error('Submit error:', err);
+        showAlert('Error: ' + err.message + '. Check console for details.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="material-icons-outlined">storefront</span> Submit Application';
+    }
 });
 </script>
+
 </body>
 </html>
-
-
-
