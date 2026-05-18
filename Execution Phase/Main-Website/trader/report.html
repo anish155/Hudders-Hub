@@ -32,42 +32,42 @@
 body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); background: var(--bg-light); min-height: 100vh; }
 
 .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #FFFFFF; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
-.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
-.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
+.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.15); text-align: center; }
+.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255,255,255,0.3); }
 .sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
 .sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.7); }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
 .sidebar-nav { padding: 16px 0; flex: 1; }
 .sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
-.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; }
-.sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
-.sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
+.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; }
+.sidebar-nav-item:hover { background: rgba(255,255,255,0.1); color: #FFFFFF; }
+.sidebar-nav-item.active { background: rgba(255,255,255,0.15); color: #FFFFFF; font-weight: 600; }
 .sidebar-nav-item .material-icons-outlined { font-size: 20px; }
-.sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
-.sidebar-nav-item.logout:hover { color: var(--primary-orange-light); background: rgba(255, 94, 58, 0.1); }
+.sidebar-nav-item.logout { color: rgba(255,255,255,0.5); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+.sidebar-nav-item.logout:hover { color: var(--primary-orange-light); background: rgba(255,94,58,0.1); }
 .sidebar-report-group { display: flex; flex-direction: column; }
 .sidebar-report-group summary { list-style: none; }
 .sidebar-report-group summary::-webkit-details-marker { display: none; }
-.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255,255,255,0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
 .sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
-.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
-.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255,255,255,0.12); color: #FFFFFF; }
 .sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
 .sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
 
 .top-nav { position: fixed; top: 0; left: 260px; right: 0; height: 60px; background: var(--bg-white); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 100; }
 .top-nav-left { display: flex; align-items: center; gap: 10px; }
+.top-nav-logo { display: flex; align-items: center; gap: 8px; }
 .top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
 .top-nav-logo span { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
 .top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
 .top-nav-right { display: flex; align-items: center; gap: 8px; }
-.top-nav-icon { width: 40px; height: 40px; border-radius: 0; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
+.top-nav-icon { width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
 .top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
 .top-nav-icon .material-icons-outlined { font-size: 22px; }
 .notification-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--primary-orange); border-radius: 50%; border: 2px solid var(--bg-white); }
-.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); border-radius: 0; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); }
-.user-pill:hover { background: var(--primary-green-light); }
+.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); font-size: 13px; font-weight: 600; color: var(--text-dark-gray); }
 .user-pill .material-icons-outlined { font-size: 18px; }
 
 .main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); width: calc(100% - 260px); }
@@ -79,11 +79,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .page-title { font-size: 40px; font-weight: 800; color: var(--text-black); margin-top: 8px; }
 
 .report-section { max-width: 900px; margin: 0 auto; }
-
 .report-type-toggle { display: inline-flex; gap: 8px; padding: 4px; border: 1px solid var(--border-light); background: var(--bg-white); margin-bottom: 32px; }
 .toggle-btn { border: none; background: transparent; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text-medium-gray); cursor: pointer; transition: var(--transition-smooth); font-family: inherit; }
 .toggle-btn.active { background: var(--primary-green); color: #FFFFFF; }
-.toggle-btn:focus-visible { outline: 2px solid var(--primary-green); outline-offset: 2px; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
 .stat-card { background: var(--bg-white); border: 1px solid var(--border-light); padding: 20px; text-align: center; }
@@ -100,7 +98,10 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .order-table tr:last-child td { border-bottom: none; }
 .order-table .product-name { font-weight: 600; color: var(--text-black); }
 .order-table .qty { font-weight: 700; color: var(--primary-green); }
-.order-table .customer { color: var(--text-medium-gray); font-size: 13px; }
+.order-table .amount { color: var(--text-dark-gray); }
+
+.empty-state { text-align: center; padding: 40px; color: var(--text-medium-gray); }
+.empty-state .material-icons-outlined { font-size: 48px; margin-bottom: 12px; display: block; }
 
 .graph-section { margin-top: 28px; }
 .graph-header { text-align: center; margin-bottom: 18px; }
@@ -110,6 +111,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .graph-header h2::after { left: calc(100% + 16px); }
 .chart-container { background: var(--bg-white); border: 1px solid var(--border-light); padding: 24px; }
 .chart-canvas { width: 100%; height: 250px; }
+
+.loading { padding: 20px; color: var(--text-medium-gray); text-align: center; font-size: 14px; }
+.error-msg { padding: 14px 16px; background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; font-size: 14px; margin-bottom: 16px; }
 
 .sidebar-toggle { display: none; }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
@@ -123,7 +127,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
   .stats-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 600px) {
   .page-title { font-size: 28px; }
   .report-type-toggle { display: none; }
@@ -139,8 +142,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-profile">
     <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
-    <div class="sidebar-name">John Farmer</div>
-    <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
+    <div class="sidebar-name" id="sidebarName">Loading...</div>
+    <div class="sidebar-status"><span class="status-dot"></span><span id="sidebarStatus">Active</span></div>
   </div>
   <nav class="sidebar-nav">
     <ul class="sidebar-nav-list">
@@ -155,14 +158,14 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
             <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
           </summary>
           <ul class="sidebar-report-sublist">
-            <li><a href="report.html?type=daily" class="sidebar-report-link" data-report-type="daily">Daily</a></li>
-            <li><a href="report.html?type=weekly" class="sidebar-report-link" data-report-type="weekly">Weekly</a></li>
+            <li><a href="report.html?type=daily"   class="sidebar-report-link" data-report-type="daily">Daily</a></li>
+            <li><a href="report.html?type=weekly"  class="sidebar-report-link" data-report-type="weekly">Weekly</a></li>
             <li><a href="report.html?type=monthly" class="sidebar-report-link" data-report-type="monthly">Monthly</a></li>
           </ul>
         </details>
       </li>
       <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+      <li><button onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</button></li>
     </ul>
   </nav>
 </aside>
@@ -176,22 +179,28 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   </div>
   <div class="top-nav-title">Reports</div>
   <div class="top-nav-right">
-    <button class="top-nav-icon"><span class="material-icons-outlined">notifications_none</span><span class="notification-badge"></span></button>
-    <div class="user-pill"><span class="material-icons-outlined">account_circle</span><span>John</span></div>
+    <button class="top-nav-icon" aria-label="Notifications">
+      <span class="material-icons-outlined">notifications_none</span>
+      <span class="notification-badge"></span>
+    </button>
+    <div class="user-pill">
+      <span class="material-icons-outlined">account_circle</span>
+      <span id="navUserName">...</span>
+    </div>
   </div>
 </header>
 
 <main class="main-content">
   <div class="page-header">
-    <p class="welcome-text">Welcome back, <strong>John</strong>!</p>
-    <p class="shop-name">Green Valley Farm</p>
-    <h1 class="page-title" id="pageTitle">Weekly Report</h1>
+    <p class="welcome-text">Welcome back, <strong id="welcomeName">...</strong>!</p>
+    <p class="shop-name" id="shopNameDisplay">...</p>
+    <h1 class="page-title" id="pageTitle">Report</h1>
   </div>
 
   <div class="report-section">
-    <div class="report-type-toggle" role="tablist" aria-label="Report type">
-      <button class="toggle-btn" data-report-type="daily" type="button">Daily</button>
-      <button class="toggle-btn active" data-report-type="weekly" type="button">Weekly</button>
+    <div class="report-type-toggle" role="tablist">
+      <button class="toggle-btn" data-report-type="daily"   type="button">Daily</button>
+      <button class="toggle-btn" data-report-type="weekly"  type="button">Weekly</button>
       <button class="toggle-btn" data-report-type="monthly" type="button">Monthly</button>
     </div>
 
@@ -200,7 +209,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 
     <div class="graph-section">
       <div class="graph-header">
-        <h2 id="graphTitle">Weekly Sales Graph</h2>
+        <h2 id="graphTitle">Sales Graph</h2>
       </div>
       <div class="chart-container">
         <canvas id="reportChart" class="chart-canvas"></canvas>
@@ -210,195 +219,241 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 </main>
 
 <script>
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebarToggle');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
+// ── Auth guard ──────────────────────────────────────────────
+const userId   = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+if (!userId || userRole !== 'trader') {
+    window.location.href = '../public/login.html';
+}
+
+// ── DOM refs ────────────────────────────────────────────────
+const statsGrid            = document.getElementById('statsGrid');
 const reportCardsContainer = document.getElementById('reportCards');
-const graphTitle = document.getElementById('graphTitle');
-const pageTitle = document.getElementById('pageTitle');
-const reportButtons = document.querySelectorAll('.toggle-btn');
-const statsGrid = document.getElementById('statsGrid');
+const reportButtons        = document.querySelectorAll('.toggle-btn');
+const pageTitle            = document.getElementById('pageTitle');
+const graphTitle           = document.getElementById('graphTitle');
+const sidebarName          = document.getElementById('sidebarName');
+const navUserName          = document.getElementById('navUserName');
+const welcomeName          = document.getElementById('welcomeName');
+const shopNameDisplay      = document.getElementById('shopNameDisplay');
 
-let currentType = 'weekly';
-
-const mockWeeklyData = {
-  summary: { total_orders: 47, total_revenue: 1250.50, avg_order_value: 26.60 },
-  orders: [
-    { customer: 'John Smith', items: 3, total: 24.50 },
-    { customer: 'Sarah Johnson', items: 2, total: 15.00 },
-    { customer: 'Mike Brown', items: 5, total: 42.75 },
-    { customer: 'Emma Wilson', items: 1, total: 8.99 },
-    { customer: 'David Lee', items: 4, total: 31.20 }
-  ],
-  chart: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], values: [120, 185, 210, 95, 280, 195, 165] }
-};
-
-const mockDailyData = {
-  summary: { total_orders: 8, total_revenue: 215.50, avg_order_value: 26.94 },
-  orders: [
-    { customer: 'John Smith', items: 3, total: 24.50 },
-    { customer: 'Sarah Johnson', items: 2, total: 15.00 },
-    { customer: 'Mike Brown', items: 5, total: 42.75 },
-    { customer: 'Emma Wilson', items: 1, total: 8.99 },
-    { customer: 'David Lee', items: 4, total: 31.20 },
-    { customer: 'Lisa Anderson', items: 2, total: 18.50 },
-    { customer: 'Tom Harris', items: 1, total: 12.00 },
-    { customer: 'Jane Clark', items: 3, total: 62.56 }
-  ],
-  chart: { labels: ['Morning', 'Afternoon', 'Evening'], values: [85, 95, 35] }
-};
-
-const mockMonthlyData = {
-  summary: { total_orders: 186, total_revenue: 4850.75, avg_order_value: 26.08 },
-  orders: [],
-  chart: { labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'], values: [180, 220, 195, 310, 285, 240, 270] }
-};
-
+// ── Sidebar toggle ──────────────────────────────────────────
+const sidebar        = document.getElementById('sidebar');
+const sidebarToggle  = document.getElementById('sidebarToggle');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
 sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
 sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
-document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
-  item.addEventListener('click', () => { if (window.innerWidth <= 900) { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); } });
-});
 
-function formatCurrency(amount) { return '£' + parseFloat(amount || 0).toFixed(2); }
+// ── Logout ──────────────────────────────────────────────────
+function handleLogout() {
+    sessionStorage.clear();
+    window.location.href = '../public/login.html';
+}
 
+// ── Helpers ─────────────────────────────────────────────────
+function formatCurrency(amount) {
+    return '£' + parseFloat(amount || 0).toFixed(2);
+}
+
+// ── Load profile info from sessionStorage ───────────────────
+function loadProfileInfo() {
+    const userName = sessionStorage.getItem('userName') || 'Trader';
+    // Try to get shop name from session, else fetch
+    sidebarName.textContent    = userName;
+    navUserName.textContent    = userName;
+    welcomeName.textContent    = userName;
+
+    // Fetch shop name from dashboard API (lightweight)
+    fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
+    .then(r => r.json())
+    .then(d => {
+        if (d.success) {
+            const fullName = d.firstname + ' ' + d.lastname;
+            sidebarName.textContent = fullName;
+            navUserName.textContent = d.firstname;
+            welcomeName.textContent = fullName;
+            shopNameDisplay.textContent = d.shop_name || '';
+            document.getElementById('sidebarStatus').textContent = d.trader_status || 'Active';
+        }
+    })
+    .catch(() => {});
+}
+
+// ── Draw bar chart ──────────────────────────────────────────
 function drawBarChart(canvas, data) {
-  const ctx = canvas.getContext('2d');
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = 250;
+    if (!data || !data.labels || !data.values || data.values.length === 0) return;
+    const ctx  = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = rect.width;
+    canvas.height = 250;
+    const W = rect.width, H = 250;
+    ctx.clearRect(0, 0, W, H);
 
-  const width = rect.width;
-  const height = 250;
+    const pad = { top: 20, right: 30, bottom: 40, left: 65 };
+    const cW  = W - pad.left - pad.right;
+    const cH  = H - pad.top  - pad.bottom;
+    const maxVal  = Math.max(...data.values, 1) * 1.15;
+    const barW    = cW / data.labels.length;
+    const actBarW = Math.max(barW - 8, 12);
 
-  ctx.clearRect(0, 0, width, height);
-
-  const padding = { top: 20, right: 30, bottom: 40, left: 60 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
-
-  const maxValue = Math.max(...data.values, 1) * 1.15;
-  const barWidth = chartWidth / data.labels.length;
-  const barGap = 8;
-  const actualBarWidth = Math.max(barWidth - barGap, 20);
-
-  ctx.fillStyle = '#5E6A63';
-  ctx.font = '12px "Plus Jakarta Sans", sans-serif';
-  ctx.textAlign = 'center';
-  data.labels.forEach((label, i) => {
-    const x = padding.left + i * barWidth + barWidth / 2;
-    ctx.fillText(label, x, height - 10);
-  });
-
-  ctx.fillStyle = '#5E6A63';
-  ctx.textAlign = 'right';
-  const yTicks = 5;
-  for (let i = 0; i <= yTicks; i++) {
-    const value = (maxValue / yTicks) * i;
-    const y = height - padding.bottom - (chartHeight / yTicks) * i;
-    ctx.fillText('\u00A3' + Math.round(value), padding.left - 8, y + 4);
-    ctx.strokeStyle = '#DCE3DA';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padding.left, y);
-    ctx.lineTo(width - padding.right, y);
-    ctx.stroke();
-  }
-
-  const gradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
-  gradient.addColorStop(0, '#0F260B');
-  gradient.addColorStop(1, '#6BAF3A');
-
-  data.values.forEach((value, i) => {
-    const barHeight = (value / maxValue) * chartHeight;
-    const x = padding.left + i * barWidth + (barWidth - actualBarWidth) / 2;
-    const y = height - padding.bottom - barHeight;
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(x, y, actualBarWidth, barHeight);
-  });
-}
-
-function renderStats(summary) {
-  statsGrid.innerHTML = `
-    <div class="stat-card"><div class="stat-value">${summary.total_orders || 0}</div><div class="stat-label">Total Orders</div></div>
-    <div class="stat-card"><div class="stat-value">${formatCurrency(summary.total_revenue || 0)}</div><div class="stat-label">Total Revenue</div></div>
-    <div class="stat-card"><div class="stat-value">${formatCurrency(summary.avg_order_value || 0)}</div><div class="stat-label">Avg Order Value</div></div>
-  `;
-}
-
-function renderReportCards(data, type) {
-  if (type === 'weekly' || type === 'daily') {
-    if (!data.orders || data.orders.length === 0) {
-      reportCardsContainer.innerHTML = '';
-      return;
+    // Grid lines + Y labels
+    ctx.fillStyle  = '#5E6A63';
+    ctx.font       = '11px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign  = 'right';
+    for (let i = 0; i <= 5; i++) {
+        const val = (maxVal / 5) * i;
+        const y   = H - pad.bottom - (cH / 5) * i;
+        ctx.fillText('£' + Math.round(val), pad.left - 6, y + 4);
+        ctx.strokeStyle = '#DCE3DA'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
     }
 
-    const title = type === 'weekly' ? 'Weekly Highlights' : 'Today\'s Orders';
-    
-    const rows = data.orders.map(o => `
-      <tr>
-        <td class="product-name">${o.customer}</td>
-        <td class="qty">${o.items}</td>
-        <td class="customer">${formatCurrency(o.total)}</td>
-      </tr>
-    `).join('');
+    // X labels
+    ctx.textAlign = 'center';
+    data.labels.forEach((label, i) => {
+        ctx.fillText(label, pad.left + i * barW + barW / 2, H - 8);
+    });
+
+    // Bars
+    const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+    grad.addColorStop(0, '#0F260B');
+    grad.addColorStop(1, '#6BAF3A');
+    data.values.forEach((val, i) => {
+        const bH = (val / maxVal) * cH;
+        const x  = pad.left + i * barW + (barW - actBarW) / 2;
+        ctx.fillStyle = grad;
+        ctx.fillRect(x, H - pad.bottom - bH, actBarW, bH);
+    });
+}
+
+// ── Render stats cards ──────────────────────────────────────
+function renderStats(summary) {
+    statsGrid.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${summary.total_orders || 0}</div>
+            <div class="stat-label">Total Orders</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${formatCurrency(summary.total_revenue || 0)}</div>
+            <div class="stat-label">Total Revenue</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${formatCurrency(summary.avg_order_value || 0)}</div>
+            <div class="stat-label">Avg Order Value</div>
+        </div>`;
+}
+
+// ── Render orders table ─────────────────────────────────────
+function renderReportCards(orders, type) {
+    if (!orders || orders.length === 0) {
+        reportCardsContainer.innerHTML = `
+            <div class="report-card">
+                <div class="empty-state">
+                    <span class="material-icons-outlined">inbox</span>
+                    <p>No orders found for this period.</p>
+                </div>
+            </div>`;
+        return;
+    }
+
+    const title = type === 'daily' ? "Today's Orders" : 'Orders This Period';
+    const rows  = orders.map(o => `
+        <tr>
+            <td class="product-name">${o.customer}</td>
+            <td class="qty">${o.items}</td>
+            <td class="amount">${formatCurrency(o.total)}</td>
+        </tr>`).join('');
 
     reportCardsContainer.innerHTML = `
-      <div class="report-card">
-        <div class="report-card-header">
-          <span class="report-card-title">${title}</span>
-        </div>
-        <table class="order-table">
-          <thead><tr><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    `;
-  } else {
-    reportCardsContainer.innerHTML = '';
-  }
+        <div class="report-card">
+            <div class="report-card-header">
+                <span class="report-card-title">${title}</span>
+            </div>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
 }
+
+// ── Set report type & fetch data ────────────────────────────
+let lastChartData = null;
 
 function setReportType(type) {
-  currentType = type;
+    const titles = {
+        daily:   'Daily Report',
+        weekly:  'Weekly Report',
+        monthly: 'Monthly Report'
+    };
+    const graphTitles = {
+        daily:   'Daily Sales Graph',
+        weekly:  'Weekly Sales Graph',
+        monthly: 'Monthly Sales Graph'
+    };
+    const apiMap = {
+        daily:   '../api/trader/get-daily-report.php',
+        weekly:  '../api/trader/get-weekly-report.php',
+        monthly: '../api/trader/get-monthly-report.php'
+    };
 
-  const titles = { daily: 'Daily Report', weekly: 'Weekly Report', monthly: 'Monthly Report' };
-  const graphTitles = { daily: 'Daily Sales Graph', weekly: 'Weekly Sales Graph', monthly: 'Monthly Sales Graph' };
+    pageTitle.textContent  = titles[type];
+    graphTitle.textContent = graphTitles[type];
 
-  pageTitle.textContent = titles[type];
-  graphTitle.textContent = graphTitles[type];
+    reportButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.reportType === type));
+    document.querySelectorAll('.sidebar-report-link').forEach(link =>
+        link.classList.toggle('active', link.dataset.reportType === type)
+    );
 
-  reportButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.reportType === type));
-  document.querySelectorAll('.sidebar-report-link').forEach(link => link.classList.toggle('active', link.dataset.reportType === type));
+    // Update URL without reload
+    const url = new URL(window.location.href);
+    url.searchParams.set('type', type);
+    window.history.replaceState({}, '', url.toString());
 
-  const url = new URL(window.location.href);
-  url.searchParams.set('type', type);
-  window.history.replaceState({}, '', url.toString());
+    // Show loading
+    statsGrid.innerHTML            = '<div class="loading">Loading...</div>';
+    reportCardsContainer.innerHTML = '';
 
-  let data;
-  if (type === 'daily') data = mockDailyData;
-  else if (type === 'weekly') data = mockWeeklyData;
-  else data = mockMonthlyData;
-
-  renderStats(data.summary);
-  renderReportCards(data, type);
-  drawBarChart(document.getElementById('reportChart'), data.chart);
+    fetch(`${apiMap[type]}?user_id=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            statsGrid.innerHTML = `<div class="error-msg">Error: ${data.message}</div>`;
+            return;
+        }
+        renderStats(data.summary);
+        renderReportCards(data.orders, type);
+        lastChartData = data.chart;
+        drawBarChart(document.getElementById('reportChart'), data.chart);
+    })
+    .catch(err => {
+        statsGrid.innerHTML = '<div class="error-msg">Failed to load report. Please try again.</div>';
+        console.error(err);
+    });
 }
 
-reportButtons.forEach(btn => btn.addEventListener('click', () => setReportType(btn.dataset.reportType)));
+// ── Button listeners ────────────────────────────────────────
+reportButtons.forEach(btn =>
+    btn.addEventListener('click', () => setReportType(btn.dataset.reportType))
+);
 
-document.addEventListener('DOMContentLoaded', () => {
-  const initialType = new URLSearchParams(window.location.search).get('type') || 'weekly';
-  setReportType(initialType);
+// ── Redraw chart on resize ──────────────────────────────────
+window.addEventListener('resize', () => {
+    if (lastChartData) {
+        drawBarChart(document.getElementById('reportChart'), lastChartData);
+    }
 });
 
-window.addEventListener('resize', () => {
-  let data;
-  if (currentType === 'daily') data = mockDailyData;
-  else if (currentType === 'weekly') data = mockWeeklyData;
-  else data = mockMonthlyData;
-  drawBarChart(document.getElementById('reportChart'), data.chart);
+// ── Init ────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfileInfo();
+    const initialType = new URLSearchParams(window.location.search).get('type') || 'weekly';
+    setReportType(initialType);
 });
 </script>
 </body>

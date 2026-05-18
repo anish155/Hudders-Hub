@@ -157,7 +157,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-profile">
     <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
-    <div class="sidebar-name">John Farmer</div>
+    <div class="sidebar-name" id="sidebarName">...</div>
     <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
   </div>
   <nav class="sidebar-nav">
@@ -193,7 +193,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   <div class="top-nav-title">Orders</div>
   <div class="top-nav-right">
     <button class="top-nav-icon"><span class="material-icons-outlined">notifications_none</span><span class="notification-badge"></span></button>
-    <div class="user-pill"><span class="material-icons-outlined">person</span><span>John</span></div>
+    <div class="user-pill"><span class="material-icons-outlined">person</span><span id="topNavName">...</span></div>
   </div>
 </header>
 
@@ -219,7 +219,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
       <input type="text" class="search-input" placeholder="Search orders..." id="searchInput">
       <div class="shop-name">
         <span class="material-icons-outlined">storefront</span>
-        <span>Green Valley Farm</span>
+        <span id="shopNameDisplay">...</span>
       </div>
     </div>
 
@@ -228,119 +228,145 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 </main>
 
 <script>
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebarToggle');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
-const ordersContainer = document.getElementById('ordersTableContainer');
-const searchInput = document.getElementById('searchInput');
-const statusTabs = document.querySelectorAll('.status-tab');
+document.addEventListener('DOMContentLoaded', function () {
 
-let currentStatus = 'all';
+    const userId   = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+    if (!userId || userRole !== 'trader') {
+        window.location.href = '../public/login.html';
+    }
 
-const mockOrders = [
-  { id: 'ORD-1045', customer: 'John Smith', items: 3, total: 24.50, status: 'Pending', date: '2026-05-10' },
-  { id: 'ORD-1046', customer: 'Sarah Johnson', items: 2, total: 15.00, status: 'Confirmed', date: '2026-05-10' },
-  { id: 'ORD-1047', customer: 'Mike Brown', items: 5, total: 42.75, status: 'Completed', date: '2026-05-11' },
-  { id: 'ORD-1048', customer: 'Emma Wilson', items: 1, total: 8.99, status: 'Pending', date: '2026-05-11' },
-  { id: 'ORD-1049', customer: 'David Lee', items: 4, total: 31.20, status: 'Cancelled', date: '2026-05-11' },
-  { id: 'ORD-1050', customer: 'Lisa Anderson', items: 2, total: 18.50, status: 'Completed', date: '2026-05-12' }
-];
+    const sidebar        = document.getElementById('sidebar');
+    const sidebarToggle  = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const ordersContainer = document.getElementById('ordersTableContainer');
+    const searchInput     = document.getElementById('searchInput');
+    const statusTabs      = document.querySelectorAll('.status-tab');
 
-sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
-sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
+    // Set names
+    document.getElementById('sidebarName').textContent =
+    (sessionStorage.getItem('firstname') || '') + ' ' + (sessionStorage.getItem('lastname') || '');
+    document.getElementById('topNavName').textContent =
+    localStorage.getItem('firstname') || '';
 
-document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
-  item.addEventListener('click', () => { if (window.innerWidth <= 900) { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); } });
-});
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('active');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    });
 
-function formatCurrency(amount) { return '£' + parseFloat(amount).toFixed(2); }
+    let allOrders   = [];
+    let currentStatus = 'all';
 
-function getStatusClass(status) {
-  const s = (status || '').toLowerCase();
-  if (s.includes('pending')) return 'pending';
-  if (s.includes('process')) return 'processing';
-  if (s.includes('complete')) return 'completed';
-  if (s.includes('confirm')) return 'confirmed';
-  if (s.includes('cancel')) return 'cancelled';
-  return 'pending';
-}
+    function formatCurrency(amount) {
+        return '£' + parseFloat(amount).toFixed(2);
+    }
 
-function renderOrdersTable(orders, total) {
-  if (orders.length === 0) {
-    ordersContainer.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">receipt_long</span><h3>No orders found</h3></div>';
-    return;
-  }
+    function getStatusClass(status) {
+        const s = (status || '').toLowerCase();
+        if (s.includes('pending'))   return 'pending';
+        if (s.includes('process'))   return 'processing';
+        if (s.includes('complete'))  return 'completed';
+        if (s.includes('confirm'))   return 'confirmed';
+        if (s.includes('cancel'))    return 'cancelled';
+        if (s.includes('deliver'))   return 'completed';
+        return 'pending';
+    }
 
-  ordersContainer.innerHTML = `
-    <table class="orders-table">
-      <thead>
-        <tr><th>#Order</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr>
-      </thead>
-      <tbody>
-        ${orders.map(o => `
-          <tr>
-            <td><span class="order-id">${o.id}</span></td>
-            <td>${new Date(o.date).toLocaleDateString('en-GB')}</td>
-            <td class="customer-name">${o.customer}</td>
-            <td>${o.items} item${o.items !== 1 ? 's' : ''}</td>
-            <td>${formatCurrency(o.total)}</td>
-            <td><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></td>
-            <td><button class="view-btn" onclick="viewOrder('${o.id}')"><span class="material-icons-outlined">visibility</span> View</button></td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-    <div class="table-footer">
-      <div class="total-orders">[Total orders <strong>${total}</strong>]</div>
-      <div class="pagination">
-        <button class="page-btn disabled"><span class="material-icons-outlined">chevron_left</span></button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn disabled"><span class="material-icons-outlined">chevron_right</span></button>
-      </div>
-      <div class="showing-info">[Showing 1-${total}]</div>
-    </div>
-  `;
-}
+    function renderOrdersTable(orders) {
+        if (orders.length === 0) {
+            ordersContainer.innerHTML = `
+                <div class="empty-state">
+                    <span class="material-icons-outlined">receipt_long</span>
+                    <h3>No orders found</h3>
+                </div>`;
+            return;
+        }
 
-function viewOrder(orderId) {
-  const order = mockOrders.find(o => o.id === orderId);
-  if (order) {
-    alert('Order Details:\n\nOrder ID: ' + order.id + '\nDate: ' + new Date(order.date).toLocaleDateString('en-GB') + '\nCustomer: ' + order.customer + '\nItems: ' + order.items + '\nTotal: ' + formatCurrency(order.total) + '\nStatus: ' + order.status);
-  }
-}
+        ordersContainer.innerHTML = `
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>#Order</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${orders.map(o => `
+                    <tr>
+                        <td><span class="order-id">${o.id}</span></td>
+                        <td>${new Date(o.date).toLocaleDateString('en-GB')}</td>
+                        <td class="customer-name">${o.customer}</td>
+                        <td>${o.items} item${o.items !== 1 ? 's' : ''}</td>
+                        <td>${formatCurrency(o.total)}</td>
+                        <td><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></td>
+                        <td><button class="view-btn" onclick="viewOrder('${o.id}')">
+                            <span class="material-icons-outlined">visibility</span> View
+                        </button></td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+            <div class="table-footer">
+                <div class="total-orders">Total orders <strong>${orders.length}</strong></div>
+                <div class="showing-info">Showing 1–${orders.length}</div>
+            </div>`;
+    }
 
-function loadOrders(status = 'all', search = '') {
-  let filtered = mockOrders;
-  
-  if (status !== 'all') {
-    filtered = mockOrders.filter(o => o.status === status);
-  }
-  
-  if (search) {
-    filtered = filtered.filter(o => 
-      o.id.toLowerCase().includes(search.toLowerCase()) ||
-      o.customer.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-  
-  renderOrdersTable(filtered, filtered.length);
-}
+    window.viewOrder = function(orderId) {
+        alert('Order details page coming soon for ' + orderId);
+    };
 
-statusTabs.forEach(tab => {
-  tab.addEventListener('click', function() {
-    statusTabs.forEach(t => t.classList.remove('active'));
-    this.classList.add('active');
-    currentStatus = this.dataset.status;
-    loadOrders(currentStatus, searchInput.value);
-  });
-});
+    function filterAndRender() {
+        const search = searchInput.value.toLowerCase();
+        let filtered = allOrders;
 
-searchInput.addEventListener('input', function() {
-  loadOrders(currentStatus, this.value);
-});
+        if (currentStatus !== 'all') {
+            filtered = filtered.filter(o => o.status === currentStatus);
+        }
+        if (search) {
+            filtered = filtered.filter(o =>
+                o.id.toLowerCase().includes(search) ||
+                o.customer.toLowerCase().includes(search)
+            );
+        }
+        renderOrdersTable(filtered);
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadOrders();
+    function loadOrders() {
+        fetch(`http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/get-orders.php?user_id=${userId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { console.error(data.message); return; }
+            allOrders = data.orders;
+
+            // Update shop name
+            document.getElementById('shopNameDisplay').textContent = data.shop_name;
+
+            filterAndRender();
+        })
+        .catch(err => console.error('Failed to load orders:', err));
+    }
+
+    statusTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            statusTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentStatus = this.dataset.status;
+            filterAndRender();
+        });
+    });
+
+    searchInput.addEventListener('input', filterAndRender);
+
+    loadOrders();
 });
 </script>
 </body>

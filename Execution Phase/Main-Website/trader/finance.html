@@ -24,32 +24,31 @@
   --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); background: var(--bg-light); min-height: 100vh; }
 
 .sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #FFFFFF; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
-.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
-.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
+.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.15); text-align: center; }
+.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255,255,255,0.3); }
 .sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
 .sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
+.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.7); }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
 .sidebar-nav { padding: 16px 0; flex: 1; }
 .sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
-.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; }
-.sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
-.sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
+.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; }
+.sidebar-nav-item:hover { background: rgba(255,255,255,0.1); color: #FFFFFF; }
+.sidebar-nav-item.active { background: rgba(255,255,255,0.15); color: #FFFFFF; font-weight: 600; }
 .sidebar-nav-item .material-icons-outlined { font-size: 20px; }
-.sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
-.sidebar-nav-item.logout:hover { color: #FF8C70; background: rgba(255, 94, 58, 0.1); }
+.sidebar-nav-item.logout { color: rgba(255,255,255,0.5); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+.sidebar-nav-item.logout:hover { color: #FF8C70; background: rgba(255,94,58,0.1); }
 .sidebar-report-group { display: flex; flex-direction: column; }
 .sidebar-report-group summary { list-style: none; }
 .sidebar-report-group summary::-webkit-details-marker { display: none; }
-.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255,255,255,0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
 .sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
-.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
-.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
+.sidebar-report-link:hover { background: rgba(255,255,255,0.12); color: #FFFFFF; }
 .sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
 .sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
 
@@ -59,16 +58,23 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
 .top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
 .top-nav-right { display: flex; align-items: center; gap: 8px; }
-.top-nav-icon { width: 40px; height: 40px; border-radius: 0; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
+.top-nav-icon { width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
 .top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
 .top-nav-icon .material-icons-outlined { font-size: 22px; }
 .notification-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: #FF5E3A; border-radius: 50%; border: 2px solid var(--bg-white); }
-.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); border-radius: 0; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); }
+.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); }
 .user-pill:hover { background: var(--primary-green-light); }
 .user-pill .material-icons-outlined { font-size: 18px; }
 
 .main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); }
 .page-title { font-size: 32px; font-weight: 800; color: var(--text-black); margin-bottom: 28px; }
+
+.summary-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 28px; }
+.summary-card { background: var(--bg-white); border: 1px solid var(--border-light); padding: 20px 24px; box-shadow: var(--shadow-sm); }
+.summary-card-label { font-size: 13px; color: var(--text-medium-gray); font-weight: 600; margin-bottom: 8px; }
+.summary-card-value { font-size: 28px; font-weight: 800; color: var(--text-black); }
+.summary-card-value.green { color: var(--primary-green); }
+.summary-card-value.orange { color: var(--primary-orange); }
 
 .finance-section { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden; }
 .section-header { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border-light); }
@@ -91,14 +97,13 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .payout-ref { font-weight: 600; color: var(--text-black); font-size: 13px; }
 .payout-amount { font-weight: 700; }
 .payout-amount.positive { color: var(--primary-green); }
-.payout-amount.negative { color: #EF4444; }
 
 .status-badge { display: inline-flex; padding: 4px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; border-radius: 2px; }
 .status-badge.completed { background: #D1FAE5; color: #065F46; }
-.status-badge.processing { background: #FEF3C7; color: #92400E; }
-.status-badge.settled { background: #DBEAFE; color: #1E40AF; }
+.status-badge.pending   { background: #FEF3C7; color: #92400E; }
+.status-badge.failed    { background: #FEE2E2; color: #991B1B; }
 
-.action-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 12px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); font-family: inherit; border-radius: 0; }
+.action-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 12px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); font-family: inherit; }
 .action-btn:hover { background: var(--primary-green); color: #FFFFFF; border-color: var(--primary-green); }
 .action-btn .material-icons-outlined { font-size: 14px; }
 
@@ -107,16 +112,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .total-payouts strong { color: var(--text-dark-gray); }
 .showing-info { font-size: 13px; color: var(--text-medium-gray); }
 
-.pagination { display: flex; align-items: center; gap: 4px; }
-.page-btn { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); font-family: inherit; border-radius: 0; }
-.page-btn:hover { background: var(--primary-green-light); border-color: var(--primary-green); }
-.page-btn.active { background: var(--primary-green); color: #FFFFFF; border-color: var(--primary-green); }
-.page-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-.page-btn .material-icons-outlined { font-size: 16px; }
-
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text-medium-gray); }
-.empty-state .material-icons-outlined { font-size: 64px; margin-bottom: 16px; color: var(--border-light); }
-.empty-state h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark-gray); }
+.empty-state .material-icons-outlined { font-size: 64px; margin-bottom: 16px; color: var(--border-light); display: block; }
 
 .sidebar-toggle { display: none; }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
@@ -128,11 +125,10 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   .main-content { margin-left: 0; }
   .top-nav { left: 0; }
   .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
-  .finance-table { font-size: 13px; }
-  .finance-table th, .finance-table td { padding: 10px 14px; }
+  .summary-cards { grid-template-columns: 1fr 1fr; }
 }
-
 @media (max-width: 600px) {
+  .summary-cards { grid-template-columns: 1fr; }
   .table-toolbar { flex-direction: column; align-items: stretch; }
   .search-input { width: 100%; }
   .page-title { font-size: 24px; }
@@ -147,7 +143,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-profile">
     <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
-    <div class="sidebar-name">John Farmer</div>
+    <div class="sidebar-name" id="sidebarName">...</div>
     <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
   </div>
   <nav class="sidebar-nav">
@@ -170,7 +166,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
         </details>
       </li>
       <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+      <li><a href="#" onclick="sessionStorage.clear(); window.location.href='../public/login.html';" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
     </ul>
   </nav>
 </aside>
@@ -183,12 +179,23 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   <div class="top-nav-title">Finance</div>
   <div class="top-nav-right">
     <button class="top-nav-icon"><span class="material-icons-outlined">notifications_none</span><span class="notification-badge"></span></button>
-    <div class="user-pill"><span class="material-icons-outlined">person</span><span>John</span></div>
+    <div class="user-pill"><span class="material-icons-outlined">person</span><span id="topNavName">...</span></div>
   </div>
 </header>
 
 <main class="main-content">
   <h1 class="page-title">Finance</h1>
+
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="summary-card-label">Total Revenue (Completed)</div>
+      <div class="summary-card-value green" id="totalRevenue">£0.00</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">Pending Payments</div>
+      <div class="summary-card-value orange" id="totalPending">£0.00</div>
+    </div>
+  </div>
 
   <div class="finance-section">
     <div class="section-header">
@@ -201,7 +208,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
       <input type="text" class="search-input" placeholder="Search payouts..." id="searchInput">
       <div class="shop-name">
         <span class="material-icons-outlined">storefront</span>
-        <span>Green Valley Farm</span>
+        <span id="shopNameDisplay">...</span>
       </div>
     </div>
 
@@ -210,98 +217,120 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 </main>
 
 <script>
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebarToggle');
-const sidebarOverlay = document.getElementById('sidebarOverlay');
-const financeContainer = document.getElementById('financeTableContainer');
-const searchInput = document.getElementById('searchInput');
+document.addEventListener('DOMContentLoaded', function () {
 
-const mockPayouts = [
-  { id: 1, date: '2026-05-10', type: 'Payout', reference: 'PAY-001', amount: 850.00, status: 'Completed' },
-  { id: 2, date: '2026-05-05', type: 'Payout', reference: 'PAY-002', amount: 1200.00, status: 'Completed' },
-  { id: 3, date: '2026-05-01', type: 'Payout', reference: 'PAY-003', amount: 675.00, status: 'Completed' },
-  { id: 4, date: '2026-04-25', type: 'Payout', reference: 'PAY-004', amount: 920.00, status: 'Completed' }
-];
+    const userId   = sessionStorage.getItem('user_id');
+    const userRole = sessionStorage.getItem('userRole');
+    if (!userId || userRole !== 'trader') {
+        window.location.href = '../public/login.html';
+    }
 
-sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
-sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
-document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(item => {
-  item.addEventListener('click', () => { if (window.innerWidth <= 900) { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); } });
-});
+    const sidebar        = document.getElementById('sidebar');
+    const sidebarToggle  = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const financeContainer = document.getElementById('financeTableContainer');
+    const searchInput      = document.getElementById('searchInput');
 
-function formatCurrency(amount) {
-  return '£' + parseFloat(amount).toFixed(2);
-}
+    document.getElementById('sidebarName').textContent =
+        (sessionStorage.getItem('firstname') || '') + ' ' + (sessionStorage.getItem('lastname') || '');
+    document.getElementById('topNavName').textContent =
+        sessionStorage.getItem('firstname') || '';
 
-function getStatusClass(status) {
-  const s = (status || '').toLowerCase();
-  if (s.includes('complete')) return 'completed';
-  if (s.includes('process')) return 'processing';
-  return 'settled';
-}
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('active');
+    });
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    });
 
-function renderFinanceTable(payouts, total) {
-  if (payouts.length === 0) {
-    financeContainer.innerHTML = '<div class="empty-state"><span class="material-icons-outlined">account_balance_wallet</span><h3>No payouts found</h3></div>';
-    return;
-  }
+    let allPayouts = [];
 
-  financeContainer.innerHTML = `
-    <table class="finance-table">
-      <thead>
-        <tr><th>Date</th><th>Type</th><th>Reference</th><th>Amount</th><th>Status</th><th>Action</th></tr>
-      </thead>
-      <tbody>
-        ${payouts.map(p => `
-          <tr>
-            <td>${new Date(p.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-            <td class="payout-type">${p.type}</td>
-            <td><span class="payout-ref">${p.reference}</span></td>
-            <td><span class="payout-amount positive">${formatCurrency(p.amount)}</span></td>
-            <td><span class="status-badge ${getStatusClass(p.status)}">${p.status}</span></td>
-            <td><button class="action-btn" onclick="viewPayout('${p.reference}')"><span class="material-icons-outlined">receipt</span> Details</button></td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-    <div class="table-footer">
-      <div class="total-payouts">[Total payouts <strong>${total}</strong>]</div>
-      <div class="pagination">
-        <button class="page-btn disabled"><span class="material-icons-outlined">chevron_left</span></button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn disabled"><span class="material-icons-outlined">chevron_right</span></button>
-      </div>
-      <div class="showing-info">[Showing 1-${total}]</div>
-    </div>
-  `;
-}
+    function formatCurrency(amount) {
+        return '£' + parseFloat(amount || 0).toFixed(2);
+    }
 
-function viewPayout(payoutId) {
-  const payout = mockPayouts.find(p => p.reference === payoutId);
-  if (payout) {
-    alert('Payout Details:\n\nReference: ' + payout.reference + '\nDate: ' + new Date(payout.date).toLocaleDateString('en-GB') + '\nType: ' + payout.type + '\nAmount: ' + formatCurrency(payout.amount) + '\nStatus: ' + payout.status);
-  }
-}
+    function getStatusClass(status) {
+        const s = (status || '').toLowerCase();
+        if (s === 'completed') return 'completed';
+        if (s === 'pending')   return 'pending';
+        if (s === 'failed')    return 'failed';
+        return 'pending';
+    }
 
-function loadFinance(search = '') {
-  let filtered = mockPayouts;
-  
-  if (search) {
-    filtered = mockPayouts.filter(p => 
-      p.reference.toLowerCase().includes(search.toLowerCase()) ||
-      p.type.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-  
-  renderFinanceTable(filtered, filtered.length);
-}
+    function renderFinanceTable(payouts) {
+        if (payouts.length === 0) {
+            financeContainer.innerHTML = `
+                <div class="empty-state">
+                    <span class="material-icons-outlined">account_balance_wallet</span>
+                    <h3>No payouts found</h3>
+                </div>`;
+            return;
+        }
 
-searchInput.addEventListener('input', function() {
-  loadFinance(this.value);
-});
+        financeContainer.innerHTML = `
+            <table class="finance-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Reference</th>
+                        <th>Order</th>
+                        <th>Method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${payouts.map(p => `
+                    <tr>
+                        <td>${new Date(p.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                        <td>${p.type}</td>
+                        <td><span class="payout-ref">${p.reference}</span></td>
+                        <td>${p.order_id}</td>
+                        <td>${p.method}</td>
+                        <td><span class="payout-amount positive">${formatCurrency(p.amount)}</span></td>
+                        <td><span class="status-badge ${getStatusClass(p.status)}">${p.status}</span></td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>
+            <div class="table-footer">
+                <div class="total-payouts">Total payouts <strong>${payouts.length}</strong></div>
+                <div class="showing-info">Showing 1–${payouts.length}</div>
+            </div>`;
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadFinance();
+    function filterAndRender() {
+        const search = searchInput.value.toLowerCase();
+        const filtered = search
+            ? allPayouts.filter(p =>
+                p.reference.toLowerCase().includes(search) ||
+                p.order_id.toLowerCase().includes(search) ||
+                p.status.toLowerCase().includes(search))
+            : allPayouts;
+        renderFinanceTable(filtered);
+    }
+
+    function loadFinance() {
+        fetch(`http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/get-finance.php?user_id=${userId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { console.error(data.message); return; }
+            allPayouts = data.payouts;
+
+            document.getElementById('shopNameDisplay').textContent = data.shop_name;
+            document.getElementById('totalRevenue').textContent = formatCurrency(data.total_revenue);
+            document.getElementById('totalPending').textContent = formatCurrency(data.total_pending);
+
+            filterAndRender();
+        })
+        .catch(err => console.error('Failed to load finance:', err));
+    }
+
+    searchInput.addEventListener('input', filterAndRender);
+
+    loadFinance();
 });
 </script>
 </body>

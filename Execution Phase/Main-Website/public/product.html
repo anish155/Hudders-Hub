@@ -433,15 +433,14 @@ window.addEventListener('scroll', function () {
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-/* ── USER MENU (matches index.html — uses localStorage) ─────────────────── */
+/* ── USER MENU — uses sessionStorage ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
-    const name             = localStorage.getItem('userName');
+    const name             = sessionStorage.getItem('userName');  // ← FIXED
     const loginBtn         = document.getElementById('loginBtn');
     const userDropdownWrap = document.getElementById('userDropdownWrap');
     const userGreeting     = document.getElementById('userGreeting');
 
     if (name) {
-        // User is logged in — hide Login link, show greeting + dropdown
         if (loginBtn)         loginBtn.style.display         = 'none';
         if (userDropdownWrap) userDropdownWrap.style.display = 'block';
         if (userGreeting)     userGreeting.textContent       = 'Hi, ' + name;
@@ -470,12 +469,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Logout — clears localStorage exactly like index.html
+    // Logout — clears sessionStorage
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function () {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userRole');
+            sessionStorage.removeItem('userName');  // ← FIXED
+            sessionStorage.removeItem('userRole');  // ← FIXED
             fetch('api/auth/logout.php', { method: 'POST' })
                 .finally(function () {
                     sessionStorage.clear();
@@ -546,7 +545,6 @@ document.getElementById('cartClose').addEventListener('click', closeCart);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
 
 function renderCart() {
-    // Remove existing cart item elements (not the empty message)
     cartBody.querySelectorAll('.cart-item').forEach(el => el.remove());
 
     let total = 0;
@@ -610,17 +608,17 @@ function addToCart() {
     openCart();
 }
 
-/* ── BUY NOW ─────────────────────────────────────────────────────────────── */
+/* ── BUY NOW — uses sessionStorage ──────────────────────────────────────── */
 function buyNow() {
-    // Use localStorage (same as index.html) to check login
-    const userName = localStorage.getItem('userName');
-    const user_id = parseInt(localStorage.getItem('user_id')); 
+    const userName = sessionStorage.getItem('userName');  // ← FIXED
+    const user_id  = parseInt(sessionStorage.getItem('user_id'));  // ← FIXED
 
-if (!user_id || isNaN(user_id)) {
-    alert("User ID not found. Please log out and log back in.");
-    return;
-}
-    const slot_id  = document.getElementById('order-slot').value;
+    if (!user_id || isNaN(user_id)) {
+        alert("User ID not found. Please log out and log back in.");
+        return;
+    }
+
+    const slot_id = document.getElementById('order-slot').value;
 
     if (!userName) {
         alert('Please login first to purchase!');
@@ -633,9 +631,9 @@ if (!user_id || isNaN(user_id)) {
         return;
     }
 
-    const buyBtn   = document.getElementById('buyNowBtn');
-    const product_id  = 3;
-    const unit_price  = currentPrice;
+    const buyBtn     = document.getElementById('buyNowBtn');
+    const product_id = 3;
+    const unit_price = currentPrice;
 
     buyBtn.textContent = 'Processing...';
     buyBtn.disabled    = true;

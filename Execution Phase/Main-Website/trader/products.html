@@ -199,7 +199,7 @@ body {
         </details>
       </li>
       <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+      <li><a href="#" onclick="sessionStorage.clear(); window.location.href='../public/login.html';" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
     </ul>
   </nav>
 </aside>
@@ -252,14 +252,14 @@ body {
 </div>
 
 <script>
-const userId = localStorage.getItem('user_id');
-const userRole = localStorage.getItem('userRole');
+const userId = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
 if (!userId || userRole !== 'trader') {
     window.location.href = '../public/login.html';
 }
 
-const firstname = localStorage.getItem('firstname') || '';
-const lastname  = localStorage.getItem('lastname')  || '';
+const firstname = sessionStorage.getItem('firstname') || '';
+const lastname  = sessionStorage.getItem('lastname')  || '';
 
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');

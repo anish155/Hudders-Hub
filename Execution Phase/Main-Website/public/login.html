@@ -258,11 +258,11 @@ loginForm.addEventListener('submit', function(e) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-    localStorage.setItem('userName',   data.name);
-    localStorage.setItem('user_id',    data.user_id); 
-    localStorage.setItem('userRole',   data.role);
-    localStorage.setItem('firstname',  data.firstname);  // ADD
-    localStorage.setItem('lastname',   data.lastname);   // ADD
+    sessionStorage.setItem('userName',  data.name);
+    sessionStorage.setItem('user_id',   data.user_id);
+    sessionStorage.setItem('userRole',  data.role);
+    sessionStorage.setItem('firstname', data.firstname);
+    sessionStorage.setItem('lastname',  data.lastname);
 
     if (data.role === 'trader') {
         window.location.href = '../trader/dashboard.html';

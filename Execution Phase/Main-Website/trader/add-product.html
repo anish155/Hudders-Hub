@@ -305,11 +305,11 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    const userId = localStorage.getItem('user_id');
-    const userRole = localStorage.getItem('userRole');
-    if (!userId || userRole !== 'trader') {
-        window.location.href = '../public/login.html';
-    }
+   const userId = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
+if (!userId || userRole !== 'trader') {
+    window.location.href = '../public/login.html';
+}
 
     const categoryMap = { 'Delicatessen': 1, 'Butcher': 2, 'Greengrocer': 3, 'Fishmonger': 4, 'Bakery': 5 };
 
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
     document.getElementById('sidebarName').textContent =
-        (localStorage.getItem('firstname') || '') + ' ' + (localStorage.getItem('lastname') || '');
+        (sessionStorage.getItem('firstname') || '') + ' ' + (sessionStorage.getItem('lastname') || '');
     document.getElementById('topNavName').textContent =
         localStorage.getItem('firstname') || '';
 

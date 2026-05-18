@@ -659,8 +659,8 @@ header.scrolled .nav-bar { padding: 8px 0; background: #F3F4F6; }
 </footer>
 
 <script>
- 
- const userRole = localStorage.getItem('userRole');
+/* ── TRADER REDIRECT — uses sessionStorage ───────────────────────────────── */
+const userRole = sessionStorage.getItem('userRole');
 if (userRole === 'trader') {
     window.location.href = '../trader/dashboard.html';
 }
@@ -670,27 +670,26 @@ window.addEventListener('scroll', function () {
     document.querySelector('header').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-/* ── USER DROPDOWN ──────────────────────────────────────────────────────── */
+/* ── USER MENU — uses sessionStorage ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
-     const name = localStorage.getItem('userName');
+    const name             = sessionStorage.getItem('userName');  // ← FIXED
+    const loginBtn         = document.getElementById('loginBtn');
+    const userDropdownWrap = document.getElementById('userDropdownWrap');
+    const userGreeting     = document.getElementById('userGreeting');
+
     if (name) {
-        // If logged in, hide "Login/Signup" and show "Hi, Name"
-        const loginBtn = document.getElementById('loginBtn');
-        const userDropdownWrap = document.getElementById('userDropdownWrap');
-        const userGreeting = document.getElementById('userGreeting');
-        
-        if (loginBtn) loginBtn.style.display = 'none';
+        if (loginBtn)         loginBtn.style.display         = 'none';
         if (userDropdownWrap) userDropdownWrap.style.display = 'block';
-        if (userGreeting) userGreeting.textContent = 'Hi, ' + name;
+        if (userGreeting)     userGreeting.textContent       = 'Hi, ' + name;
     }
- const dropdownBtn = document.getElementById('userDropdownBtn');
+
+    const dropdownBtn  = document.getElementById('userDropdownBtn');
     const dropdownMenu = document.getElementById('userDropdown');
-    const chevron = document.getElementById('dropChevron');
+    const chevron      = document.getElementById('dropChevron');
 
     if (dropdownBtn) {
         dropdownBtn.addEventListener('click', function (e) {
             e.stopPropagation();
-            // This adds/removes the "open" class which your CSS uses to show the menu
             dropdownMenu.classList.toggle('open');
             if (chevron) {
                 chevron.textContent = dropdownMenu.classList.contains('open') ? 'expand_less' : 'expand_more';
@@ -698,7 +697,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 3. Close the menu if the user clicks anywhere else on the page
     document.addEventListener('click', function () {
         if (dropdownMenu && dropdownMenu.classList.contains('open')) {
             dropdownMenu.classList.remove('open');
@@ -706,12 +704,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 4. Logout Logic
-        const logoutBtn = document.getElementById('logoutBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function () {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userRole');
+            sessionStorage.removeItem('userName');   // ← FIXED
+            sessionStorage.removeItem('userRole');   // ← FIXED
             fetch('api/auth/logout.php', { method: 'POST' })
                 .finally(function () {
                     sessionStorage.clear();
@@ -720,7 +717,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-    
 
 /* ── FAVOURITES ─────────────────────────────────────────────────────────── */
 document.querySelectorAll('.favorite-btn').forEach(btn => {

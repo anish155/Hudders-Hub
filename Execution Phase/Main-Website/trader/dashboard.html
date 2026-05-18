@@ -585,14 +585,14 @@ body {
 <script>
 
 // Auth guard
-const userId = localStorage.getItem('user_id');
-const userRole = localStorage.getItem('userRole');
+const userId = sessionStorage.getItem('user_id');
+const userRole = sessionStorage.getItem('userRole');
 if (!userId || userRole !== 'trader') {
     window.location.href = '../public/login.html';
 }
 
 function handleLogout() {
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = '../public/login.html';
 }
 
@@ -610,7 +610,7 @@ function getStatusClass(status) {
 }
 
 function loadDashboard() {
-    fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
+    fetch(`http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/get-dashboard.php?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
