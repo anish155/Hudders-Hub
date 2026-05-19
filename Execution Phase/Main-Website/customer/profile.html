@@ -75,8 +75,8 @@
       <div class="profile-chip">
         <div class="avatar"><span class="material-icons-outlined">person</span></div>
         <div>
-          <p class="name">John Smith</p>
-          <p class="mail">john.smith@email.com</p>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
         </div>
       </div>
       <nav class="menu">
@@ -86,7 +86,7 @@
         <a href="wishlist.html">Wishlist</a>
         <a href="change-password.html">Change Password</a>
         <a href="email-settings.html">Email Settings</a>
-        <a class="logout" href="../api/auth/logout.php">Logout</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
       </nav>
     </aside>
 
@@ -95,10 +95,10 @@
         <h1>My Profile</h1>
         <p class="sub">Update your personal information and account preferences.</p>
         <form class="grid">
-          <div class="field"><label for="firstName">First Name</label><input id="firstName" type="text" value="John"></div>
-          <div class="field"><label for="lastName">Last Name</label><input id="lastName" type="text" value="Smith"></div>
-          <div class="field"><label for="email">Email Address</label><input id="email" type="email" value="john.smith@email.com"></div>
-          <div class="field"><label for="phone">Phone Number</label><input id="phone" type="tel" value="+44 7700 900123"></div>
+          <div class="field"><label for="firstName">First Name</label><input id="firstName" type="text" value=""></div>
+          <div class="field"><label for="lastName">Last Name</label><input id="lastName" type="text" value=""></div>
+          <div class="field"><label for="email">Email Address</label><input id="email" type="email" value="" readonly></div>
+          <div class="field"><label for="phone">Phone Number</label><input id="phone" type="tel" value="" readonly></div>
           <div class="field full"><label for="bio">Short Bio</label><textarea id="bio">I enjoy shopping from local traders and planning weekly fresh groceries for family meals.</textarea></div>
           <div class="btn-row full">
             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -109,13 +109,135 @@
 
       <article class="card">
         <h2 style="font-size:20px;margin-bottom:12px;">Account Overview</h2>
+        <p class="sub" style="margin-bottom:12px;">Member since: <span id="memberSince">-</span></p>
         <div class="mini-cards">
-          <div class="mini"><b>14</b><span>Total Orders</span></div>
-          <div class="mini"><b>4</b><span>Saved Addresses</span></div>
-          <div class="mini"><b>7</b><span>Wishlist Items</span></div>
+          <div class="mini"><b id="totalOrders">0</b><span>Total Orders</span></div>
+          <div class="mini"><b id="activeOrders">0</b><span>Active Orders</span></div>
+          <div class="mini"><b id="wishlistCount">0</b><span>Wishlist Items</span></div>
         </div>
       </article>
     </section>
   </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    function pick(obj, ...keys) {
+      for (const k of keys) {
+        if (obj && obj[k] !== undefined && obj[k] !== null) return obj[k];
+      }
+      return '';
+    }
+
+    function fillFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (!fullName && !email) return;
+
+      const parts = fullName.split(/\s+/).filter(Boolean);
+      const firstName = parts[0] || '';
+      const lastName = parts.slice(1).join(' ');
+
+      document.getElementById('firstName').value = document.getElementById('firstName').value || firstName;
+      document.getElementById('lastName').value = document.getElementById('lastName').value || lastName;
+      document.getElementById('email').value = document.getElementById('email').value || email;
+
+      document.querySelector('.name').textContent = fullName || 'Customer';
+      document.querySelector('.mail').textContent = email || '-';
+    }
+
+    async function loadProfile() {
+      fillFromLocalCache();
+
+      try {
+        const userId = sessionStorage.getItem('user_id');
+        console.log('userId from localStorage:', userId);
+        
+        if (!userId) {
+          alert('Not logged in! Redirecting to login...');
+          window.location.href = '../public/login.html';
+          return;
+        }
+
+        const response = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        console.log('API Response status:', response.status);
+
+        if (response.status === 401) {
+          window.location.href = '../public/login.html';
+          return;
+        }
+
+        const data = await response.json();
+        console.log('API Response data:', data);
+        
+        if (data.success) {
+          const user = data.data;
+          const firstName = pick(user, 'FIRSTNAME', 'firstname');
+          const lastName = pick(user, 'LASTNAME', 'lastname');
+          const email = pick(user, 'EMAIL', 'email');
+          const phone = pick(user, 'PHONE_NUMBER', 'phone_number');
+          const createdAt = pick(user, 'CREATED_AT', 'created_at');
+          const totalOrders = pick(user, 'TOTAL_ORDERS', 'total_orders');
+          const activeOrders = pick(user, 'ACTIVE_ORDERS', 'active_orders');
+          const wishlistCount = pick(user, 'WISHLIST_COUNT', 'wishlist_count');
+
+          document.getElementById('firstName').value = firstName;
+          document.getElementById('lastName').value = lastName;
+          document.getElementById('email').value = email;
+          document.getElementById('phone').value = phone;
+          
+          document.querySelector('.name').textContent = (firstName + ' ' + lastName).trim() || 'Customer';
+          document.querySelector('.mail').textContent = email || '-';
+          
+          if (createdAt) {
+            const date = new Date(createdAt);
+            document.getElementById('memberSince').textContent = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+          }
+          document.getElementById('totalOrders').textContent = totalOrders || 0;
+          document.getElementById('activeOrders').textContent = activeOrders || 0;
+          document.getElementById('wishlistCount').textContent = wishlistCount || 0;
+        } else {
+          console.error('Failed to load profile:', data.error);
+          fillFromLocalCache();
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        fillFromLocalCache();
+      }
+    }
+
+    document.querySelector('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstname = document.getElementById('firstName').value;
+      const lastname = document.getElementById('lastName').value;
+      const phone_number = document.getElementById('phone').value;
+      const address = document.getElementById('bio').value;
+
+      try {
+        const userId = sessionStorage.getItem('user_id');
+        const response = await fetch('../api/customer/update-profile.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: userId, firstname, lastname, phone_number, address })
+        });
+        const data = await response.json();
+        alert(data.success ? 'Profile updated!' : data.error);
+      } catch (err) {
+        alert('Error updating profile');
+      }
+    });
+
+    loadProfile();
+  </script>
 </body>
 </html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuddersHub - Trader Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0F260B;
+            --primary-orange: #FF5E3A;
+            --bg-light: #F7F6F3;
+            --bg-white: #FFFFFF;
+            --border-light: #DCE3DA;
+            --text-black: #0B140A;
+            --text-medium: #5E6A63;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-light); }
+        .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--primary-green); color: white; height: 100vh; position: sticky; top: 0; }
+        .sidebar-profile { padding: 28px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-avatar { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 12px; }
+        .sidebar-name { font-weight: 700; }
+        .sidebar-role { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .sidebar-status { font-size: 12px; color: rgba(255,255,255,0.7); }
+        .sidebar-nav-list { list-style: none; padding: 16px 12px; }
+        .sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.2s; }
+        .sidebar-nav-item:hover, .sidebar-nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .main-content { padding: 28px; max-width: 900px; margin: 0 auto; }
+        .top-nav { background: white; border-bottom: 1px solid var(--border-light); padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .profile-card { background: white; border: 1px solid var(--border-light); padding: 28px; margin-bottom: 24px; }
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 8px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-medium); }
+        .form-input, .form-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); font-family: inherit; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .readonly-field { background: var(--bg-light); color: var(--text-medium); }
+        .logo-section { display: flex; gap: 24px; align-items: center; margin-bottom: 20px; }
+        .logo-preview { width: 100px; height: 100px; background: var(--bg-light); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .btn { padding: 10px 24px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: var(--primary-green); color: white; }
+        .btn-secondary { background: var(--bg-light); border: 1px solid var(--border-light); }
+        .btn-danger { background: var(--primary-orange); color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .checkbox-group { display: flex; gap: 20px; flex-wrap: wrap; }
+        .checkbox-group label { display: flex; align-items: center; gap: 6px; font-weight: normal; }
+        .action-bar { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-active { background: #D1FAE5; color: #065F46; }
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 20px; border-radius: 4px; display: none; z-index: 1000; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; left: -280px; z-index: 200; }
+            .sidebar.open { left: 0; }
+            .sidebar-toggle { display: block; position: fixed; bottom: 20px; right: 20px; background: var(--primary-green); color: white; border: none; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 300; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+        .sidebar-toggle { display: none; }
+    </style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="sidebar-avatar"><span class="material-icons-outlined">storefront</span></div>
+            <div class="sidebar-name" id="sidebarName">Loading&hellip;</div>
+            <div class="sidebar-role" id="sidebarRole">Trader</div>
+            <div class="sidebar-status" id="sidebarStatus">Active</div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="sidebar-nav-list">
+                <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+                <li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+                <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+                <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">payments</span>Finance</a></li>
+                <li><a href="profile.html" class="sidebar-nav-item active"><span class="material-icons-outlined">manage_accounts</span>Profile</a></li>
+                <li><button onclick="handleLogout()" class="sidebar-nav-item" style="background:none;border:none;color:inherit;cursor:pointer;width:100%;text-align:left;"><span class="material-icons-outlined">logout</span>Logout</button></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <div>HuddersHub Trader</div>
+            <div id="topNavName"></div>
+        </header>
+
+        <h1 style="margin-bottom: 20px;">Profile Settings</h1>
+
+        <form id="profileForm" enctype="multipart/form-data">
+            <!-- Shop Details Section -->
+            <div class="profile-card">
+                <div class="section-title"><span class="material-icons-outlined">storefront</span> Shop Details</div>
+                <div class="logo-section">
+                    <div class="logo-preview" id="logoPreview">
+                        <img id="shopLogoImg" src="../public/assets/logo.png" alt="Shop Logo">
+                    </div>
+                    <div>
+                        <input type="file" id="shopLogo" name="shop_logo" accept="image/jpeg,image/png,image/jpg" style="display:none">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById(&apos;shopLogo&apos;).click()">Change Logo</button>
+                        <small style="display:block; margin-top:4px;">JPG or PNG, max 2MB</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shop Name</label>
+                    <input type="text" id="shopName" name="shop_name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shop Type</label>
+                    <input type="text" id="shopType" class="form-input readonly-field" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shop Description (max 500 characters)</label>
+                    <textarea id="shopDescription" name="shop_description" class="form-textarea" rows="3" maxlength="500"></textarea>
+                    <small id="descCounter">0/500</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Shop Address</label>
+                    <input type="text" id="shopAddress" name="shop_address" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Account Status</label>
+                    <span id="traderStatus" class="status-badge"></span>
+                </div>
+            </div>
+
+            <!-- Owner Details Section -->
+            <div class="profile-card">
+                <div class="section-title"><span class="material-icons-outlined">person_outline</span> Owner Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" id="firstName" name="firstname" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" id="lastName" name="lastname" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password Section -->
+            <div class="profile-card">
+                <div class="section-title"><span class="material-icons-outlined">lock</span> Change Password</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" id="newPassword" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" class="form-input">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="changePassword()">Update Password</button>
+            </div>
+
+            <!-- Collection Days Section -->
+            <div class="profile-card">
+                <div class="section-title"><span class="material-icons-outlined">schedule</span> Collection Days</div>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="collectionWed" value="1"> Wednesday</label>
+                    <label><input type="checkbox" id="collectionThu" value="1"> Thursday</label>
+                    <label><input type="checkbox" id="collectionFri" value="1"> Friday</label>
+                </div>
+            </div>
+
+            <!-- Email Notifications Section -->
+            <div class="profile-card">
+                <div class="section-title"><span class="material-icons-outlined">notifications</span> Email Notifications</div>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="notifyNewOrder"> New Order Alert</label>
+                    <label><input type="checkbox" id="notifyDailyReport"> Daily Report</label>
+                    <label><input type="checkbox" id="notifyWeeklyFinance"> Weekly Finance</label>
+                    <label><input type="checkbox" id="notifyMonthlyReport"> Monthly Report</label>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="profile-card">
+                <div class="section-title" style="color: var(--primary-orange);"><span class="material-icons-outlined">warning</span> Danger Zone</div>
+                <button type="button" class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+                <p style="font-size:12px; color:var(--text-medium); margin-top:8px;">This will permanently delete your shop, products, and all associated data.</p>
+            </div>
+
+            <div class="action-bar">
+                <button type="button" class="btn btn-secondary" onclick="window.location.reload()">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">Save Changes</button>
+            </div>
+        </form>
+    </main>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+    const userId = sessionStorage.getItem('user_id');
+    if (!userId || sessionStorage.getItem('userRole') !== 'trader') window.location.href = '../public/login.html';
+
+    function handleLogout() { sessionStorage.clear(); window.location.href = '../public/login.html'; }
+
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.backgroundColor = type === 'error' ? '#dc3545' : '#28a745';
+        toast.style.display = 'block';
+        setTimeout(() => toast.style.display = 'none', 3000);
+    }
+
+    // Load profile data
+    async function loadProfile() {
+        try {
+            const res = await fetch(`../api/trader/get-profile.php?user_id=${userId}`);
+            const data = await res.json();
+            if (data.success) {
+                const p = data.data;
+                document.getElementById('shopName').value        = p.shop_name         || '';
+                document.getElementById('shopType').value        = p.shop_type         || 'Not specified';
+                document.getElementById('shopDescription').value = p.shop_description  || '';
+                document.getElementById('shopAddress').value     = p.location          || '';
+                document.getElementById('firstName').value        = p.firstname         || '';
+                document.getElementById('lastName').value         = p.lastname          || '';
+                document.getElementById('email').value            = p.email             || '';
+                document.getElementById('phone').value            = p.phone             || '';
+                // Status badge
+                const statusSpan = document.getElementById('traderStatus');
+                const traderStatus = p.trader_status || 'Pending';
+                statusSpan.textContent = traderStatus;
+                statusSpan.className = `status-badge ${traderStatus === 'Active' ? 'status-active' : 'status-pending'}`;
+                document.getElementById('sidebarStatus').textContent = traderStatus;
+                document.getElementById('sidebarName').textContent = [p.firstname, p.lastname].filter(Boolean).join(' ');
+                document.getElementById('topNavName').textContent = [p.firstname, p.lastname].filter(Boolean).join(' ');
+                // Collection days
+                document.getElementById('collectionWed').checked = p.collection_wed == 1;
+                document.getElementById('collectionThu').checked = p.collection_thu == 1;
+                document.getElementById('collectionFri').checked = p.collection_fri == 1;
+                // Notifications
+                document.getElementById('notifyNewOrder').checked    = p.notify_new_order     == 1;
+                document.getElementById('notifyDailyReport').checked = p.notify_daily_report  == 1;
+                document.getElementById('notifyWeeklyFinance').checked = p.notify_weekly_finance == 1;
+                document.getElementById('notifyMonthlyReport').checked = p.notify_monthly_report == 1;
+                // Logo preview
+                if (p.logo_data && p.logo_mime) {
+                    document.getElementById('shopLogoImg').src = `data:${p.logo_mime};base64,${p.logo_data}`;
+                } else {
+                    document.getElementById('shopLogoImg').src = '../public/assets/logo.png';
+                }
+                updateDescCounter();
+            } else {
+                showToast('Failed to load profile', 'error');
+            }
+        } catch (err) {
+            showToast('Network error', 'error');
+        }
+    }
+
+    function updateDescCounter() {
+        const desc = document.getElementById('shopDescription').value;
+        document.getElementById('descCounter').innerText = desc.length + '/500';
+    }
+    document.getElementById('shopDescription').addEventListener('input', updateDescCounter);
+
+    // Change password function
+    async function changePassword() {
+        const current  = document.getElementById('currentPassword').value;
+        const newPass  = document.getElementById('newPassword').value;
+        const confirm  = document.getElementById('confirmPassword').value;
+        if (!current || !newPass || !confirm) {
+            showToast('Please fill all password fields', 'error');
+            return;
+        }
+        if (newPass !== confirm) {
+            showToast('New passwords do not match', 'error');
+            return;
+        }
+        if (newPass.length < 6) {
+            showToast('Password must be at least 6 characters', 'error');
+            return;
+        }
+        const saveBtn = event.target;
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Updating&hellip;';
+        try {
+            const res = await fetch('../api/trader/update-profile.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: parseInt(userId),
+                    action: 'update_password',
+                    current_password: current,
+                    new_password: newPass
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Password changed successfully');
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } else {
+                showToast(data.message || 'Password change failed', 'error');
+            }
+        } catch (err) {
+            showToast('Network error', 'error');
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Update Password';
+        }
+    }
+
+    // Delete account
+    async function deleteAccount() {
+        const confirm1 = confirm('⚠️  WARNING: This will permanently delete your account, shop, products, and all associated data. This cannot be undone! Are you sure?');
+        if (!confirm1) return;
+        const confirm2 = prompt('Type "DELETE" to confirm account deletion:');
+        if (confirm2 !== 'DELETE') return;
+        try {
+            const res = await fetch('../api/trader/update-profile.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: parseInt(userId), action: 'delete_account' })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Account deleted. Redirecting&hellip;');
+                sessionStorage.clear();
+                setTimeout(() => window.location.href = '../public/login.html', 2000);
+            } else {
+                showToast(data.message || 'Deletion failed', 'error');
+            }
+        } catch (err) {
+            showToast('Network error', 'error');
+        }
+    }
+
+    // Save all changes (multart form — excludes password)
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('action', 'update_all');
+        formData.append('shop_name',       document.getElementById('shopName').value);
+        formData.append('shop_description',document.getElementById('shopDescription').value);
+        formData.append('shop_address',    document.getElementById('shopAddress').value);
+        formData.append('firstname',       document.getElementById('firstName').value);
+        formData.append('lastname',        document.getElementById('lastName').value);
+        formData.append('email',           document.getElementById('email').value);
+        formData.append('phone',           document.getElementById('phone').value);
+        formData.append('collection_wed',  document.getElementById('collectionWed').checked  ? 1 : 0);
+        formData.append('collection_thu',  document.getElementById('collectionThu').checked  ? 1 : 0);
+        formData.append('collection_fri',  document.getElementById('collectionFri').checked  ? 1 : 0);
+        formData.append('notify_new_order',document.getElementById('notifyNewOrder').checked    ? 1 : 0);
+        formData.append('notify_daily_report', document.getElementById('notifyDailyReport').checked ? 1 : 0);
+        formData.append('notify_weekly_finance', document.getElementById('notifyWeeklyFinance').checked ? 1 : 0);
+        formData.append('notify_monthly_report', document.getElementById('notifyMonthlyReport').checked ? 1 : 0);
+        const logoFile = document.getElementById('shopLogo').files[0];
+        if (logoFile) formData.append('shop_logo', logoFile);
+
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving&hellip;';
+        try {
+            const res = await fetch('../api/trader/update-profile.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast(data.message || 'Profile updated successfully');
+                loadProfile();
+            } else {
+                showToast(data.message || 'Update failed', 'error');
+            }
+        } catch (err) {
+            showToast('Network error', 'error');
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Changes';
+        }
+    });
+
+    loadProfile();
+</script>
+</body>
+</html>

@@ -67,8 +67,8 @@
       <div class="profile-chip">
         <div class="avatar"><span class="material-icons-outlined">person</span></div>
         <div>
-          <p class="name">John Smith</p>
-          <p class="mail">john.smith@email.com</p>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
         </div>
       </div>
       <nav class="menu">
@@ -78,7 +78,7 @@
         <a class="active" href="wishlist.html">Wishlist</a>
         <a href="change-password.html">Change Password</a>
         <a href="email-settings.html">Email Settings</a>
-        <a class="logout" href="../api/auth/logout.php">Logout</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
       </nav>
     </aside>
 
@@ -89,36 +89,156 @@
           <p>Keep products you love and move them to cart anytime.</p>
         </div>
       </div>
-      <div class="grid">
-        <article class="item">
-          <div class="thumb"><img src="../public/assets/Item-image/green-bell-pepper-isolated.jpg" alt="Premium chicken wings"></div>
-          <div class="info">
-            <span class="shop">Hudders Butchers</span>
-            <h3 class="title">Premium Chicken Wings</h3>
-            <p class="price">GBP 5.90</p>
-            <div class="actions"><button class="btn btn-add" type="button">Add to Cart</button><button class="btn btn-remove" type="button">Remove</button></div>
-          </div>
-        </article>
-        <article class="item">
-          <div class="thumb"><img src="../public/assets/Item-image/green-broccoli.jpg" alt="Lean beef mince"></div>
-          <div class="info">
-            <span class="shop">Hudders Butchers</span>
-            <h3 class="title">Lean Beef Mince</h3>
-            <p class="price">GBP 7.40</p>
-            <div class="actions"><button class="btn btn-add" type="button">Add to Cart</button><button class="btn btn-remove" type="button">Remove</button></div>
-          </div>
-        </article>
-        <article class="item">
-          <div class="thumb"><img src="../public/assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg" alt="Marinated lamb chops"></div>
-          <div class="info">
-            <span class="shop">Hudders Butchers</span>
-            <h3 class="title">Marinated Lamb Chops</h3>
-            <p class="price">GBP 11.80</p>
-            <div class="actions"><button class="btn btn-add" type="button">Add to Cart</button><button class="btn btn-remove" type="button">Remove</button></div>
-          </div>
-        </article>
+      <div class="grid" id="wishlist-items">
+        <p style="color:#5E6A63;padding:20px;">Loading wishlist...</p>
       </div>
     </section>
   </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    function fillIdentityFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (fullName) document.querySelector('.name').textContent = fullName;
+      if (email) document.querySelector('.mail').textContent = email;
+    }
+
+    async function loadProfileIdentity() {
+      fillIdentityFromLocalCache();
+      const userId = sessionStorage.getItem('user_id');
+      if (!userId) return;
+
+      try {
+        const res = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        const data = await res.json();
+        if (data.success && data.data) {
+          const user = data.data;
+          const firstName = user.FIRSTNAME || user.firstname || '';
+          const lastName = user.LASTNAME || user.lastname || '';
+          const email = user.EMAIL || user.email || '-';
+          document.querySelector('.name').textContent = (firstName + ' ' + lastName).trim() || 'Customer';
+          document.querySelector('.mail').textContent = email;
+        }
+      } catch (err) {
+        console.error('Error loading profile identity:', err);
+        fillIdentityFromLocalCache();
+      }
+    }
+
+    async function loadWishlist() {
+      try {
+        const res = await fetch('../api/customer/get-wishlist.php');
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+          renderWishlist(data.data);
+        } else {
+          document.getElementById('wishlist-items').innerHTML = '<p style="color:#5E6A63;padding:20px;">Your wishlist is empty. <a href="../public/index.html" style="color:#FF5E3A;">Browse products</a></p>';
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    function renderWishlist(items) {
+      const container = document.getElementById('wishlist-items');
+      let html = '';
+
+      // Category_image map: keys match lowercase shop_type / product name sub-strings
+      const imgMap = {
+        greengrocer:  'imgi_46_chinese-broccoli-vegetables_1203-6831.jpg',
+        butcher:      'fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg',
+        fishmonger:   'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        seafood:      'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        fish:         'top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg',
+        bakery:       'imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg',
+        delicatessen: 'imgi_47_cheese-wood_573717-86.jpg',
+        egg:    'green-broccoli.jpg',              // best available for egg/vegetable
+        meat:   'fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg',
+        cheese: 'imgi_47_cheese-wood_573717-86.jpg',
+      };
+
+      items.forEach(item => {
+        const shopName = (item.SHOP_NAME || '').toLowerCase();
+        const name     = (item.NAME || '').toLowerCase();
+        let imgFile    = 'green-bell-pepper-isolated.jpg';
+
+        // Match against shop_name first, then product name
+        for (const [k, v] of Object.entries(imgMap)) {
+          if (shopName.includes(k) || name.includes(k)) { imgFile = v; break; }
+        }
+
+        html += `
+          <article class="item">
+            <div class="thumb"><img src="../public/assets/Item-image/${imgFile}" alt="${item.NAME}" onerror="this.src='../public/assets/Item-image/green-bell-pepper-isolated.jpg'"></div>
+            <div class="info">
+              <span class="shop">${item.SHOP_NAME || 'Shop'}</span>
+              <h3 class="title">${item.NAME}</h3>
+              <p class="price">GBP ${parseFloat(item.PRICE).toFixed(2)}</p>
+              <div class="actions">
+                <button class="btn btn-add" onclick="addToCart(${item.PRODUCT_ID})">Add to Cart</button>
+                <button class="btn btn-remove" onclick="removeWishlist(${item.PRODUCT_ID})">Remove</button>
+              </div>
+            </div>
+          </article>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function addToCart(productId) {
+      try {
+        const res = await fetch('../api/cart/add-to-cart.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, quantity: 1 })
+        });
+
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          alert('Server error (status ' + res.status + '). Try again.');
+          return;
+        }
+
+        if (data.success) {
+          alert('Added to cart!');
+          // refresh wishlist count badge on index.html if open
+          const wishCountEl = parent?.document?.getElementById?.('wishlistCount');
+          if (wishCountEl) { let c = parseInt(wishCountEl.textContent) || 0; wishCountEl.textContent = Math.max(0, c - 1); }
+        } else {
+          alert(data.error || 'Error adding to cart');
+        }
+      } catch (err) {
+        alert('Cannot reach server. Please try again.');
+      }
+    }
+
+    async function removeWishlist(productId) {
+      if (!confirm('Remove from wishlist?')) return;
+      try {
+        const res = await fetch('../api/customer/remove-wishlist.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId })
+        });
+        const data = await res.json();
+        if (data.success) loadWishlist();
+        else alert(data.error);
+      } catch (err) { alert('Error'); }
+    }
+
+    loadProfileIdentity();
+    loadWishlist();
+  </script>
 </body>
 </html>

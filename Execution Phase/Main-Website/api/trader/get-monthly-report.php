@@ -1,65 +1,86 @@
 <?php
-header('Content-Type: application/json');
+/**
+ * Monthly Sales Report API
+ * GET /api/trader/get-monthly-report.php?user_id=N&month=YYYY-MM
+ */
 require_once '../../config/database.php';
+header('Content-Type: application/json');
 
-$user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
-if (!$user_id) { echo json_encode(['success' => false, 'message' => 'User ID required']); exit; }
+$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
+$month   = trim($_GET['month'] ?? '');
 
-try {
-    $shopStmt = oci_parse($conn, "SELECT shop_id FROM SHOP WHERE user_id = :user_id");
-    oci_bind_by_name($shopStmt, ':user_id', $user_id);
-    oci_execute($shopStmt);
-    $shopRow = oci_fetch_assoc($shopStmt);
-    $shop_id = $shopRow['SHOP_ID'] ?? 0;
-    if (!$shop_id) { throw new Exception("Shop not found"); }
+if (!$user_id) {
+    echo json_encode(['success' => false, 'message' => 'Missing user_id']);
+    exit;
+}
 
-    // Summary
-    $stmt = oci_parse($conn, "
-        SELECT COUNT(DISTINCT o.order_id) AS total_orders, 
-               NVL(SUM(op.quantity * op.unit_price), 0) AS total_revenue
-        FROM HUDDER_ORDER o 
-        JOIN ORDER_PRODUCT op ON o.order_id = op.order_id 
-        JOIN PRODUCT p ON op.product_id = p.product_id
-        WHERE p.shop_id = :sid AND TRUNC(o.order_date, 'MM') = TRUNC(SYSDATE, 'MM') AND o.status != 'Cancelled'
-    ");
-    oci_bind_by_name($stmt, ':sid', $shop_id);
-    oci_execute($stmt);
-    $sum = oci_fetch_assoc($stmt);
+if (!$month || !preg_match('/^\d{4}-\d{2}$/', $month)) {
+    $month = date('Y-m');
+}
 
-    // Orders List (This is what was missing)
-    $ordersStmt = oci_parse($conn, "
-        SELECT DISTINCT o.order_id, u.firstname || ' ' || u.lastname AS customer_name
-        FROM HUDDER_ORDER o
-        JOIN HUDDER_USER u ON o.user_id = u.user_id
-        JOIN ORDER_PRODUCT op ON o.order_id = op.order_id
-        JOIN PRODUCT p ON op.product_id = p.product_id
-        WHERE p.shop_id = :sid AND TRUNC(o.order_date, 'MM') = TRUNC(SYSDATE, 'MM')
-        ORDER BY o.order_id DESC
-    ");
-    oci_bind_by_name($ordersStmt, ':sid', $shop_id);
-    oci_execute($ordersStmt);
-    $orders = [];
-    while ($row = oci_fetch_assoc($ordersStmt)) {
-        $itemStmt = oci_parse($conn, "SELECT SUM(quantity) AS items, SUM(quantity * unit_price) AS total FROM ORDER_PRODUCT op2 JOIN PRODUCT p2 ON op2.product_id = p2.product_id WHERE op2.order_id = :oid AND p2.shop_id = :sid");
-        oci_bind_by_name($itemStmt, ':oid', $row['ORDER_ID']);
-        oci_bind_by_name($itemStmt, ':sid', $shop_id);
-        oci_execute($itemStmt);
-        $iRow = oci_fetch_assoc($itemStmt);
-        $orders[] = ['customer' => $row['CUSTOMER_NAME'], 'items' => $iRow['ITEMS'], 'total' => $iRow['TOTAL']];
-    }
+$month_start = $month . '-01';
+$month_end   = date('Y-m-t', strtotime($month_start));
 
-    // Chart
-    $chartStmt = oci_parse($conn, "
-        SELECT 'Week ' || CEIL(TO_NUMBER(TO_CHAR(o.order_date, 'DD')) / 7) AS label, SUM(op.quantity * op.unit_price) AS value
-        FROM HUDDER_ORDER o JOIN ORDER_PRODUCT op ON o.order_id = op.order_id JOIN PRODUCT p ON op.product_id = p.product_id
-        WHERE p.shop_id = :sid AND TRUNC(o.order_date, 'MM') = TRUNC(SYSDATE, 'MM') AND o.status != 'Cancelled'
-        GROUP BY CEIL(TO_NUMBER(TO_CHAR(o.order_date, 'DD')) / 7) ORDER BY label
-    ");
-    oci_bind_by_name($chartStmt, ':sid', $shop_id);
-    oci_execute($chartStmt);
-    $labels = []; $values = [];
-    while ($r = oci_fetch_assoc($chartStmt)) { $labels[] = $r['LABEL']; $values[] = (float)$r['VALUE']; }
+// Get shop
+$ss   = oci_parse($conn, "SELECT shop_id FROM SHOP WHERE user_id = :user_id");
+oci_bind_by_name($ss, ':user_id', $user_id);
+oci_execute($ss);
+$shop = oci_fetch_assoc($ss);
+oci_free_statement($ss);
 
-    echo json_encode(['success' => true, 'summary' => ['total_orders' => $sum['TOTAL_ORDERS'], 'total_revenue' => $sum['TOTAL_REVENUE'], 'avg_order_value' => $sum['TOTAL_ORDERS'] > 0 ? $sum['TOTAL_REVENUE']/$sum['TOTAL_ORDERS'] : 0], 'orders' => $orders, 'chart' => ['labels' => $labels, 'values' => $values]]);
-} catch (Exception $e) { echo json_encode(['success' => false, 'message' => $e->getMessage()]); }
+if (!$shop) {
+    echo json_encode(['success' => false, 'message' => 'Shop not found']);
+    exit;
+}
+$shop_id = (int)$shop['SHOP_ID'];
+
+// Product sales (Completed orders only — revenue)
+$sql = "
+    SELECT p.name,
+           COUNT(DISTINCT o.order_id) AS orders,
+           SUM(op.quantity) AS quantity,
+           SUM(op.quantity * op.unit_price) AS income
+    FROM ORDER_PRODUCT op
+    JOIN PRODUCT p ON op.product_id = p.product_id
+    JOIN HUDDER_ORDER o ON o.order_id = op.order_id
+    WHERE p.shop_id = :shop_id
+      AND TRUNC(o.order_date) >= TO_DATE(:ms, 'YYYY-MM-DD')
+      AND TRUNC(o.order_date) <= TO_DATE(:me, 'YYYY-MM-DD')
+      AND o.status = 'Completed'
+    GROUP BY p.name
+    ORDER BY income DESC
+";
+$stmt = oci_parse($conn, $sql);
+oci_bind_by_name($stmt, ':shop_id', $shop_id);
+oci_bind_by_name($stmt, ':ms',      $month_start);
+oci_bind_by_name($stmt, ':me',      $month_end);
+oci_execute($stmt);
+
+$products     = [];
+$total_income = 0;
+$total_orders = 0;
+$total_qty    = 0;
+
+while ($row = oci_fetch_assoc($stmt)) {
+    $income       = (float)$row['INCOME'];
+    $orders       = (int)$row['ORDERS'];
+    $qty          = (int)$row['QUANTITY'];
+    $products[]   = ['name' => $row['NAME'], 'orders' => $orders, 'quantity' => $qty, 'income' => $income];
+    $total_income += $income;
+    $total_orders += $orders;
+    $total_qty    += $qty;
+}
+oci_free_statement($stmt);
+oci_close($conn);
+
+echo json_encode([
+    'success' => true,
+    'month'   => $month,
+    'summary' => [
+        'total_income'  => $total_income,
+        'total_orders'  => $total_orders,
+        'products_sold' => $total_qty
+    ],
+    'products' => $products
+]);
 ?>

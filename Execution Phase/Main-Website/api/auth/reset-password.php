@@ -1,8 +1,8 @@
 <?php
 /**
  * Reset Password API
- * Endpoint: POST /api/auth/reset-password.php
- * Resets the user's password using a valid token
+ * POST /api/auth/reset-password.php
+ * Resets password using a valid session token
  */
 
 header('Content-Type: application/json');
@@ -15,104 +15,65 @@ require_once '../../config/database.php';
 $response = ['success' => false, 'message' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $response['message'] = 'Invalid request method. Only POST is allowed.';
-    echo json_encode($response);
-    exit;
+    $response['message'] = 'Only POST allowed.';
+    echo json_encode($response); exit;
 }
 
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
+$data        = json_decode(file_get_contents('php://input'), true);
+$email       = trim($data['email']        ?? '');
+$token       = trim($data['token']        ?? '');
+$newPassword = $data['new_password']      ?? '';
 
-if (!$data) {
-    $response['message'] = 'Invalid JSON input.';
-    echo json_encode($response);
-    exit;
-}
-
-// Required fields
-if (empty($data['email']) || empty($data['token']) || empty($data['new_password'])) {
+if (!$email || !$token || !$newPassword) {
     $response['message'] = 'Email, token, and new password are required.';
-    echo json_encode($response);
-    exit;
+    echo json_encode($response); exit;
 }
 
-$email      = trim($data['email']);
-$token      = trim($data['token']);
-$newPassword = $data['new_password'];
-
-// Validate password
-if (strlen($newPassword) < 6) {
-    $response['message'] = 'Password must be at least 6 characters long.';
-    echo json_encode($response);
-    exit;
+// VARCHAR2(20) max
+if (strlen($newPassword) < 4) {
+    $response['message'] = 'Password must be at least 4 characters.';
+    echo json_encode($response); exit;
 }
+$newPassword = substr($newPassword, 0, 20);
+
+$sql = "SELECT user_id FROM HUDDER_USER
+        WHERE email = :email
+          AND password_reset_token = :token
+          AND (password_reset_expires IS NULL OR password_reset_expires >= SYSDATE)";
+$stmt = oci_parse($conn, $sql);
+oci_bind_by_name($stmt, ':email', $email);
+oci_bind_by_name($stmt, ':token', $token);
+oci_execute($stmt);
+$user = oci_fetch_assoc($stmt);
+oci_free_statement($stmt);
+
+if (!$user) {
+    $response['message'] = 'Invalid or expired reset token.';
+    echo json_encode($response); exit;
+}
+
+$userId = $user['USER_ID'];
 
 try {
-    // Validate token (session-based)
-    session_start();
-    $tokens = $_SESSION['password_reset_tokens'] ?? [];
+    $sql  = "UPDATE HUDDER_USER SET user_password = :pwd, password_reset_token = NULL, password_reset_expires = NULL WHERE user_id = :user_id";
+    $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ':pwd', $newPassword);
+    oci_bind_by_name($stmt, ':user_id', $userId);
+    $ok   = oci_execute($stmt, OCI_COMMIT_ON_SUCCESS);
+    oci_free_statement($stmt);
 
-    if (!isset($tokens[$email])) {
-        $response['message'] = 'Invalid or expired token.';
-        echo json_encode($response);
-        exit;
-    }
-
-    $storedToken = $tokens[$email];
-
-    if ($storedToken['token'] !== $token) {
-        $response['message'] = 'Invalid token provided.';
-        echo json_encode($response);
-        exit;
-    }
-
-    if (strtotime($storedToken['expires']) < time()) {
-        $response['message'] = 'Token has expired. Please request a new reset link.';
-        // Remove expired token
-        unset($_SESSION['password_reset_tokens'][$email]);
-        echo json_encode($response);
-        exit;
-    }
-
-    $userId = $storedToken['user_id'];
-
-    // Hash the new password
-    $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-
-    // Update password in database
-    $updateSql = "UPDATE HUDDERS_USER SET user_password = :password WHERE user_id = :user_id";
-    $updateStmt = oci_parse($conn, $updateSql);
-    oci_bind_by_name($updateStmt, ':password', $hashedPassword);
-    oci_bind_by_name($updateStmt, ':user_id', $userId);
-
-    $result = oci_execute($updateStmt, OCI_NO_AUTO_COMMIT);
-    oci_free_statement($updateStmt);
-
-    if ($result) {
-        oci_commit($conn);
-        // Remove used token
-        unset($_SESSION['password_reset_tokens'][$email]);
-
+    if ($ok) {
         $response['success'] = true;
-        $response['message'] = 'Your password has been reset successfully. You can now log in with your new password.';
+        $response['message'] = 'Password reset successfully. You can now log in.';
     } else {
-        oci_rollback($conn);
-        $e = oci_error($updateStmt);
-        $response['message'] = 'Failed to reset password. Please try again.';
-        if ($e) {
-            $response['message'] .= ' Error: ' . $e['message'];
-        }
+        $e = oci_error($conn);
+        $response['message'] = 'Failed to update password: ' . ($e['message'] ?? 'Unknown error');
     }
 
 } catch (Exception $e) {
-    if (isset($conn)) {
-        oci_rollback($conn);
-    }
-    $response['message'] = 'An error occurred. Please try again later.';
+    $response['message'] = 'An error occurred: ' . $e->getMessage();
 } finally {
-    if (isset($conn)) {
-        oci_close($conn);
-    }
+    if (isset($conn)) oci_close($conn);
 }
 
 echo json_encode($response);

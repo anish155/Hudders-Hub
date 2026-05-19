@@ -1,36 +1,28 @@
 <?php
-/**
- * Logout API
- * Endpoint: GET or POST /api/auth/logout.php
- * Destroys the session and clears all session data
- */
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-session_start();
-
-// Unset all session variables
-$_SESSION = array();
-
-// Destroy the session cookie
-if (isset($_COOKIE[session_name()])) {
-    setcookie(session_name(), '', [
-        'expires' => time() - 3600,
-        'path' => '/',
-        'secure' => false,
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
 }
 
-// Destroy the session
-session_unset();
+session_name('hudders_hub');
+session_start();
+
+$_SESSION = array();
+
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
 session_destroy();
 
-// Return success response
-header('Location: ../../public/login.html');
-exit;
+echo json_encode(['success' => true, 'message' => 'Logged out successfully']);
 ?>

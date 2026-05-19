@@ -1,14 +1,26 @@
 <?php
-session_start();
+require_once '../../config/config.php';
 require_once '../../config/database.php';
+require_once '../../config/session.php';
 
+$order_id = isset($_GET['order_id']) ? (int)$_GET['order_id'] : 0;
 $order = $_SESSION['pending_order'] ?? null;
-if ($order) {
-    $upd = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Cancelled' WHERE order_id = :oid");
-    oci_bind_by_name($upd, ':oid', $order['order_id']);
-    oci_execute($upd);
-    unset($_SESSION['pending_order']);
+if (!$order_id && $order) {
+    $order_id = (int)($order['order_id'] ?? 0);
 }
+
+if ($order_id) {
+    try {
+        $conn = getDB();
+        $upd = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Cancelled' WHERE order_id = :oid");
+        oci_bind_by_name($upd, ':oid', $order_id);
+        oci_execute($upd);
+        oci_close($conn);
+    } catch (Exception $e) {
+        error_log('[cancel] ' . $e->getMessage());
+    }
+}
+unset($_SESSION['pending_order']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,9 +44,10 @@ if ($order) {
     <div class="icon"><span class="material-icons-outlined">cancel</span></div>
     <h2>Payment Cancelled</h2>
     <p>Your payment was cancelled. No charges have been made.</p>
+    <p>Your order has been marked as cancelled.</p>
     <br>
-    <a href="/Hudders-Hub/Execution Phase/Main-Website/public/index.html" class="btn">Back to Home</a>
-    <a href="javascript:history.back()" class="btn btn-orange">Try Again</a>
+    <a href="<?php echo BASE_URL; ?>/public/index.html" class="btn">Back to Home</a>
+    <a href="<?php echo BASE_URL; ?>/public/cart.html" class="btn btn-orange">Back to Cart</a>
 </div>
 </body>
 </html>

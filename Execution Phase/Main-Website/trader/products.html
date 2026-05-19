@@ -68,7 +68,12 @@ body {
 .top-nav-logo { display: flex; align-items: center; gap: 10px; }
 .top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
 .top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
-.top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
+        .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+        .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+        .fab:active { transform:translateY(0) scale(0.97); }
+        .fab .material-icons-outlined { font-size:28px; line-height:1; }
+
+        .top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
 .top-nav-right { display: flex; align-items: center; gap: 8px; }
 .top-nav-icon { width: 40px; height: 40px; border-radius: 0; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
 .top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
@@ -89,6 +94,7 @@ body {
 .table-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border-light); gap: 16px; flex-wrap: wrap; }
 .search-input { padding: 8px 14px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 13px; color: var(--text-black); font-family: inherit; min-width: 180px; transition: var(--transition-smooth); }
 .search-input:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light); }
+.filter-select { padding: 8px 12px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 13px; color: var(--text-black); font-family: inherit; border-radius: 0; cursor: pointer; margin-left: 8px; }
 
 .products-table { width: 100%; border-collapse: collapse; }
 .products-table thead { background: var(--bg-gray); }
@@ -104,9 +110,9 @@ body {
 
 .stock-cell { display: flex; align-items: center; gap: 8px; }
 .stock-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.stock-dot.in-stock { background: #4ADE80; }
-.stock-dot.low-stock { background: #FBBF24; }
-.stock-dot.out-of-stock { background: #EF4444; }
+.stock-dot.green  { background: #22c55e; }
+.stock-dot.yellow { background: #eab308; }
+.stock-dot.red    { background: #ef4444; }
 .stock-qty { font-weight: 600; font-size: 13px; }
 .stock-qty.zero { color: #EF4444; }
 
@@ -199,7 +205,7 @@ body {
         </details>
       </li>
       <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="#" onclick="sessionStorage.clear(); window.location.href='../public/login.html';" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+      <li><a href="#" onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
     </ul>
   </nav>
 </aside>
@@ -223,6 +229,12 @@ body {
 <main class="main-content">
   <h1 class="page-title">My Products</h1>
 
+  <!-- ══ Add Product FAB (reusable on add-product.html too) ═══════════════ -->
+  <a href="add-product.html" class="fab" title="Add new product">
+    <span class="material-icons-outlined">add</span>
+  </a>
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+
   <div class="products-section">
     <div class="section-header">
       <span class="section-header-line"></span>
@@ -231,7 +243,20 @@ body {
     </div>
 
     <div class="table-toolbar">
-      <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by product name… e.g. Bread">
+      <select id="filterSelect" class="filter-select" onchange="filterAndRender()">
+        <option value="all">All Products</option>
+        <option value="in-stock">In Stock (≥5)</option>
+        <option value="low-stock">Low Stock (1–4)</option>
+        <option value="out-of-stock">Out of Stock (0)</option>
+      </select>
+      <select id="sortSelect" class="filter-select" onchange="filterAndRender()">
+        <option value="name">Sort by Name</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="stock-asc">Stock: Low to High</option>
+        <option value="stock-desc">Stock: High to Low</option>
+      </select>
       <span style="font-size:14px;font-weight:600;color:var(--text-dark-gray);">
     <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px;color:var(--primary-green);">storefront</span>
     <span id="shopNameDisplay">...</span>
@@ -252,10 +277,19 @@ body {
 </div>
 
 <script>
+// Auth guard - only traders allowed
 const userId = sessionStorage.getItem('user_id');
 const userRole = sessionStorage.getItem('userRole');
-if (!userId || userRole !== 'trader') {
+if (!userId) {
     window.location.href = '../public/login.html';
+} else if (!userRole || userRole.toLowerCase() !== 'trader') {
+    window.location.href = '../public/login.html';
+}
+
+function handleLogout() {
+  fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
+    .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
+    .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }
 
 const firstname = sessionStorage.getItem('firstname') || '';
@@ -287,12 +321,19 @@ function formatCurrency(amount) {
 }
 
 function getStockStatus(stock) {
-    if (stock === 0) return { class: 'out-of-stock', label: 'Out of stock' };
-    if (stock < 10)  return { class: 'low-stock',    label: 'Low stock'    };
-    return                   { class: 'in-stock',     label: 'In stock'     };
+    if (stock === 0) return { class: 'red',    label: 'Out of stock' };
+    if (stock <  5) return { class: 'yellow', label: 'Low stock'    };
+    return                { class: 'green',  label: 'In stock'     };
 }
 
+let currentPage = 1;
+const productsPerPage = 6;
+
 function renderProductsTable(products) {
+    const totalPages = Math.ceil(products.length / productsPerPage);
+    const start = (currentPage - 1) * productsPerPage;
+    const paged = products.slice(start, start + productsPerPage);
+    
     if (products.length === 0) {
         productsContainer.innerHTML = `
             <div style="padding:48px;text-align:center;color:var(--text-medium-gray);">
@@ -313,7 +354,6 @@ function renderProductsTable(products) {
                 <tr>
                     <th>#ID</th>
                     <th>Product Name</th>
-                    <th>Category</th>
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Status</th>
@@ -321,13 +361,12 @@ function renderProductsTable(products) {
                 </tr>
             </thead>
             <tbody>
-                ${products.map(p => {
+                ${paged.map(p => {
                     const s = getStockStatus(p.stock);
                     return `
                     <tr>
                         <td><span class="product-id">#${p.id}</span></td>
                         <td class="product-name">${p.name}</td>
-                        <td>${p.category}</td>
                         <td class="product-price">${formatCurrency(p.price)}</td>
                         <td>
                             <div class="stock-cell">
@@ -335,7 +374,7 @@ function renderProductsTable(products) {
                                 <span class="stock-qty ${p.stock === 0 ? 'zero' : ''}">${p.stock}</span>
                             </div>
                         </td>
-                        <td>${p.status}</td>
+                        <td>${s.label}</td>
                         <td>
                             <a href="edit-product.html?id=${p.id}" class="edit-btn">
                                 <span class="material-icons-outlined">edit</span> Edit
@@ -351,14 +390,19 @@ function renderProductsTable(products) {
 
         <div class="table-footer">
             <div class="total-products">Total products <strong>${products.length}</strong></div>
-            <div class="showing-info">Showing 1–${products.length}</div>
+            <div class="pagination">
+                <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changePage(-1)">Previous</button>
+                <span style="margin: 0 12px;">Page ${currentPage} of ${totalPages}</span>
+                <button class="page-btn ${currentPage >= totalPages ? 'disabled' : ''}" onclick="changePage(1)">Next</button>
+            </div>
+            <div class="showing-info">Showing ${start + 1}–${Math.min(start + productsPerPage, products.length)} of ${products.length}</div>
         </div>
 
         <div class="stock-legend">
             <span class="legend-title">Stock status:</span>
-            <div class="legend-item"><span class="stock-dot in-stock"></span> In stock</div>
-            <div class="legend-item"><span class="stock-dot low-stock"></span> Low stock (&lt;10)</div>
-            <div class="legend-item"><span class="stock-dot out-of-stock"></span> Out of stock</div>
+            <div class="legend-item"><span class="stock-dot green"></span> In stock (≥5)</div>
+            <div class="legend-item"><span class="stock-dot yellow"></span> Low stock (1–4)</div>
+            <div class="legend-item"><span class="stock-dot red"></span> Out of stock (0)</div>
         </div>
 
         <div class="add-product-wrap">
@@ -389,7 +433,7 @@ function deleteProduct(id, name) {
 }
 
 function loadProducts() {
-    fetch(`http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/get-products.php?user_id=${userId}`)
+    fetch(`../api/trader/get-products.php?user_id=${userId}`)
     .then(r => r.json())
     .then(data => {
         if (!data.success) { showErrorToast(data.message); return; }
@@ -406,11 +450,36 @@ function loadProducts() {
 
 function filterAndRender() {
     const search = searchInput.value.toLowerCase();
-    const filtered = search
-        ? allProducts.filter(p =>
-            p.name.toLowerCase().includes(search) ||
-            p.category.toLowerCase().includes(search))
-        : allProducts;
+    const filterVal = document.getElementById('filterSelect').value;
+    const sortVal = document.getElementById('sortSelect').value;
+    
+    let filtered = allProducts;
+    
+        // Search filter
+        if (search) {
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(search));
+        }
+        
+        // Stock filter
+        if (filterVal !== 'all') {
+            filtered = filtered.filter(p => {
+                if (filterVal === 'out-of-stock') return p.stock === 0;
+                if (filterVal === 'low-stock')    return p.stock > 0 && p.stock < 5;
+                if (filterVal === 'in-stock')     return p.stock >= 5;
+                return true;
+            });
+        }
+    
+    // Sort
+    filtered.sort((a, b) => {
+        if (sortVal === 'name') return a.name.localeCompare(b.name);
+        if (sortVal === 'price-asc') return a.price - b.price;
+        if (sortVal === 'price-desc') return b.price - a.price;
+        if (sortVal === 'stock-asc') return a.stock - b.stock;
+        if (sortVal === 'stock-desc') return b.stock - a.stock;
+        return 0;
+    });
+    
     renderProductsTable(filtered);
 }
 
@@ -429,6 +498,12 @@ function showErrorToast(message) {
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 4000);
 }
+
+// Load sidebar trader info
+fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
+    .then(r => r.json())
+    .then(d => { if (d.success) { document.getElementById('sidebarName').textContent = d.firstname || d.email || 'Trader'; if (d.trader_status) document.getElementById('sidebarStatus').textContent = d.trader_status; } })
+    .catch(() => {});
 
 document.addEventListener('DOMContentLoaded', loadProducts);
 </script>

@@ -1,444 +1,1693 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HuddersHub - Trader Dashboard | Add New Product</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-<style>
-:root {
-  --primary-green: #0F260B;
-  --primary-green-dark: #0B1C08;
-  --primary-green-light: rgba(15, 38, 11, 0.08);
-  --primary-orange: #FF5E3A;
-  --primary-orange-dark: #E3472C;
-  --accent-green: #CAED95;
-  --bg-white: #FFFFFF;
-  --bg-light: #F7F6F3;
-  --bg-gray: #F2F4F1;
-  --border-light: #DCE3DA;
-  --text-black: #0B140A;
-  --text-dark-gray: #1E2A1C;
-  --text-medium-gray: #5E6A63;
-  --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
-  --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
-  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HuddersHub - Add New Product</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --primary-green: #0f260b;
+                --primary-green-dark: #0b1c08;
+                --primary-green-light: rgba(15, 38, 11, 0.08);
+                --primary-orange: #ff5e3a;
+                --primary-orange-dark: #e3472c;
+                --accent-green: #caed95;
+                --bg-white: #ffffff;
+                --bg-light: #f7f6f3;
+                --bg-gray: #f2f4f1;
+                --border-light: #dce3da;
+                --text-black: #0b140a;
+                --text-dark-gray: #1e2a1c;
+                --text-medium-gray: #5e6a63;
+                --shadow-sm: 0 2px 6px rgba(15, 38, 11, 0.08);
+                --shadow-md: 0 10px 24px rgba(15, 38, 11, 0.12);
+                --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); background: var(--bg-light); min-height: 100vh; }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Plus Jakarta Sans", sans-serif;
+                color: var(--text-black);
+                background: var(--bg-light);
+                min-height: 100vh;
+            }
 
-.sidebar { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: var(--primary-green); color: #FFFFFF; display: flex; flex-direction: column; z-index: 200; overflow-y: auto; }
-.sidebar-profile { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); text-align: center; }
-.sidebar-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; margin: 0 auto 12px; border: 2px solid rgba(255, 255, 255, 0.3); }
-.sidebar-avatar .material-icons-outlined { font-size: 32px; color: #FFFFFF; }
-.sidebar-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.sidebar-status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255, 255, 255, 0.7); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ADE80; }
-.sidebar-nav { padding: 16px 0; flex: 1; }
-.sidebar-nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
-.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: var(--transition-smooth); cursor: pointer; }
-.sidebar-nav-item:hover { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
-.sidebar-nav-item.active { background: rgba(255, 255, 255, 0.15); color: #FFFFFF; font-weight: 600; }
-.sidebar-nav-item .material-icons-outlined { font-size: 20px; }
-.sidebar-nav-item.logout { color: rgba(255, 255, 255, 0.5); margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; }
-.sidebar-nav-item.logout:hover { color: var(--primary-orange); background: rgba(255, 94, 58, 0.1); }
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 260px;
+                height: 100vh;
+                background: var(--primary-green);
+                color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                z-index: 200;
+                overflow-y: auto;
+            }
+            .sidebar-profile {
+                padding: 28px 20px 24px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+                text-align: center;
+            }
+            .sidebar-avatar {
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.15);
+                display: grid;
+                place-items: center;
+                margin: 0 auto 12px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+            .sidebar-avatar .material-icons-outlined {
+                font-size: 32px;
+                color: #ffffff;
+            }
+            .sidebar-name {
+                font-size: 16px;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+            .sidebar-status {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #4ade80;
+            }
+            .sidebar-nav {
+                padding: 16px 0;
+                flex: 1;
+            }
+            .sidebar-nav-list {
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                padding: 0 12px;
+            }
+            .sidebar-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                color: rgba(255, 255, 255, 0.7);
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                transition: var(--transition-smooth);
+                cursor: pointer;
+            }
+            .sidebar-nav-item:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #ffffff;
+            }
+            .sidebar-nav-item.active {
+                background: rgba(255, 255, 255, 0.15);
+                color: #ffffff;
+                font-weight: 600;
+            }
+            .sidebar-nav-item .material-icons-outlined {
+                font-size: 20px;
+            }
+            .sidebar-nav-item.logout {
+                color: rgba(255, 255, 255, 0.5);
+                margin-top: 8px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: 20px;
+            }
+            .sidebar-nav-item.logout:hover {
+                color: var(--primary-orange);
+                background: rgba(255, 94, 58, 0.1);
+            }
+            .sidebar-report-group {
+                display: flex;
+                flex-direction: column;
+            }
+            .sidebar-report-group summary {
+                list-style: none;
+            }
+            .sidebar-report-group summary::-webkit-details-marker {
+                display: none;
+            }
+            .sidebar-report-sublist {
+                list-style: none;
+                padding-left: 18px;
+                margin-left: 28px;
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transition:
+                    max-height 0.3s ease,
+                    opacity 0.3s ease,
+                    margin-top 0.3s ease;
+            }
+            .sidebar-report-group[open] .sidebar-report-sublist {
+                max-height: 180px;
+                opacity: 1;
+                margin-top: 6px;
+            }
+            .sidebar-report-link {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 16px;
+                color: rgba(255, 255, 255, 0.65);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: var(--transition-smooth);
+            }
+            .sidebar-report-link:hover,
+            .sidebar-report-link.active {
+                background: rgba(255, 255, 255, 0.12);
+                color: #ffffff;
+            }
+            .sidebar-report-caret {
+                margin-left: auto;
+                transition: transform 0.25s ease;
+                font-size: 18px;
+            }
+            .sidebar-report-group[open] .sidebar-report-caret {
+                transform: rotate(180deg);
+            }
 
-.sidebar-report-group { display: flex; flex-direction: column; }
-.sidebar-report-group summary { list-style: none; }
-.sidebar-report-group summary::-webkit-details-marker { display: none; }
-.sidebar-report-sublist { list-style: none; padding-left: 18px; margin-left: 28px; border-left: 1px solid rgba(255, 255, 255, 0.1); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
-.sidebar-report-group[open] .sidebar-report-sublist { max-height: 180px; opacity: 1; margin-top: 6px; }
-.sidebar-report-link { display: flex; align-items: center; gap: 12px; padding: 10px 16px; color: rgba(255, 255, 255, 0.65); text-decoration: none; font-size: 13px; font-weight: 500; transition: var(--transition-smooth); }
-.sidebar-report-link:hover, .sidebar-report-link.active { background: rgba(255, 255, 255, 0.12); color: #FFFFFF; }
-.sidebar-report-caret { margin-left: auto; transition: transform 0.25s ease; font-size: 18px; }
-.sidebar-report-group[open] .sidebar-report-caret { transform: rotate(180deg); }
+            .top-nav {
+                position: fixed;
+                top: 0;
+                left: 260px;
+                right: 0;
+                height: 60px;
+                background: var(--bg-white);
+                border-bottom: 1px solid var(--border-light);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 28px;
+                z-index: 100;
+            }
+            .top-nav-logo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .top-nav-logo img {
+                width: 36px;
+                height: 36px;
+                object-fit: contain;
+            }
+            .top-nav-logo span {
+                font-weight: 700;
+                font-style: italic;
+                font-size: 22px;
+                color: var(--primary-green);
+            }
+            .top-nav-right {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .top-nav-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 0;
+                border: none;
+                background: transparent;
+                cursor: pointer;
+                display: grid;
+                place-items: center;
+                transition: var(--transition-smooth);
+                color: var(--text-medium-gray);
+                position: relative;
+            }
+            .top-nav-icon:hover {
+                background: var(--primary-green-light);
+                color: var(--primary-green);
+            }
+            .top-nav-icon .material-icons-outlined {
+                font-size: 22px;
+            }
+            .notification-badge {
+                position: absolute;
+                top: 6px;
+                right: 6px;
+                width: 8px;
+                height: 8px;
+                background: var(--primary-orange);
+                border-radius: 50%;
+                border: 2px solid var(--bg-white);
+            }
+            .user-pill {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 14px;
+                background: var(--bg-gray);
+                border-radius: 0;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-dark-gray);
+                cursor: pointer;
+                transition: var(--transition-smooth);
+            }
+            .user-pill:hover {
+                background: var(--primary-green-light);
+            }
+            .user-pill .material-icons-outlined {
+                font-size: 18px;
+            }
 
-.top-nav { position: fixed; top: 0; left: 260px; right: 0; height: 60px; background: var(--bg-white); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; z-index: 100; }
-.top-nav-logo { display: flex; align-items: center; gap: 10px; }
-.top-nav-logo img { width: 36px; height: 36px; object-fit: contain; }
-.top-nav-logo span { font-weight: 700; font-style: italic; font-size: 22px; color: var(--primary-green); }
-.top-nav-title { font-size: 18px; font-weight: 700; color: var(--text-black); position: absolute; left: 50%; transform: translateX(-50%); }
-.top-nav-right { display: flex; align-items: center; gap: 8px; }
-.top-nav-icon { width: 40px; height: 40px; border-radius: 0; border: none; background: transparent; cursor: pointer; display: grid; place-items: center; transition: var(--transition-smooth); color: var(--text-medium-gray); position: relative; }
-.top-nav-icon:hover { background: var(--primary-green-light); color: var(--primary-green); }
-.top-nav-icon .material-icons-outlined { font-size: 22px; }
-.notification-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--primary-orange); border-radius: 50%; border: 2px solid var(--bg-white); }
-.user-pill { display: flex; align-items: center; gap: 8px; padding: 6px 14px; background: var(--bg-gray); border-radius: 0; font-size: 13px; font-weight: 600; color: var(--text-dark-gray); cursor: pointer; transition: var(--transition-smooth); }
-.user-pill:hover { background: var(--primary-green-light); }
-.user-pill .material-icons-outlined { font-size: 18px; }
+            .main-content {
+                margin-left: 260px;
+                margin-top: 60px;
+                padding: 32px;
+                min-height: calc(100vh - 60px);
+            }
 
-.main-content { margin-left: 260px; margin-top: 60px; padding: 32px; min-height: calc(100vh - 60px); }
+            .page-header {
+                margin-bottom: 24px;
+            }
+            .page-header h1 {
+                font-size: 28px;
+                font-weight: 800;
+                color: var(--text-black);
+            }
 
-.page-header { margin-bottom: 28px; }
-.page-header h1 { font-size: 28px; font-weight: 800; color: var(--text-black); }
+            .tabs-header {
+                display: flex;
+                align-items: center;
+                gap: 0;
+                margin-bottom: 24px;
+                border-bottom: 2px solid var(--border-light);
+            }
+            .tab-item {
+                padding: 12px 24px;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+                text-decoration: none;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -2px;
+                transition: var(--transition-smooth);
+                cursor: pointer;
+            }
+            .tab-item:hover {
+                color: var(--primary-green);
+            }
+            .tab-item.active {
+                color: var(--primary-green);
+                border-bottom-color: var(--primary-green);
+            }
 
-.tabs-header { display: flex; align-items: center; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border-light); }
-.tab-item { padding: 12px 24px; font-size: 14px; font-weight: 600; color: var(--text-medium-gray); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: var(--transition-smooth); cursor: pointer; }
-.tab-item:hover { color: var(--primary-green); }
-.tab-item.active { color: var(--primary-green); border-bottom-color: var(--primary-green); }
+            .form-card {
+                background: var(--bg-white);
+                border: 1px solid var(--border-light);
+                box-shadow: var(--shadow-sm);
+                padding: 28px;
+                max-width: 800px;
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .form-group.full-width {
+                grid-column: span 2;
+            }
+            .form-btn-container {
+                grid-column: span 2;
+                display: flex;
+                align-items: center;
+            }
+            .form-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+            }
+            .form-input,
+            .form-textarea,
+            .form-select {
+                padding: 10px 12px;
+                border: 1px solid var(--border-light);
+                background: var(--bg-white);
+                font-size: 14px;
+                color: var(--text-black);
+                font-family: inherit;
+                transition: var(--transition-smooth);
+                width: 100%;
+                border-radius: 0;
+            }
+            .form-input:focus,
+            .form-textarea:focus,
+            .form-select:focus {
+                outline: none;
+                border-color: var(--primary-green);
+                box-shadow: 0 0 0 3px var(--primary-green-light);
+            }
+            .form-textarea {
+                min-height: 100px;
+                resize: vertical;
+            }
 
-.form-card { background: var(--bg-white); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); padding: 28px; max-width: 800px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group.full-width { grid-column: span 2; }
-.form-label { font-size: 13px; font-weight: 600; color: var(--text-medium-gray); }
-.form-input, .form-textarea, .form-select { padding: 10px 12px; border: 1px solid var(--border-light); background: var(--bg-white); font-size: 14px; color: var(--text-black); font-family: inherit; transition: var(--transition-smooth); width: 100%; }
-.form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light); }
-.form-textarea { min-height: 100px; resize: vertical; }
+            .select-wrapper {
+                position: relative;
+            }
+            .select-wrapper .select-arrow {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 20px;
+                color: var(--text-medium-gray);
+                pointer-events: none;
+            }
+            .form-select {
+                appearance: none;
+                padding-right: 40px;
+                cursor: pointer;
+                border-radius: 0;
+            }
 
-.select-wrapper { position: relative; }
-.select-wrapper .select-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--text-medium-gray); pointer-events: none; }
-.form-select { appearance: none; padding-right: 40px; cursor: pointer; }
+            .form-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                margin-top: 24px;
+                padding-top: 24px;
+                border-top: 1px solid var(--border-light);
+            }
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 24px;
+                border-radius: 0;
+                font-size: 14px;
+                font-weight: 600;
+                font-family: inherit;
+                cursor: pointer;
+                transition: var(--transition-smooth);
+                border: none;
+            }
+            .btn-primary {
+                background: var(--primary-green);
+                color: #ffffff;
+            }
+            .btn-primary:hover {
+                background: var(--primary-green-dark);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-md);
+            }
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+            .btn-primary:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+            .btn-secondary {
+                background: var(--bg-gray);
+                color: var(--text-dark-gray);
+                border: 1px solid var(--border-light);
+            }
+            .btn-secondary:hover {
+                background: var(--border-light);
+            }
 
-.allergy-section { margin-top: 8px; }
-.allergy-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--primary-orange-dark); margin-bottom: 12px; }
-.allergy-label .material-icons-outlined { font-size: 18px; color: var(--primary-orange); }
+            /* ── FAB ─────────────────────────────────────────────────────────── */
+            .fab {
+                position: fixed;
+                bottom: 32px;
+                right: 32px;
+                width: 56px;
+                height: 56px;
+                background: var(--primary-green);
+                color: #fff;
+                border: none;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                box-shadow: 0 4px 16px rgba(15, 38, 11, 0.35);
+                text-decoration: none;
+                z-index: 999;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .fab:hover {
+                background: var(--primary-orange);
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 6px 22px rgba(255, 94, 58, 0.4);
+            }
+            .fab:active {
+                transform: translateY(0) scale(0.97);
+            }
+            .fab .material-icons-outlined {
+                font-size: 28px;
+                line-height: 1;
+            }
+            .fab-back {
+            }
 
-.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-light); }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; border-radius: 0; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); border: none; }
-.btn-primary { background: var(--primary-green); color: #FFFFFF; }
-.btn-primary:hover { background: var(--primary-green-dark); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.btn-secondary { background: var(--bg-gray); color: var(--text-dark-gray); border: 1px solid var(--border-light); }
-.btn-secondary:hover { background: var(--border-light); }
+            .toast {
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 24px;
+                font-size: 14px;
+                font-weight: 600;
+                z-index: 9999;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+            }
+            .toast.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            .toast-success {
+                background: var(--primary-green);
+                color: #fff;
+            }
+            .toast-error {
+                background: var(--primary-orange);
+                color: #fff;
+            }
 
-.toast { position: fixed; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 10px; padding: 14px 24px; font-size: 14px; font-weight: 600; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast-success { background: var(--primary-green); color: #fff; }
-.toast-error { background: var(--primary-orange); color: #fff; }
+            .form-input.error,
+            .form-textarea.error,
+            .form-select.error {
+                border-color: var(--primary-orange);
+                background: #fef2f2;
+            }
+            .form-input.error:focus,
+            .form-textarea.error:focus,
+            .form-select.error:focus {
+                box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.15);
+            }
+            .error-message {
+                font-size: 12px;
+                color: var(--primary-orange);
+                margin-top: 4px;
+                display: none;
+            }
+            .form-group.has-error .error-message {
+                display: block;
+            }
 
-.form-input.error, .form-textarea.error, .form-select.error { border-color: var(--primary-orange); background: #FEF2F2; }
-.form-input.error:focus, .form-textarea.error:focus, .form-select.error:focus { box-shadow: 0 0 0 3px rgba(255, 94, 58, 0.15); }
-.error-message { font-size: 12px; color: var(--primary-orange); margin-top: 4px; display: none; }
-.form-group.has-error .error-message { display: block; }
+            /* Dietary checkboxes */
+            .dietary-group {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+                margin-top: 4px;
+            }
+            .dietary-group label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 14px;
+                color: var(--text-dark-gray);
+                cursor: pointer;
+            }
 
-.sidebar-toggle { display: none; }
-.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; }
-.sidebar-overlay.active { display: block; }
+            /* Image upload drop zone */
+            .image-upload-section {
+                margin-top: 8px;
+            }
+            .image-upload-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-medium-gray);
+                display: block;
+                margin-bottom: 8px;
+            }
+            .drop-area {
+                border: 2px dashed var(--border-light);
+                border-radius: 0;
+                padding: 32px 20px;
+                text-align: center;
+                cursor: pointer;
+                transition: var(--transition-smooth);
+            }
+            .drop-area:hover {
+                border-color: var(--primary-green);
+                background: var(--primary-green-light);
+            }
+            .drop-area .material-icons-outlined {
+                font-size: 36px;
+                color: var(--text-medium-gray);
+                display: block;
+                margin-bottom: 8px;
+            }
+            .drop-area .drop-text {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-dark-gray);
+            }
+            .drop-area .drop-hint {
+                font-size: 12px;
+                color: var(--text-medium-gray);
+                margin-top: 4px;
+            }
+            #imageInput {
+                display: none;
+            }
+            .image-preview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 16px;
+            }
+            .preview-wrapper {
+                position: relative;
+                width: 80px;
+                height: 80px;
+                flex-shrink: 0;
+            }
+            .preview-img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border: 1px solid var(--border-light);
+                display: block;
+            }
+            .remove-img-btn {
+                position: absolute;
+                top: -7px;
+                right: -7px;
+                background: var(--primary-orange);
+                color: #fff;
+                border: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 0;
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+                font-size: 14px;
+                line-height: 1;
+                padding: 0;
+            }
+            .remove-img-btn:hover {
+                background: var(--primary-orange-dark);
+            }
 
-@media (max-width: 900px) {
-  .sidebar { left: -280px; transition: left 0.3s ease; }
-  .sidebar.open { left: 0; }
-  .main-content { margin-left: 0; }
-  .top-nav { left: 0; }
-  .sidebar-toggle { display: grid; position: fixed; top: 10px; left: 10px; z-index: 300; width: 44px; height: 44px; border-radius: 0; background: var(--primary-green); color: #fff; border: none; cursor: pointer; place-items: center; }
-  .form-grid { grid-template-columns: 1fr; }
-  .form-group.full-width { grid-column: span 1; }
-}
+            .sidebar-toggle {
+                display: none;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.4);
+                z-index: 150;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
 
-@media (max-width: 600px) {
-  .form-card { padding: 20px; }
-  .form-actions { flex-direction: column-reverse; }
-  .form-actions .btn { width: 100%; justify-content: center; }
-}
-</style>
-</head>
-<body>
+            @media (max-width: 900px) {
+                .sidebar {
+                    left: -280px;
+                    transition: left 0.3s ease;
+                }
+                .sidebar.open {
+                    left: 0;
+                }
+                .main-content {
+                    margin-left: 0;
+                }
+                .top-nav {
+                    left: 0;
+                }
+                .sidebar-toggle {
+                    display: grid;
+                    position: fixed;
+                    top: 10px;
+                    left: 10px;
+                    z-index: 300;
+                    width: 44px;
+                    height: 44px;
+                    border-radius: 0;
+                    background: var(--primary-green);
+                    color: #fff;
+                    border: none;
+                    cursor: pointer;
+                    place-items: center;
+                }
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+                .form-group.full-width,
+                .form-btn-container {
+                    grid-column: span 1;
+                }
+                .form-btn-container {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+            }
 
-<button class="sidebar-toggle" id="sidebarToggle" aria-label="Open menu">
-  <span class="material-icons-outlined">menu</span>
-</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-profile">
-    <div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
-    <div class="sidebar-name" id="sidebarName">...</div>
-    <div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
-  </div>
-  <nav class="sidebar-nav">
-    <ul class="sidebar-nav-list">
-      <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
-      <li><a href="products.html" class="sidebar-nav-item active"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
-      <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
-      <li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
-      <li>
-        <details class="sidebar-report-group">
-          <summary class="sidebar-nav-item">
-            <span class="material-icons-outlined">analytics</span>
-            Reports
-            <span class="material-icons-outlined sidebar-report-caret">expand_more</span>
-          </summary>
-          <ul class="sidebar-report-sublist">
-            <li><a href="report.html?type=daily" class="sidebar-report-link">Daily</a></li>
-            <li><a href="report.html?type=weekly" class="sidebar-report-link">Weekly</a></li>
-            <li><a href="report.html?type=monthly" class="sidebar-report-link">Monthly</a></li>
-          </ul>
-        </details>
-      </li>
-      <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
-    </ul>
-  </nav>
-</aside>
-
-<header class="top-nav">
-  <div class="top-nav-logo">
-    <img src="../public/assets/logo.png" alt="HuddersHub">
-    <span>HuddersHub</span>
-  </div>
-  <div class="top-nav-title">Add Product</div>
-  <div class="top-nav-right">
-    <button class="top-nav-icon" aria-label="Notifications">
-      <span class="material-icons-outlined">notifications_none</span>
-      <span class="notification-badge"></span>
-    </button>
-    <div class="user-pill"><span class="material-icons-outlined">person</span><span id="topNavName">...</span></div>
-  </div>
-</header>
-
-<main class="main-content">
-  <div class="page-header">
-    <h1>Products</h1>
-  </div>
-
-  <div class="tabs-header">
-    <a href="products.html" class="tab-item">My products</a>
-    <a href="#" class="tab-item active">Add new product</a>
-  </div>
-
-  <div class="form-card">
-    <form id="addProductForm">
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label" for="productName">Product name</label>
-          <input type="text" id="productName" class="form-input" placeholder="e.g. Organic Chicken Breast" required>
-          <span class="error-message">Product name is required</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="productPrice">Price</label>
-          <div style="position: relative;">
-            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-medium-gray); font-weight: 600;">£</span>
-            <input type="number" id="productPrice" class="form-input" placeholder="0.00" step="0.01" min="0" style="padding-left: 28px;" required>
-          </div>
-          <span class="error-message">Valid price is required</span>
-        </div>
-
-        <div class="form-group full-width">
-          <label class="form-label" for="productDescription">Product description</label>
-          <textarea id="productDescription" class="form-textarea" placeholder="Describe your product in detail..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="productCategory">Category</label>
-          <div class="select-wrapper">
-            <select id="productCategory" class="form-select" required>
-              <option value="">Select category...</option>
-              <option value="Butcher">Butcher</option>
-              <option value="Greengrocer">Greengrocer</option>
-              <option value="Bakery">Bakery</option>
-              <option value="Fishmonger">Fishmonger</option>
-              <option value="Delicatessen">Delicatessen</option>
-            </select>
-            <span class="material-icons-outlined select-arrow">expand_more</span>
-          </div>
-          <span class="error-message">Please select a category</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="quantityPerItem">Quantity per item</label>
-          <input type="number" id="quantityPerItem" class="form-input" placeholder="e.g. 1" min="1" value="1">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="stockAvailable">Stock Available</label>
-          <input type="number" id="stockAvailable" class="form-input" placeholder="e.g. 100" min="0" required>
-          <span class="error-message">Stock available is required</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="minOrder">Minimum Order</label>
-          <input type="number" id="minOrder" class="form-input" placeholder="e.g. 1" min="1" value="1">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="maxOrder">Maximum Order</label>
-          <input type="number" id="maxOrder" class="form-input" placeholder="e.g. 50" min="1" value="50">
-        </div>
-
-        <div class="form-group full-width allergy-section">
-          <div class="allergy-label">
-            <span class="material-icons-outlined">warning</span>
-            Allergy information
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label" for="contains">Contains</label>
-              <input type="text" id="contains" class="form-input" placeholder="e.g. Gluten, Dairy">
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="mayContain">May Contain</label>
-              <input type="text" id="mayContain" class="form-input" placeholder="e.g. Traces of nuts">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='products.html'">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="saveBtn">
-          <span class="material-icons-outlined">save</span>
-          Save
+            @media (max-width: 600px) {
+                .form-card {
+                    padding: 20px;
+                }
+                .form-actions {
+                    flex-direction: column-reverse;
+                }
+                .form-actions .btn {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <button
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Open menu"
+        >
+            <span class="material-icons-outlined">menu</span>
         </button>
-      </div>
-    </form>
-  </div>
-</main>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<div class="toast toast-success" id="successToast">
-  <span class="material-icons-outlined">check_circle</span>
-  <span>Product saved successfully!</span>
-</div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-profile">
+                <div class="sidebar-avatar">
+                    <span class="material-icons-outlined">person</span>
+                </div>
+                <div class="sidebar-name" id="sidebarName">...</div>
+                <div class="sidebar-status">
+                    <span class="status-dot"></span>Status: Active
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="sidebar-nav-list">
+                    <li>
+                        <a href="dashboard.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >dashboard</span
+                            >Dashboard</a
+                        >
+                    </li>
+                    <li>
+                        <a href="products.html" class="sidebar-nav-item active"
+                            ><span class="material-icons-outlined"
+                                >inventory_2</span
+                            >Products</a
+                        >
+                    </li>
+                    <li>
+                        <a href="orders.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >receipt_long</span
+                            >Orders</a
+                        >
+                    </li>
+                    <li>
+                        <a href="finance.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >account_balance_wallet</span
+                            >Finance</a
+                        >
+                    </li>
+                    <li>
+                        <details class="sidebar-report-group">
+                            <summary class="sidebar-nav-item">
+                                <span class="material-icons-outlined"
+                                    >analytics</span
+                                >
+                                Reports
+                                <span
+                                    class="material-icons-outlined sidebar-report-caret"
+                                    >expand_more</span
+                                >
+                            </summary>
+                            <ul class="sidebar-report-sublist">
+                                <li>
+                                    <a
+                                        href="report.html?type=daily"
+                                        class="sidebar-report-link"
+                                        >Daily</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        href="report.html?type=weekly"
+                                        class="sidebar-report-link"
+                                        >Weekly</a
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        href="report.html?type=monthly"
+                                        class="sidebar-report-link"
+                                        >Monthly</a
+                                    >
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <a href="profile.html" class="sidebar-nav-item"
+                            ><span class="material-icons-outlined"
+                                >settings</span
+                            >Profile</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            onclick="handleLogout()"
+                            class="sidebar-nav-item logout"
+                            ><span class="material-icons-outlined">logout</span
+                            >Logout</a
+                        >
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-<div class="toast toast-error" id="errorToast">
-  <span class="material-icons-outlined">error</span>
-  <span id="errorMessage">Please fix the errors above.</span>
-</div>
+        <header class="top-nav">
+            <div class="top-nav-logo">
+                <img src="../public/assets/logo.png" alt="HuddersHub" />
+                <span>HuddersHub</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px">
+                <div class="user-pill">
+                    <span class="material-icons-outlined">person</span>
+                    <span id="topNavName">...</span>
+                </div>
+            </div>
+        </header>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Products</h1>
+            </div>
 
-   const userId = sessionStorage.getItem('user_id');
-const userRole = sessionStorage.getItem('userRole');
-if (!userId || userRole !== 'trader') {
-    window.location.href = '../public/login.html';
-}
+            <!-- ══ Back to products list FAB ═══════════════════════════════════════ -->
+            <a
+                href="products.html"
+                class="fab fab-back"
+                title="Back to My Products"
+            >
+                <span class="material-icons-outlined">arrow_back</span>
+            </a>
+            <!-- ══════════════════════════════════════════════════════════════════════ -->
 
-    const categoryMap = { 'Delicatessen': 1, 'Butcher': 2, 'Greengrocer': 3, 'Fishmonger': 4, 'Bakery': 5 };
+            <div class="tabs-header">
+                <a href="products.html" class="tab-item">My products</a>
+                <a href="#" class="tab-item active">Add new product</a>
+            </div>
 
-    const form    = document.getElementById('addProductForm');
-    const saveBtn = document.getElementById('saveBtn');
-    const sidebar        = document.getElementById('sidebar');
-    const sidebarToggle  = document.getElementById('sidebarToggle');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
+            <div class="form-card">
+                <form id="addProductForm" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <!-- Trader name (read-only) -->
+                        <div class="form-group">
+                            <label class="form-label" for="traderName"
+                                >Trader Name</label
+                            >
+                            <input
+                                type="text"
+                                id="traderName"
+                                class="form-input"
+                                readonly
+                            />
+                        </div>
 
-    document.getElementById('sidebarName').textContent =
-        (sessionStorage.getItem('firstname') || '') + ' ' + (sessionStorage.getItem('lastname') || '');
-    document.getElementById('topNavName').textContent =
-        localStorage.getItem('firstname') || '';
+                        <!-- Product name -->
+                        <div class="form-group">
+                            <label class="form-label" for="productName"
+                                >Product Name *</label
+                            >
+                            <input
+                                type="text"
+                                id="productName"
+                                class="form-input"
+                                placeholder="e.g. Organic Chicken Breast"
+                                required
+                            />
+                            <span class="error-message"
+                                >Product name is required</span
+                            >
+                        </div>
 
-    sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        sidebarOverlay.classList.toggle('active');
-    });
-    sidebarOverlay.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('active');
-    });
+                        <!-- Price -->
+                        <div class="form-group">
+                            <label class="form-label" for="price"
+                                >Price (£) *</label
+                            >
+                            <div style="position: relative">
+                                <span
+                                    style="
+                                        position: absolute;
+                                        left: 12px;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        color: var(--text-medium-gray);
+                                        font-weight: 600;
+                                    "
+                                    >£</span
+                                >
+                                <input
+                                    type="number"
+                                    id="price"
+                                    class="form-input"
+                                    placeholder="0.00"
+                                    step="0.01"
+                                    min="0"
+                                    style="padding-left: 28px"
+                                    required
+                                />
+                            </div>
+                            <span class="error-message"
+                                >Valid price is required</span
+                            >
+                        </div>
 
-    function showSuccessToast(message) {
-        const t = document.getElementById('successToast');
-        t.querySelector('span:last-child').textContent = message;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 4000);
-    }
+                        <!-- Category -->
+                        <div class="form-group">
+                            <label class="form-label" for="category"
+                                >Category * (based on your shop type)</label
+                            >
+                            <div class="select-wrapper">
+                                <select
+                                    id="category"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="">Select category...</option>
+                                </select>
+                                <span
+                                    class="material-icons-outlined select-arrow"
+                                    >expand_more</span
+                                >
+                            </div>
+                            <span class="error-message"
+                                >Please select a category</span
+                            >
+                        </div>
 
-    function showErrorToast(message) {
-        const t = document.getElementById('errorToast');
-        document.getElementById('errorMessage').textContent = message;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 4000);
-    }
+                        <!-- Description -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="productDescription"
+                                >Product Description (intro)</label
+                            >
+                            <textarea
+                                id="productDescription"
+                                class="form-textarea"
+                                rows="3"
+                                placeholder="Brief intro — e.g. 'Crisp, vibrant spinach leaves with a clean earthy flavour...'"
+                            ></textarea>
+                            <span
+                                class="help-text"
+                                style="font-size: 11px; color: #5e6a63"
+                                >This appears as the main intro paragraph on the
+                                product page.</span
+                            >
+                        </div>
 
-    document.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(field => {
-        field.addEventListener('input', function () {
-            this.classList.remove('error');
-            this.closest('.form-group').classList.remove('has-error');
-        });
-    });
+                        <!-- Rich description cards -->
+                        <div class="form-group full-width">
+                            <label
+                                class="form-label"
+                                style="
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #0f260b;
+                                    margin-bottom: 12px;
+                                "
+                            >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="
+                                        font-size: 18px;
+                                        vertical-align: middle;
+                                        margin-right: 6px;
+                                    "
+                                    >auto_awesome</span
+                                >
+                                Product Details (shown as cards on product page)
+                            </label>
+                            <div
+                                style="
+                                    display: grid;
+                                    grid-template-columns: 1fr 1fr;
+                                    gap: 16px;
+                                "
+                            >
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="appearanceAroma"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >visibility</span
+                                        >
+                                        Appearance &amp; Aroma
+                                    </label>
+                                    <textarea
+                                        id="appearanceAroma"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Describe colour, sheen, texture appearance and aroma..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="textureFlavour"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >restaurant</span
+                                        >
+                                        Texture &amp; Flavour
+                                    </label>
+                                    <textarea
+                                        id="textureFlavour"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Describe the taste and texture profile..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="culinaryVersatility"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >soup_kitchen</span
+                                        >
+                                        Culinary Versatility
+                                    </label>
+                                    <textarea
+                                        id="culinaryVersatility"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="How can this product be used? Recipes, cooking methods..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="nutritionalHighlights"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >health_and_safety</span
+                                        >
+                                        Nutritional Highlights
+                                    </label>
+                                    <textarea
+                                        id="nutritionalHighlights"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Key nutrients, vitamins, health benefits..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="growingSourcing"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                            "
+                                            >nature</span
+                                        >
+                                        Growing &amp; Sourcing
+                                    </label>
+                                    <textarea
+                                        id="growingSourcing"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Where is it sourced? Farming method, region..."
+                                    ></textarea>
+                                </div>
+                                <div class="form-group" style="margin: 0">
+                                    <label
+                                        class="form-label"
+                                        for="allergenicInfoDetail"
+                                        style="color: #e3472c"
+                                    >
+                                        <span
+                                            class="material-icons-outlined"
+                                            style="
+                                                font-size: 14px;
+                                                vertical-align: middle;
+                                                color: #ff5e3a;
+                                            "
+                                            >info_outline</span
+                                        >
+                                        Allergenic Information (detailed)
+                                    </label>
+                                    <textarea
+                                        id="allergenicInfoDetail"
+                                        class="form-textarea"
+                                        rows="3"
+                                        placeholder="Full allergen details, preparation facility warnings..."
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
 
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        let isValid = true;
+                        <!-- Price row: unit + price handled above, now stock row -->
+                        <div class="form-group">
+                            <label class="form-label" for="stock"
+                                >Stock Available *</label
+                            >
+                            <input
+                                type="number"
+                                id="stock"
+                                class="form-input"
+                                min="0"
+                                placeholder="e.g. 100"
+                                required
+                            />
+                            <span class="error-message">Stock is required</span>
+                        </div>
 
-        document.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+                        <!-- Quantity per item (unit) -->
+                        <div class="form-group">
+                            <label class="form-label" for="unit"
+                                >Quantity per item</label
+                            >
+                            <input
+                                type="text"
+                                id="unit"
+                                class="form-input"
+                                placeholder="e.g. 500g, 1kg, 1 loaf"
+                            />
+                        </div>
 
-        const requiredFields = [
-            { id: 'productName' },
-            { id: 'productPrice' },
-            { id: 'productCategory' },
-            { id: 'stockAvailable' }
-        ];
+                        <!-- Min / Max order -->
+                        <div class="form-group">
+                            <label class="form-label" for="minOrder"
+                                >Minimum Order</label
+                            >
+                            <input
+                                type="number"
+                                id="minOrder"
+                                class="form-input"
+                                min="1"
+                                value="1"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="maxOrder"
+                                >Maximum Order</label
+                            >
+                            <input
+                                type="number"
+                                id="maxOrder"
+                                class="form-input"
+                                min="1"
+                                value="50"
+                            />
+                        </div>
 
-        requiredFields.forEach(field => {
-            const input = document.getElementById(field.id);
-            if (!input.value.trim()) {
-                input.classList.add('error');
-                input.closest('.form-group').classList.add('has-error');
-                isValid = false;
-            } else {
-                input.classList.remove('error');
+                        <!-- Allergen info -->
+                        <div class="form-group full-width">
+                            <label
+                                class="form-label"
+                                style="
+                                    color: var(--primary-orange-dark);
+                                    font-weight: 600;
+                                "
+                            >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="
+                                        font-size: 18px;
+                                        color: var(--primary-orange);
+                                        vertical-align: middle;
+                                        margin-right: 4px;
+                                    "
+                                    >warning</span
+                                >
+                                Allergen Information
+                            </label>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="contains"
+                                        >Contains</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="contains"
+                                        class="form-input"
+                                        placeholder="e.g. Gluten, Dairy"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="mayContain"
+                                        >May Contain</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="mayContain"
+                                        class="form-input"
+                                        placeholder="e.g. Traces of nuts"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dietary tags -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Dietary Tags</label>
+                            <div class="dietary-group">
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Vegetarian"
+                                    />
+                                    Vegetarian</label
+                                >
+                                <label
+                                    ><input type="checkbox" value="Vegan" />
+                                    Vegan</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Gluten Free"
+                                    />
+                                    Gluten Free</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        value="Dairy Free"
+                                    />
+                                    Dairy Free</label
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Product images (drag & drop, up to 5) -->
+                        <div class="form-group full-width image-upload-section">
+                            <label class="image-upload-label"
+                                >Product Images (up to 5)</label
+                            >
+                            <div class="drop-area" id="dropArea">
+                                <span class="material-icons-outlined"
+                                    >add_photo_alternate</span
+                                >
+                                <div class="drop-text">
+                                    Click or drag images here
+                                </div>
+                                <div class="drop-hint">
+                                    Supports: JPG, PNG (max 5 images)
+                                </div>
+                            </div>
+                            <input
+                                type="file"
+                                id="imageInput"
+                                multiple
+                                accept="image/jpeg,image/png,image/jpg"
+                            />
+                            <div id="imagePreview" class="image-preview"></div>
+                        </div>
+                    </div>
+                    <!-- /form-grid -->
+
+                    <div class="form-actions">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            onclick="window.location.href = 'products.html'"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="submitBtn"
+                        >
+                            <span class="material-icons-outlined">save</span>
+                            Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <div class="toast toast-success" id="successToast">
+            <span class="material-icons-outlined">check_circle</span>
+            <span id="toastSuccessText">Product saved successfully!</span>
+        </div>
+        <div class="toast toast-error" id="errorToast">
+            <span class="material-icons-outlined">error</span>
+            <span id="toastErrorText">Please fix the errors above.</span>
+        </div>
+
+        <script>
+            // ── Auth guard ──────────────────────────────────────────────────────────────
+            const userId = sessionStorage.getItem("user_id");
+            const userRole = sessionStorage.getItem("userRole");
+            const firstname = sessionStorage.getItem("firstname") || "";
+            const lastname = sessionStorage.getItem("lastname") || "";
+
+            if (!userId) {
+                window.location.href = "../public/login.html";
+            } else if (!userRole || userRole.toLowerCase() !== "trader") {
+                window.location.href = "../public/login.html";
             }
-        });
 
-        const price = parseFloat(document.getElementById('productPrice').value);
-        if (isNaN(price) || price <= 0) {
-            document.getElementById('productPrice').classList.add('error');
-            document.getElementById('productPrice').closest('.form-group').classList.add('has-error');
-            isValid = false;
-        }
-
-        const minOrder = parseInt(document.getElementById('minOrder').value) || 1;
-        const maxOrder = parseInt(document.getElementById('maxOrder').value) || 50;
-        if (minOrder > maxOrder) {
-            document.getElementById('minOrder').classList.add('error');
-            document.getElementById('minOrder').closest('.form-group').classList.add('has-error');
-            showErrorToast('Minimum order cannot exceed maximum order.');
-            isValid = false;
-        }
-
-        if (!isValid) { showErrorToast('Please fix the errors above.'); return; }
-
-        saveBtn.disabled = true;
-        saveBtn.innerHTML = '<span class="material-icons-outlined">refresh</span> Saving...';
-
-        const categoryName = document.getElementById('productCategory').value;
-        const allergens = [
-            document.getElementById('contains').value,
-            document.getElementById('mayContain').value
-        ].filter(Boolean).join(', ') || 'None';
-
-        fetch('http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/add-product.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user_id:     parseInt(userId),
-                name:        document.getElementById('productName').value.trim(),
-                description: document.getElementById('productDescription').value.trim(),
-                price:       price,
-                stock:       parseInt(document.getElementById('stockAvailable').value),
-                category_id: categoryMap[categoryName] || 1,
-                min_order:   minOrder,
-                max_order:   maxOrder,
-                allergens:   allergens
-            })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                showSuccessToast('Product submitted for admin approval!');
-                setTimeout(() => window.location.href = 'products.html', 1200);
-            } else {
-                showErrorToast(data.message || 'Failed to save product');
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<span class="material-icons-outlined">save</span> Save';
+            function handleLogout() {
+                fetch("../api/auth/logout.php", { method: "POST", credentials: 'same-origin' })
+                    .then(() => {
+                        sessionStorage.clear();
+                        window.location.href = "../public/login.html";
+                    })
+                    .catch(() => {
+                        sessionStorage.clear();
+                        window.location.href = "../public/login.html";
+                    });
             }
-        })
-        .catch(() => {
-            showErrorToast('Network error, please try again.');
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = '<span class="material-icons-outlined">save</span> Save';
-        });
-    });
 
-}); // end DOMContentLoaded
-</script>
-</body>
+            // ── Sidebar / overlay ───────────────────────────────────────────────────────
+            const sidebar = document.getElementById("sidebar");
+            const sidebarToggle = document.getElementById("sidebarToggle");
+            const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+            sidebarToggle.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
+                sidebarOverlay.classList.toggle("active");
+            });
+            sidebarOverlay.addEventListener("click", () => {
+                sidebar.classList.remove("open");
+                sidebarOverlay.classList.remove("active");
+            });
+
+            // ── Navigation helper: tab active state ─────────────────────────────────────
+            document
+                .querySelectorAll(".tab-item")
+                .forEach((t) =>
+                    t.addEventListener("click", (e) => e.preventDefault()),
+                );
+
+            // ── Category presets per shop type ──────────────────────────────────────────
+            const CATEGORY_MAP = {
+                Butcher: ["Beef", "Chicken", "Lamb", "Pork", "Other Meats"],
+                Greengrocer: [
+                    "Fruits",
+                    "Vegetables",
+                    "Herbs",
+                    "Salad",
+                    "Other Produce",
+                ],
+                Fishmonger: [
+                    "Fresh Fish",
+                    "Shellfish",
+                    "Smoked Fish",
+                    "Frozen Seafood",
+                ],
+                Bakery: [
+                    "Bread",
+                    "Cakes",
+                    "Pastries",
+                    "Cookies",
+                    "Other Baked Goods",
+                ],
+                Delicatessen: [
+                    "Cheeses",
+                    "Cold Cuts",
+                    "Dips",
+                    "Olives",
+                    "Other Deli",
+                ],
+            };
+
+            function populateCategoryDropdown(shopType) {
+                const list = CATEGORY_MAP[shopType] || CATEGORY_MAP["Butcher"];
+                const select = document.getElementById("category");
+                select.innerHTML =
+                    '<option value="">Select category...</option>';
+                list.forEach((cat) => {
+                    const opt = document.createElement("option");
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    select.appendChild(opt);
+                });
+            }
+
+            // ── Load trader info ─────────────────────────────────────────────────────────
+            async function loadTraderInfo() {
+                try {
+                    // Dashboard → trader name
+                    const dashRes = await fetch(
+                        "../api/trader/get-dashboard.php?user_id=" + userId,
+                    );
+                    const dash = await dashRes.json();
+                    if (dash.success) {
+                        document.getElementById("topNavName").textContent =
+                            dash.firstname || "";
+                        document.getElementById("sidebarName").textContent =
+                            (dash.firstname || "") +
+                            " " +
+                            (dash.lastname || "");
+                        document.getElementById("traderName").value =
+                            (dash.firstname || "") +
+                            " " +
+                            (dash.lastname || "");
+                    }
+
+                    // Profile → shop_type for category preset
+                    const profRes = await fetch(
+                        "../api/trader/get-profile.php?user_id=" + userId,
+                    );
+                    const prof = await profRes.json();
+                    if (prof.success) {
+                        const shopType =
+                            (prof.data && prof.data.shop_type) || "Butcher";
+                        populateCategoryDropdown(shopType);
+                    } else {
+                        populateCategoryDropdown("Butcher");
+                    }
+                } catch (_) {
+                    populateCategoryDropdown("Butcher");
+                }
+            }
+
+            loadTraderInfo();
+
+            // ── Image upload (drag-and-drop, up to 5) ───────────────────────────────────
+            let selectedFiles = [];
+            const dropArea = document.getElementById("dropArea");
+            const imageInput = document.getElementById("imageInput");
+            const previewBox = document.getElementById("imagePreview");
+
+            dropArea.addEventListener("click", () => imageInput.click());
+
+            dropArea.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = "var(--primary-green)";
+                dropArea.style.background = "var(--primary-green-light)";
+            });
+            dropArea.addEventListener("dragleave", () => {
+                dropArea.style.borderColor = "";
+                dropArea.style.background = "";
+            });
+            dropArea.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = "";
+                dropArea.style.background = "";
+                addFiles(Array.from(e.dataTransfer.files));
+            });
+
+            imageInput.addEventListener("change", (e) =>
+                addFiles(Array.from(e.target.files)),
+            );
+
+            function addFiles(files) {
+                const total = selectedFiles.length + files.length;
+                if (total > 5) {
+                    showToast("Maximum 5 images allowed", "error");
+                    return;
+                }
+                files.forEach((file) => {
+                    if (!file.type.startsWith("image/")) return;
+                    selectedFiles.push(file);
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        const wrapper = document.createElement("div");
+                        wrapper.className = "preview-wrapper";
+                        const img = document.createElement("img");
+                        img.src = ev.target.result;
+                        img.className = "preview-img";
+                        const removeBtn = document.createElement("button");
+                        removeBtn.type = "button";
+                        removeBtn.className = "remove-img-btn";
+                        removeBtn.innerHTML = "×";
+                        removeBtn.setAttribute("aria-label", "Remove image");
+                        removeBtn.addEventListener("click", () => {
+                            const idx = selectedFiles.indexOf(file);
+                            if (idx > -1) selectedFiles.splice(idx, 1);
+                            wrapper.remove();
+                        });
+                        wrapper.appendChild(img);
+                        wrapper.appendChild(removeBtn);
+                        previewBox.appendChild(wrapper);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                imageInput.value = "";
+            }
+
+            // ── Toast helpers ────────────────────────────────────────────────────────────
+            function showToast(msg, type = "success") {
+                const toast = document.getElementById(
+                    type === "error" ? "errorToast" : "successToast",
+                );
+                document.getElementById(
+                    type === "error" ? "toastErrorText" : "toastSuccessText",
+                ).textContent = msg;
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 4000);
+            }
+
+            // ── Form validation helpers ────────────────────────────────────────────────
+            function clearErrors() {
+                document
+                    .querySelectorAll(".form-group")
+                    .forEach((g) => g.classList.remove("has-error"));
+                document
+                    .querySelectorAll(".error")
+                    .forEach((f) => f.classList.remove("error"));
+            }
+
+            function markError(input, msg) {
+                input.classList.add("error");
+                input.closest(".form-group").classList.add("has-error");
+                const errEl = input
+                    .closest(".form-group")
+                    .querySelector(".error-message");
+                if (errEl && msg) errEl.textContent = msg;
+            }
+
+            // Live clear on input
+            document
+                .querySelectorAll(".form-input, .form-textarea, .form-select")
+                .forEach((el) => {
+                    el.addEventListener("input", clearErrors);
+                    el.addEventListener("change", clearErrors);
+                });
+
+            // ── Form submit ─────────────────────────────────────────────────────────────
+            const form = document.getElementById("addProductForm");
+            const submitBtn = document.getElementById("submitBtn");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                clearErrors();
+                let valid = true;
+
+                const nameVal = document
+                    .getElementById("productName")
+                    .value.trim();
+                const priceVal = document.getElementById("price").value;
+                const catVal = document.getElementById("category").value;
+                const stockVal = document.getElementById("stock").value;
+
+                if (!nameVal) {
+                    document
+                        .getElementById("productName")
+                        .classList.add("error");
+                    document
+                        .getElementById("productName")
+                        .closest(".form-group")
+                        .classList.add("has-error");
+                    valid = false;
+                }
+                if (!priceVal || parseFloat(priceVal) <= 0) {
+                    markError(
+                        document.getElementById("price"),
+                        "Valid price is required",
+                    );
+                    valid = false;
+                }
+                if (!catVal) {
+                    markError(
+                        document.getElementById("category"),
+                        "Please select a category",
+                    );
+                    valid = false;
+                }
+                if (stockVal === "" || parseInt(stockVal) < 0) {
+                    document.getElementById("stock").classList.add("error");
+                    document
+                        .getElementById("stock")
+                        .closest(".form-group")
+                        .classList.add("has-error");
+                    valid = false;
+                }
+
+                if (!valid) {
+                    showToast("Please fill all required fields.", "error");
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML =
+                    '<span class="material-icons-outlined">refresh</span> Saving...';
+
+                // Collect dietary tags (comma-separated)
+                const dietaryTags = [];
+                document
+                    .querySelectorAll(".dietary-group input:checked")
+                    .forEach((cb) => dietaryTags.push(cb.value));
+
+                // Collect allergen info
+                const contains = document
+                    .getElementById("contains")
+                    .value.trim();
+                const mayContain = document
+                    .getElementById("mayContain")
+                    .value.trim();
+                const allergenInfo =
+                    [contains, mayContain].filter(Boolean).join("; ") || "None";
+
+                const fd = new FormData();
+                fd.append("user_id", userId);
+                fd.append("name", nameVal);
+                fd.append(
+                    "description",
+                    document.getElementById("productDescription").value.trim(),
+                );
+                fd.append(
+                    "appearance_aroma",
+                    document.getElementById("appearanceAroma").value,
+                );
+                fd.append(
+                    "texture_flavour",
+                    document.getElementById("textureFlavour").value,
+                );
+                fd.append(
+                    "culinary_versatility",
+                    document.getElementById("culinaryVersatility").value,
+                );
+                fd.append(
+                    "nutritional_highlights",
+                    document.getElementById("nutritionalHighlights").value,
+                );
+                fd.append(
+                    "growing_sourcing",
+                    document.getElementById("growingSourcing").value,
+                );
+                fd.append(
+                    "allergenic_info_detail",
+                    document.getElementById("allergenicInfoDetail").value,
+                );
+                fd.append("price", priceVal);
+                fd.append("stock", stockVal);
+                fd.append(
+                    "min_order",
+                    document.getElementById("minOrder").value,
+                );
+                fd.append(
+                    "max_order",
+                    document.getElementById("maxOrder").value,
+                );
+                fd.append("unit", document.getElementById("unit").value.trim());
+                fd.append("category", catVal);
+                fd.append("allergen_info", allergenInfo);
+                fd.append("dietary_tags", dietaryTags.join(","));
+                selectedFiles.forEach((file) => fd.append("images[]", file));
+
+                try {
+                    const res = await fetch("../api/trader/add-product.php", {
+                        method: "POST",
+                        body: fd,
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        showToast(
+                            "Product added successfully! It will appear on the website once approved.",
+                        );
+                        setTimeout(
+                            () => (window.location.href = "products.html"),
+                            2000,
+                        );
+                    } else {
+                        showToast(
+                            data.message || "Failed to add product",
+                            "error",
+                        );
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML =
+                            '<span class="material-icons-outlined">save</span> Save Product';
+                    }
+                } catch (_) {
+                    showToast("Network error. Please try again.", "error");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML =
+                        '<span class="material-icons-outlined">save</span> Save Product';
+                }
+            });
+        </script>
+    </body>
 </html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Report - HuddersHub Trader</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+:root { --primary-orange: #FF5E3A; --primary-green: #0F260B; --bg-light: #F7F6F3; --bg-white: #FFFFFF; --border-light: #DCE3DA; --text-black: #0B140A; --text-medium: #5E6A63; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-light); color: var(--text-black); }
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.sidebar { background: var(--primary-green); color: #fff; padding: 20px 0; }
+.sidebar-profile { text-align: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-avatar { width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.sidebar-name { font-weight: 600; font-size: 16px; }
+.sidebar-status { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.sidebar-nav-list { list-style: none; }
+.sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: rgba(255,255,255,0.8); text-decoration: none; }
+.sidebar-nav-item:hover, .sidebar-nav-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+.sidebar-nav-item.logout { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; color: #FF8C70; }
+
+.main { padding: 24px; }
+.page-title { font-size: 28px; font-weight: 700; color: var(--primary-green); margin-bottom: 20px; }
+
+.week-nav { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.week-display { font-size: 18px; font-weight: 600; background: var(--bg-white); padding: 10px 24px; border-radius: 8px; border: 1px solid var(--border-light); }
+.nav-btn { background: var(--bg-white); border: 1px solid var(--border-light); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 18px; }
+.nav-btn:hover { background: var(--primary-green-light); }
+
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--bg-white); padding: 20px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.stat-label { font-size: 13px; color: var(--text-medium); margin-bottom: 4px; }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--primary-green); }
+
+.section { background: var(--bg-white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.section-title { font-size: 18px; font-weight: 600; color: var(--primary-green); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th, .data-table td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-light); }
+.data-table th { background: var(--bg-light); font-weight: 600; color: var(--text-medium); }
+.data-table td:first-child, .data-table th:first-child { text-align: left; }
+.data-table tr:last-child td { font-weight: 700; background: var(--bg-light); }
+.data-table .positive { color: #28a745; }
+
+.product-table th, .product-table td { text-align: left; }
+.product-table td:nth-child(2), .product-table td:nth-child(3) { text-align: center; }
+.product-table td:last-child { text-align: right; font-weight: 600; }
+
+.btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--primary-orange); color: white; }
+.btn-secondary { background: var(--bg-white); border: 1px solid var(--border-light); }
+.btn:hover { opacity: 0.9; }
+
+/* ── FAB ─────────────────────────────────────────────────────────── */
+.fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+.fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+.fab:active { transform:translateY(0) scale(0.97); }
+.fab .material-icons-outlined { font-size:28px; line-height:1; }
+
+@media print { .sidebar, .week-nav, .no-print { display: none; } .layout { display: block; } }
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="sidebar-profile">
+<div class="sidebar-avatar"><span class="material-icons-outlined">person</span></div>
+<div class="sidebar-name" id="sidebarName">Trader</div>
+<div class="sidebar-status"><span class="status-dot"></span>Status: Active</div>
+</div>
+<ul class="sidebar-nav-list">
+<li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+<li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+<li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+<li><a href="finance.html" class="sidebar-nav-item"><span class="material-icons-outlined">account_balance_wallet</span>Finance</a></li>
+<li><a href="report.html" class="sidebar-nav-item"><span class="material-icons-outlined">analytics</span>Reports</a></li>
+<li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
+<li><a href="#" onclick="handleLogout()" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+</ul>
+</aside>
+
+<main class="main">
+    <a href="add-product.html" class="fab" title="Add new product">
+        <span class="material-icons-outlined">add</span>
+    </a>
+    <h1 class="page-title">Weekly Finance Report</h1>
+
+<div class="week-nav no-print">
+<button class="nav-btn" onclick="changeWeek(-1)">❮</button>
+<div class="week-display" id="weekDisplay">Week of...</div>
+<button class="nav-btn" onclick="changeWeek(1)">❯</button>
+<button class="btn btn-primary" onclick="loadReport()">
+<span class="material-icons-outlined">refresh</span> Generate
+</button>
+<button class="btn btn-secondary" onclick="window.print()">
+<span class="material-icons-outlined">print</span> Print
+</button>
+<button class="btn btn-secondary" onclick="exportToCSV()">
+<span class="material-icons-outlined">download</span> Export CSV
+</button>
+</div>
+
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-label">Total Revenue (Collected)</div>
+<div class="stat-value" id="totalRevenue">£0.00</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">Total Orders</div>
+<div class="stat-value" id="totalOrders">0</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">Collected Orders</div>
+<div class="stat-value" id="totalCollected">0</div>
+</div>
+</div>
+
+<div class="section">
+<h2 class="section-title">📅 Daily Breakdown</h2>
+<table class="data-table">
+<thead>
+<tr><th>Day</th><th>Orders</th><th>Collected</th><th>Revenue</th></tr>
+</thead>
+<tbody id="dailyTable"></tbody>
+</table>
+</div>
+
+<div class="section">
+<h2 class="section-title">📦 Product Revenue Breakdown</h2>
+<p style="font-size:13px;color:var(--text-medium);margin-bottom:12px;">* Only includes COLLECTED orders - uncollected orders not counted in finance</p>
+<table class="data-table product-table">
+<thead>
+<tr><th>Product</th><th>Qty Sold</th><th>Income</th></tr>
+</thead>
+<tbody id="productTable"></tbody>
+</table>
+</div>
+</main>
+</div>
+
+<script>
+const userId = parseInt(sessionStorage.getItem('user_id') || '0');
+const userRole = sessionStorage.getItem('userRole') || '';
+
+if (!userId) {
+    window.location.href = '../public/login.html';
+} else if (!userRole || userRole.toLowerCase() !== 'trader') {
+    window.location.href = '../public/login.html';
+}
+
+let currentWeekStart = getWednesday(new Date());
+let currentReportData = null;
+
+function getWednesday(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day <= 3 ? -3 : 4);
+    return new Date(d.setDate(diff));
+}
+
+function formatDate(d) {
+    return d.toISOString().split('T')[0];
+}
+
+function formatCurrency(amt) { return '£' + parseFloat(amt || 0).toFixed(2); }
+
+function changeWeek(delta) {
+    currentWeekStart.setDate(currentWeekStart.getDate() + (delta * 7));
+    updateWeekDisplay();
+    loadReport();
+}
+
+function updateWeekDisplay() {
+    const end = new Date(currentWeekStart);
+    end.setDate(end.getDate() + 6);
+    document.getElementById('weekDisplay').textContent = 
+        `${currentWeekStart.toLocaleDateString('en-GB', {day:'numeric',month:'short'})} - ${end.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'})}`;
+}
+
+function handleLogout() {
+    sessionStorage.clear();
+    window.location.href = '../public/login.html';
+}
+
+function exportToCSV() {
+    if (!currentReportData || !currentReportData.daily || !currentReportData.products) {
+        alert('No data to export.');
+        return;
+    }
+    
+    let csv = 'Daily Breakdown\n';
+    csv += 'Date,Orders,Collected,Revenue\n';
+    currentReportData.daily.forEach(d => {
+        csv += `${d.date},${d.orders},${d.collected},${d.revenue}\n`;
+    });
+    csv += `Total,${currentReportData.summary.total_orders},${currentReportData.summary.total_collected},${currentReportData.summary.total_revenue}\n\n`;
+    
+    csv += 'Product Revenue Breakdown\n';
+    csv += 'Product,Qty Sold,Income\n';
+    currentReportData.products.forEach(p => {
+        csv += `${p.name.replace(/,/g, '')},${p.quantity},${p.income}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', `weekly_report_${formatDate(currentWeekStart)}.csv`);
+    a.click();
+}
+
+function loadReport() {
+    const weekStart = formatDate(currentWeekStart);
+    
+    fetch(`../api/trader/get-weekly-report.php?user_id=${userId}&week_start=${weekStart}`)
+    .then(r => r.json())
+    .then(data => {
+        if (!data.success) { alert(data.message); return; }
+        
+        currentReportData = data;
+        
+        document.getElementById('totalRevenue').textContent = formatCurrency(data.summary.total_revenue);
+        document.getElementById('totalOrders').textContent = data.summary.total_orders;
+        document.getElementById('totalCollected').textContent = data.summary.total_collected;
+        
+        // Daily table
+        let dailyHtml = '';
+        data.daily.forEach(d => {
+            dailyHtml += `<tr>
+                <td>${new Date(d.date).toLocaleDateString('en-GB', {weekday:'short',day:'numeric',month:'short'})}</td>
+                <td>${d.orders}</td>
+                <td>${d.collected}</td>
+                <td class="positive">${formatCurrency(d.revenue)}</td>
+            </tr>`;
+        });
+        dailyHtml += `<tr>
+            <td><strong>Total</strong></td>
+            <td>${data.summary.total_orders}</td>
+            <td>${data.summary.total_collected}</td>
+            <td class="positive"><strong>${formatCurrency(data.summary.total_revenue)}</strong></td>
+        </tr>`;
+        document.getElementById('dailyTable').innerHTML = dailyHtml || '<tr><td colspan="4" style="text-align:center;color:var(--text-medium);">No data</td></tr>';
+        
+        // Product table
+        let productHtml = '';
+        data.products.forEach(p => {
+            productHtml += `<tr>
+                <td>${p.name}</td>
+                <td>${p.quantity}</td>
+                <td class="positive">${formatCurrency(p.income)}</td>
+            </tr>`;
+        });
+        document.getElementById('productTable').innerHTML = productHtml || '<tr><td colspan="3" style="text-align:center;color:var(--text-medium);">No products</td></tr>';
+    })
+    .catch(() => alert('Failed to load report'));
+}
+
+updateWeekDisplay();
+loadReport();
+</script>
+</body>
+</html>

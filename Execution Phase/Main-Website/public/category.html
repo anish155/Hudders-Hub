@@ -1,1 +1,184 @@
-﻿<html><head><title>Test</title></head><body></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Category | HuddersHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f1ea;
+  --surface: #ffffff;
+  --text: #142018;
+  --muted: #5d6a61;
+  --line: #dde4da;
+  --accent: #ff5e3a;
+  --accent-2: #caed95;
+  --shadow: 0 18px 40px rgba(18, 34, 17, 0.12);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(202, 237, 149, 0.35), transparent 32%),
+    radial-gradient(circle at 85% 10%, rgba(255, 94, 58, 0.15), transparent 30%),
+    linear-gradient(180deg, #fbfaf7 0%, var(--bg) 100%);
+}
+a { color: inherit; text-decoration: none; }
+.wrap { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+header { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(14px); background: rgba(251, 250, 247, 0.86); border-bottom: 1px solid rgba(221, 228, 218, 0.8); }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 0; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -0.02em; }
+.brand img { width: 42px; height: 42px; object-fit: contain; }
+.nav { display: flex; flex-wrap: wrap; gap: 18px; color: var(--muted); font-weight: 600; }
+.nav a:hover { color: var(--accent); }
+main { padding: 40px 0 72px; }
+.hero { display: grid; gap: 18px; padding: 34px; border: 1px solid var(--line); background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.82)); box-shadow: var(--shadow); }
+.eyebrow { display: inline-flex; width: fit-content; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; background: rgba(202, 237, 149, 0.34); color: #33502f; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.hero h1 { margin: 0; font-size: clamp(34px, 5vw, 58px); line-height: 0.95; letter-spacing: -0.05em; }
+.hero p { margin: 0; max-width: 720px; font-size: 16px; line-height: 1.7; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { padding: 10px 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.9); font-size: 13px; font-weight: 700; border-radius: 999px; }
+.panel { margin-top: 22px; padding: 28px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.panel-head { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 18px; }
+.panel-head h2 { margin: 0; font-size: 22px; }
+.panel-head p { margin: 4px 0 0; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.card { padding: 18px; border: 1px solid var(--line); background: linear-gradient(180deg, #fff, #fcfcfb); box-shadow: 0 10px 24px rgba(15, 33, 14, 0.08); display: grid; gap: 10px; }
+.card .icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: rgba(255, 94, 58, 0.12); color: var(--accent); }
+.card h3 { margin: 0; font-size: 16px; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.card a { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--accent); }
+.category-list { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.category-link { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.82); }
+.category-link span { color: var(--muted); font-size: 13px; }
+.footer-cta { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 999px; font-weight: 800; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.ghost { border: 1px solid var(--line); background: #fff; }
+@media (max-width: 980px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .topbar, .panel-head { flex-direction: column; align-items: start; }
+  .grid, .category-list { grid-template-columns: 1fr; }
+  .hero, .panel { padding: 22px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap topbar">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="HuddersHub logo">
+      <span>HuddersHub</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow" id="eyebrow">Category</div>
+      <h1 id="title">Fresh local produce</h1>
+      <p id="description">Browse curated local traders and discover the freshest seasonal goods from Huddersfield's marketplace.</p>
+      <div class="chips" id="chips"></div>
+      <div class="footer-cta">
+        <a class="btn primary" href="index.html"><span class="material-icons-outlined">storefront</span>Back to home</a>
+        <a class="btn ghost" href="contact.html"><span class="material-icons-outlined">support_agent</span>Contact support</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Featured picks</h2>
+          <p>Simple landing pages keep the current site usable while the catalog pages are being filled in.</p>
+        </div>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <div class="icon"><span class="material-icons-outlined">restaurant</span></div>
+          <h3>Fresh essentials</h3>
+          <p>Seasonal produce, artisan goods, and everyday staples from trusted local sellers.</p>
+          <a href="index.html">Browse marketplace <span class="material-icons-outlined">arrow_forward</span></a>
+        </article>
+        <article class="card">
+          <div class="icon"><span class="material-icons-outlined">schedule</span></div>
+          <h3>Pickup friendly</h3>
+          <p>Collection slots are built around real-world shopping so checkout stays simple.</p>
+          <a href="collection.html">Choose a slot <span class="material-icons-outlined">arrow_forward</span></a>
+        </article>
+        <article class="card">
+          <div class="icon"><span class="material-icons-outlined">local_shipping</span></div>
+          <h3>Fast checkout</h3>
+          <p>Cart, payment, and confirmation pages are wired up across the public front end.</p>
+          <a href="cart.html">Open cart <span class="material-icons-outlined">arrow_forward</span></a>
+        </article>
+        <article class="card">
+          <div class="icon"><span class="material-icons-outlined">help_center</span></div>
+          <h3>Need help?</h3>
+          <p>Use the support pages if you need to confirm a collection or get in touch.</p>
+          <a href="contact.html">Contact us <span class="material-icons-outlined">arrow_forward</span></a>
+        </article>
+      </div>
+
+      <div class="category-list" id="categoryList"></div>
+    </section>
+  </div>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const shop = params.get('shop');
+const type = params.get('type');
+const view = params.get('view');
+
+const categories = {
+  butcher: { title: 'Butcher', subtitle: 'Premium cuts and everyday meat essentials.', eyebrow: 'Shop', chips: ['Meat & Poultry', 'Local suppliers', 'Fresh daily'] },
+  greengrocer: { title: 'Greengrocer', subtitle: 'Seasonal fruit and vegetables from nearby growers.', eyebrow: 'Shop', chips: ['Fruit', 'Vegetables', 'Seasonal picks'] },
+  fishmonger: { title: 'Fishmonger', subtitle: 'Fresh fish and seafood for lighter, cleaner meals.', eyebrow: 'Shop', chips: ['Seafood', 'Day boat', 'Expert prep'] },
+  bakery: { title: 'Bakery', subtitle: 'Fresh breads, pastries, and handmade baked goods.', eyebrow: 'Shop', chips: ['Bread', 'Pastries', 'Sweet treats'] },
+  delicat: { title: 'Delicatessen', subtitle: 'Speciality foods, cheeses, and ready-to-enjoy extras.', eyebrow: 'Shop', chips: ['Cheese', 'Speciality foods', 'Ready to serve'] },
+  'meat-poultry': { title: 'Meat & Poultry', subtitle: 'Browse the meat and poultry selection from local traders.', eyebrow: 'Browse by type', chips: ['Cuts', 'Poultry', 'Local traders'] },
+  'fish-seafood': { title: 'Fish & Seafood', subtitle: 'Browse fish and seafood options for your next meal.', eyebrow: 'Browse by type', chips: ['Fresh fish', 'Shellfish', 'Seafood'] },
+  'fruits-veg': { title: 'Fruits & Veg', subtitle: 'Browse seasonal fruit and vegetable produce.', eyebrow: 'Browse by type', chips: ['Produce', 'Seasonal', 'Healthy'] },
+  'bakery-items': { title: 'Bakery Items', subtitle: 'Browse breads, cakes, pastries, and baked favourites.', eyebrow: 'Browse by type', chips: ['Bread', 'Pastries', 'Cakes'] },
+  'deli-foods': { title: 'Deli Foods', subtitle: 'Browse cheeses, deli favourites, and specialty foods.', eyebrow: 'Browse by type', chips: ['Cheese', 'Charcuterie', 'Specials'] },
+  all: { title: 'All Categories', subtitle: 'Explore every trader and product group in one place.', eyebrow: 'Marketplace', chips: ['All shops', 'All types', 'One hub'] }
+};
+
+const key = shop || type || view || 'all';
+const state = categories[key] || { title: 'Category', subtitle: 'Browse the marketplace using the available category links.', eyebrow: 'Marketplace', chips: ['Fresh local food', 'Trusted traders', 'Simple pickup'] };
+
+document.title = `${state.title} | HuddersHub`;
+document.getElementById('eyebrow').textContent = state.eyebrow;
+document.getElementById('title').textContent = state.title;
+document.getElementById('description').textContent = state.subtitle;
+document.getElementById('chips').innerHTML = state.chips.map((chip) => `<span class="chip">${chip}</span>`).join('');
+
+const categoryList = document.getElementById('categoryList');
+const entries = [
+  ['Butcher', 'butcher.html'],
+  ['Greengrocer', 'greengrocer.html'],
+  ['Fishmonger', 'fishmonger.html'],
+  ['Bakery', 'bakery.html'],
+  ['Delicatessen', 'delicat.html'],
+  ['All Categories', 'all-categories.html']
+];
+categoryList.innerHTML = entries.map(([label, link]) => `
+  <a class="category-link" href="${link}">
+    <strong>${label}</strong>
+    <span>Open category</span>
+  </a>
+`).join('');
+</script>
+</body>
+</html><html><head><title>Test</title></head><body></body></html>

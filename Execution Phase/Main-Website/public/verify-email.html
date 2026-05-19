@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - HuddersHub</title>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F7F6F3; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%; }
+        .success { color: #10B981; font-size: 48px; }
+        .error { color: #EF4444; font-size: 48px; }
+        h1 { color: #0F260B; margin: 20px 0 10px; }
+        p { color: #5E6A63; margin-bottom: 20px; }
+        a { display: inline-block; background: #FF5E3A; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        a:hover { background: #E3472C; }
+    </style>
+</head>
+<body>
+    <div class="container" id="result">
+        <p>Verifying your email...</p>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const email = params.get('email');
+
+        fetch('../api/auth/verify-email.php?token=' + encodeURIComponent(token) + '&email=' + encodeURIComponent(email))
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('result');
+                if (data.success) {
+                    container.innerHTML = '<div class="success">✓</div><h1>Verified!</h1><p>' + data.message + '</p><a href="login.html">Go to Login</a>';
+                } else {
+                    container.innerHTML = '<div class="error">✗</div><h1>Error</h1><p>' + data.message + '</p><a href="signup.html">Back to Signup</a>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('result').innerHTML = '<div class="error">✗</div><h1>Error</h1><p>Something went wrong.</p><a href="signup.html">Back to Signup</a>';
+            });
+    </script>
+</body>
+</html>

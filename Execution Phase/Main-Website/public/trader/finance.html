@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HuddersHub - Trader Finance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #0F260B;
+            --primary-orange: #FF5E3A;
+            --bg-light: #F7F6F3;
+            --bg-white: #FFFFFF;
+            --border-light: #DCE3DA;
+            --text-black: #0B140A;
+            --text-medium: #5E6A63;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-light); }
+        .layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+        .sidebar { background: var(--primary-green); color: white; height: 100vh; position: sticky; top: 0; }
+        .sidebar-profile { padding: 28px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .sidebar-avatar { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 12px; }
+        .sidebar-name { font-weight: 700; }
+        .sidebar-role { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .sidebar-nav-list { list-style: none; padding: 16px 12px; }
+        .sidebar-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.2s; background: none; border: none; cursor: pointer; width: 100%; text-align: left; font-size: inherit; font-family: inherit; }
+        .sidebar-nav-item:hover, .sidebar-nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+        .main-content { padding: 28px; }
+        .top-nav { background: white; border-bottom: 1px solid var(--border-light); padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .finance-card { background: white; border: 1px solid var(--border-light); padding: 24px; }
+        .finance-label { font-size: 20px; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
+        .finance-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--bg-light); }
+        .finance-row span:last-child { font-weight: 600; color: var(--primary-green); }
+        .sidebar-toggle { display: none; }
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: fixed; left: -280px; z-index: 200; }
+            .sidebar.open { left: 0; }
+            .finance-grid { grid-template-columns: 1fr; }
+            .sidebar-toggle { display: block; position: fixed; bottom: 20px; right: 20px; background: var(--primary-green); color: white; border: none; padding: 12px; border-radius: 50%; cursor: pointer; z-index: 300; }
+        }
+    </style>
+</head>
+<body>
+<button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+<div class="layout">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="sidebar-avatar"><span class="material-icons-outlined">storefront</span></div>
+            <div class="sidebar-name" id="sidebarName">Loading&hellip;</div>
+            <div class="sidebar-role">Trader</div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="sidebar-nav-list">
+                <li><a href="dashboard.html" class="sidebar-nav-item"><span class="material-icons-outlined">dashboard</span>Dashboard</a></li>
+                <li><a href="products.html" class="sidebar-nav-item"><span class="material-icons-outlined">inventory_2</span>Products</a></li>
+                <li><a href="orders.html" class="sidebar-nav-item"><span class="material-icons-outlined">receipt_long</span>Orders</a></li>
+                <li><a href="finance.html" class="sidebar-nav-item active"><span class="material-icons-outlined">payments</span>Finance</a></li>
+                <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">manage_accounts</span>Profile</a></li>
+                <li><button onclick="handleLogout()" class="sidebar-nav-item"><span class="material-icons-outlined">logout</span>Logout</button></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <div>HuddersHub Trader</div>
+            <div id="topNavName"></div>
+        </header>
+        <h1 style="margin-bottom: 20px;">Finance</h1>
+        <div class="finance-grid">
+            <div class="finance-card" id="dailyCard">
+                <div class="finance-label"><span class="material-icons-outlined">today</span> Daily Report
+                    <button class="btn btn-secondary" style="float:right;font-size:12px;padding:4px 12px;" onclick="window.print()">Print</button>
+                    <button class="btn btn-secondary" style="float:right;font-size:12px;padding:4px 12px;margin-right:8px;" onclick="exportDailyCSV()">Export CSV</button>
+                </div>
+                <div id="dailyContent">Loading&hellip;</div>
+            </div>
+            <div class="finance-card" id="weeklyCard">
+                <div class="finance-label"><span class="material-icons-outlined">date_range</span> Weekly Report</div>
+                <div id="weeklyContent">Loading&hellip;</div>
+            </div>
+            <div class="finance-card" id="monthlyCard">
+                <div class="finance-label"><span class="material-icons-outlined">month</span> Monthly Report</div>
+                <div id="monthlyContent">Loading&hellip;</div>
+            </div>
+            <div class="finance-card" id="payoutCard">
+                <div class="finance-label"><span class="material-icons-outlined">payments</span> Payouts</div>
+                <div id="payoutContent">Loading&hellip;</div>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    const userId = sessionStorage.getItem('user_id');
+    if (!userId || sessionStorage.getItem('userRole') !== 'trader') window.location.href = '../public/login.html';
+    function handleLogout() { sessionStorage.clear(); window.location.href = '../public/login.html'; }
+    document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+
+    let dailyRaw = null;
+
+    async function loadReport(url, containerId) {
+        try {
+            const res  = await fetch(url);
+            const d    = await res.json();
+            const el   = document.getElementById(containerId);
+            if (!d.success) { el.innerHTML = '<p style="color:red;">' + (d.message || 'Error') + '</p>'; return; }
+
+            // ── Daily report (structured slots) ────────────────────────────
+            if (d.slots) {
+                dailyRaw = d;
+                const slotKeys = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+                let html = '<div class="finance-row"><span>Date</span><span>' + (d.date || '') + '</span></div>';
+                html += '<div class="finance-row"><span>Total Orders</span><span>' + (d.total_orders || 0) + '</span></div>';
+                html += '<div class="finance-row"><span>Total Revenue</span><span>&pound;' + (d.total_revenue || 0).toFixed(2) + '</span></div>';
+                html += '<hr style="border:none;border-top:1px solid var(--border-light);margin:12px 0;">';
+                for (const sk of slotKeys) {
+                    const items = d.slots[sk];
+                    if (!items || !items.length) continue;
+                    html += '<div style="font-weight:600;margin:8px 0 4px;">' + sk + '</div>';
+                    html += '<table style="width:100%;border-collapse:collapse;margin-bottom:12px;"><thead><tr style="background:var(--bg-light)"><th style="padding:4px 8px;text-align:left;font-size:12px;">#</th><th style="padding:4px 8px;text-align:left;font-size:12px;">Customer</th><th style="padding:4px 8px;text-align:left;font-size:12px;">Products</th><th style="padding:4px 8px;text-align:right;font-size:12px;">Total</th><th style="padding:4px 8px;text-align:left;font-size:12px;">Status</th></tr></thead><tbody>';
+                    for (const it of items) {
+                        html += '<tr><td style="padding:4px 8px;font-size:13px;">' + it.order_num + '</td><td style="padding:4px 8px;font-size:13px;">' + it.customer_name + '</td><td style="padding:4px 8px;font-size:13px;">' + it.products.map(function(p){ return p.name+' x'+p.quantity; }).join(', ') + '</td><td style="padding:4px 8px;font-size:13px;text-align:right;">&pound;' + it.total.toFixed(2) + '</td><td style="padding:4px 8px;font-size:13px;">' + it.status + '</td></tr>';
+                    }
+                    html += '</tbody></table>';
+                }
+                el.innerHTML = html;
+                return;
+            }
+
+            // ── Weekly report (summary + daily table + product revenue) ────
+            if (d.summary || d.daily || d.products) {
+                let html = '';
+                if (d.summary) {
+                    html += '<div class="finance-row"><span>Total Revenue</span><span>&pound;' + (d.summary.total_revenue||0).toFixed(2) + '</span></div>';
+                    html += '<div class="finance-row"><span>Total Orders</span><span>' + (d.summary.total_orders||0) + '</span></div>';
+                    html += '<div class="finance-row"><span>Collected</span><span>' + (d.summary.total_collected||0) + '</span></div>';
+                    html += '<hr style="border:none;border-top:1px solid var(--border-light);margin:8px 0;">';
+                }
+                if (d.daily && d.daily.length) {
+                    html += '<div style="font-weight:600;margin:4px 0;">Daily Breakdown</div>';
+                    html += '<table style="width:100%;border-collapse:collapse;margin-bottom:8px;"><thead><tr style="background:var(--bg-light)"><th style="padding:4px 8px;text-align:left;font-size:12px;">Date</th><th style="padding:4px 8px;text-align:right;font-size:12px;">Orders</th><th style="padding:4px 8px;text-align:right;font-size:12px;">Revenue</th><th style="padding:4px 8px;text-align:right;font-size:12px;">Collected</th></tr></thead><tbody>';
+                    for (var ri = 0; ri < d.daily.length; ri++) {
+                        var r = d.daily[ri];
+                        html += '<tr><td style="padding:4px 8px;font-size:13px;">' + (r.date||'') + '</td><td style="padding:4px 8px;font-size:13px;text-align:right;">' + (r.orders||0) + '</td><td style="padding:4px 8px;font-size:13px;text-align:right;">&pound;' + (r.revenue||0).toFixed(2) + '</td><td style="padding:4px 8px;font-size:13px;text-align:right;">' + (r.collected||0) + '</td></tr>';
+                    }
+                    html += '</tbody></table>';
+                }
+                if (d.products && d.products.length) {
+                    html += '<div style="font-weight:600;margin:4px 0;">Product Revenue</div>';
+                    for (var pi = 0; pi < d.products.length; pi++) {
+                        var p = d.products[pi];
+                        html += '<div class="finance-row"><span>' + (p.name||'') + '</span><span>Qty: ' + (p.quantity||0) + ' &nbsp;&pound;' + (p.income||0).toFixed(2) + '</span></div>';
+                    }
+                }
+                el.innerHTML = html || 'No breakdown available.';
+                return;
+            }
+
+            // ── Monthly report (products array) ────────────────────────────
+            if (d.products && d.products.length) {
+                var rows = '';
+                for (var mi = 0; mi < d.products.length; mi++) {
+                    var mp = d.products[mi];
+                    rows += '<div class="finance-row"><span>' + (mp.name||'') + '</span><span>Qty: ' + (mp.quantity||0) + ' &nbsp;&pound;' + (mp.income||0).toFixed(2) + '</span></div>';
+                }
+                el.innerHTML = rows;
+                return;
+            }
+            if (d.products && !d.products.length) { el.innerHTML = 'No data available.'; return; }
+
+            // ── Payouts ────────────────────────────────────────────────────
+            if (d.payouts && d.payouts.length) {
+                var totalPayout = (typeof d.total_revenue === 'number') ? d.total_revenue : 0;
+                if (!totalPayout) {
+                    for (var pui = 0; pui < d.payouts.length; pui++) totalPayout += d.payouts[pui].amount || 0;
+                }
+                var payoutHtml = '<div class="finance-row" style="border-bottom:2px solid var(--border-light);margin-bottom:8px;"><span>Total Paid Out</span><span>&pound;' + totalPayout.toFixed(2) + '</span></div>';
+                for (var pui = 0; pui < d.payouts.length; pui++) {
+                    var pp = d.payouts[pui];
+                    payoutHtml += '<div class="finance-row"><span>' + (pp.date||'') + ' &middot; ' + (pp.reference||'') + '</span><span>&pound;' + (pp.amount||0).toFixed(2) + ' <small style="color:var(--text-medium);">(' + (pp.orders||0) + ' orders)</small></span></div>';
+                }
+                el.innerHTML = payoutHtml;
+                return;
+            }
+            if (d.payouts && !d.payouts.length) { el.innerHTML = '<p>No payouts yet.</p>'; return; }
+
+            // ── Generic key-value fallback ────────────────────────────────
+            var keys = Object.keys(d);
+            var genRows = '';
+            for (var ki = 0; ki < keys.length; ki++) {
+                var kk = keys[ki];
+                var vv = d[kk];
+                genRows += '<div class="finance-row"><span>' + kk.replace(/_/g,' ') + '</span><span>' + (typeof vv === 'number' ? '&pound;' + vv.toFixed(2) : vv) + '</span></div>';
+            }
+            el.innerHTML = genRows || 'No data available.';
+
+        } catch (ex) { document.getElementById(containerId).innerHTML = 'Error loading data.'; }
+    }
+
+    function exportDailyCSV() {
+        if (!dailyRaw || !dailyRaw.slots) { alert('No daily data loaded'); return; }
+        var csv = 'Order,Customer,Slot,Products,Total,Status\n';
+        var slots = Object.keys(dailyRaw.slots);
+        for (var si = 0; si < slots.length; si++) {
+            var slotName = slots[si];
+            var items = dailyRaw.slots[slotName];
+            for (var ii = 0; ii < items.length; ii++) {
+                var it = items[ii];
+                var prodNames = [];
+                for (var pi = 0; pi < it.products.length; pi++) prodNames.push(it.products[pi].name + ' x' + it.products[pi].quantity);
+                csv += '"' + it.order_num + '","' + it.customer_name.replace(/"/g, '""') + '","' + slotName + '","' + prodNames.join(' | ').replace(/"/g,'""') + '",' + it.total.toFixed(2) + ',"' + (it.status||'') + '"\n';
+            }
+        }
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'daily-report-' + (dailyRaw.date || '') + '.csv';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        alert('CSV downloaded: daily-report-' + (dailyRaw.date||'') + '.csv');
+    }
+
+    loadReport('../api/trader/get-daily-report.php', 'dailyContent');
+    loadReport('../api/trader/get-weekly-report.php', 'weeklyContent');
+    loadReport('../api/trader/get-monthly-report.php', 'monthlyContent');
+    loadReport('../api/trader/get-payouts.php', 'payoutContent');
+</script>
+</body>
+</html>

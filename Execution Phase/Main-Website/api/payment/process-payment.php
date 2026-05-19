@@ -1,151 +1,92 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 
-session_start();
+require_once '../../config/config.php';
 require_once '../../config/database.php';
-require_once '../../config/mail_config.php'; // Load the secret credentials
+require_once '../../config/session.php';
 
-// Load PHPMailer
-if (file_exists('../../vendor/autoload.php')) {
-    require_once '../../vendor/autoload.php';
+// ── POST: called by payment.html or internal API ──────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    if (!$input || !isset($input['order_id'])) {
+        echo json_encode(['success' => false, 'error' => 'Missing order_id']);
+        exit;
+    }
+
+    $order_id       = (int)$input['order_id'];
+    $payment_method = $input['payment_method'] ?? 'PayPal';
+    $conn           = getDB();
+
+    try {
+        // Update payment record
+        $upd = oci_parse($conn, "UPDATE PAYMENT SET method = :method, status = 'Completed' WHERE order_id = :oid");
+        oci_bind_by_name($upd, ':method', $payment_method);
+        oci_bind_by_name($upd, ':oid', $order_id);
+        oci_execute($upd, OCI_NO_AUTO_COMMIT);
+
+        // Update order status to 'Ready' (valid constraint value)
+        $updOrder = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Ready' WHERE order_id = :oid");
+        oci_bind_by_name($updOrder, ':oid', $order_id);
+        oci_execute($updOrder, OCI_NO_AUTO_COMMIT);
+
+        oci_commit($conn);
+        oci_close($conn);
+
+        echo json_encode(['success' => true, 'message' => 'Payment processed']);
+    } catch (Exception $e) {
+        oci_rollback($conn);
+        oci_close($conn);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
 }
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
-// --- 1. Resolve order data ---
+// ── GET: PayPal return callback ───────────────────────────────────────────
 $order = $_SESSION['pending_order'] ?? null;
 
-// Fallback for PayPal return URL params
 if (!$order && isset($_GET['order_id'])) {
     $order = [
-        'order_id' => $_GET['order_id'],
-        'user_id'  => $_GET['user_id']  ?? 0,
-        'amount'   => $_GET['amt']      ?? 0
+        'order_id' => (int)$_GET['order_id'],
+        'user_id'  => (int)($_GET['user_id'] ?? 0),
+        'amount'   => (float)($_GET['amt']    ?? 0),
     ];
 }
 
-if (!$order) {
-    die("<div style='text-align:center; padding:50px;'><h2>Error: Order data lost.</h2><p>Please check your session or URL parameters.</p></div>");
+if (!$order || empty($order['order_id'])) {
+    header('Location: ' . BASE_URL . '/public/index.html');
+    exit;
 }
 
 $order_id = (int)$order['order_id'];
 $user_id  = (int)$order['user_id'];
 $amount   = (float)$order['amount'];
 
-$db_success = false;
-$mail_error = null;
+$conn = getDB();
 
 try {
-    // 2. Update Order Status to 'Completed'
-    $upd = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Completed' WHERE order_id = :oid");
+    // Update order status to 'Ready'
+    $upd = oci_parse($conn, "UPDATE HUDDER_ORDER SET status = 'Ready' WHERE order_id = :oid");
     oci_bind_by_name($upd, ':oid', $order_id);
     oci_execute($upd, OCI_NO_AUTO_COMMIT);
 
-    // 3. Insert Payment Record (Using :u_id to avoid Oracle reserved keyword conflict)
-    $ins = oci_parse($conn, "
-        INSERT INTO PAYMENT (PAYMENT_ID, ORDER_ID, PAYMENT_DATE, AMOUNT, METHOD, STATUS, USER_ID)
-        VALUES (seq_Payment.NEXTVAL, :oid, SYSDATE, :amt, 'PayPal', 'Completed', :u_id)
-    ");
-    oci_bind_by_name($ins, ':oid', $order_id);
-    oci_bind_by_name($ins, ':amt', $amount);
-    oci_bind_by_name($ins, ':u_id', $user_id);
-    
-    $success = oci_execute($ins, OCI_NO_AUTO_COMMIT);
-    
-    if (!$success) {
-        $e = oci_error($ins);
-        throw new Exception($e['message']);
-    }
+    // Update payment status to 'Completed'
+    $updPay = oci_parse($conn, "UPDATE PAYMENT SET status = 'Completed', method = 'PayPal' WHERE order_id = :oid");
+    oci_bind_by_name($updPay, ':oid', $order_id);
+    oci_execute($updPay, OCI_NO_AUTO_COMMIT);
 
     oci_commit($conn);
-    $db_success = true;
-
 } catch (Exception $e) {
     oci_rollback($conn);
-    die("<div style='color:red; text-align:center; padding:50px;'><h2>Database Error</h2><p>" . htmlspecialchars($e->getMessage()) . "</p></div>");
+    error_log('[process-payment] Error: ' . $e->getMessage());
 }
 
-// --- 4. Send Confirmation Email ---
-if ($db_success) {
-    // Fetch User Details
-    $user_q = oci_parse($conn, "SELECT email, firstname FROM HUDDER_USER WHERE user_id = :u_id");
-    oci_bind_by_name($user_q, ':u_id', $user_id);
-    oci_execute($user_q);
-    $user_data = oci_fetch_assoc($user_q);
+oci_close($conn);
+unset($_SESSION['pending_order']);
 
-    if ($user_data && class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-        $mail = new PHPMailer(true);
-        try {
-            // SMTP Settings using the constants from mail_config.php
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = MAIL_USER; 
-            $mail->Password   = MAIL_PASS; 
-            $mail->SMTPSecure = 'tls';
-            $mail->Port       = 587;
-
-            // Recipients
-            $mail->setFrom(MAIL_USER, 'HuddersHub Support');
-            $mail->addAddress($user_data['EMAIL'], $user_data['FIRSTNAME']);
-
-            // Content
-            $mail->isHTML(true);
-            $mail->Subject = 'Order Confirmed - HuddersHub #' . $order_id;
-            $mail->Body    = "
-                <div style='font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;'>
-                    <h2 style='color: #28a745;'>Payment Received! 🎉</h2>
-                    <p>Hi " . htmlspecialchars($user_data['FIRSTNAME']) . ",</p>
-                    <p>Your order <strong>#$order_id</strong> has been successfully placed.</p>
-                    <p><strong>Total Paid:</strong> &pound;" . number_format($amount, 2) . "</p>
-                    <p>Thank you for shopping at HuddersHub.</p>
-                </div>";
-
-            $mail->send();
-        } catch (Exception $e) {
-            $mail_error = $mail->ErrorInfo;
-            error_log("Email failed: " . $mail_error);
-        }
-    }
-    unset($_SESSION['pending_order']);
-}
+// Redirect to invoice page
+header('Location: ' . BASE_URL . '/public/invoice.html?order_id=' . $order_id . '&paid=1');
+exit;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Order Complete - HuddersHub</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 60px; background: #f7f6f3; color: #333; }
-        .card { background: white; padding: 40px; display: inline-block; border: 1px solid #ddd; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 500px; width: 100%; }
-        h1 { color: #28a745; margin-bottom: 10px; }
-        .order-id { font-size: 1.4em; font-weight: bold; background: #f1f1f1; padding: 10px; margin: 20px 0; border-radius: 4px; }
-        .btn { display: inline-block; padding: 14px 30px; background: #0F260B; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; margin-top: 20px; }
-        .btn:hover { background: #1c3c17; }
-        .error-msg { background: #fff5f5; border: 1px solid #feb2b2; padding: 10px; color: #c53030; font-size: 0.9em; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Payment Successful!</h1>
-        <p>Your order has been confirmed and recorded in our system.</p>
-        
-        <div class="order-id">Order #<?php echo $order_id; ?></div>
-        
-        <p>Amount Paid: <strong>£<?php echo number_format($amount, 2); ?></strong></p>
-        
-        <?php if ($mail_error): ?>
-            <div class="error-msg">
-                <strong>Notice:</strong> Order saved, but the confirmation email could not be sent.<br>
-                <em>(Error: <?php echo htmlspecialchars($mail_error); ?>)</em>
-            </div>
-        <?php else: ?>
-            <p style="color: #666;">A confirmation email was sent to <strong><?php echo htmlspecialchars($user_data['EMAIL'] ?? 'your email'); ?></strong></p>
-        <?php endif; ?>
-
-        <br>
-        <a href="/Hudders-Hub/Execution%20Phase/Main-Website/public/index.html" class="btn">Back to Home</a>
-    </div>
-</body>
-</html>

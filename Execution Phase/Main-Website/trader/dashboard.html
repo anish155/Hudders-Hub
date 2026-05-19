@@ -476,6 +476,13 @@ body {
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
   .top-nav-title { display: none; }
+  }
+
+  /* ── FAB ─────────────────────────────────────────────────────────── */
+  .fab { position:fixed; bottom:32px; right:32px; width:56px; height:56px; background:var(--primary-green); color:#fff; border:none; border-radius:50%; display:grid; place-items:center; box-shadow:0 4px 16px rgba(15,38,11,0.35); text-decoration:none; z-index:999; transition:all 0.25s cubic-bezier(0.4,0,0.2,1); }
+  .fab:hover { background:var(--primary-orange); transform:translateY(-3px) scale(1.05); box-shadow:0 6px 22px rgba(255,94,58,0.40); }
+  .fab:active { transform:translateY(0) scale(0.97); }
+  .fab .material-icons-outlined { font-size:28px; line-height:1; }
 }
 </style>
 </head>
@@ -493,7 +500,7 @@ body {
       <div class="sidebar-avatar">
         <span class="material-icons-outlined">person</span>
       </div>
-      <div class="sidebar-name">John Farmer</div>
+      <div class="sidebar-name">Loading...</div>
       <div class="sidebar-status">
         <span class="status-dot"></span>
         Status: Active
@@ -557,6 +564,9 @@ body {
   </aside>
 
   <main class="main-content">
+    <a href="add-product.html" class="fab" title="Add new product">
+      <span class="material-icons-outlined">add</span>
+    </a>
     <header class="top-nav">
       <div class="top-nav-left">
         <div class="top-nav-logo">
@@ -578,22 +588,58 @@ body {
       </div>
     </header>
 
-    <div class="content-area" id="contentArea"></div>
+<style>
+.status-select { padding: 4px 8px; border-radius: 4px; border: none; font-size: 12px; cursor: pointer; }
+.status-select.Pending { background: #fff3cd; color: #856404; }
+.status-select.Preparing { background: #dbeafe; color: #1e40af; }
+.status-select.Ready { background: #d1fae5; color: #065f46; }
+.status-select.Collected { background: #e0e7ff; color: #3730a3; }
+.status-select.Cancelled { background: #f8d7da; color: #721c24; }
+.order-customer { font-size: 13px; color: var(--text-medium-gray); margin: 8px 0; padding: 0 12px; }
+.order-collection { font-size: 12px; color: var(--primary-green); background: var(--primary-green-light); padding: 8px 12px; margin: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; }
+.alerts-section, .reviews-section { margin: 24px 0; padding: 0 24px; }
+.alerts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.alert-card { background: white; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); }
+.alert-card.out-of-stock { border-left: 4px solid #dc3545; }
+.alert-card.low-stock { border-left: 4px solid #ffc107; }
+.alert-info { display: flex; flex-direction: column; }
+.alert-name { font-weight: 600; font-size: 14px; }
+.alert-stock { font-size: 12px; color: #dc3545; }
+.alert-btn { background: var(--primary-orange); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.reviews-list { display: flex; flex-direction: column; gap: 12px; }
+.review-card { background: white; border-radius: 8px; padding: 16px; box-shadow: var(--shadow-sm); }
+.review-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.review-product { font-weight: 600; font-size: 14px; }
+.review-rating { color: #ffc107; }
+.review-body { font-size: 14px; color: var(--text-medium-gray); margin-bottom: 8px; }
+.review-footer { font-size: 12px; color: #999; }
+</style>
+
+        <div class="content-area" id="dashboardContent"></div>
   </main>
 </div>
 
 <script>
 
-// Auth guard
+// Auth guard - only traders allowed
 const userId = sessionStorage.getItem('user_id');
 const userRole = sessionStorage.getItem('userRole');
-if (!userId || userRole !== 'trader') {
+if (!userId) {
+    window.location.href = '../public/login.html';
+} else if (!userRole || userRole.toLowerCase() !== 'trader') {
     window.location.href = '../public/login.html';
 }
 
 function handleLogout() {
-    sessionStorage.clear();
-    window.location.href = '../public/login.html';
+  fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
+    .then(() => {
+      sessionStorage.clear();
+      window.location.href = '../public/login.html';
+    })
+    .catch(() => {
+      sessionStorage.clear();
+      window.location.href = '../public/login.html';
+    });
 }
 
 function formatCurrency(amount) {
@@ -601,20 +647,21 @@ function formatCurrency(amount) {
 }
 
 function getStatusClass(status) {
-    const s = (status || '').toLowerCase();
-    if (s.includes('pending')) return 'pending';
-    if (s.includes('process')) return 'processing';
-    if (s.includes('complete')) return 'completed';
-    if (s.includes('cancel')) return 'cancelled';
-    return 'pending';
+    const s = (status || '');
+    if (s === 'Pending') return 'Pending';
+    if (s === 'Preparing') return 'Preparing';
+    if (s === 'Ready') return 'Ready';
+    if (s === 'Collected') return 'Collected';
+    if (s === 'Cancelled') return 'Cancelled';
+    return 'Pending';
 }
 
 function loadDashboard() {
-    fetch(`http://localhost/Hudders-Hub/Execution%20Phase/Main-Website/api/trader/get-dashboard.php?user_id=${userId}`)
+    fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
     .then(res => res.json())
     .then(data => {
         if (!data.success) {
-            contentArea.innerHTML = `<p style="color:red;">Error: ${data.message}</p>`;
+            dashboardContent.innerHTML = `<p style="color:red;">Error: ${data.message}</p>`;
             return;
         }
 
@@ -623,11 +670,7 @@ function loadDashboard() {
             ? '£' + (stats.weekly_revenue / 1000).toFixed(1) + 'k'
             : formatCurrency(stats.weekly_revenue);
 
-        contentArea.innerHTML = `
-            <section class="welcome-section">
-                <h1 class="welcome-title">Welcome back, ${data.firstname} ${data.lastname}!</h1>
-                <p class="welcome-shop">${data.shop_name}</p>
-            </section>
+        dashboardContent.innerHTML = `
             <section class="stats-section">
                 <div class="stats-label">Quick stats</div>
                 <div class="stats-grid">
@@ -649,15 +692,31 @@ function loadDashboard() {
                             <div class="order-card">
                                 <div class="order-card-header">
                                     <span class="order-id">${order.id}</span>
-                                    <span class="order-status ${getStatusClass(order.status)}">${order.status}</span>
+                                    <select class="status-select ${getStatusClass(order.status)}" onchange="updateOrderStatus(${order.order_id}, this.value)">
+                                        <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Preparing" ${order.status === 'Preparing' ? 'selected' : ''}>Preparing</option>
+                                        <option value="Ready" ${order.status === 'Ready' ? 'selected' : ''}>Ready</option>
+                                        <option value="Collected" ${order.status === 'Collected' ? 'selected' : ''}>Collected</option>
+                                        <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                    </select>
                                     <span class="order-time">${order.time}</span>
                                 </div>
+                                <div class="order-customer">Customer: ${order.customer}</div>
+                                ${order.status_updated_at ? `<div class="order-status-time" style="font-size:11px;color:var(--text-medium-gray);padding:0 12px 4px;">Status updated: ${order.status_updated_at}</div>` : ''}
                                 <div class="order-items">
-                                    <div class="order-item">
-                                        <span class="order-item-name">${order.customer}</span>
-                                        <span class="order-item-qty">${order.items} item${order.items !== 1 ? 's' : ''}</span>
-                                    </div>
+                                    ${order.products.map(p => `
+                                        <div class="order-item">
+                                            <span class="order-item-name">${p.name}</span>
+                                            <span class="order-item-qty">x${p.quantity} (${formatCurrency(p.price)})</span>
+                                        </div>
+                                    `).join('')}
                                 </div>
+                                ${order.collection && order.collection.date ? `
+                                    <div class="order-collection">
+                                        <span class="material-icons-outlined">schedule</span>
+                                        Collection: ${order.collection.date} ${order.collection.time} at ${order.collection.location || 'Shop'}
+                                    </div>
+                                ` : ''}
                                 <div class="order-total">
                                     <span class="order-total-label">Order total</span>
                                     <span class="order-total-value">${formatCurrency(order.total)}</span>
@@ -666,16 +725,93 @@ function loadDashboard() {
                     }
                 </div>
             </section>
+
+            <!-- Low Stock Alerts -->
+            ${data.low_stock && data.low_stock.length > 0 ? `
+            <section class="alerts-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">⚠️ Low Stock Alerts</h2>
+                </div>
+                <div class="alerts-grid">
+                    ${data.low_stock.map(item => `
+                        <div class="alert-card ${item.stock === 0 ? 'out-of-stock' : 'low-stock'}">
+                            <div class="alert-info">
+                                <span class="alert-name">${item.name}</span>
+                                <span class="alert-stock">${item.stock === 0 ? 'Out of stock!' : 'Only ' + item.stock + ' left'}</span>
+                            </div>
+                            <button class="alert-btn" onclick="quickUpdateStock(${item.id})">Update Stock</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+            ` : ''}
+
+            <!-- Recent Reviews -->
+            ${data.reviews && data.reviews.length > 0 ? `
+            <section class="reviews-section">
+                <div class="orders-header">
+                    <h2 class="orders-title">📝 Recent Reviews</h2>
+                </div>
+                <div class="reviews-list">
+                    ${data.reviews.map(r => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <span class="review-product">${r.product}</span>
+                                <span class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
+                            </div>
+                            <div class="review-body">${r.comment || 'No comment'}</div>
+                            <div class="review-footer">${r.customer}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+            ` : ''}
         `;
 
         // Update sidebar name
-        document.querySelector('.sidebar-name').textContent = `${data.firstname} ${data.lastname}`;
+        document.querySelector('.sidebar-name').textContent = data.firstname || data.email || 'Trader';
         document.querySelector('.sidebar-status').innerHTML = `<span class="status-dot"></span>Status: ${data.trader_status}`;
     })
     .catch(err => {
-        contentArea.innerHTML = `<p style="color:red;">Failed to load dashboard.</p>`;
+        dashboardContent.innerHTML = `<p style="color:red;">Failed to load dashboard.</p>`;
         console.error(err);
     });
+}
+
+function updateOrderStatus(orderId, newStatus) {
+    fetch('../api/trader/update-order-status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, order_id: orderId, status: newStatus })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            loadDashboard();
+        } else {
+            alert('Failed to update status: ' + data.message);
+        }
+    })
+    .catch(() => alert('Error updating status'));
+}
+
+function quickUpdateStock(productId) {
+    const newStock = prompt('Enter new stock quantity:');
+    if (newStock !== null && !isNaN(newStock)) {
+        fetch('../api/trader/update-product-stock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, product_id: productId, stock: parseInt(newStock) })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                loadDashboard();
+            } else {
+                alert('Failed to update stock: ' + data.message);
+            }
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);

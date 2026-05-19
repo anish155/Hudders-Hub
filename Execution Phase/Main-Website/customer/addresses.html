@@ -73,8 +73,8 @@
       <div class="profile-chip">
         <div class="avatar"><span class="material-icons-outlined">person</span></div>
         <div>
-          <p class="name">John Smith</p>
-          <p class="mail">john.smith@email.com</p>
+          <p class="name">Loading...</p>
+          <p class="mail">...</p>
         </div>
       </div>
       <nav class="menu">
@@ -84,7 +84,7 @@
         <a href="wishlist.html">Wishlist</a>
         <a href="change-password.html">Change Password</a>
         <a href="email-settings.html">Email Settings</a>
-        <a class="logout" href="../api/auth/logout.php">Logout</a>
+        <a class="logout" href="../public/logout.html">Logout</a>
       </nav>
     </aside>
 
@@ -97,18 +97,9 @@
           </div>
           <button class="add-btn" type="button">Add New Address</button>
         </div>
-        <div class="address-grid">
+        <div class="address-grid" id="addrList">
           <div class="address-item">
-            <span class="tag">Default</span>
-            <h3>Home</h3>
-            <p>John Smith<br>12 Green Street, Marsh<br>Huddersfield, HD1 4AB<br>+44 7700 900123</p>
-            <div class="actions"><button class="text-btn" type="button">Edit</button><button class="text-btn" type="button">Remove</button></div>
-          </div>
-          <div class="address-item">
-            <span class="tag">Work</span>
-            <h3>Office</h3>
-            <p>John Smith<br>45 Leeds Road<br>Huddersfield, HD2 1YZ<br>+44 7700 900123</p>
-            <div class="actions"><button class="text-btn" type="button">Edit</button><button class="text-btn" type="button">Remove</button></div>
+            <p style="color:#5E6A63;">Loading addresses...</p>
           </div>
         </div>
       </article>
@@ -131,5 +122,114 @@
       </article>
     </section>
   </main>
+  <script>
+    // Role check - only customers allowed
+    (function() {
+      const role = sessionStorage.getItem('userRole');
+      if (!role) {
+        window.location.href = '../public/login.html';
+        return;
+      }
+      if (role.toLowerCase() !== 'customer') {
+        window.location.href = '../trader/dashboard.html';
+        return;
+      }
+    })();
+
+    function fillIdentityFromLocalCache() {
+      const fullName = (sessionStorage.getItem('userName') || '').trim();
+      const email = (sessionStorage.getItem('userEmail') || '').trim();
+      if (fullName) document.querySelector('.name').textContent = fullName;
+      if (email) document.querySelector('.mail').textContent = email;
+    }
+
+    async function loadProfile() {
+      fillIdentityFromLocalCache();
+      const userId = sessionStorage.getItem('user_id');
+      if (!userId) return;
+
+      try {
+        const res = await fetch('../api/customer/get-profile.php?user_id=' + userId);
+        const data = await res.json();
+        if (data.success) {
+          const u = data.data;
+          const firstName = u.FIRSTNAME || u.firstname || '';
+          const lastName = u.LASTNAME || u.lastname || '';
+          const email = u.EMAIL || u.email || '';
+          document.querySelector('.name').textContent = (firstName + ' ' + lastName).trim() || 'Customer';
+          document.querySelector('.mail').textContent = email || '-';
+        }
+      } catch (err) {
+        console.error(err);
+        fillIdentityFromLocalCache();
+      }
+    }
+
+    async function loadAddresses() {
+      try {
+        const res = await fetch('../api/customer/get-addresses.php');
+        const data = await res.json();
+        if (data.success) {
+          const addr = data.data.ADDRESS;
+          if (addr) {
+            document.getElementById('addrList').innerHTML = `
+              <div class="address-item">
+                <span class="tag">Saved</span>
+                <h3>Address</h3>
+                <p>${addr.replace(/\n/g, '<br>')}</p>
+                <div class="actions">
+                  <button class="text-btn" onclick="editAddr()">Edit</button>
+                  <button class="text-btn" onclick="deleteAddr()">Remove</button>
+                </div>
+              </div>`;
+          }
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function saveAddr(e) {
+      e.preventDefault();
+      const addr = document.getElementById('line1').value;
+      if (!addr) return alert('Please enter an address');
+
+      try {
+        const res = await fetch('../api/customer/add-address.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: addr })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Address saved!');
+          loadAddresses();
+          e.target.reset();
+        } else {
+          alert(data.error || 'Error saving address');
+        }
+      } catch (err) { alert('Error connecting'); }
+    }
+
+    function editAddr() {
+      document.getElementById('line1').focus();
+    }
+
+    async function deleteAddr() {
+      if (!confirm('Delete this address?')) return;
+      try {
+        const res = await fetch('../api/customer/delete-address.php', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          alert('Address deleted');
+          loadAddresses();
+        } else {
+          alert(data.error);
+        }
+      } catch (err) { alert('Error'); }
+    }
+
+    loadProfile();
+    loadAddresses();
+    document.querySelector('form').addEventListener('submit', saveAddr);
+  </script>
 </body>
 </html>
