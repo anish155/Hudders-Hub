@@ -16,7 +16,7 @@ try {
     $password       = $data['password'];
     $requested_role = strtolower(trim($data['role'] ?? 'customer'));
 
-    $sql  = "SELECT user_id, firstname, lastname, email, user_password, user_role FROM HUDDER_USER WHERE email = :em";
+    $sql  = "SELECT user_id, firstname, lastname, email, user_password, user_role, verification_token, verified_at FROM HUDDER_USER WHERE email = :em";
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':em', $email);
     oci_execute($stmt);
@@ -29,6 +29,15 @@ try {
     $db_pass = $user['USER_PASSWORD'];
     $valid   = ($password === $db_pass);
     if (!$valid) throw new Exception('Invalid email or password.');
+
+    if (!empty($user['VERIFICATION_TOKEN']) && empty($user['VERIFIED_AT'])) {
+        echo json_encode([
+            'success' => false,
+            'email_not_verified' => true,
+            'message' => 'Please verify your email before logging in.'
+        ]);
+        exit;
+    }
 
     // Role check
     $db_role = strtolower($user['USER_ROLE']);

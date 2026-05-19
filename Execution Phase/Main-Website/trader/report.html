@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root {
   --primary-orange: #FF5E3A;
@@ -84,6 +85,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
 .toggle-btn { border: none; background: transparent; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text-medium-gray); cursor: pointer; transition: var(--transition-smooth); font-family: inherit; }
 .toggle-btn.active { background: var(--primary-green); color: #FFFFFF; }
 .toggle-btn:focus-visible { outline: 2px solid var(--primary-green); outline-offset: 2px; }
+.download-btn { display: inline-flex; align-items: center; gap: 8px; border: none; background: var(--primary-orange); color: #FFFFFF; padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); font-family: inherit; }
+.download-btn:hover { background: var(--primary-orange-dark); transform: translateY(-1px); }
+.download-btn:focus-visible { outline: 2px solid var(--primary-green); outline-offset: 2px; }
 
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
 .stat-card { background: var(--bg-white); border: 1px solid var(--border-light); padding: 20px; text-align: center; }
@@ -201,6 +205,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
       <button class="toggle-btn" data-report-type="daily" type="button">Daily</button>
       <button class="toggle-btn active" data-report-type="weekly" type="button">Weekly</button>
       <button class="toggle-btn" data-report-type="monthly" type="button">Monthly</button>
+      <button class="download-btn" id="downloadReportBtn" type="button"><span class="material-icons-outlined">picture_as_pdf</span>Download Report PDF</button>
     </div>
 
     <div id="statsGrid" class="stats-grid"></div>
@@ -226,6 +231,7 @@ const graphTitle = document.getElementById('graphTitle');
 const pageTitle = document.getElementById('pageTitle');
 const reportButtons = document.querySelectorAll('.toggle-btn');
 const statsGrid = document.getElementById('statsGrid');
+const downloadReportBtn = document.getElementById('downloadReportBtn');
 
 let currentType = 'weekly';
 let reportData = null;
@@ -270,6 +276,79 @@ document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(ite
 });
 
 function formatCurrency(amount) { return '£' + parseFloat(amount || 0).toFixed(2); }
+
+function getReportSummary(data, type) {
+  if (type === 'daily') {
+    const totalOrders = data.total_orders || 0;
+    const totalRevenue = data.total_revenue || 0;
+    return {
+      total_orders: totalOrders,
+      total_revenue: totalRevenue,
+      avg_order_value: totalOrders ? totalRevenue / totalOrders : 0,
+    };
+  }
+
+  if (type === 'weekly') {
+    const totalOrders = data.summary?.total_orders || 0;
+    const totalRevenue = data.summary?.total_revenue || 0;
+    return {
+      total_orders: totalOrders,
+      total_revenue: totalRevenue,
+      avg_order_value: totalOrders ? totalRevenue / totalOrders : 0,
+    };
+  }
+
+  const totalOrders = data.summary?.total_orders || data.total_orders || 0;
+  const totalRevenue = data.summary?.total_income || data.total_income || 0;
+  return {
+    total_orders: totalOrders,
+    total_revenue: totalRevenue,
+    avg_order_value: totalOrders ? totalRevenue / totalOrders : 0,
+  };
+}
+
+function getReportChartData(data, type) {
+  if (type === 'daily') {
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    const labels = [];
+    const values = [];
+
+    slotNames.forEach((slot) => {
+      const orders = Array.isArray(data.slots?.[slot]) ? data.slots[slot] : [];
+      if (!orders.length) return;
+      labels.push(slot);
+      values.push(orders.reduce((sum, order) => sum + parseFloat(order.total || 0), 0));
+    });
+
+    return { labels, values };
+  }
+
+  if (type === 'weekly') {
+    const daily = Array.isArray(data.daily) ? data.daily : [];
+    return {
+      labels: daily.map((item) => item.date),
+      values: daily.map((item) => parseFloat(item.revenue || 0)),
+    };
+  }
+
+  const products = Array.isArray(data.products) ? data.products.slice(0, 8) : [];
+  return {
+    labels: products.map((item) => item.name),
+    values: products.map((item) => parseFloat(item.income || 0)),
+  };
+}
+
+function drawEmptyChart(canvas, message) {
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width || 600;
+  canvas.height = 250;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#5E6A63';
+  ctx.font = '14px "Plus Jakarta Sans", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+}
 
 function drawBarChart(canvas, data) {
   const ctx = canvas.getContext('2d');
@@ -337,48 +416,106 @@ function renderStats(summary) {
 }
 
 function renderReportCards(data, type) {
-  if (type === 'weekly' || type === 'daily') {
-    if (!data.orders || data.orders.length === 0) {
+  if (type === 'daily') {
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    const sections = slotNames.map((slot) => {
+      const orders = Array.isArray(data.slots?.[slot]) ? data.slots[slot] : [];
+      if (!orders.length) return '';
+
+      const rows = orders.map((order) => `
+        <tr>
+          <td class="product-name">${order.order_num}</td>
+          <td class="qty">${order.products.map((p) => `${p.name} x${p.quantity}`).join(', ')}</td>
+          <td class="customer">${formatCurrency(order.total)}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="report-card">
+          <div class="report-card-header">
+            <span class="report-card-title">${slot}</span>
+          </div>
+          <table class="order-table">
+            <thead><tr><th>Order</th><th>Products</th><th>Total</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }).filter(Boolean).join('');
+
+    reportCardsContainer.innerHTML = sections;
+    return;
+  }
+
+  if (type === 'weekly') {
+    const daily = Array.isArray(data.daily) ? data.daily : [];
+    if (!daily.length) {
       reportCardsContainer.innerHTML = '';
       return;
     }
 
-    const title = type === 'weekly' ? 'Weekly Highlights' : 'Today\'s Orders';
-    
-    const rows = data.orders.map(o => `
+    const rows = daily.map((item) => `
       <tr>
-        <td class="product-name">${o.customer}</td>
-        <td class="qty">${o.items}</td>
-        <td class="customer">${formatCurrency(o.total)}</td>
+        <td class="product-name">${item.date}</td>
+        <td class="qty">${item.orders || 0}</td>
+        <td class="customer">${formatCurrency(item.revenue || 0)}</td>
       </tr>
     `).join('');
 
     reportCardsContainer.innerHTML = `
       <div class="report-card">
         <div class="report-card-header">
-          <span class="report-card-title">${title}</span>
+          <span class="report-card-title">Weekly Breakdown</span>
         </div>
         <table class="order-table">
-          <thead><tr><th>Customer</th><th>Items</th><th>Total</th></tr></thead>
+          <thead><tr><th>Date</th><th>Orders</th><th>Revenue</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
     `;
-  } else {
-    reportCardsContainer.innerHTML = '';
+    return;
   }
+
+  const products = Array.isArray(data.products) ? data.products : [];
+  if (!products.length) {
+    reportCardsContainer.innerHTML = '';
+    return;
+  }
+
+  const rows = products.map((item) => `
+    <tr>
+      <td class="product-name">${item.name}</td>
+      <td class="qty">${item.quantity || 0}</td>
+      <td class="customer">${formatCurrency(item.income || 0)}</td>
+    </tr>
+  `).join('');
+
+  reportCardsContainer.innerHTML = `
+    <div class="report-card">
+      <div class="report-card-header">
+        <span class="report-card-title">Monthly Product Summary</span>
+      </div>
+      <table class="order-table">
+        <thead><tr><th>Product</th><th>Quantity</th><th>Income</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
 }
 
 function renderReport() {
     if (!reportData) return;
-    const summary = { total_orders: reportData.order_count || reportData.total_orders || 0, total_revenue: reportData.total_revenue || 0 };
+    const summary = getReportSummary(reportData, currentType);
     renderStats(summary);
     renderReportCards(reportData, currentType);
-    
-    const chartData = currentType === 'daily' 
-        ? { labels: reportData.orders.map(o => o.id), values: reportData.orders.map(o => o.total) }
-        : { labels: reportData.days ? reportData.days.map(d => d.date) : reportData.weeks.map(w => w.week), values: reportData.days ? reportData.days.map(d => d.revenue) : reportData.weeks.map(w => w.revenue) };
-    drawBarChart(document.getElementById('reportChart'), chartData);
+
+    const chartData = getReportChartData(reportData, currentType);
+    const chartCanvas = document.getElementById('reportChart');
+    if (!chartData.labels.length || !chartData.values.length) {
+      drawEmptyChart(chartCanvas, 'No chart data available for this report');
+      return;
+    }
+    drawBarChart(chartCanvas, chartData);
 }
 
 function setReportType(type) {
@@ -400,7 +537,49 @@ function setReportType(type) {
   loadReport(type);
 }
 
+function downloadReportPDF() {
+  if (!reportData || !window.jspdf) return;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const summary = getReportSummary(reportData, currentType);
+  const chartData = getReportChartData(reportData, currentType);
+  const margin = 14;
+  let y = 16;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text(pageTitle.textContent || 'Report', margin, y);
+  y += 8;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.text(`Total Orders: ${summary.total_orders}`, margin, y);
+  y += 6;
+  doc.text(`Total Revenue: ${formatCurrency(summary.total_revenue)}`, margin, y);
+  y += 6;
+  doc.text(`Avg Order Value: ${formatCurrency(summary.avg_order_value)}`, margin, y);
+  y += 10;
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Chart data', margin, y);
+  y += 7;
+  doc.setFont('helvetica', 'normal');
+
+  chartData.labels.forEach((label, index) => {
+    if (y > 275) {
+      doc.addPage();
+      y = 16;
+    }
+    doc.text(`${label}: ${formatCurrency(chartData.values[index])}`, margin, y);
+    y += 6;
+  });
+
+  doc.save(`${currentType}_report.pdf`);
+}
+
 reportButtons.forEach(btn => btn.addEventListener('click', () => setReportType(btn.dataset.reportType)));
+if (downloadReportBtn) downloadReportBtn.addEventListener('click', downloadReportPDF);
 
 document.addEventListener('DOMContentLoaded', () => {
   const initialType = new URLSearchParams(window.location.search).get('type') || 'weekly';

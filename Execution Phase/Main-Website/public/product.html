@@ -2154,17 +2154,29 @@
                         <div class="review-bars-wrap" id="reviewBars"></div>
                     </div>
                     <div class="review-sort-row">
-                        <button class="sort-btn active" type="button">
+                        <button class="sort-btn active" data-sort="newest" type="button">
                             Most Recent
                         </button>
-                        <button class="sort-btn" type="button">
+                        <button class="sort-btn" data-sort="highest" type="button">
                             Highest Rated
                         </button>
+                        <label style="margin-left:12px;color:var(--text-muted);font-size:14px">Filter:</label>
+                        <select id="reviewFilter" style="margin-left:8px">
+                            <option value="">All stars</option>
+                            <option value="5">5 stars</option>
+                            <option value="4">4 stars</option>
+                            <option value="3">3 stars</option>
+                            <option value="2">2 stars</option>
+                            <option value="1">1 star</option>
+                        </select>
                     </div>
                     <div class="review-cards" id="reviewCards">
                         <p style="color: var(--text-muted)">
                             Loading reviews...
                         </p>
+                    </div>
+                    <div style="text-align:center;margin-top:12px">
+                        <button id="loadMoreReviews" class="btn" style="display:none">Load more reviews</button>
                     </div>
                     <!-- Write Review -->
                     <div
@@ -2382,10 +2394,49 @@
                 <div class="footer-bottom-links">
                     <a href="privacy.html">Privacy Policy</a
                     ><a href="terms.html">Terms of Service</a>
+                    <a href="register-trader.html">Apply as a trader</a>
                 </div>
             </div>
         </footer>
 
+        <!-- Trader modal (opens register-trader.html in an iframe) -->
+        <div id="traderModal" class="trader-modal" style="display:none;align-items:center;justify-content:center;">
+            <div class="trader-modal-backdrop" onclick="closeTraderModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;"></div>
+            <div class="trader-modal-content" style="position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);width:92%;max-width:920px;height:86%;background:#fff;border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;">
+                <button class="trader-modal-close" onclick="closeTraderModal()" style="position:absolute;right:8px;top:8px;background:transparent;border:none;font-size:24px;cursor:pointer;z-index:10000;">×</button>
+                <iframe id="traderModalFrame" src="about:blank" frameborder="0" style="width:100%;height:100%;border:0;"></iframe>
+            </div>
+        </div>
+        <style>
+            .footer-trader-btn{background:#FF5E3A;color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:700;text-decoration:none}
+            @media (max-width:640px){ .trader-modal-content{width:96%;height:92%} }
+        </style>
+        <script>
+        (function(){
+            function openTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                iframe.src = 'register-trader.html';
+                modal.style.display='flex';
+                document.body.style.overflow='hidden';
+            }
+            function closeTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                modal.style.display='none';
+                iframe.src = 'about:blank';
+                document.body.style.overflow='';
+            }
+            window.openTraderModal = openTraderModal;
+            window.closeTraderModal = closeTraderModal;
+            document.addEventListener('DOMContentLoaded', function(){
+                var links = document.querySelectorAll('a[href="register-trader.html"]');
+                links.forEach(function(a){ a.classList.add('footer-trader-link'); a.addEventListener('click', function(ev){ ev.preventDefault(); openTraderModal(); }); });
+                var bottom = document.querySelector('.footer-bottom-links');
+                if(bottom){ var btn = document.createElement('button'); btn.className='footer-trader-btn'; btn.textContent='Apply as a trader'; btn.addEventListener('click', function(e){ e.preventDefault(); openTraderModal(); }); bottom.insertBefore(btn, bottom.firstChild); }
+            });
+        })();
+        </script>
         <script>
             // ── STATE ────────────────────────────────────────────────────────────────────
             const params = new URLSearchParams(window.location.search);
@@ -2457,6 +2508,7 @@
                     return;
                 }
                 const name = params.get("name") || "";
+                console.debug('resolveProduct: url params', Object.fromEntries(params.entries()));
                 if (name) {
                     try {
                         const r = await fetch(
@@ -2473,8 +2525,10 @@
                     } catch (e) {}
                 }
                 try {
+                    console.debug('resolveProduct: no pid/name, fetching homepage product');
                     const r = await fetch(
                         "../api/products/get-homepage-products.php?limit=1",
+                        { credentials: 'same-origin' }
                     );
                     const d = JSON.parse(await r.text());
                     if (d.success && d.data && d.data.length) {
@@ -2492,11 +2546,14 @@
             // ── LOAD PRODUCT ─────────────────────────────────────────────────────────────
             async function loadProduct() {
                 try {
+                    console.debug('loadProduct: fetching product', activeId, 'session_user_id=', sessionStorage.getItem('user_id'));
                     const r = await fetch(
                         "../api/products/get-product.php?product_id=" +
                             activeId,
+                        { credentials: 'same-origin' }
                     );
                     const raw = await r.text();
+                    console.debug('loadProduct: response', raw.slice(0,500));
                     const d = JSON.parse(raw);
                     if (!d.success || !d.data) {
                         document.getElementById("productTitle").textContent =
@@ -3249,85 +3306,97 @@
             }
 
             // ── REVIEWS ──────────────────────────────────────────────────────────────────
-            async function loadReviews() {
+            // Reviews: pagination/filter/sort state
+            let reviewOffset = 0;
+            const reviewLimit = 5;
+            let reviewSort = 'newest';
+            let reviewStar = '';
+
+            async function loadReviews(reset = true) {
                 if (!activeId) return;
                 try {
-                    const r = await fetch(
-                        "../api/products/get-reviews.php?product_id=" +
-                            activeId,
-                    );
-                    const d = JSON.parse(await r.text());
-                    if (!d.success) return;
-
-                    const avg = parseFloat(d.average_rating || 0);
-                    const total = parseInt(d.total_reviews || 0, 10);
-                    document.getElementById("bigNum").textContent =
-                        avg.toFixed(1);
-                    document.getElementById("reviewsCount").textContent =
-                        "Based on " +
-                        total +
-                        " review" +
-                        (total !== 1 ? "s" : "");
-                    document.getElementById("bigStars").innerHTML =
-                        generateStarHtml(avg, 28);
-
-                    // Build star bars (simplified — count per rating)
-                    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-                    if (d.data)
-                        d.data.forEach((rv) => {
-                            const r = Math.round(rv.RATING || 0);
-                            if (r >= 1 && r <= 5) counts[r]++;
-                        });
-                    document.getElementById("reviewBars").innerHTML = [
-                        5, 4, 3, 2, 1,
-                    ]
-                        .map((n) => {
-                            const pct =
-                                total > 0
-                                    ? Math.round((counts[n] / total) * 100)
-                                    : 0;
-                            return `<div class="bar-row"><span class="bar-label">${n}</span><div class="bar-bg"><span class="bar-fill" style="width:${pct}%"></span></div><span class="bar-count">${counts[n]}</span></div>`;
-                        })
-                        .join("");
-
-                    // Review cards
-                    const list = document.getElementById("reviewCards");
-                    if (!d.data || !d.data.length) {
-                        list.innerHTML =
-                            '<p style="color:var(--text-muted);">No reviews yet. Be the first!</p>';
-                    } else {
-                        list.innerHTML = d.data
-                            .map((rv) => {
-                                const initial = (rv.REVIEWER ||
-                                    "?")[0].toUpperCase();
-                                const starHtml = generateStarHtml(
-                                    rv.RATING || 0,
-                                    18,
-                                );
-                                return `<div class="review-card">
-                    <div class="review-header-inner">
-                        <div class="review-author">
-                            <div class="review-avatar">${initial}</div>
-                            <div class="review-name-wrap">
-                                <span class="review-name">${rv.REVIEWER || "Customer"} <span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span></span>
-                            </div>
-                        </div>
-                        <div class="review-stars">${starHtml}</div>
-                    </div>
-                    <div class="review-text"><p>${rv.REVIEW_TEXT || ""}</p></div>
-                </div>`;
-                            })
-                            .join("");
+                    if (reset) {
+                        reviewOffset = 0;
                     }
 
-                    const uid = sessionStorage.getItem("user_id");
-                    document.getElementById("writeReviewBox").style.display =
-                        uid ? "block" : "none";
-                    document.getElementById("loginToReview").style.display = uid
-                        ? "none"
-                        : "block";
+                    // Fetch aggregates (all) on reset to populate bars and summary
+                    if (reset) {
+                        const aggResp = await fetch(`../api/products/get-reviews.php?product_id=${activeId}&limit=1000`);
+                        const agg = JSON.parse(await aggResp.text());
+                        if (agg && agg.success) {
+                            const avg = parseFloat(agg.average_rating || 0);
+                            const total = parseInt(agg.total_reviews || 0, 10);
+                            document.getElementById('bigNum').textContent = avg.toFixed(1);
+                            document.getElementById('reviewsCount').textContent = 'Based on ' + total + ' review' + (total !== 1 ? 's' : '');
+                            document.getElementById('bigStars').innerHTML = generateStarHtml(avg, 28);
+
+                            // Build star bars from returned page (agg.data may be limited but total available)
+                            const counts = {5:0,4:0,3:0,2:0,1:0};
+                            if (agg.data) agg.data.forEach(rv => { const r = Math.round(rv.RATING||0); if (r>=1&&r<=5) counts[r]++; });
+                            document.getElementById('reviewBars').innerHTML = [5,4,3,2,1].map(n => {
+                                const pct = total>0 ? Math.round((counts[n]/total)*100) : 0;
+                                return `<div class="bar-row"><span class="bar-label">${n}</span><div class="bar-bg"><span class="bar-fill" style="width:${pct}%"></span></div><span class="bar-count">${counts[n]}</span></div>`;
+                            }).join('');
+                        }
+                    }
+
+                    // Fetch page
+                    const q = new URLSearchParams({ product_id: activeId, offset: reviewOffset, limit: reviewLimit, sort: reviewSort });
+                    if (reviewStar) q.set('star', reviewStar);
+                    const r = await fetch('../api/products/get-reviews.php?' + q.toString(), { credentials: 'same-origin' });
+                    const d = JSON.parse(await r.text());
+                    if (!d.success) {
+                        const listEl = document.getElementById('reviewCards');
+                        if (listEl) listEl.innerHTML = `<p style="color:var(--text-muted);">${d.error || 'Error loading reviews'}</p>`;
+                        return;
+                    }
+
+                    // Cards
+                    const list = document.getElementById('reviewCards');
+                    if (!d.data || !d.data.length) {
+                        if (reset) list.innerHTML = '<p style="color:var(--text-muted);">No reviews yet. Be the first!</p>';
+                    } else {
+                        const html = d.data.map(rv => {
+                            const initial = (rv.REVIEWER||'?')[0].toUpperCase();
+                            const starHtml = generateStarHtml(rv.RATING||0,18);
+                            const when = rv.CREATED_AT ? new Date(rv.CREATED_AT).toLocaleDateString() : '';
+                            const ownTools = rv.IS_OWN ? `<div class="review-actions"><button onclick="deleteReview(${rv.REVIEW_ID})" class="btn-small">Delete</button></div>` : '';
+                            return `<div class="review-card">
+                                <div class="review-header-inner">
+                                    <div class="review-author">
+                                        <div class="review-avatar">${initial}</div>
+                                        <div class="review-name-wrap">
+                                            <span class="review-name">${rv.REVIEWER||'Customer'} ${rv.VERIFIED?'<span class="verified-badge"><span class="material-icons-outlined">verified</span> Verified</span>':''}</span>
+                                            <span class="review-date">${when}</span>
+                                        </div>
+                                    </div>
+                                    <div class="review-stars">${starHtml}</div>
+                                </div>
+                                <div class="review-text"><p>${rv.REVIEW_TEXT||''}</p></div>
+                                ${ownTools}
+                            </div>`;
+                        }).join('');
+
+                        if (reset) list.innerHTML = html; else list.insertAdjacentHTML('beforeend', html);
+                    }
+
+                    // Show/hide load more
+                    const loadBtn = document.getElementById('loadMoreReviews');
+                    const total = parseInt(d.total_reviews || 0,10) || 0;
+                    if (reviewOffset + reviewLimit < total) {
+                        loadBtn.style.display = 'inline-block';
+                    } else loadBtn.style.display = 'none';
+
+                    reviewOffset += d.data ? d.data.length : 0;
+
+                    const uid = sessionStorage.getItem('user_id');
+                    console.debug('loadReviews: offset=', reviewOffset, 'limit=', reviewLimit, 'sort=', reviewSort, 'star=', reviewStar, 'user_id=', uid, 'api_total=', d.total_reviews);
+                    document.getElementById('writeReviewBox').style.display = uid ? 'block' : 'none';
+                    document.getElementById('loginToReview').style.display = uid ? 'none' : 'block';
                 } catch (e) {
-                    console.error("loadReviews:", e);
+                    console.error('loadReviews:', e);
+                    const listEl = document.getElementById('reviewCards');
+                    if (listEl) listEl.innerHTML = '<p style="color:var(--text-muted);">Error loading reviews. Try refreshing the page.</p>';
                 }
             }
 
@@ -3385,8 +3454,31 @@
                             .querySelectorAll(".review-sort-row .sort-btn")
                             .forEach((b) => b.classList.remove("active"));
                         this.classList.add("active");
+                        reviewSort = this.dataset.sort || 'newest';
+                        loadReviews(true);
                     });
                 });
+
+            // Filter select
+            document.getElementById('reviewFilter')?.addEventListener('change', function(){
+                reviewStar = this.value || '';
+                loadReviews(true);
+            });
+
+            // Load more
+            document.getElementById('loadMoreReviews')?.addEventListener('click', function(){
+                loadReviews(false);
+            });
+
+            // Delete review
+            async function deleteReview(id){
+                if(!confirm('Delete this review?')) return;
+                try{
+                    const r = await fetch('../api/products/delete-review.php', { method:'POST', credentials:'same-origin', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ review_id: id }) });
+                    const d = JSON.parse(await r.text());
+                    if(d.success){ showToast('Review deleted'); loadReviews(true); } else alert(d.error || 'Could not delete');
+                }catch(e){ alert('Error'); }
+            }
 
             // ── BADGE COUNTS ─────────────────────────────────────────────────────────────
             async function loadBadges() {
@@ -3414,6 +3506,7 @@
             // ── USER MENU ────────────────────────────────────────────────────────────────
             async function initUserMenu() {
                 const uid = sessionStorage.getItem("user_id");
+                console.debug('initUserMenu: sessionStorage user_id=', uid, 'userName=', sessionStorage.getItem('userName'));
                 const loginBtn = document.getElementById("loginBtn");
                 const dropWrap = document.getElementById("userDropdownWrap");
                 const greeting = document.getElementById("userGreeting");

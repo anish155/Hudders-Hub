@@ -2302,9 +2302,66 @@
                 <div class="footer-bottom-links">
                     <a href="privacy.html">Privacy Policy</a
                     ><a href="terms.html">Terms of Service</a>
+                    <a href="register-trader.html">Apply as a trader</a>
                 </div>
             </div>
         </footer>
+
+        </footer>
+
+        <!-- Trader modal (opens register-trader.html in an iframe) -->
+        <div id="traderModal" class="trader-modal" style="display:none;align-items:center;justify-content:center;">
+            <div class="trader-modal-backdrop" onclick="closeTraderModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;"></div>
+            <div class="trader-modal-content" style="position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);width:92%;max-width:920px;height:86%;background:#fff;border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;">
+                <button class="trader-modal-close" onclick="closeTraderModal()" style="position:absolute;right:8px;top:8px;background:transparent;border:none;font-size:24px;cursor:pointer;z-index:10000;">×</button>
+                <iframe id="traderModalFrame" src="about:blank" frameborder="0" style="width:100%;height:100%;border:0;"></iframe>
+            </div>
+        </div>
+        <style>
+            .footer-trader-btn{background:#FF5E3A;color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:700;text-decoration:none}
+            @media (max-width:640px){ .trader-modal-content{width:96%;height:92%} }
+        </style>
+        <script>
+        (function(){
+            function openTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                iframe.src = 'register-trader.html';
+                modal.style.display='flex';
+                document.body.style.overflow='hidden';
+            }
+            function closeTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                modal.style.display='none';
+                iframe.src = 'about:blank';
+                document.body.style.overflow='';
+            }
+            window.openTraderModal = openTraderModal;
+            window.closeTraderModal = closeTraderModal;
+
+            // Replace or enhance footer links/buttons
+            document.addEventListener('DOMContentLoaded', function(){
+                // convert existing text link to button styling and intercept click
+                var links = document.querySelectorAll('a[href="register-trader.html"]');
+                links.forEach(function(a){
+                    a.classList.add('footer-trader-link');
+                    a.addEventListener('click', function(ev){ ev.preventDefault(); openTraderModal(); });
+                });
+
+                // add a highlighted button to footer-bottom-links if present
+                var bottom = document.querySelector('.footer-bottom-links');
+                if(bottom){
+                    var btn = document.createElement('button');
+                    btn.className = 'footer-trader-btn';
+                    btn.textContent = 'Apply as a trader';
+                    btn.addEventListener('click', function(e){ e.preventDefault(); openTraderModal(); });
+                    // insert before first child for visibility
+                    bottom.insertBefore(btn, bottom.firstChild);
+                }
+            });
+        })();
+        </script>
 
         <script>
             /* -- SCROLL --------------------------------------------------------------- */
@@ -2448,100 +2505,80 @@
                     }
                 }
 
-                // Load For-You products from Oracle DB (replaces hardcoded static products)
-                async function loadForyouProducts() {
-                    const grid = document.getElementById("foryou-grid");
-                    if (!grid) return;
-                    try {
-                        const res = await fetch(
-                            "../api/products/get-homepage-products.php?limit=8",
-                        );
-                        const data = await res.json();
-                        if (
-                            !data.success ||
-                            !Array.isArray(data.data) ||
-                            !data.data.length
-                        )
-                            return;
+                let homepageProductsPromise = null;
 
-                        data.data.forEach((product) => {
+                function fetchHomepageProducts() {
+                    try {
+                        if (!homepageProductsPromise) {
+                            homepageProductsPromise = fetch(
+                                "../api/products/get-homepage-products.php?limit=12",
+                            )
+                                .then((res) => res.json())
+                                .then((data) =>
+                                    data.success && Array.isArray(data.data)
+                                        ? data.data
+                                        : [],
+                                )
+                                .catch((err) => {
+                                    console.error(
+                                        "Homepage products load error:",
+                                        err,
+                                    );
+                                    return [];
+                                });
+                        }
+
+                        return homepageProductsPromise;
+                    } catch (err) {
+                        console.error("Homepage products load error:", err);
+                        return Promise.resolve([]);
+                    }
+                }
+
+                function renderHomepageProducts(products) {
+                    const forYouGrid = document.getElementById("foryou-grid");
+                    const trendingTrack = document.getElementById(
+                        "trending-track",
+                    );
+                    const flashSaleTrack = document.getElementById(
+                        "flash-sale-track",
+                    );
+                    const topRatedTrack = document.getElementById(
+                        "top-rated-track",
+                    );
+
+                    if (forYouGrid) {
+                        products.slice(0, 8).forEach((product) => {
                             const card = buildProductCard(product);
-                            if (card) grid.appendChild(card);
+                            if (card) forYouGrid.appendChild(card);
                         });
-
-                        // Pre-mark any already-favourited products on the freshly rendered cards
-                        await loadInitialWishlistState();
-                    } catch (err) {
-                        console.error("For-you load error:", err);
                     }
-                }
 
-                // Load Trending products into carousel
-                async function loadTrendingCarousel() {
-                    const track = document.getElementById("trending-track");
-                    if (!track) return;
-                    try {
-                        const res = await fetch(
-                            "../api/products/get-homepage-products.php?limit=10",
-                        );
-                        const data = await res.json();
-                        if (!data.success || !data.data || !data.data.length)
-                            return;
-                        data.data.forEach((p) => {
-                            const card = buildCarouselCard(p);
-                            if (card) track.appendChild(card);
+                    if (trendingTrack) {
+                        products.slice(0, 10).forEach((product) => {
+                            const card = buildCarouselCard(product);
+                            if (card) trendingTrack.appendChild(card);
                         });
-                        await loadInitialWishlistState();
-                    } catch (err) {
-                        console.error("Trending load error:", err);
                     }
-                }
 
-                // Load Flash Sale (discounted) products into carousel
-                async function loadFlashSaleCarousel() {
-                    const track = document.getElementById("flash-sale-track");
-                    if (!track) return;
-                    try {
-                        const res = await fetch(
-                            "../api/products/get-homepage-products.php?limit=10",
-                        );
-                        const data = await res.json();
-                        if (!data.success || !data.data || !data.data.length)
-                            return;
-                        // Filter to discounted products, or show all if none
-                        const discounted = data.data.filter(
-                            (p) => parseFloat(p.DISCOUNT_PERCENT || 0) > 0,
+                    if (flashSaleTrack) {
+                        const discounted = products.filter(
+                            (product) =>
+                                parseFloat(product.DISCOUNT_PERCENT || 0) > 0,
                         );
                         const toShow =
-                            discounted.length > 0 ? discounted : data.data;
-                        toShow.forEach((p) => {
-                            const card = buildCarouselCard(p);
-                            if (card) track.appendChild(card);
+                            discounted.length > 0 ? discounted : products;
+                        toShow.slice(0, 10).forEach((product) => {
+                            const card = buildCarouselCard(product);
+                            if (card) flashSaleTrack.appendChild(card);
                         });
-                        await loadInitialWishlistState();
-                    } catch (err) {
-                        console.error("Flash sale load error:", err);
                     }
-                }
 
-                // Load Top Rated products into carousel
-                async function loadTopRatedCarousel() {
-                    const track = document.getElementById("top-rated-track");
-                    if (!track) return;
-                    try {
-                        const res = await fetch(
-                            "../api/products/get-homepage-products.php?limit=10",
-                        );
-                        const data = await res.json();
-                        if (!data.success || !data.data || !data.data.length)
-                            return;
-                        data.data.forEach((p) => {
-                            const card = buildCarouselCard(p);
-                            if (card) track.appendChild(card);
+                    if (topRatedTrack) {
+                        products.slice(0, 10).forEach((product) => {
+                            const card = buildCarouselCard(product);
+                            if (card) topRatedTrack.appendChild(card);
                         });
-                        await loadInitialWishlistState();
-                    } catch (err) {
-                        console.error("Top rated load error:", err);
                     }
                 }
 
@@ -2871,10 +2908,10 @@
                     return div;
                 }
 
-                loadForyouProducts();
-                loadTrendingCarousel();
-                loadFlashSaleCarousel();
-                loadTopRatedCarousel();
+                fetchHomepageProducts().then((products) => {
+                    renderHomepageProducts(products);
+                    loadInitialWishlistState();
+                });
 
                 const dropdownBtn = document.getElementById("userDropdownBtn");
                 const dropdownMenu = document.getElementById("userDropdown");

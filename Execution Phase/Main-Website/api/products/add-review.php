@@ -27,7 +27,7 @@ if ($rating < 1 || $rating > 5) {
 $checkSql = "SELECT COUNT(*) as cnt FROM ORDER_PRODUCT op
              JOIN HUDDER_ORDER o ON op.order_id = o.order_id
              WHERE op.product_id = :product_id AND o.user_id = :user_id
-             AND o.status = 'Completed'";
+             AND (LOWER(o.status) LIKE '%complete%' OR LOWER(o.status) LIKE '%collect%')";
 $checkStmt = oci_parse($conn, $checkSql);
 oci_bind_by_name($checkStmt, ':product_id', $product_id);
 oci_bind_by_name($checkStmt, ':user_id', $user_id);

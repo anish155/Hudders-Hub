@@ -1047,7 +1047,44 @@ Categories
 </div>
 <div class="cart-body">
 <div class="cart-item" data-price="0.90" data-category="Greengrocer">
-<img src="assets/Item-image/green-bell-pepper-isolated.jpg" alt="Green Bell Pepper">
+        <!-- Trader modal (opens register-trader.html in an iframe) -->
+        <div id="traderModal" class="trader-modal" style="display:none;align-items:center;justify-content:center;">
+            <div class="trader-modal-backdrop" onclick="closeTraderModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;"></div>
+            <div class="trader-modal-content" style="position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);width:92%;max-width:920px;height:86%;background:#fff;border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;">
+                <button class="trader-modal-close" onclick="closeTraderModal()" style="position:absolute;right:8px;top:8px;background:transparent;border:none;font-size:24px;cursor:pointer;z-index:10000;">×</button>
+                <iframe id="traderModalFrame" src="about:blank" frameborder="0" style="width:100%;height:100%;border:0;"></iframe>
+            </div>
+        </div>
+        <style>
+            .footer-trader-btn{background:#FF5E3A;color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:700;text-decoration:none}
+            @media (max-width:640px){ .trader-modal-content{width:96%;height:92%} }
+        </style>
+        <script>
+        (function(){
+            function openTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                iframe.src = 'register-trader.html';
+                modal.style.display='flex';
+                document.body.style.overflow='hidden';
+            }
+            function closeTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                modal.style.display='none';
+                iframe.src = 'about:blank';
+                document.body.style.overflow='';
+            }
+            window.openTraderModal = openTraderModal;
+            window.closeTraderModal = closeTraderModal;
+            document.addEventListener('DOMContentLoaded', function(){
+                var links = document.querySelectorAll('a[href="register-trader.html"]');
+                links.forEach(function(a){ a.classList.add('footer-trader-link'); a.addEventListener('click', function(ev){ ev.preventDefault(); openTraderModal(); }); });
+                var bottom = document.querySelector('.footer-bottom-links');
+                if(bottom){ var btn = document.createElement('button'); btn.className='footer-trader-btn'; btn.textContent='Apply as a trader'; btn.addEventListener('click', function(e){ e.preventDefault(); openTraderModal(); }); bottom.insertBefore(btn, bottom.firstChild); }
+            });
+        })();
+        </script>
 <div class="cart-item-details">
 <div class="cart-item-top">
 <div>
@@ -1201,14 +1238,15 @@ FOOTER
         
     </div>
 </div>
-<div class="page-wrap footer-bottom">
+            <div class="page-wrap footer-bottom">
     <div class="footer-bottom-left">
         <span>&copy; 2026 HuddersHub. All rights reserved.</span>
     </div>
-    <div class="footer-bottom-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Service</a>
-    </div>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="register-trader.html">Apply as a trader</a>
+                </div>
 </div>
 </footer>
 

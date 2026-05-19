@@ -631,15 +631,15 @@ if (!userId) {
 }
 
 function handleLogout() {
-    fetch('../api/auth/logout.php', { method: 'POST' })
-        .then(() => {
-            sessionStorage.clear();
-            window.location.href = '../public/login.html';
-        })
-        .catch(() => {
-            sessionStorage.clear();
-            window.location.href = '../public/login.html';
-        });
+  fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
+    .then(() => {
+      sessionStorage.clear();
+      window.location.href = '../public/login.html';
+    })
+    .catch(() => {
+      sessionStorage.clear();
+      window.location.href = '../public/login.html';
+    });
 }
 
 function formatCurrency(amount) {

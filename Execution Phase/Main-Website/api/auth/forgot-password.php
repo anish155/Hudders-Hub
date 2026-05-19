@@ -11,6 +11,8 @@ header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 require_once '../../config/database.php';
+require_once '../../config/config.php';
+require_once '../../config/mailer.php';
 
 $response = ['success' => false, 'message' => ''];
 
@@ -28,7 +30,7 @@ if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
-    $sql  = "SELECT user_id, firstname FROM HUDDER_USER WHERE email = :email";
+    $sql  = "SELECT user_id, firstname, email FROM HUDDER_USER WHERE email = :email";
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':email', $email);
     oci_execute($stmt);
@@ -40,17 +42,28 @@ try {
     $response['message'] = 'If an account with that email exists, a password reset link has been sent.';
 
     if ($user) {
-        // Store token in session (demo — no email server)
-        if (session_status() === PHP_SESSION_NONE) session_start();
         $token = bin2hex(random_bytes(32));
-        $_SESSION['pwd_reset'][$email] = [
-            'token'   => $token,
-            'user_id' => (int)$user['USER_ID'],
-            'expires' => time() + 3600
-        ];
-        // In production you'd email the link. For demo, expose token in response.
-        $response['dev_token'] = $token;
-        $response['dev_email'] = $email;
+        $expiresSql = "UPDATE HUDDER_USER
+                       SET password_reset_token = :token,
+                           password_reset_expires = (SYSDATE + (1/24))
+                       WHERE user_id = :user_id";
+        $expStmt = oci_parse($conn, $expiresSql);
+        oci_bind_by_name($expStmt, ':token', $token);
+        oci_bind_by_name($expStmt, ':user_id', $user['USER_ID']);
+        if (!oci_execute($expStmt, OCI_COMMIT_ON_SUCCESS)) {
+            $e = oci_error($expStmt);
+            echo json_encode(['success' => false, 'message' => $e['message'] ?? 'Could not store reset token']);
+            exit;
+        }
+        oci_free_statement($expStmt);
+
+        $resetLink = huddershub_base_url() . '/public/reset-password.html?token=' . urlencode($token) . '&email=' . urlencode($email);
+        try {
+            huddershub_send_reset_email($email, $user['FIRSTNAME'], $resetLink);
+        } catch (Exception $mailError) {
+            error_log('Reset email failed: ' . $mailError->getMessage());
+        }
+        $response['reset_link'] = $resetLink;
     }
 
 } catch (Exception $e) {

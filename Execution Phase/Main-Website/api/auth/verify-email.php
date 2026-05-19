@@ -16,7 +16,7 @@ if (empty($token) || empty($email)) {
 }
 
 try {
-    $sql = "SELECT user_id, firstname, verification_token FROM HUDDER_USER WHERE email = :email";
+    $sql = "SELECT user_id, firstname, verification_token, verified_at FROM HUDDER_USER WHERE email = :email";
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':email', $email);
     oci_execute($stmt);
@@ -28,13 +28,18 @@ try {
         exit;
     }
 
+    if (!empty($user['VERIFIED_AT'])) {
+        echo json_encode(['success' => true, 'message' => 'Email is already verified. You can log in.']);
+        exit;
+    }
+
     if ($user['VERIFICATION_TOKEN'] !== $token) {
         echo json_encode(['success' => false, 'message' => 'Invalid verification token.']);
         exit;
     }
 
     // Clear the token and mark as verified
-    $updateSql = "UPDATE HUDDER_USER SET verification_token = NULL WHERE user_id = :user_id";
+    $updateSql = "UPDATE HUDDER_USER SET verification_token = NULL, verified_at = SYSDATE WHERE user_id = :user_id";
     $updateStmt = oci_parse($conn, $updateSql);
     oci_bind_by_name($updateStmt, ':user_id', $user['USER_ID']);
     

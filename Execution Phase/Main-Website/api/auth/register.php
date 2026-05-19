@@ -6,6 +6,7 @@ ini_set('display_errors', 0);
 header('Content-Type: application/json');
 require_once '../../config/config.php';
 require_once '../../config/database.php';
+require_once '../../config/mailer.php';
 
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
@@ -129,13 +130,17 @@ try {
     oci_commit($conn);
     
     // 7. Send verification email
-    $verify_link = BASE_URL . '/public/verify-email.html?token=' . $token . '&email=' . urlencode($email);
-    
-    // Include email sending (mock for now - returns link in response)
+    $verify_link = huddershub_base_url() . '/public/verify-email.html?token=' . urlencode($token) . '&email=' . urlencode($email);
+    try {
+        huddershub_send_verification_email($email, $fname, $verify_link);
+    } catch (Exception $mailError) {
+        error_log('Verification email failed: ' . $mailError->getMessage());
+    }
+
     echo json_encode([
         'success' => true, 
         'message' => "Welcome $fname! Account created. Please check your email to verify your account.",
-        'verification_link' => $verify_link // Remove in production - for testing only
+        'verification_link' => $verify_link
     ]);
 
 } catch (Exception $e) {

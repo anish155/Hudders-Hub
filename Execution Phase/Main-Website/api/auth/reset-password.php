@@ -36,32 +36,26 @@ if (strlen($newPassword) < 4) {
 }
 $newPassword = substr($newPassword, 0, 20);
 
-if (session_status() === PHP_SESSION_NONE) session_start();
+$sql = "SELECT user_id FROM HUDDER_USER
+        WHERE email = :email
+          AND password_reset_token = :token
+          AND (password_reset_expires IS NULL OR password_reset_expires >= SYSDATE)";
+$stmt = oci_parse($conn, $sql);
+oci_bind_by_name($stmt, ':email', $email);
+oci_bind_by_name($stmt, ':token', $token);
+oci_execute($stmt);
+$user = oci_fetch_assoc($stmt);
+oci_free_statement($stmt);
 
-$resets = $_SESSION['pwd_reset'] ?? [];
-
-if (!isset($resets[$email])) {
+if (!$user) {
     $response['message'] = 'Invalid or expired reset token.';
     echo json_encode($response); exit;
 }
 
-$entry = $resets[$email];
-
-if ($entry['token'] !== $token) {
-    $response['message'] = 'Invalid reset token.';
-    echo json_encode($response); exit;
-}
-
-if (time() > $entry['expires']) {
-    unset($_SESSION['pwd_reset'][$email]);
-    $response['message'] = 'Reset token has expired. Please request a new one.';
-    echo json_encode($response); exit;
-}
-
-$userId = $entry['user_id'];
+$userId = $user['USER_ID'];
 
 try {
-    $sql  = "UPDATE HUDDER_USER SET user_password = :pwd WHERE user_id = :user_id";
+    $sql  = "UPDATE HUDDER_USER SET user_password = :pwd, password_reset_token = NULL, password_reset_expires = NULL WHERE user_id = :user_id";
     $stmt = oci_parse($conn, $sql);
     oci_bind_by_name($stmt, ':pwd', $newPassword);
     oci_bind_by_name($stmt, ':user_id', $userId);
@@ -69,7 +63,6 @@ try {
     oci_free_statement($stmt);
 
     if ($ok) {
-        unset($_SESSION['pwd_reset'][$email]);
         $response['success'] = true;
         $response['message'] = 'Password reset successfully. You can now log in.';
     } else {

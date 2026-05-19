@@ -200,8 +200,53 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
     <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="register-trader.html">Become a Trader</a><a href="faq.html">Help Center</a></div>
     <div class="footer-col"><h4>Contact</h4><p>Huddersfield, UK</p><p>support@huddershub.test</p></div>
 </div>
-<div class="page-wrap footer-bottom"><span>&copy; 2026 HuddersHub. All rights reserved.</span><div style="display:flex; gap:20px;"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div></div>
+<div class="page-wrap footer-bottom">
+    <span>&copy; 2026 HuddersHub. All rights reserved.</span>
+    <div style="display:flex; gap:20px;">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="register-trader.html">Apply as a trader</a>
+    </div>
+</div>
 </footer>
+        <!-- Trader modal (opens register-trader.html in an iframe) -->
+        <div id="traderModal" class="trader-modal" style="display:none;align-items:center;justify-content:center;">
+            <div class="trader-modal-backdrop" onclick="closeTraderModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;"></div>
+            <div class="trader-modal-content" style="position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);width:92%;max-width:920px;height:86%;background:#fff;border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;">
+                <button class="trader-modal-close" onclick="closeTraderModal()" style="position:absolute;right:8px;top:8px;background:transparent;border:none;font-size:24px;cursor:pointer;z-index:10000;">×</button>
+                <iframe id="traderModalFrame" src="about:blank" frameborder="0" style="width:100%;height:100%;border:0;"></iframe>
+            </div>
+        </div>
+        <style>
+            .footer-trader-btn{background:#FF5E3A;color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:700;text-decoration:none}
+            @media (max-width:640px){ .trader-modal-content{width:96%;height:92%} }
+        </style>
+        <script>
+        (function(){
+            function openTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                iframe.src = 'register-trader.html';
+                modal.style.display='flex';
+                document.body.style.overflow='hidden';
+            }
+            function closeTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                modal.style.display='none';
+                iframe.src = 'about:blank';
+                document.body.style.overflow='';
+            }
+            window.openTraderModal = openTraderModal;
+            window.closeTraderModal = closeTraderModal;
+            document.addEventListener('DOMContentLoaded', function(){
+                var links = document.querySelectorAll('a[href="register-trader.html"]');
+                links.forEach(function(a){ a.classList.add('footer-trader-link'); a.addEventListener('click', function(ev){ ev.preventDefault(); openTraderModal(); }); });
+                var bottom = document.querySelector('.footer-bottom-links');
+                if(bottom){ var btn = document.createElement('button'); btn.className='footer-trader-btn'; btn.textContent='Apply as a trader'; btn.addEventListener('click', function(e){ e.preventDefault(); openTraderModal(); }); bottom.insertBefore(btn, bottom.firstChild); }
+            });
+        })();
+        </script>
 
 <script>
 let currentRole = 'customer';
@@ -252,6 +297,7 @@ loginForm.addEventListener('submit', function(e) {
 
         fetch('../api/auth/login.php', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, role: currentRole })
         })
@@ -260,6 +306,8 @@ loginForm.addEventListener('submit', function(e) {
             if (data.success) {
                 const fullName = [data.name, data.lastname].filter(Boolean).join(' ').trim();
                 sessionStorage.setItem('userName', fullName || data.name || 'User');
+                sessionStorage.setItem('firstname', data.name || '');
+                sessionStorage.setItem('lastname', data.lastname || '');
                 sessionStorage.setItem('user_id', data.user_id); 
                 sessionStorage.setItem('userRole', data.role);
                 sessionStorage.setItem('userEmail', data.email || '');

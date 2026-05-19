@@ -236,10 +236,6 @@
             <span class="material-icons-outlined">print</span>
             Print Report
         </button>
-        <button class="btn btn-secondary" onclick="exportToCSV()">
-            <span class="material-icons-outlined">download</span>
-            Export CSV
-        </button>
         <button class="btn btn-orange" id="printLabelsBtn">
             <span class="material-icons-outlined">local_printshop</span>
             Print Labels
@@ -269,7 +265,7 @@ if (!userId)  window.location.href = '../public/login.html';
 if (!userRole || userRole.toLowerCase() !== 'trader') window.location.href = '../public/login.html';
 
 function handleLogout() {
-    fetch('../api/auth/logout.php', { method: 'POST' })
+    fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
         .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
         .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }
@@ -439,37 +435,6 @@ function renderReport(data) {
 
 // ── Confirmation shortcut for window.print() ─────────────────────────────────
 // (not used — we skip to keep browser native print dialog)
-
-// ── CSV export ───────────────────────────────────────────────────────────────
-function exportToCSV() {
-    if (!currentReportData || !currentReportData.slots) {
-        alert('No data to export. Please generate a report first.');
-        return;
-    }
-    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
-    let csv = '"Order #","Customer Name","Customer ID","Slot","Products","Total","Status"\n';
-    for (const slot of slotNames) {
-        const orders = currentReportData.slots[slot] || [];
-        for (const o of orders) {
-            const products    = o.products.map(p => `${escCsv(p.name)} x${p.quantity}`).join('; ');
-            const csvName     = escCsv(o.customer_name);
-            const csvOrder    = escCsv(o.order_num);
-            csv += `${csvOrder},${csvName},"#CUS-${String(o.customer_id).padStart(4,'0')}","${slot}","${products}",${o.total},${o.status}\n`;
-        }
-    }
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `daily_report_${currentReportData.date}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function escCsv(s) {
-    if (s.indexOf('"') !== -1) return '"' + s.replace(/"/g, '""') + '"';
-    return '"' + s + '"';
-}
 
 // ── Print labels (new window) ────────────────────────────────────────────────
 function printLabels() {

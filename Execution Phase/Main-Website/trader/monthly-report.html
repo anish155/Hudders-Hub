@@ -277,7 +277,7 @@ if (!userId)  window.location.href = '../public/login.html';
 if (!userRole || userRole.toLowerCase() !== 'trader') window.location.href = '../public/login.html';
 
 function handleLogout() {
-    fetch('../api/auth/logout.php', { method: 'POST' })
+    fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
         .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
         .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }

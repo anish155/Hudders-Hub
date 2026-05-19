@@ -17,9 +17,10 @@ if (!$conn) {
     exit;
 }
 
-$sql = "SELECT user_id, firstname, lastname, email, phone_number, address
-        FROM HUDDER_USER
-        WHERE user_id = :user_id";
+$sql = "SELECT user_id, firstname, lastname, email, phone_number, address,
+           TO_CHAR(NVL(created_at, SYSDATE), 'YYYY-MM-DD') AS created_at
+    FROM HUDDER_USER
+    WHERE user_id = :user_id";
 $stmt = oci_parse($conn, $sql);
 oci_bind_by_name($stmt, ':user_id', $user_id);
 oci_execute($stmt);
@@ -34,7 +35,8 @@ if ($user) {
             'LASTNAME' => $user['LASTNAME'],
             'EMAIL' => $user['EMAIL'],
             'PHONE_NUMBER' => $user['PHONE_NUMBER'] ?? '',
-            'ADDRESS' => $user['ADDRESS'] ?? ''
+            'ADDRESS' => $user['ADDRESS'] ?? '',
+            'CREATED_AT' => $user['CREATED_AT'] ?? ''
         ]
     ]);
 } else {

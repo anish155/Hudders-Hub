@@ -20,6 +20,7 @@
             href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
             rel="stylesheet"
         />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
         <style>
             /* ========================================================================
@@ -1162,9 +1163,10 @@ MAIN CONTENT
                         <div class="invoice-actions">
                             <button
                                 class="btn btn-secondary"
-                                onclick="window.print()"
+                                id="downloadInvoiceBtn"
+                                type="button"
                             >
-                                Print Invoice
+                                Download Invoice PDF
                             </button>
                             <button
                                 class="btn btn-primary"
@@ -1264,9 +1266,49 @@ FOOTER
                 <div class="footer-bottom-links">
                     <a href="privacy.html">Privacy Policy</a>
                     <a href="terms.html">Terms of Service</a>
+                    <a href="register-trader.html">Apply as a trader</a>
                 </div>
             </div>
         </footer>
+
+        <!-- Trader modal (opens register-trader.html in an iframe) -->
+        <div id="traderModal" class="trader-modal" style="display:none;align-items:center;justify-content:center;">
+            <div class="trader-modal-backdrop" onclick="closeTraderModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;"></div>
+            <div class="trader-modal-content" style="position:fixed;left:50%;top:50%;transform:translate(-50%, -50%);width:92%;max-width:920px;height:86%;background:#fff;border-radius:8px;overflow:hidden;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;">
+                <button class="trader-modal-close" onclick="closeTraderModal()" style="position:absolute;right:8px;top:8px;background:transparent;border:none;font-size:24px;cursor:pointer;z-index:10000;">×</button>
+                <iframe id="traderModalFrame" src="about:blank" frameborder="0" style="width:100%;height:100%;border:0;"></iframe>
+            </div>
+        </div>
+        <style>
+            .footer-trader-btn{background:#FF5E3A;color:#fff;padding:8px 12px;border-radius:8px;border:none;font-weight:700;text-decoration:none}
+            @media (max-width:640px){ .trader-modal-content{width:96%;height:92%} }
+        </style>
+        <script>
+        (function(){
+            function openTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                iframe.src = 'register-trader.html';
+                modal.style.display='flex';
+                document.body.style.overflow='hidden';
+            }
+            function closeTraderModal(){
+                var modal=document.getElementById('traderModal');
+                var iframe=document.getElementById('traderModalFrame');
+                modal.style.display='none';
+                iframe.src = 'about:blank';
+                document.body.style.overflow='';
+            }
+            window.openTraderModal = openTraderModal;
+            window.closeTraderModal = closeTraderModal;
+            document.addEventListener('DOMContentLoaded', function(){
+                var links = document.querySelectorAll('a[href="register-trader.html"]');
+                links.forEach(function(a){ a.classList.add('footer-trader-link'); a.addEventListener('click', function(ev){ ev.preventDefault(); openTraderModal(); }); });
+                var bottom = document.querySelector('.footer-bottom-links');
+                if(bottom){ var btn = document.createElement('button'); btn.className='footer-trader-btn'; btn.textContent='Apply as a trader'; btn.addEventListener('click', function(e){ e.preventDefault(); openTraderModal(); }); bottom.insertBefore(btn, bottom.firstChild); }
+            });
+        })();
+        </script>
 
         <!-- =========================================================================
 JAVASCRIPT
@@ -1282,6 +1324,8 @@ JAVASCRIPT
             // LOAD INVOICE DATA
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get("order_id");
+            const autoDownloadInvoice = urlParams.get("paid") === "1";
+            let currentInvoiceOrder = null;
 
             async function loadInvoice() {
                 if (!orderId) {
@@ -1296,6 +1340,9 @@ JAVASCRIPT
                     const data = await res.json();
                     if (data.success && data.data) {
                         renderInvoice(data.data);
+                        if (autoDownloadInvoice) {
+                            setTimeout(() => downloadInvoicePDF(), 250);
+                        }
                     } else {
                         document.querySelector(".invoice-card").innerHTML =
                             '<p style="color:red;padding:20px;">Order not found.</p>';
@@ -1306,6 +1353,7 @@ JAVASCRIPT
             }
 
             function renderInvoice(order) {
+                currentInvoiceOrder = order;
                 // Use IDs — no fragile CSS selectors
                 const num = document.getElementById("invoiceNumber");
                 const dateEl = document.getElementById("invoiceDate");
@@ -1405,6 +1453,108 @@ JAVASCRIPT
                     itemsTbody.innerHTML =
                         '<tr><td colspan="4" style="text-align:center;padding:16px;color:#5E6A63;">No items found.</td></tr>';
                 }
+            }
+
+            function downloadInvoicePDF() {
+                if (!currentInvoiceOrder || !window.jspdf) return;
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: "portrait",
+                    unit: "mm",
+                    format: "a4",
+                });
+                const margin = 14;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                let y = 16;
+
+                const order = currentInvoiceOrder;
+                const products = Array.isArray(order.PRODUCTS)
+                    ? order.PRODUCTS
+                    : [];
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(20);
+                doc.text("HuddersHub Invoice", margin, y);
+                y += 8;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(11);
+                doc.text(`Invoice #: HH-${order.ORDER_ID}`, margin, y);
+                y += 6;
+                doc.text(`Order #: ${order.ORDER_ID}`, margin, y);
+                y += 6;
+                doc.text(
+                    `Payment: ${order.PAYMENT_METHOD || "PayPal"}`,
+                    margin,
+                    y,
+                );
+                y += 6;
+                doc.text(
+                    `Collection: ${order.SLOT_DATE || "—"}${order.SLOT_TIME ? "  " + order.SLOT_TIME : ""}`,
+                    margin,
+                    y,
+                );
+                y += 10;
+
+                doc.setDrawColor(220, 227, 218);
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 8;
+
+                doc.setFont("helvetica", "bold");
+                doc.text("Item", margin, y);
+                doc.text("Qty", 110, y);
+                doc.text("Unit Price", 135, y);
+                doc.text("Line Total", 168, y);
+                y += 4;
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 6;
+
+                let subtotal = 0;
+                doc.setFont("helvetica", "normal");
+                products.forEach((item) => {
+                    const qty = parseInt(item.QUANTITY || 1, 10);
+                    const unitPrice = parseFloat(item.UNIT_PRICE || 0);
+                    const lineTotal = parseFloat(
+                        item.SUBTOTAL || unitPrice * qty,
+                    );
+                    subtotal += lineTotal;
+
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    doc.text(String(item.NAME || "Item"), margin, y);
+                    doc.text(String(qty), 110, y);
+                    doc.text(`GBP ${unitPrice.toFixed(2)}`, 135, y);
+                    doc.text(`GBP ${lineTotal.toFixed(2)}`, 168, y);
+                    y += 7;
+                });
+
+                y += 4;
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 8;
+
+                const total = parseFloat(order.AMOUNT || subtotal + 2.4);
+                doc.setFont("helvetica", "bold");
+                doc.text(`Subtotal: GBP ${(total - 2.4).toFixed(2)}`, margin, y);
+                y += 6;
+                doc.text("Service fee: GBP 2.40", margin, y);
+                y += 6;
+                doc.text(`Total: GBP ${total.toFixed(2)}`, margin, y);
+
+                doc.save(`invoice_${order.ORDER_ID}.pdf`);
+            }
+
+            const downloadInvoiceBtn = document.getElementById(
+                "downloadInvoiceBtn",
+            );
+            if (downloadInvoiceBtn) {
+                downloadInvoiceBtn.addEventListener(
+                    "click",
+                    downloadInvoicePDF,
+                );
             }
 
             // Load on page load

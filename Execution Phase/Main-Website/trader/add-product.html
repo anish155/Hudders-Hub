@@ -1317,7 +1317,7 @@
             }
 
             function handleLogout() {
-                fetch("../api/auth/logout.php", { method: "POST" })
+                fetch("../api/auth/logout.php", { method: "POST", credentials: 'same-origin' })
                     .then(() => {
                         sessionStorage.clear();
                         window.location.href = "../public/login.html";
