@@ -839,7 +839,11 @@ color: #5E6A63;
 padding: 10px 0 60px;
 }
 .cta-card {
-background: linear-gradient(135deg, #0F260B 0%, #143d12 55%, #1f5b1d 100%);
+background-color: #0b0f0b;
+background-image: 
+    radial-gradient(circle at 15% 0%, rgba(255, 94, 58, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 85% 100%, rgba(202, 237, 149, 0.06) 0%, transparent 35%),
+    linear-gradient(135deg, #1a2219 0%, #050705 100%);
 color: #FFFFFF;
 border-radius: 0;
 padding: 28px;
@@ -969,10 +973,10 @@ HEADER START
 </a>
 </div>
 <div class="search-wrap">
-<div class="search-bar">
-<input type="text" placeholder="Search">
-<span class="search-icon material-icons-outlined">search</span>
-</div>
+<form class="search-bar" action="search.php" method="get">
+<input type="text" name="q" placeholder="Search">
+<button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+</form>
 </div>
 <div class="actions">
 <span class="action-btn" id="loginBtn" style="cursor: pointer;">
@@ -985,10 +989,7 @@ HEADER START
 </a>
 <a class="icon-with-badge" href="../customer/wishlist.html" aria-label="Wishlist">
 <span class="material-icons-outlined">favorite_border</span>
-<span class="badge">5</span>
-</a>
-<a class="icon-with-badge moon" href="#" aria-label="Dark mode">
-<span class="material-icons-outlined" style="font-size: 20px;">dark_mode</span>
+<span class="badge" id="wishlistCount">0</span>
 </a>
 </div>
 </div>
@@ -1010,23 +1011,23 @@ Categories
 <div class="dropdown-section">
 <div class="dropdown-section-title">Browse by Shop</div>
 <div class="dropdown-divider"></div>
-<a href="butcher.html" class="dropdown-item">Butcher</a>
-<a href="greengrocer.html" class="dropdown-item">Greengrocer</a>
-<a href="fishmonger.html" class="dropdown-item">Fishmonger</a>
-<a href="bakery.html" class="dropdown-item">Bakery</a>
-<a href="delicat.html" class="dropdown-item">Delicatessen</a>
+<a href="category.php?shop=butcher" class="dropdown-item">Butcher</a>
+<a href="category.php?shop=greengrocer" class="dropdown-item">Greengrocer</a>
+<a href="category.php?shop=fishmonger" class="dropdown-item">Fishmonger</a>
+<a href="category.php?shop=bakery" class="dropdown-item">Bakery</a>
+<a href="category.php?shop=delicatessen" class="dropdown-item">Delicatessen</a>
 </div>
 <div class="dropdown-section">
 <div class="dropdown-section-title">Browse by Type</div>
 <div class="dropdown-divider"></div>
-<a href="meat-poultry.html" class="dropdown-item">Meat & Poultry</a>
-<a href="fish-seafood.html" class="dropdown-item">Fish & Seafood</a>
-<a href="fruits-veg.html" class="dropdown-item">Fruits & Veg</a>
-<a href="bakery-items.html" class="dropdown-item">Bakery Items</a>
-<a href="deli-foods.html" class="dropdown-item">Deli Foods</a>
+<a href="category.php?shop=butcher" class="dropdown-item">Meat & Poultry</a>
+<a href="category.php?shop=fishmonger" class="dropdown-item">Fish & Seafood</a>
+<a href="category.php?shop=greengrocer" class="dropdown-item">Fruits & Veg</a>
+<a href="category.php?shop=bakery" class="dropdown-item">Bakery Items</a>
+<a href="category.php?shop=delicatessen" class="dropdown-item">Deli Foods</a>
 </div>
 <div class="dropdown-divider"></div>
-<a href="all-categories.html" class="dropdown-item all-categories">All Categories</a>
+<a href="category.php" class="dropdown-item all-categories">All Categories</a>
 </div>
 </div>
 <span class="nav-separator"></span>
@@ -1217,11 +1218,11 @@ FOOTER
     </div>
     <div class="footer-col">
         <h4>Shop</h4>
-        <a href="category.html?type=greengrocer">Green Grocer</a>
-        <a href="category.html?type=butcher">The Butcher</a>
-        <a href="category.html?type=bakery">Bakery</a>
-        <a href="category.html?type=delicatessen">Delicatessen</a>
-        <a href="category.html?type=dairy">Dairy & Eggs</a>
+        <a href="category.php?shop=greengrocer">Green Grocer</a>
+        <a href="category.php?shop=butcher">The Butcher</a>
+        <a href="category.php?shop=bakery">Bakery</a>
+        <a href="category.php?shop=delicatessen">Delicatessen</a>
+        <a href="category.php">All Products</a>
     </div>
     <div class="footer-col">
         <h4>Company</h4>

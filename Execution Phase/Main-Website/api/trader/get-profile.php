@@ -3,9 +3,9 @@
  * Get Trader Profile API
  * GET /api/trader/get-profile.php?user_id=N
  *
- * SHOP columns: shop_id, name, description, location, contact_number, user_id
- * NO: logo_url, shop_type, collection_wed/thu/fri
- * HUDDER_USER: no notify_* columns
+ * SHOP columns: shop_id, name, description, location, contact_number,
+ *               collection_wed/thu/fri, shop_type, shop_logo, mimetype, filename
+ * HUDDER_USER: notify_new_order, notify_daily_report, notify_weekly_finance, notify_monthly_report
  */
 require_once '../../config/database.php';
 header('Content-Type: application/json');
@@ -22,7 +22,14 @@ $sql = "
            u.notify_new_order, u.notify_daily_report, u.notify_weekly_finance, u.notify_monthly_report,
            s.shop_id, s.name AS shop_name, s.description AS shop_description,
            s.location, s.contact_number, s.shop_logo, s.mimetype, s.filename,
-           s.shop_type, s.collection_wed, s.collection_thu, s.collection_fri,
+           NVL(s.shop_type, 'Butcher')                        AS shop_type,
+           NVL(s.collection_wed, 1)                           AS collection_wed,
+           NVL(s.collection_thu, 1)                           AS collection_thu,
+           NVL(s.collection_fri, 1)                           AS collection_fri,
+           NVL(u.notify_new_order,     1)                     AS notify_new_order,
+           NVL(u.notify_daily_report,  0)                     AS notify_daily_report,
+           NVL(u.notify_weekly_finance,1)                     AS notify_weekly_finance,
+           NVL(u.notify_monthly_report,1)                     AS notify_monthly_report,
            t.status AS trader_status
     FROM HUDDER_USER u
     JOIN TRADER t ON t.user_id = u.user_id

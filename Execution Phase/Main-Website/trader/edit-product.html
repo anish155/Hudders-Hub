@@ -584,9 +584,6 @@
                 color: var(--text-medium-gray);
                 margin-top: 4px;
             }
-            #newImageInput {
-                display: none;
-            }
             .image-preview {
                 display: flex;
                 flex-wrap: wrap;
@@ -1345,28 +1342,27 @@
                         <!-- New images -->
                         <div class="form-group full-width">
                             <span class="images-heading"
-                                >Add New Images
+                                >Add New Image URLs
                                 <span style="font-weight: 400; font-size: 12px"
                                     >(up to 5 total)</span
                                 ></span
                             >
-                            <div class="drop-area" id="dropArea">
-                                <span class="material-icons-outlined"
-                                    >add_photo_alternate</span
-                                >
-                                <div class="drop-text">
-                                    Click or drag images here to add
-                                </div>
-                                <div class="drop-hint">
-                                    JPG, PNG — up to 5 images total
-                                </div>
+                            <div id="newImageUrlInputs">
+                                <input
+                                    type="url"
+                                    class="form-input new-image-url-input"
+                                    placeholder="https://example.com/image1.jpg"
+                                />
                             </div>
-                            <input
-                                type="file"
-                                id="newImageInput"
-                                multiple
-                                accept="image/jpeg,image/png,image/jpg"
-                            />
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="addNewImageUrlBtn"
+                                style="margin-top: 12px; font-size: 13px; padding: 8px 16px;"
+                            >
+                                <span class="material-icons-outlined" style="font-size: 18px;">add</span>
+                                Add another URL
+                            </button>
                             <div
                                 id="newImagePreview"
                                 class="image-preview"
@@ -1417,10 +1413,12 @@
             function handleLogout() {
                 fetch("../api/auth/logout.php", { method: "POST", credentials: 'same-origin' })
                     .then(() => {
+                        localStorage.removeItem('hh_remember');
                         sessionStorage.clear();
                         window.location.href = "../public/login.html";
                     })
                     .catch(() => {
+                        localStorage.removeItem('hh_remember');
                         sessionStorage.clear();
                         window.location.href = "../public/login.html";
                     });
@@ -1524,7 +1522,6 @@
             // ── Load product ─────────────────────────────────────────────────────────────
             let productData = {};
             let existingImages = [];
-            let newImageFiles = [];
             let imagesToDelete = [];
 
             function showToast(msg, type = "success") {
@@ -1656,16 +1653,15 @@
                     wrapper.className = "preview-wrapper";
                     wrapper.dataset.id = img.image_id;
                     const imgEl = document.createElement("img");
-                    imgEl.src =
-                        "data:" +
-                        (img.mime_type || "image/jpeg") +
-                        ";base64," +
-                        img.image_data;
+                    imgEl.src = img.image_url || "";
                     imgEl.className = "preview-img";
+                    imgEl.onerror = () => {
+                        imgEl.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%23f2f4f1' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%235e6a63' font-size='12'%3EInvalid%3C/text%3E%3C/svg%3E";
+                    };
                     const rmBtn = document.createElement("button");
                     rmBtn.type = "button";
                     rmBtn.className = "remove-img-btn";
-                    rmBtn.innerHTML = "×";
+                    rmBtn.innerHTML = "x";
                     rmBtn.title = "Remove image";
                     rmBtn.addEventListener("click", () => {
                         imagesToDelete.push(img.image_id);
@@ -1677,73 +1673,63 @@
                 });
             }
 
-            // ── New image drag & drop ────────────────────────────────────────────────────
-            const dropArea = document.getElementById("dropArea");
-            const newImageInput = document.getElementById("newImageInput");
+            // ── New image URL inputs ────────────────────────────────────────────────────
+            const newImageUrlInputs = document.getElementById("newImageUrlInputs");
+            const addNewImageUrlBtn = document.getElementById("addNewImageUrlBtn");
             const newPreviewBox = document.getElementById("newImagePreview");
+            let newUrlInputCount = 1;
 
-            dropArea.addEventListener("click", () => newImageInput.click());
-
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.style.borderColor = "var(--primary-green)";
-                dropArea.style.background = "var(--primary-green-light)";
-            });
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.style.borderColor = "";
-                dropArea.style.background = "";
-            });
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.style.borderColor = "";
-                dropArea.style.background = "";
-                collectFiles(Array.from(e.dataTransfer.files));
-            });
-
-            newImageInput.addEventListener("change", (e) =>
-                collectFiles(Array.from(e.target.files)),
-            );
-
-            function collectFiles(files) {
-                // total = remaining existing + queued new + incoming files
-                const totalImages =
-                    existingImages.length + newImageFiles.length + files.length;
-                if (totalImages > 5) {
-                    showToast(
-                        "Maximum 5 images total across current and new images",
-                        "error",
-                    );
+            addNewImageUrlBtn.addEventListener("click", () => {
+                const totalImages = existingImages.length - imagesToDelete.length + newUrlInputCount;
+                if (totalImages >= 5) {
+                    showToast("Maximum 5 images total", "error");
                     return;
                 }
-                files.forEach((file) => {
-                    if (!file.type.startsWith("image/")) return;
-                    newImageFiles.push(file);
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
+                const input = document.createElement("input");
+                input.type = "url";
+                input.className = "form-input new-image-url-input";
+                input.placeholder = "https://example.com/image" + (newUrlInputCount + 1) + ".jpg";
+                input.style.marginTop = "8px";
+                newImageUrlInputs.appendChild(input);
+                newUrlInputCount++;
+                if (totalImages + 1 >= 5) {
+                    addNewImageUrlBtn.style.display = "none";
+                }
+            });
+
+            newImageUrlInputs.addEventListener("input", (e) => {
+                if (e.target.classList.contains("new-image-url-input")) {
+                    const url = e.target.value.trim();
+                    const idx = Array.from(newImageUrlInputs.querySelectorAll(".new-image-url-input")).indexOf(e.target);
+                    const existingPreview = newPreviewBox.querySelector(`.preview-wrapper[data-input-index="${idx}"]`);
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+                    if (url) {
                         const wrapper = document.createElement("div");
                         wrapper.className = "preview-wrapper";
+                        wrapper.dataset.inputIndex = idx;
                         const imgEl = document.createElement("img");
-                        imgEl.src = ev.target.result;
+                        imgEl.src = url;
                         imgEl.className = "preview-img";
+                        imgEl.onerror = () => {
+                            imgEl.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%23f2f4f1' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%235e6a63' font-size='12'%3EInvalid%3C/text%3E%3C/svg%3E";
+                        };
                         const rmBtn = document.createElement("button");
                         rmBtn.type = "button";
                         rmBtn.className = "remove-img-btn";
-                        rmBtn.innerHTML = "×";
+                        rmBtn.innerHTML = "x";
                         rmBtn.title = "Remove";
                         rmBtn.addEventListener("click", () => {
-                            newImageFiles = newImageFiles.filter(
-                                (f) => f !== file,
-                            );
+                            e.target.value = "";
                             wrapper.remove();
                         });
                         wrapper.appendChild(imgEl);
                         wrapper.appendChild(rmBtn);
                         newPreviewBox.appendChild(wrapper);
-                    };
-                    reader.readAsDataURL(file);
-                });
-                newImageInput.value = "";
-            }
+                    }
+                }
+            });
 
             // ── Form submit ──────────────────────────────────────────────────────────────
             const form = document.getElementById("editProductForm");
@@ -1770,6 +1756,16 @@
                 if (stockEl.value === "" || +stockEl.value < 0) {
                     stockEl.classList.add("error");
                     stockEl.closest(".form-group").classList.add("has-error");
+                    valid = false;
+                }
+
+                const minOrderVal = parseInt(document.getElementById("minOrder").value) || 1;
+                const maxOrderVal = parseInt(document.getElementById("maxOrder").value) || 50;
+                if (minOrderVal > maxOrderVal) {
+                    document.getElementById("minOrder").classList.add("error");
+                    document.getElementById("minOrder").closest(".form-group").classList.add("has-error");
+                    document.getElementById("maxOrder").classList.add("error");
+                    document.getElementById("maxOrder").closest(".form-group").classList.add("has-error");
                     valid = false;
                 }
 
@@ -1860,7 +1856,12 @@
                 }
                 if (imagesToDelete.length > 0)
                     fd.append("delete_images", JSON.stringify(imagesToDelete));
-                newImageFiles.forEach((f) => fd.append("new_images[]", f));
+                const newImageUrls = [];
+                document.querySelectorAll(".new-image-url-input").forEach((input) => {
+                    const url = input.value.trim();
+                    if (url) newImageUrls.push(url);
+                });
+                fd.append("new_image_urls", newImageUrls.join(","));
 
                 try {
                     const res = await fetch(

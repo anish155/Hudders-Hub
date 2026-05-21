@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -93,7 +93,10 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .forgot-link { font-size: 14px; font-weight: 600; color: var(--primary-orange); }
 
 .login-btn { width: 100%; height: 48px; background: var(--primary-green); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-.api-error-banner { display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 12px 16px; font-size: 14px; align-items: center; gap: 8px; margin-bottom: 15px; }
+.api-error-banner { display: none; background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; padding: 12px 16px; font-size: 14px; font-weight: 600; align-items: center; gap: 8px; margin-bottom: 15px; }
+.api-error-banner .material-icons-outlined { color: #DC2626; font-size: 20px; }
+.api-error-banner.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+.api-error-banner.success .material-icons-outlined { color: #166534; }
 .pending-banner { display: none; background: #FEF3C7; border: 2px solid #F59E0B; color: #92400E; padding: 20px; font-size: 15px; align-items: flex-start; gap: 12px; margin-bottom: 15px; border-radius: 8px; }
 .visible { display: flex !important; }
 .form-error-msg { font-size: 13px; color: #EF4444; margin-top: 6px; display: none; }
@@ -121,7 +124,7 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
             <span class="brand-text">HuddersHub</span>
         </a>
     </div>
-    <div style="flex:1; margin: 0 40px;"><input type="text" placeholder="Search" style="width:100%; padding:8px; border:1px solid #ddd;"></div>
+    <div style="flex:1; margin: 0 40px;"></div>
     <div class="actions"><a href="signup.html" class="action-btn">Register</a></div>
 </div>
 </div>
@@ -196,7 +199,7 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 </div>
 <div class="page-wrap footer-grid">
     <div class="footer-brand"><span class="brand-name">HuddersHub</span><p>Local food, trusted traders.</p></div>
-    <div class="footer-col"><h4>Shop</h4><a href="category.html?type=greengrocer">Greengrocer</a><a href="category.html?type=butcher">Butcher</a><a href="category.html?type=bakery">Bakery</a></div>
+    <div class="footer-col"><h4>Shop</h4><a href="category.php?shop=greengrocer">Greengrocer</a><a href="category.php?shop=butcher">Butcher</a><a href="category.php?shop=bakery">Bakery</a></div>
     <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="register-trader.html">Become a Trader</a><a href="faq.html">Help Center</a></div>
     <div class="footer-col"><h4>Contact</h4><p>Huddersfield, UK</p><p>support@huddershub.test</p></div>
 </div>
@@ -253,6 +256,7 @@ let currentRole = 'customer';
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
 const pwInput = document.getElementById('password');
+const rememberCheckbox = document.getElementById('remember');
 const loginSubmitBtn = document.getElementById('loginSubmitBtn');
 
 function switchRole(role) {
@@ -268,7 +272,37 @@ function resetUI() {
     document.getElementById('pendingBanner').classList.remove('visible');
     document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
     document.querySelectorAll('.form-error-msg').forEach(m => m.classList.remove('visible'));
+    document.querySelector('#apiBanner .material-icons-outlined').textContent = 'error_outline';
+    document.getElementById('apiBanner').classList.remove('success');
 }
+
+// ── Remember Me: load saved credentials ──────────────────────────────────
+(function loadRemembered() {
+    try {
+        var saved = localStorage.getItem('hh_remember');
+        if (saved) {
+            var d = JSON.parse(saved);
+            if (d.email) emailInput.value = d.email;
+            if (d.password) pwInput.value = d.password;
+            if (d.role) switchRole(d.role);
+            if (d.remember) rememberCheckbox.checked = true;
+        }
+    } catch(e) { /* ignore */ }
+})();
+
+// ── Remember Me: save on checkbox change ─────────────────────────────────
+rememberCheckbox.addEventListener('change', function() {
+    if (this.checked && emailInput.value.trim() && pwInput.value) {
+        localStorage.setItem('hh_remember', JSON.stringify({
+            email: emailInput.value.trim(),
+            password: pwInput.value,
+            role: currentRole,
+            remember: true
+        }));
+    } else if (!this.checked) {
+        localStorage.removeItem('hh_remember');
+    }
+});
 
 document.getElementById('togglePw').addEventListener('click', () => {
     const isPass = pwInput.type === 'password';
@@ -294,6 +328,18 @@ loginForm.addEventListener('submit', function(e) {
     if (valid) {
         loginSubmitBtn.disabled = true;
         document.getElementById('loginBtnText').textContent = 'Connecting...';
+
+        // Save or clear remembered credentials
+        if (rememberCheckbox.checked) {
+            localStorage.setItem('hh_remember', JSON.stringify({
+                email: email,
+                password: password,
+                role: currentRole,
+                remember: true
+            }));
+        } else {
+            localStorage.removeItem('hh_remember');
+        }
 
         fetch('../api/auth/login.php', {
             method: 'POST',
@@ -328,16 +374,40 @@ loginForm.addEventListener('submit', function(e) {
                 } else {
                     document.getElementById('apiBanner').classList.add('visible');
                     document.getElementById('apiBannerMsg').textContent = data.message;
+                    if (data.password_error) {
+                        pwInput.classList.add('error');
+                        document.getElementById('passError').textContent = data.message;
+                        document.getElementById('passError').classList.add('visible');
+                    }
                 }
             }
         })
         .catch(err => {
-            alert('Server error.');
             loginSubmitBtn.disabled = false;
             document.getElementById('loginBtnText').textContent = 'Log in';
+            document.getElementById('apiBanner').classList.add('visible');
+            document.getElementById('apiBannerMsg').textContent = 'Server error. Please try again.';
         });
     }
 });
+
+// Show registration-success banner if redirected from signup
+(function(){
+    try {
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('registered') === '1') {
+            var name = urlParams.get('name') || '';
+            var banner = document.getElementById('apiBanner');
+            var msg   = document.getElementById('apiBannerMsg');
+            banner.classList.remove('visible');
+            banner.classList.add('success');
+            banner.querySelector('.material-icons-outlined').textContent = 'check_circle';
+            msg.innerHTML = 'Account created successfully for <strong>' + name.replace(/[<>&'"]/g,'') + '</strong>. Please check your email to verify your account before logging in.';
+            banner.classList.add('visible');
+        }
+    } catch(e) { /* ignore */ }
+})();
+
 </script>
 </body>
 </html>

@@ -180,6 +180,7 @@ function updateWeekDisplay() {
 }
 
 function handleLogout() {
+    localStorage.removeItem('hh_remember');
     sessionStorage.clear();
     window.location.href = '../public/login.html';
 }

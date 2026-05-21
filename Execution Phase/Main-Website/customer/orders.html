@@ -27,6 +27,27 @@
                 margin: 0;
                 padding: 0;
             }
+            /* Professional Modal */
+            .prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+            .prof-modal-overlay.show{display:flex;opacity:1}
+            .prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+            .prof-modal-overlay.show .prof-modal{transform:scale(1)}
+            .prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+            .prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+            .prof-modal-icon.error{background:#ffebee;color:#c62828}
+            .prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+            .prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+            .prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+            .prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+            .prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+            .prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+            .prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+            .prof-modal-btn.primary{background:#0f260b;color:#fff}
+            .prof-modal-btn.primary:hover{background:#1c3c17}
+            .prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+            .prof-modal-btn.secondary:hover{background:#e0e0e0}
+            .prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+            .prof-modal-close:hover{color:#333}
             body {
                 font-family: "Plus Jakarta Sans", sans-serif;
                 background: var(--bg);
@@ -278,6 +299,10 @@
                     "
                     >Account</a
                 >
+                <a href="../public/cart.html" style="text-decoration:none;color:#0f260b;font-weight:600;position:relative;display:inline-flex;align-items:center;">
+                    <span class="material-icons-outlined" style="font-size:22px;">shopping_cart</span>
+                    <span id="cartCount" style="position:absolute;top:-6px;right:-8px;background:#0f260b;color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:999px;">0</span>
+                </a>
             </div>
         </header>
 
@@ -480,11 +505,15 @@
                         order.STATUS === "Pending"
                             ? `<button onclick="cancelOrderFromList(${order.ORDER_ID})" style="padding:6px 12px;background:#FEE2E2;color:#991B1B;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px;">Cancel</button>`
                             : "";
+                    const reorderBtn = (order.STATUS === "Completed" || order.STATUS === "Ready" || order.STATUS === "Delivered")
+                            ? `<button onclick="reorderFromList(${order.ORDER_ID})" style="padding:6px 12px;background:#DEF7EC;color:#03543F;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px;">Reorder</button>`
+                            : "";
                     html +=
                         '<td data-label="Action"><a class="link" href="order-detail.html?order_id=' +
                         order.ORDER_ID +
                         '">View Details</a>' +
                         cancelBtn +
+                        reorderBtn +
                         "</td>";
                     html += "</tr>";
                 });
@@ -503,33 +532,152 @@
             });
 
             async function cancelOrderFromList(orderId) {
-                if (
-                    !confirm(
-                        "Cancel order #" + orderId + "? This cannot be undone.",
-                    )
-                )
-                    return;
+                showConfirm("Are you sure you want to cancel order #" + orderId + "? A full refund will be issued and you will receive a confirmation email.", function(confirmed){
+                    if(!confirmed) return;
+                    (async () => {
+                        try {
+                            const res = await fetch("../api/orders/cancel-order.php", {
+                                method: "POST",
+                                credentials: "same-origin",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ order_id: orderId }),
+                            });
+                            const text = await res.text();
+                            let data;
+                            try {
+                                data = JSON.parse(text);
+                            } catch (parseErr) {
+                                showModal("Server returned an invalid response. Please try again.", "error");
+                                console.error("Parse error:", text);
+                                return;
+                            }
+                            if (data.success) {
+                                showModal("Order #" + orderId + " has been cancelled. A confirmation email has been sent to your inbox.", "success");
+                                loadOrders();
+                            } else {
+                                showModal(data.error || "Could not cancel order.", "error");
+                            }
+                        } catch (e) {
+                            showModal("Network error: " + e.message, "error");
+                            console.error("Fetch error:", e);
+                        }
+                    })();
+                }, "Cancel Order");
+            }
+
+            async function reorderFromList(orderId) {
                 try {
-                    const res = await fetch("../api/orders/cancel-order.php", {
+                    const res = await fetch("../api/orders/reorder.php", {
                         method: "POST",
-                        credentials: "same-origin",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ order_id: orderId }),
+                        body: JSON.stringify({ order_id: orderId })
                     });
-                    const data = JSON.parse(await res.text());
+                    const text = await res.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseErr) {
+                        showModal("Server returned an invalid response.", "error");
+                        console.error("Parse error:", text);
+                        return;
+                    }
                     if (data.success) {
-                        alert("Order #" + orderId + " has been cancelled.");
-                        loadOrders();
+                        const cartCountEl = document.getElementById('cartCount');
+                        if (cartCountEl && data.cart_count !== undefined) {
+                            cartCountEl.textContent = data.cart_count;
+                        }
+                        showModal(data.count + " item(s) have been added to your cart.", "success", "Reorder Successful", [
+                            { label: "View Cart", primary: true, action: () => window.location.href = "../public/cart.html" },
+                            { label: "Continue Shopping", action: () => { closeProfModal(); } }
+                        ]);
                     } else {
-                        alert(data.error || "Could not cancel order.");
+                        showModal(data.error || "Could not reorder.", "error");
                     }
                 } catch (e) {
-                    alert("Network error.");
+                    showModal("Network error: " + e.message, "error");
+                    console.error("Fetch error:", e);
                 }
             }
 
             loadProfileIdentity();
             loadOrders();
+            loadCartCount();
+
+            async function loadCartCount() {
+                try {
+                    const userId = sessionStorage.getItem('user_id');
+                    if (!userId) return;
+                    const res = await fetch('../api/customer/get-cart-count.php?user_id=' + userId, { credentials: 'same-origin' });
+                    const data = await res.json();
+                    if (data.success && data.count !== undefined) {
+                        const el = document.getElementById('cartCount');
+                        if (el) el.textContent = data.count;
+                    }
+                } catch (err) {
+                    console.error('Error loading cart count:', err);
+                }
+            }
+        </script>
+        <!-- Professional Modal -->
+        <div class="prof-modal-overlay" id="profModal">
+            <div class="prof-modal" style="position:relative;">
+                <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+                <div class="prof-modal-icon" id="profModalIcon"></div>
+                <div class="prof-modal-title" id="profModalTitle"></div>
+                <div class="prof-modal-message" id="profModalMessage"></div>
+                <div class="prof-modal-buttons" id="profModalButtons"></div>
+            </div>
+        </div>
+        <script>
+        function showModal(msg, type = "info", title = "", buttons = []) {
+            const overlay = document.getElementById("profModal");
+            const icon = document.getElementById("profModalIcon");
+            const titleEl = document.getElementById("profModalTitle");
+            const msgEl = document.getElementById("profModalMessage");
+            const btns = document.getElementById("profModalButtons");
+            const icons = { success: "check_circle", error: "error", warning: "warning", info: "info", confirm: "help" };
+            const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+            icon.className = "prof-modal-icon " + type;
+            icon.innerHTML = '<span class="material-icons-outlined" style="font-size:32px;">' + (icons[type] || "info") + '</span>';
+            titleEl.textContent = title || titles[type] || "";
+            msgEl.textContent = msg;
+
+            if (buttons.length > 0) {
+                btns.innerHTML = buttons.map((btn, i) => {
+                    const cls = btn.primary ? 'prof-modal-btn primary' : 'prof-modal-btn secondary';
+                    return '<button class="' + cls + '" data-idx="' + i + '">' + btn.label + '</button>';
+                }).join('');
+                btns.querySelectorAll('button').forEach((el, i) => {
+                    el.addEventListener('click', () => {
+                        if (buttons[i].action) buttons[i].action();
+                    });
+                });
+            } else {
+                btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+            }
+            overlay.classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+        function showConfirm(msg, onConfirm, title = "Confirm") {
+            const overlay = document.getElementById("profModal");
+            const icon = document.getElementById("profModalIcon");
+            const titleEl = document.getElementById("profModalTitle");
+            const msgEl = document.getElementById("profModalMessage");
+            const btns = document.getElementById("profModalButtons");
+            icon.className = "prof-modal-icon confirm";
+            icon.innerHTML = '<span class="material-icons-outlined" style="font-size:32px;">help</span>';
+            titleEl.textContent = title;
+            msgEl.textContent = msg;
+            btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+            overlay.classList.add("show");
+            document.body.style.overflow = "hidden";
+            window._profConfirmCallback = onConfirm;
+        }
+        function closeProfModal(confirmed = false) {
+            document.getElementById("profModal").classList.remove("show");
+            document.body.style.overflow = "";
+            if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+        }
         </script>
     </body>
 </html>

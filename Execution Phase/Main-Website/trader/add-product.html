@@ -1246,28 +1246,28 @@
                             </div>
                         </div>
 
-                        <!-- Product images (drag & drop, up to 5) -->
+                        <!-- Product images (URL inputs, up to 5) -->
                         <div class="form-group full-width image-upload-section">
                             <label class="image-upload-label"
-                                >Product Images (up to 5)</label
+                                >Product Images (up to 5 URLs)</label
                             >
-                            <div class="drop-area" id="dropArea">
-                                <span class="material-icons-outlined"
-                                    >add_photo_alternate</span
-                                >
-                                <div class="drop-text">
-                                    Click or drag images here
-                                </div>
-                                <div class="drop-hint">
-                                    Supports: JPG, PNG (max 5 images)
-                                </div>
+                            <div id="imageUrlInputs">
+                                <input
+                                    type="url"
+                                    class="form-input image-url-input"
+                                    placeholder="https://example.com/image1.jpg"
+                                    data-index="0"
+                                />
                             </div>
-                            <input
-                                type="file"
-                                id="imageInput"
-                                multiple
-                                accept="image/jpeg,image/png,image/jpg"
-                            />
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                id="addImageUrlBtn"
+                                style="margin-top: 12px; font-size: 13px; padding: 8px 16px;"
+                            >
+                                <span class="material-icons-outlined" style="font-size: 18px;">add</span>
+                                Add another URL
+                            </button>
                             <div id="imagePreview" class="image-preview"></div>
                         </div>
                     </div>
@@ -1319,10 +1319,12 @@
             function handleLogout() {
                 fetch("../api/auth/logout.php", { method: "POST", credentials: 'same-origin' })
                     .then(() => {
+                        localStorage.removeItem('hh_remember');
                         sessionStorage.clear();
                         window.location.href = "../public/login.html";
                     })
                     .catch(() => {
+                        localStorage.removeItem('hh_remember');
                         sessionStorage.clear();
                         window.location.href = "../public/login.html";
                     });
@@ -1434,68 +1436,62 @@
 
             loadTraderInfo();
 
-            // ── Image upload (drag-and-drop, up to 5) ───────────────────────────────────
-            let selectedFiles = [];
-            const dropArea = document.getElementById("dropArea");
-            const imageInput = document.getElementById("imageInput");
+            // ── Image URL inputs (up to 5) ───────────────────────────────────
+            const imageUrlInputs = document.getElementById("imageUrlInputs");
+            const addImageUrlBtn = document.getElementById("addImageUrlBtn");
             const previewBox = document.getElementById("imagePreview");
+            let urlInputCount = 1;
 
-            dropArea.addEventListener("click", () => imageInput.click());
-
-            dropArea.addEventListener("dragover", (e) => {
-                e.preventDefault();
-                dropArea.style.borderColor = "var(--primary-green)";
-                dropArea.style.background = "var(--primary-green-light)";
-            });
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.style.borderColor = "";
-                dropArea.style.background = "";
-            });
-            dropArea.addEventListener("drop", (e) => {
-                e.preventDefault();
-                dropArea.style.borderColor = "";
-                dropArea.style.background = "";
-                addFiles(Array.from(e.dataTransfer.files));
-            });
-
-            imageInput.addEventListener("change", (e) =>
-                addFiles(Array.from(e.target.files)),
-            );
-
-            function addFiles(files) {
-                const total = selectedFiles.length + files.length;
-                if (total > 5) {
+            addImageUrlBtn.addEventListener("click", () => {
+                if (urlInputCount >= 5) {
                     showToast("Maximum 5 images allowed", "error");
                     return;
                 }
-                files.forEach((file) => {
-                    if (!file.type.startsWith("image/")) return;
-                    selectedFiles.push(file);
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
+                const input = document.createElement("input");
+                input.type = "url";
+                input.className = "form-input image-url-input";
+                input.placeholder = "https://example.com/image" + (urlInputCount + 1) + ".jpg";
+                input.dataset.index = urlInputCount;
+                input.style.marginTop = "8px";
+                imageUrlInputs.appendChild(input);
+                urlInputCount++;
+                if (urlInputCount >= 5) {
+                    addImageUrlBtn.style.display = "none";
+                }
+            });
+
+            imageUrlInputs.addEventListener("input", (e) => {
+                if (e.target.classList.contains("image-url-input")) {
+                    const url = e.target.value.trim();
+                    const existingPreview = previewBox.querySelector(`.preview-wrapper[data-input-index="${e.target.dataset.index}"]`);
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+                    if (url) {
                         const wrapper = document.createElement("div");
                         wrapper.className = "preview-wrapper";
+                        wrapper.dataset.inputIndex = e.target.dataset.index;
                         const img = document.createElement("img");
-                        img.src = ev.target.result;
+                        img.src = url;
                         img.className = "preview-img";
+                        img.onerror = () => {
+                            img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect fill='%23f2f4f1' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%235e6a63' font-size='12'%3EInvalid%3C/text%3E%3C/svg%3E";
+                        };
                         const removeBtn = document.createElement("button");
                         removeBtn.type = "button";
                         removeBtn.className = "remove-img-btn";
-                        removeBtn.innerHTML = "×";
+                        removeBtn.innerHTML = "x";
                         removeBtn.setAttribute("aria-label", "Remove image");
                         removeBtn.addEventListener("click", () => {
-                            const idx = selectedFiles.indexOf(file);
-                            if (idx > -1) selectedFiles.splice(idx, 1);
+                            e.target.value = "";
                             wrapper.remove();
                         });
                         wrapper.appendChild(img);
                         wrapper.appendChild(removeBtn);
                         previewBox.appendChild(wrapper);
-                    };
-                    reader.readAsDataURL(file);
-                });
-                imageInput.value = "";
-            }
+                    }
+                }
+            });
 
             // ── Toast helpers ────────────────────────────────────────────────────────────
             function showToast(msg, type = "success") {
@@ -1528,12 +1524,18 @@
                 if (errEl && msg) errEl.textContent = msg;
             }
 
-            // Live clear on input
+            // Live clear per-field on input
             document
                 .querySelectorAll(".form-input, .form-textarea, .form-select")
                 .forEach((el) => {
-                    el.addEventListener("input", clearErrors);
-                    el.addEventListener("change", clearErrors);
+                    el.addEventListener("input", () => {
+                        el.classList.remove("error");
+                        el.closest(".form-group")?.classList.remove("has-error");
+                    });
+                    el.addEventListener("change", () => {
+                        el.classList.remove("error");
+                        el.closest(".form-group")?.classList.remove("has-error");
+                    });
                 });
 
             // ── Form submit ─────────────────────────────────────────────────────────────
@@ -1582,6 +1584,20 @@
                         .getElementById("stock")
                         .closest(".form-group")
                         .classList.add("has-error");
+                    valid = false;
+                }
+
+                const minOrderVal = parseInt(document.getElementById("minOrder").value) || 1;
+                const maxOrderVal = parseInt(document.getElementById("maxOrder").value) || 50;
+                if (minOrderVal > maxOrderVal) {
+                    markError(
+                        document.getElementById("minOrder"),
+                        "Min order cannot be higher than max order",
+                    );
+                    markError(
+                        document.getElementById("maxOrder"),
+                        "Max order cannot be lower than min order",
+                    );
                     valid = false;
                 }
 
@@ -1655,7 +1671,12 @@
                 fd.append("category", catVal);
                 fd.append("allergen_info", allergenInfo);
                 fd.append("dietary_tags", dietaryTags.join(","));
-                selectedFiles.forEach((file) => fd.append("images[]", file));
+                const imageUrls = [];
+                document.querySelectorAll(".image-url-input").forEach((input) => {
+                    const url = input.value.trim();
+                    if (url) imageUrls.push(url);
+                });
+                fd.append("image_urls", imageUrls.join(","));
 
                 try {
                     const res = await fetch("../api/trader/add-product.php", {

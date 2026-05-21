@@ -16,9 +16,7 @@ $sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock,
                 p.min_order, p.max_order, p.allergen_info, p.dietary_tags,
                 p.unit, p.status,
                 s.name AS shop_name, s.shop_type,
-                pi.mime_type   AS image_mimetype,
-                pi.file_name   AS image_filename,
-                pi.display_order,
+                pi.image_url,
                 c.category_name,
                 NVL(d.discount_percent, 0) AS discount_percent
          FROM PRODUCT p
@@ -31,9 +29,9 @@ $sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock,
              WHERE valid_until >= TRUNC(SYSDATE)
              GROUP BY product_id
          ) d ON d.product_id = p.product_id
-         WHERE p.status = 'Active'
-         ORDER BY p.product_id DESC
-         FETCH FIRST :limit ROWS ONLY";
+          WHERE p.status = 'Active'
+          ORDER BY DBMS_RANDOM.VALUE
+          FETCH FIRST :limit ROWS ONLY";
 
 $stmt = oci_parse($conn, $sql);
 oci_bind_by_name($stmt, ':limit', $limit);

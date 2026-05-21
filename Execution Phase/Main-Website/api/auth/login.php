@@ -23,29 +23,34 @@ try {
     $user = oci_fetch_assoc($stmt);
     oci_free_statement($stmt);
 
-    if (!$user) throw new Exception('Invalid email or password.');
+    if (!$user) {
+        // Check if the email exists at all vs wrong password
+        $chk = oci_parse($conn, "SELECT COUNT(*) AS CNT FROM HUDDER_USER WHERE UPPER(email) = UPPER(:em)");
+        oci_bind_by_name($chk, ':em', $email);
+        oci_execute($chk);
+        $row = oci_fetch_assoc($chk);
+        oci_free_statement($chk);
 
-    // Plain-text comparison (schema stores plain passwords)
-    $db_pass = $user['USER_PASSWORD'];
-    $valid   = ($password === $db_pass);
-    if (!$valid) throw new Exception('Invalid email or password.');
-
-    if (!empty($user['VERIFICATION_TOKEN']) && empty($user['VERIFIED_AT'])) {
-        echo json_encode([
-            'success' => false,
-            'email_not_verified' => true,
-            'message' => 'Please verify your email before logging in.'
-        ]);
-        exit;
+        if ($row && (int)$row['CNT'] > 0) {
+            throw new Exception('Incorrect password. Please try again.');
+        } else {
+            throw new Exception('Email not found. Please check your email or sign up.');
+        }
     }
 
     // Role check
     $db_role = strtolower($user['USER_ROLE']);
     if ($db_role !== $requested_role) {
-        throw new Exception('Account type mismatch. Please use the ' . ucfirst($db_role) . ' login.');
+        if ($db_role === 'trader' && $requested_role === 'customer') {
+            throw new Exception('This email is registered as a Trader. Please switch to the Trader login tab.');
+        } elseif ($db_role === 'customer' && $requested_role === 'trader') {
+            throw new Exception('This email is registered as a Customer. Please switch to the Customer login tab.');
+        } else {
+            throw new Exception('Account not found. Please use the ' . ucfirst($db_role) . ' login.');
+        }
     }
 
-    // Trader approval check
+    // Trader approval check (BEFORE password so pending traders get the right message)
     if ($requested_role === 'trader') {
         $ts   = oci_parse($conn, "SELECT status FROM TRADER WHERE user_id = :user_id");
         oci_bind_by_name($ts, ':user_id', $user['USER_ID']);
@@ -53,12 +58,32 @@ try {
         $trow = oci_fetch_assoc($ts);
         oci_free_statement($ts);
 
-        // If no TRADER row exists, allow login (needs admin to create TRADER entry)
         if ($trow && strtolower(trim($trow['STATUS'])) === 'pending') {
             echo json_encode(['success' => false, 'trader_pending' => true,
-                'message' => 'Your trader account is pending admin approval.']);
+                'message' => 'Your trader account is pending admin approval. Please wait for confirmation before logging in.']);
             exit;
         }
+    }
+
+    // Password verification (supports bcrypt and plain-text fallback)
+    $db_pass = $user['USER_PASSWORD'];
+    $valid   = password_verify($password, $db_pass);
+    if (!$valid) {
+        $valid = ($password === $db_pass);
+    }
+    if (!$valid) {
+        echo json_encode(['success' => false, 'message' => 'Incorrect password. Please try again.', 'password_error' => true]);
+        exit;
+    }
+
+    // Email verification check
+    if (!empty($user['VERIFICATION_TOKEN']) && empty($user['VERIFIED_AT'])) {
+        echo json_encode([
+            'success' => false,
+            'email_not_verified' => true,
+            'message' => 'Please verify your email before logging in.'
+        ]);
+        exit;
     }
 
     // Set session

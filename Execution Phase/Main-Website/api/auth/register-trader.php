@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once '../../config/database.php';
+require_once '../../config/mailer.php';
 
 $response = ['success' => false, 'message' => ''];
 
@@ -74,7 +75,7 @@ try {
     oci_free_statement($chk);
 
     if ($row && (int)$row['CNT'] > 0) {
-        $response['message'] = 'An account with this email already exists.';
+        $response['message'] = 'Email already registered';
         echo json_encode($response); exit;
     }
 
@@ -160,8 +161,40 @@ try {
     oci_free_statement($ss);
 
     oci_commit($conn);
-    $response['success'] = true;
-    $response['message'] = 'Registration successful! Your account is pending admin approval.';
+
+    // Send confirmation email to trader (PHPMailer)
+    $traderSent = false;
+    $traderEmailError = null;
+    $adminSent = false;
+    $adminEmailError = null;
+
+    try {
+        $traderSent = huddershub_send_trader_registration_received(
+            $email,
+            $firstname . ' ' . $lastname,
+            $shop_name,
+            $shop_type
+        );
+    } catch (Exception $e) {
+        $traderEmailError = $e->getMessage();
+    }
+
+    // Notify admin  (PHPMailer)
+    try {
+        $adminSent = huddershub_send_admin_new_trader_notification(
+            'admin@huddershub.test',
+            $firstname, $lastname,
+            $shop_name, $shop_type, $shop_location,
+            $email, $phone, $shop_description
+        );
+    } catch (Exception $e) {
+        $adminEmailError = $e->getMessage();
+    }
+
+    $response['success']      = true;
+    $response['trader_email'] = $traderSent;
+    $response['admin_email']  = $adminSent;
+    $response['message'] = 'Registration successful! Your account is pending admin approval. Please wait 1-2 days for confirmation.';
 
 } catch (Exception $e) {
     if (isset($conn)) oci_rollback($conn);

@@ -18,11 +18,9 @@ $conn = getDB();
 $sql = "SELECT o.order_id, o.user_id, p.amount
         FROM HUDDER_ORDER o
         JOIN PAYMENT p ON o.order_id = p.order_id
-        WHERE o.order_id = :oid AND o.user_id = :uid";
+        WHERE o.order_id = :oid";
 $stmt = oci_parse($conn, $sql);
-$uid = $_SESSION['user_id'];
 oci_bind_by_name($stmt, ':oid', $order_id);
-oci_bind_by_name($stmt, ':uid', $uid);
 oci_execute($stmt);
 $row = oci_fetch_assoc($stmt);
 oci_free_statement($stmt);

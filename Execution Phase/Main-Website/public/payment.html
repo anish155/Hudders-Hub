@@ -20,6 +20,8 @@
             href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
             rel="stylesheet"
         />
+        <!-- PayPal Sandbox SDK -->
+        <script src="https://www.paypal.com/sdk/js?client-id=AV177GLmNtAt_QsGuJnCP8UVzyEvuWSc7RKu0z-vMPX02i-SUQhtXIVsilDsE_pmLVvrRWk5I9F7LMzS&currency=GBP&intent=capture&disable-funding=card,credit,paylater"></script>
 
         <style>
             /* ========================================================================
@@ -58,6 +60,27 @@
                 margin: 0;
                 padding: 0;
             }
+            /* Professional Modal */
+            .prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+            .prof-modal-overlay.show{display:flex;opacity:1}
+            .prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+            .prof-modal-overlay.show .prof-modal{transform:scale(1)}
+            .prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+            .prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+            .prof-modal-icon.error{background:#ffebee;color:#c62828}
+            .prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+            .prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+            .prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+            .prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+            .prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+            .prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+            .prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+            .prof-modal-btn.primary{background:#0f260b;color:#fff}
+            .prof-modal-btn.primary:hover{background:#1c3c17}
+            .prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+            .prof-modal-btn.secondary:hover{background:#e0e0e0}
+            .prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+            .prof-modal-close:hover{color:#333}
             html {
                 scroll-behavior: smooth;
             }
@@ -189,28 +212,25 @@
                 display: flex;
                 align-items: center;
                 gap: 16px;
+                white-space: nowrap;
             }
-            .user-menu,
-            .action-btn {
+            .action-btn,
+            .user-menu {
                 display: inline-flex;
                 align-items: center;
                 gap: 6px;
                 font-size: 14px;
                 font-weight: 600;
+                color: var(--text-medium-gray);
+                text-decoration: none;
+                transition: var(--transition-smooth);
                 cursor: pointer;
                 padding: 8px 12px;
-                border-radius: var(--radius-sm);
             }
-            .user-menu {
-                color: var(--text-black);
-            }
-            .user-menu:hover,
-            .action-btn:hover {
-                background: var(--primary-green-light);
+            .action-btn:hover,
+            .user-menu:hover {
+                background: rgba(15, 38, 11, 0.06);
                 color: var(--primary-green);
-            }
-            .action-btn {
-                color: var(--text-medium-gray);
             }
             .icon-with-badge {
                 position: relative;
@@ -218,27 +238,93 @@
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                padding: 6px;
+                transition: var(--transition-smooth);
+                text-decoration: none;
                 color: var(--text-black);
+                padding: 6px;
+                background: transparent;
+                border: 1px solid transparent;
+                outline: none;
             }
             .icon-with-badge:hover {
-                background: var(--primary-green-light);
+                background: rgba(15, 38, 11, 0.06);
                 color: var(--primary-green);
             }
             .icon-with-badge .material-icons-outlined {
                 font-size: 24px;
+                color: inherit;
             }
             .badge {
                 position: absolute;
                 top: 0;
                 right: 0;
                 background: var(--badge-bg);
-                color: #fff;
+                color: var(--badge-text);
                 padding: 2px 5px;
                 font-size: 10px;
                 font-weight: 600;
+                line-height: 1;
                 min-width: 16px;
                 text-align: center;
+            }
+
+            /* USER DROPDOWN */
+            .user-menu-wrap {
+                position: relative;
+            }
+            .user-dropdown-wrap {
+                position: relative;
+            }
+            .user-dropdown {
+                position: absolute;
+                top: calc(100% + 8px);
+                right: 0;
+                background: #fff;
+                border: 1px solid var(--border-light);
+                box-shadow: var(--shadow-lg);
+                min-width: 180px;
+                z-index: 2000;
+                display: none;
+                flex-direction: column;
+                padding: 6px 0;
+            }
+            .user-dropdown.open {
+                display: flex;
+            }
+            .dropdown-user-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 16px;
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--text-dark-gray);
+                text-decoration: none;
+                background: none;
+                border: none;
+                width: 100%;
+                cursor: pointer;
+                font-family: "Plus Jakarta Sans", sans-serif;
+                transition: var(--transition-smooth);
+            }
+            .dropdown-user-item:hover {
+                background: var(--primary-green-light);
+                color: var(--primary-green);
+            }
+            .dropdown-user-item .material-icons-outlined {
+                font-size: 18px;
+            }
+            .dropdown-user-divider {
+                height: 1px;
+                background: var(--border-light);
+                margin: 4px 0;
+            }
+            .dropdown-logout {
+                color: #dc2626;
+            }
+            .dropdown-logout:hover {
+                background: #fef2f2;
+                color: #dc2626;
             }
             .nav-bar {
                 background: #f1f3f0;
@@ -269,198 +355,6 @@
             .breadcrumb-current {
                 color: var(--primary-green);
                 font-weight: 600;
-            }
-
-            /* ========================================================================
-   CART DRAWER
-   ======================================================================== */
-            .cart-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition-smooth);
-                z-index: 1200;
-            }
-            .cart-overlay.open {
-                opacity: 1;
-                visibility: visible;
-            }
-            .cart-drawer {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100vh;
-                width: min(420px, 92vw);
-                background: #fff;
-                box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
-                transform: translateX(100%);
-                transition: var(--transition-smooth);
-                z-index: 1300;
-                display: flex;
-                flex-direction: column;
-            }
-            .cart-drawer.open {
-                transform: translateX(0);
-            }
-            .cart-header {
-                padding: 20px 22px 16px;
-                border-bottom: 1px solid var(--border-light);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .cart-header h3 {
-                font-size: 20px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-close {
-                border: none;
-                background: transparent;
-                font-size: 20px;
-                color: var(--text-dark-gray);
-            }
-            .cart-body {
-                padding: 18px 22px;
-                flex: 1;
-                display: grid;
-                gap: 14px;
-                align-content: start;
-                overflow-y: auto;
-            }
-            .cart-item {
-                display: grid;
-                grid-template-columns: 64px 1fr;
-                gap: 14px;
-                align-items: flex-start;
-                border: 1px solid var(--border-light);
-                padding: 12px;
-                background: #fff;
-                box-shadow: var(--shadow-sm);
-            }
-            .cart-item img {
-                width: 56px;
-                height: 56px;
-                object-fit: cover;
-                background: var(--bg-gray);
-            }
-            .cart-item-details {
-                display: grid;
-                gap: 10px;
-            }
-            .cart-item-top {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .cart-item h4 {
-                font-size: 14px;
-                margin-bottom: 4px;
-                color: var(--text-dark-gray);
-            }
-            .cart-item p {
-                font-size: 12px;
-                color: var(--text-medium-gray);
-            }
-            .cart-price {
-                font-weight: 700;
-                color: var(--primary-orange);
-                font-size: 14px;
-                white-space: nowrap;
-            }
-            .cart-item-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-            }
-            .cart-qty {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: var(--bg-gray);
-                padding: 6px 10px;
-            }
-            .cart-qty button {
-                border: none;
-                background: #fff;
-                width: 22px;
-                height: 22px;
-                font-size: 14px;
-                font-weight: 700;
-                cursor: pointer;
-                color: var(--text-dark-gray);
-                box-shadow: var(--shadow-sm);
-            }
-            .cart-qty .qty-val {
-                font-size: 12px;
-                font-weight: 700;
-                min-width: 12px;
-                text-align: center;
-            }
-            .cart-remove {
-                border: none;
-                background: transparent;
-                color: var(--text-medium-gray);
-                font-size: 12px;
-                cursor: pointer;
-                text-decoration: underline;
-            }
-            .cart-footer {
-                border-top: 1px solid var(--border-light);
-                padding: 16px 22px 20px;
-                display: grid;
-                gap: 12px;
-            }
-            .cart-total {
-                display: flex;
-                justify-content: space-between;
-                font-size: 14px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 14px;
-            }
-            .cart-link {
-                font-size: 13px;
-                color: var(--text-medium-gray);
-                text-decoration: none;
-                border-bottom: 1px solid var(--border-light);
-            }
-            .cart-link:hover {
-                color: var(--primary-green);
-                border-bottom-color: var(--primary-green);
-            }
-            .cart-checkout {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 16px;
-                border: none;
-                background: linear-gradient(
-                    135deg,
-                    var(--primary-orange) 0%,
-                    var(--primary-orange-light) 100%
-                );
-                color: #fff;
-                font-size: 13px;
-                font-weight: 700;
-                cursor: pointer;
-                box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
-            }
-            .cart-empty {
-                display: none;
-                text-align: center;
-                color: var(--text-medium-gray);
-                padding: 24px 0;
-                font-size: 13px;
             }
 
             /* ========================================================================
@@ -756,6 +650,15 @@
                 cursor: not-allowed;
                 transform: none;
                 box-shadow: none;
+            }
+
+            /* PayPal Button Container */
+            #paypal-button-container {
+                margin-top: 16px;
+                min-height: 48px;
+            }
+            #paypal-button-container iframe {
+                border-radius: 0 !important;
             }
 
             @media (max-width: 960px) {
@@ -1065,29 +968,100 @@
                                 gap: 12px;
                             "
                         >
-                            <img src="Asstes/logo.png" alt="HuddersHub logo" />
+                            <img src="assets/logo.png" alt="HuddersHub logo" />
                             <span class="brand-text">HuddersHub</span>
                         </a>
                     </div>
                     <div class="search-wrap">
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search" /><span
-                                class="search-icon material-icons-outlined"
-                                >search</span
-                            >
-                        </div>
+                        <form class="search-bar" action="search.php" method="get">
+                            <input type="text" name="q" placeholder="Search" />
+                            <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+                        </form>
                     </div>
                     <div class="actions">
-                        <span
-                            class="action-btn"
-                            id="loginBtn"
-                            style="cursor: pointer"
-                            ><span
-                                class="material-icons-outlined"
-                                style="font-size: 24px"
-                                >person</span
-                            ><span id="loginBtnText">Login/Signup</span></span
-                        >
+                        <!-- USER MENU -->
+                        <div class="user-menu-wrap">
+                            <!-- Shown when logged OUT -->
+                            <a
+                                class="action-btn user-menu"
+                                id="loginBtn"
+                                href="login.html"
+                            >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="font-size: 24px"
+                                    >person</span
+                                >
+                                <span>Login / Signup</span>
+                            </a>
+                            <!-- Shown when logged IN -->
+                            <div
+                                class="user-dropdown-wrap"
+                                id="userDropdownWrap"
+                                style="display: none"
+                            >
+                                <button
+                                    class="action-btn user-menu"
+                                    id="userDropdownBtn"
+                                    style="border: none; background: none"
+                                >
+                                    <span
+                                        class="material-icons-outlined"
+                                        style="font-size: 24px"
+                                        >person</span
+                                    >
+                                    <span id="userGreeting">Hi, User</span>
+                                    <span
+                                        class="material-icons-outlined"
+                                        style="font-size: 16px"
+                                        id="dropChevron"
+                                        >expand_more</span
+                                    >
+                                </button>
+                                <div class="user-dropdown" id="userDropdown">
+                                    <a
+                                        href="../customer/profile.html"
+                                        class="dropdown-user-item"
+                                    >
+                                        <span class="material-icons-outlined"
+                                            >manage_accounts</span
+                                        >
+                                        My Profile
+                                    </a>
+                                    <a
+                                        href="../customer/orders.html"
+                                        class="dropdown-user-item"
+                                    >
+                                        <span class="material-icons-outlined"
+                                            >receipt_long</span
+                                        >
+                                        My Orders
+                                    </a>
+                                    <a
+                                        href="register-trader.html"
+                                        class="dropdown-user-item"
+                                    >
+                                        <span class="material-icons-outlined"
+                                            >storefront</span
+                                        >
+                                        Apply to be Trader
+                                    </a>
+                                    <div class="dropdown-user-divider"></div>
+                                    <a
+                                        href="logout.html"
+                                        class="dropdown-user-item dropdown-logout"
+                                        id="logoutBtn"
+                                    >
+                                        <span class="material-icons-outlined"
+                                            >logout</span
+                                        >
+                                        Log out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END USER MENU -->
+
                         <a
                             class="icon-with-badge"
                             href="cart.html"
@@ -1102,14 +1076,6 @@
                             ><span class="material-icons-outlined"
                                 >favorite_border</span
                             ><span class="badge" id="wishlistCount">0</span></a
-                        >
-                        <a
-                            class="icon-with-badge moon"
-                            href="#"
-                            style="font-size: 20px"
-                            ><span class="material-icons-outlined"
-                                >dark_mode</span
-                            ></a
                         >
                     </div>
                 </div>
@@ -1128,66 +1094,6 @@
                 </div>
             </nav>
         </header>
-
-        <!-- CART DRAWER -->
-        <div class="cart-overlay" id="cartOverlay"></div>
-        <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-            <div class="cart-header">
-                <h3>Your cart</h3>
-                <button
-                    class="cart-close"
-                    id="cartClose"
-                    aria-label="Close cart"
-                >
-                    &times;
-                </button>
-            </div>
-            <div class="cart-body">
-                <div
-                    class="cart-item"
-                    data-price="0.90"
-                    data-category="Greengrocer"
-                >
-                    <img
-                        src="Asstes/Item-image/green-bell-pepper-isolated.jpg"
-                        alt="Green Bell Pepper"
-                    />
-                    <div class="cart-item-details">
-                        <div class="cart-item-top">
-                            <div>
-                                <h4>Green Bell Pepper</h4>
-                                <p class="cart-meta">Greengrocer · Qty 2</p>
-                            </div>
-                            <span class="cart-price">£1.80</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <div class="cart-qty">
-                                <button class="qty-btn" data-action="decrease">
-                                    -</button
-                                ><span class="qty-val">2</span
-                                ><button class="qty-btn" data-action="increase">
-                                    +
-                                </button>
-                            </div>
-                            <button class="cart-remove">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="cart-empty" style="display: none">
-                    Your cart is empty.
-                </div>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total</span
-                    ><span class="cart-total-value">£1.80</span>
-                </div>
-                <div class="cart-actions">
-                    <a class="cart-link" href="cart.html">Go to cart</a
-                    ><button class="cart-checkout">Checkout →</button>
-                </div>
-            </div>
-        </aside>
 
         <!-- ========================================================================
      MAIN CONTENT
@@ -1211,32 +1117,12 @@
                         </div>
                         <form id="paymentForm" novalidate>
                             <!-- PayPal Only -->
-                            <div class="payment-methods">
-                                <div
-                                    class="payment-option active"
-                                    style="cursor: default"
-                                >
-                                    <div
-                                        class="payment-icon"
-                                        style="
-                                            background: #003087;
-                                            color: #fff;
-                                            font-weight: 700;
-                                            font-size: 13px;
-                                        "
-                                    >
-                                        PP
+                            <div class="payment-methods" style="margin-bottom: 24px;">
+                                <div class="payment-option active" style="cursor: default; border-radius: 8px; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_150x38.png" alt="PayPal" style="height: 32px;" />
                                     </div>
-                                    <span
-                                        class="payment-label"
-                                        style="font-weight: 600"
-                                        >PayPal</span
-                                    >
-                                    <img
-                                        src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png"
-                                        alt="PayPal"
-                                        style="height: 24px; margin-left: auto"
-                                    />
+                                    <span class="payment-label" style="text-align: right; color: #003087;">Fast & Secure</span>
                                 </div>
                             </div>
 
@@ -1317,14 +1203,9 @@
                                 </p>
                             </div>
 
-                            <button type="button" class="btn-pay" id="payBtn">
-                                <span id="payBtnText">Pay with PayPal</span>
-                                <span
-                                    class="material-icons-outlined"
-                                    id="payBtnArrow"
-                                    >arrow_forward</span
-                                >
-                            </button>
+                            <!-- PayPal Smart Button Container -->
+                            <div id="paypal-button-container"></div>
+                            <p id="paypalError" style="color: #ef4444; font-size: 13px; text-align: center; margin-top: 12px; display: none;"></p>
                         </form>
                     </div>
 
@@ -1513,9 +1394,164 @@
                 else header.classList.remove("scrolled");
             });
 
+            // USER LOGGED IN STATE
+            document.addEventListener("DOMContentLoaded", function () {
+                const loginBtn = document.getElementById("loginBtn");
+                const userDropdownWrap =
+                    document.getElementById("userDropdownWrap");
+                const userGreeting = document.getElementById("userGreeting");
+
+                async function loadUserGreeting() {
+                    let userId = sessionStorage.getItem("user_id");
+
+                    // If sessionStorage is empty, try checking the PHP session
+                    if (!userId) {
+                        try {
+                            const sessionRes = await fetch("../api/auth/session.php");
+                            const sessionData = await sessionRes.json();
+                            if (sessionData.success && sessionData.user_id) {
+                                userId = sessionData.user_id;
+                                sessionStorage.setItem("user_id", userId);
+                                if (sessionData.email) sessionStorage.setItem("userEmail", sessionData.email);
+                                if (sessionData.role) sessionStorage.setItem("userRole", sessionData.role);
+                            }
+                        } catch (e) {
+                            console.warn("Session check failed:", e);
+                        }
+                    }
+
+                    if (!userId) {
+                        if (loginBtn) loginBtn.style.display = "inline-flex";
+                        if (userDropdownWrap)
+                            userDropdownWrap.style.display = "none";
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(
+                            "../api/customer/get-profile.php?user_id=" + userId,
+                        );
+                        const data = await response.json();
+                        if (data.success && data.data) {
+                            const firstName = (
+                                data.data.FIRSTNAME || ""
+                            ).trim();
+                            const lastName = (data.data.LASTNAME || "").trim();
+                            const fullName =
+                                [firstName, lastName]
+                                    .filter(Boolean)
+                                    .join(" ") || "User";
+                            if (loginBtn) loginBtn.style.display = "none";
+                            if (userDropdownWrap)
+                                userDropdownWrap.style.display = "block";
+                            if (userGreeting)
+                                userGreeting.textContent = "Hi, " + fullName;
+                        }
+                    } catch (err) {
+                        if (userId) {
+                            if (loginBtn) loginBtn.style.display = "none";
+                            if (userDropdownWrap)
+                                userDropdownWrap.style.display = "block";
+                            if (userGreeting)
+                                userGreeting.textContent = "Hi, User";
+                        }
+                    }
+                }
+
+                loadUserGreeting();
+
+                async function loadCartAndWishlistCounts() {
+                    const userId = sessionStorage.getItem("user_id");
+                    const cartCountEl = document.getElementById("cartCount");
+                    const wishlistCountEl =
+                        document.getElementById("wishlistCount");
+
+                    if (!userId) {
+                        // userId should have been set by loadUserGreeting if session exists
+                        if (cartCountEl) cartCountEl.textContent = "0";
+                        if (wishlistCountEl) wishlistCountEl.textContent = "0";
+                        return;
+                    }
+
+                    try {
+                        const [cartRes, wishRes] = await Promise.all([
+                            fetch(
+                                "../api/customer/get-cart-count.php?user_id=" +
+                                    userId,
+                            ),
+                            fetch(
+                                "../api/customer/get-wishlist-count.php?user_id=" +
+                                    userId,
+                            ),
+                        ]);
+
+                        const cartData = await cartRes.json();
+                        const wishData = await wishRes.json();
+
+                        if (cartCountEl)
+                            cartCountEl.textContent = cartData.count || 0;
+                        if (wishlistCountEl)
+                            wishlistCountEl.textContent = wishData.count || 0;
+                    } catch (err) {
+                        if (cartCountEl) cartCountEl.textContent = "0";
+                        if (wishlistCountEl) wishlistCountEl.textContent = "0";
+                    }
+                }
+
+                loadCartAndWishlistCounts();
+
+                const dropdownBtn = document.getElementById("userDropdownBtn");
+                const dropdownMenu = document.getElementById("userDropdown");
+                const chevron = document.getElementById("dropChevron");
+
+                if (dropdownBtn) {
+                    dropdownBtn.addEventListener("click", function (e) {
+                        e.stopPropagation();
+                        dropdownMenu.classList.toggle("open");
+                        if (chevron) {
+                            chevron.textContent =
+                                dropdownMenu.classList.contains("open")
+                                    ? "expand_less"
+                                    : "expand_more";
+                        }
+                    });
+                }
+
+                document.addEventListener("click", function () {
+                    if (
+                        dropdownMenu &&
+                        dropdownMenu.classList.contains("open")
+                    ) {
+                        dropdownMenu.classList.remove("open");
+                        if (chevron) chevron.textContent = "expand_more";
+                    }
+                });
+
+                const logoutBtn = document.getElementById("logoutBtn");
+                if (logoutBtn) {
+                    logoutBtn.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        sessionStorage.clear();
+                        window.location.href = "logout.html";
+                    });
+                }
+            });
+
             // LOAD ORDER DETAILS
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get("order_id");
+            const error = urlParams.get("error");
+
+            // Show error if payment was cancelled or failed
+            if (error === 'cancelled') {
+                window.addEventListener('DOMContentLoaded', function() {
+                    showModal('Payment was cancelled. You can try again.', 'warning', 'Payment Cancelled');
+                });
+            } else if (error === 'failed') {
+                window.addEventListener('DOMContentLoaded', function() {
+                    showModal('Payment failed. Please try again.', 'error', 'Payment Failed');
+                });
+            }
 
             if (!orderId) {
                 document.querySelector(".sidebar-card").innerHTML =
@@ -1523,7 +1559,11 @@
             }
 
             async function loadOrderDetails() {
-                if (!orderId) return;
+                if (!orderId) {
+                    document.querySelector(".sidebar-card").innerHTML =
+                        '<p style="color:red;">Order not found. <a href="cart.html">Return to cart</a></p>';
+                    return;
+                }
                 try {
                     const res = await fetch(
                         "../api/orders/get-order.php?order_id=" + orderId,
@@ -1533,51 +1573,55 @@
                     try {
                         data = JSON.parse(rawText);
                     } catch (e) {
+                        console.error("Failed to parse order response:", rawText);
+                        document.querySelector(".sidebar-card").innerHTML =
+                            '<p style="color:red;">Error loading order. <a href="cart.html">Return to cart</a></p>';
                         return;
                     }
-                    if (!data.success || !data.data) return;
+                    if (!data.success || !data.data) {
+                        console.error("Order data not found:", data);
+                        document.querySelector(".sidebar-card").innerHTML =
+                            '<p style="color:red;">' + (data.error || 'Order not found') + '. <a href="cart.html">Return to cart</a></p>';
+                        return;
+                    }
 
                     const order = data.data;
-                    const amount = parseFloat(order.AMOUNT || 0);
-                    const fee = 2.4;
-
-                    // Update Pay button
-                    const payBtnText = document.getElementById("payBtnText");
-                    if (payBtnText)
-                        payBtnText.textContent =
-                            "Pay with PayPal  £" + amount.toFixed(2);
+                    const fee = 2.40;
 
                     // Update order items list
                     const itemsList = document.getElementById("orderItemsList");
-                    if (
-                        itemsList &&
-                        order.PRODUCTS &&
-                        order.PRODUCTS.length > 0
-                    ) {
-                        let subtotal = 0;
+                    let subtotal = 0;
+
+                    if (order.PRODUCTS && order.PRODUCTS.length > 0) {
                         let html = "";
                         order.PRODUCTS.forEach((p) => {
                             const lineTotal =
-                                parseFloat(p.QUANTITY) *
-                                parseFloat(p.UNIT_PRICE);
+                                parseFloat(p.QUANTITY || 0) *
+                                parseFloat(p.UNIT_PRICE || 0);
                             subtotal += lineTotal;
                             html += `<div class="order-item-row">
                                 <div class="order-item-details">
-                                    <div class="order-item-name">${p.NAME}</div>
-                                    <div class="order-item-qty">Qty: ${p.QUANTITY}</div>
+                                    <div class="order-item-name">${p.NAME || 'Product'}</div>
+                                    <div class="order-item-qty">Qty: ${p.QUANTITY || 0}</div>
                                 </div>
                                 <div class="order-item-price">£${lineTotal.toFixed(2)}</div>
                             </div>`;
                         });
                         itemsList.innerHTML = html;
-
-                        const subEl = document.getElementById("paySubtotal");
-                        const totalEl = document.getElementById("payTotal");
-                        if (subEl)
-                            subEl.textContent = "£" + subtotal.toFixed(2);
-                        if (totalEl)
-                            totalEl.textContent = "£" + amount.toFixed(2);
+                    } else {
+                        itemsList.innerHTML = '<p style="color: #5e6a63; font-size: 13px;">No items in this order.</p>';
                     }
+
+                    // Get amount from PAYMENT table or calculate from products
+                    const amountFromDb = parseFloat(order.AMOUNT || 0);
+                    const total = amountFromDb > 0 ? amountFromDb : (subtotal + fee);
+
+                    const subEl = document.getElementById("paySubtotal");
+                    const totalEl = document.getElementById("payTotal");
+                    if (subEl)
+                        subEl.textContent = "£" + subtotal.toFixed(2);
+                    if (totalEl)
+                        totalEl.textContent = "£" + total.toFixed(2);
 
                     // Update collection info
                     const collInfo = document.getElementById("collectionInfo");
@@ -1594,85 +1638,22 @@
                             " · " +
                             (order.SLOT_TIME || "") +
                             "</strong>";
+                    } else if (collInfo && order.LOCATION) {
+                        collInfo.innerHTML =
+                            "Collection: <strong>" +
+                            (order.LOCATION || "TBD") +
+                            "</strong>";
                     }
+
+                    // Render PayPal button AFTER order details are loaded
+                    renderPayPalButton();
                 } catch (err) {
                     console.error("loadOrderDetails error:", err);
+                    document.querySelector(".sidebar-card").innerHTML =
+                        '<p style="color:red;">Error loading order. <a href="cart.html">Return to cart</a></p>';
                 }
             }
             loadOrderDetails();
-
-            // CART DRAWER
-            const cartTrigger = document.getElementById("cartTrigger");
-            const cartDrawer = document.getElementById("cartDrawer");
-            const cartOverlay = document.getElementById("cartOverlay");
-            const cartClose = document.getElementById("cartClose");
-            function formatMoney(v) {
-                return "£" + v.toFixed(2);
-            }
-            function updateCartTotals() {
-                if (!cartDrawer) return;
-                const items = cartDrawer.querySelectorAll(".cart-item");
-                let total = 0;
-                items.forEach((item) => {
-                    const price = parseFloat(item.dataset.price || "0");
-                    const qtyEl = item.querySelector(".qty-val");
-                    const qty =
-                        parseInt(qtyEl ? qtyEl.textContent : "0", 10) || 0;
-                    const priceEl = item.querySelector(".cart-price");
-                    if (priceEl) priceEl.textContent = formatMoney(price * qty);
-                    total += price * qty;
-                });
-                const totalEl = cartDrawer.querySelector(".cart-total-value");
-                if (totalEl) totalEl.textContent = formatMoney(total);
-                const emptyEl = cartDrawer.querySelector(".cart-empty");
-                if (emptyEl)
-                    emptyEl.style.display = items.length ? "none" : "block";
-                const badge = document.querySelector("#cartTrigger .badge");
-                if (badge) badge.textContent = items.length;
-            }
-            function openCart() {
-                cartDrawer.classList.add("open");
-                cartOverlay.classList.add("open");
-                document.body.style.overflow = "hidden";
-            }
-            function closeCart() {
-                cartDrawer.classList.remove("open");
-                cartOverlay.classList.remove("open");
-                document.body.style.overflow = "";
-            }
-            if (cartTrigger)
-                cartTrigger.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    openCart();
-                });
-            if (cartDrawer) {
-                cartDrawer.addEventListener("click", (e) => {
-                    const qtyBtn = e.target.closest(".qty-btn");
-                    if (qtyBtn) {
-                        const item = qtyBtn.closest(".cart-item");
-                        const qtyEl = item?.querySelector(".qty-val");
-                        if (!item || !qtyEl) return;
-                        let qty = parseInt(qtyEl.textContent, 10) || 1;
-                        qty += qtyBtn.dataset.action === "increase" ? 1 : -1;
-                        qty = Math.max(1, qty);
-                        qtyEl.textContent = qty;
-                        updateCartTotals();
-                        return;
-                    }
-                    const removeBtn = e.target.closest(".cart-remove");
-                    if (removeBtn) {
-                        const item = removeBtn.closest(".cart-item");
-                        if (item) item.remove();
-                        updateCartTotals();
-                    }
-                });
-            }
-            if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
-            if (cartClose) cartClose.addEventListener("click", closeCart);
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") closeCart();
-            });
-            updateCartTotals();
 
             // BADGE COUNT LOADER
             async function loadBadgeCounts() {
@@ -1702,35 +1683,181 @@
             }
             loadBadgeCounts();
 
-            // PAY BUTTON - redirect to PayPal
-            document
-                .getElementById("payBtn")
-                .addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const termsChecked =
-                        document.getElementById("termsCheckbox").checked;
-                    if (!termsChecked) {
-                        document.getElementById("termsError").style.display =
-                            "block";
-                        return;
+            // REAL PAYPAL SANDBOX BUTTON WITH FALLBACK
+            function getPayPalAmount() {
+                const totalEl = document.getElementById("payTotal");
+                if (!totalEl) return "0.00";
+                const text = totalEl.textContent.replace("£", "").trim();
+                return parseFloat(text || "0").toFixed(2);
+            }
+
+            function renderPayPalButton() {
+                const container = document.getElementById("paypal-button-container");
+                const errorEl = document.getElementById("paypalError");
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get("order_id");
+
+                if (!orderId) {
+                    errorEl.textContent = "Order not found. Please start over from the cart.";
+                    errorEl.style.display = "block";
+                    return;
+                }
+
+                if (typeof paypal === "undefined") {
+                    errorEl.textContent = "PayPal SDK failed to load. Please try again.";
+                    errorEl.style.display = "block";
+                    return;
+                }
+
+                paypal.Buttons({
+                    style: {
+                        layout: "vertical",
+                        color: "gold",
+                        shape: "rect",
+                        label: "paypal",
+                        height: 48,
+                    },
+
+                    onInit: function(data, actions) {
+                        actions.disable();
+                        document.getElementById("termsCheckbox").addEventListener("change", function() {
+                            if (this.checked) {
+                                actions.enable();
+                            } else {
+                                actions.disable();
+                            }
+                        });
+                    },
+
+                    onClick: function() {
+                        const termsChecked = document.getElementById("termsCheckbox").checked;
+                        if (!termsChecked) {
+                            showModal("Please accept the terms and conditions", "error");
+                        }
+                    },
+
+                    createOrder: function(data, actions) {
+                        const amount = getPayPalAmount();
+                        console.log("Creating PayPal order for HDR-" + orderId + " with amount £" + amount);
+                        
+                        return fetch("../api/paypal/create-order.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                order_id: orderId,
+                                amount: amount,
+                                currency: "GBP"
+                            })
+                        })
+                        .then(function(res) { 
+                            if (!res.ok) {
+                                return res.text().then(text => { throw new Error("HTTP " + res.status + ": " + text); });
+                            }
+                            return res.json(); 
+                        })
+                        .then(function(orderData) {
+                            if (orderData.success && orderData.paypal_order_id) {
+                                console.log("PayPal Order ID:", orderData.paypal_order_id);
+                                return orderData.paypal_order_id;
+                            } else {
+                                const msg = orderData.message || "PayPal order creation failed.";
+                                showModal(msg, "error");
+                                throw new Error(msg);
+                            }
+                        })
+                        .catch(function(err) {
+                            console.error("createOrder error:", err);
+                            showModal("Could not initiate PayPal: " + err.message, "error");
+                            throw err;
+                        });
+                    },
+
+                    onApprove: function(data, actions) {
+                        return fetch("../api/paypal/capture-order.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                order_id: orderId,
+                                paypal_order_id: data.orderID
+                            })
+                        })
+                        .then(function(res) { return res.json(); })
+                        .then(function(orderData) {
+                            if (orderData.success) {
+                                showModal("Payment successful! Your order has been confirmed.", "success");
+                                setTimeout(function() {
+                                    window.location.href = "invoice.html?order_id=" + orderId + "&paid=1";
+                                }, 2000);
+                            } else {
+                                showModal(orderData.message || "Payment failed. Please try again.", "error");
+                            }
+                        })
+                        .catch(function(err) {
+                            showModal("Payment processing error. Please try again.", "error");
+                        });
+                    },
+
+                    onError: function(err) {
+                        console.error("PayPal error:", err);
+                        const msg = "PayPal encountered an error. If you see 'Unable to process payment', please use an Incognito window and a separate Sandbox Personal account.";
+                        errorEl.textContent = msg;
+                        errorEl.style.display = "block";
+                        showModal(msg, "warning", "PayPal Troubleshooting");
+                    },
+
+                    onCancel: function(data) {
+                        showModal("Payment was cancelled.", "warning");
                     }
-                    document.getElementById("termsError").style.display =
-                        "none";
-                    const urlParams = new URLSearchParams(
-                        window.location.search,
-                    );
-                    const orderId = urlParams.get("order_id");
-                    if (!orderId) {
-                        alert(
-                            "Order not found. Please start over from the cart.",
-                        );
-                        return;
-                    }
-                    // Redirect to PayPal
-                    window.location.href =
-                        "../api/payment/paypal-redirect.php?order_id=" +
-                        orderId;
-                });
+                }).render("#paypal-button-container");
+            }
+        </script>
+        <!-- Professional Modal -->
+        <div class="prof-modal-overlay" id="profModal">
+            <div class="prof-modal" style="position:relative;">
+                <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+                <div class="prof-modal-icon" id="profModalIcon"></div>
+                <div class="prof-modal-title" id="profModalTitle"></div>
+                <div class="prof-modal-message" id="profModalMessage"></div>
+                <div class="prof-modal-buttons" id="profModalButtons"></div>
+            </div>
+        </div>
+        <script>
+            function showModal(msg, type = "info", title = "") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+                const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+                icon.className = "prof-modal-icon " + type;
+                icon.textContent = icons[type] || "ℹ";
+                titleEl.textContent = title || titles[type] || "";
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+            function showConfirm(msg, onConfirm, title = "Confirm") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                icon.className = "prof-modal-icon confirm";
+                icon.textContent = "?";
+                titleEl.textContent = title;
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+                window._profConfirmCallback = onConfirm;
+            }
+            function closeProfModal(confirmed = false) {
+                document.getElementById("profModal").classList.remove("show");
+                document.body.style.overflow = "";
+                if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+            }
         </script>
     </body>
 </html>

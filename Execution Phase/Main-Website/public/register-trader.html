@@ -108,6 +108,13 @@ button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
 .form-input:focus, .form-select:focus, .form-textarea:focus {
     outline: none; border-color: var(--primary-green); box-shadow: 0 0 0 3px var(--primary-green-light);
 }
+.form-input.error, .form-select.error, .form-textarea.error {
+    border-color: #dc3545; box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+}
+.error-msg {
+    font-size: 12px; color: #dc3545; margin-top: 4px; display: none;
+}
+.error-msg.visible { display: block; }
 .form-textarea { resize: vertical; min-height: 100px; }
 
 /* SHOP TYPE GRID */
@@ -226,10 +233,12 @@ button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
                                 <span class="label">Delicatessen</span>
                             </div>
                         </div>
+                        <span class="error-msg" id="shop_type_error">Please select a shop type</span>
                     </div>
                     <div class="form-group full-width">
                         <label class="form-label" for="shop_name">Shop Name *</label>
                         <input type="text" id="shop_name" class="form-input" placeholder="e.g., Smith's Fresh Meats" required>
+                        <span class="error-msg" id="shop_name_error">Shop name is required</span>
                     </div>
                     <div class="form-group full-width">
                         <label class="form-label" for="shop_description">Shop Description</label>
@@ -238,6 +247,7 @@ button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
                     <div class="form-group">
                         <label class="form-label" for="shop_location">Shop Location *</label>
                         <input type="text" id="shop_location" class="form-input" placeholder="e.g., 123 Market Street, Huddersfield" required>
+                        <span class="error-msg" id="shop_location_error">Shop location is required</span>
                     </div>
                 </div>
             </div>
@@ -251,14 +261,17 @@ button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
                     <div class="form-group">
                         <label class="form-label" for="firstname">First Name *</label>
                         <input type="text" id="firstname" class="form-input" required>
+                        <span class="error-msg" id="firstname_error">First name is required</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="lastname">Last Name *</label>
                         <input type="text" id="lastname" class="form-input" required>
+                        <span class="error-msg" id="lastname_error">Last name is required</span>
                     </div>
                     <div class="form-group full-width">
                         <label class="form-label" for="email">Email Address *</label>
                         <input type="email" id="email" class="form-input" required>
+                        <span class="error-msg" id="email_error">Valid email address is required</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="phone_number">Phone Number</label>
@@ -280,10 +293,12 @@ button { font-family: inherit; transition: all 0.3s ease; cursor: pointer; }
                     <div class="form-group">
                         <label class="form-label" for="password">Create Password *</label>
                         <input type="password" id="password" class="form-input" minlength="6" required>
+                        <span class="error-msg" id="password_error">Password must be at least 6 characters</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="confirm_password">Confirm Password *</label>
                         <input type="password" id="confirm_password" class="form-input" required>
+                        <span class="error-msg" id="confirm_password_error">Passwords do not match</span>
                     </div>
                 </div>
             </div>
@@ -366,44 +381,114 @@ function showAlert(msg, type) {
     alertBox.className = 'alert ' + type + ' visible';
 }
 
+function clearErrors() {
+    document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.form-input, .form-textarea').forEach(el => el.classList.remove('error'));
+}
+
+function showFieldError(fieldId, msg) {
+    const errorEl = document.getElementById(fieldId + '_error');
+    const fieldEl = document.getElementById(fieldId);
+    if (errorEl) {
+        errorEl.textContent = msg;
+        errorEl.classList.add('visible');
+    }
+    if (fieldEl) {
+        fieldEl.classList.add('error');
+    }
+}
+
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearErrors();
     
+    let hasErrors = false;
+    
+    const firstname = document.getElementById('firstname').value.trim();
+    const lastname = document.getElementById('lastname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const shopName = document.getElementById('shop_name').value.trim();
+    const shopLocation = document.getElementById('shop_location').value.trim();
+    const shopType = document.getElementById('shop_type').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirm_password').value;
     
-    if (password !== confirmPassword) {
-        showAlert('Passwords do not match!', 'error');
-        return;
+    if (!firstname) {
+        showFieldError('firstname', 'First name is required');
+        hasErrors = true;
     }
     
-    if (!document.getElementById('shop_type').value) {
-        showAlert('Please select a shop type!', 'error');
+    if (!lastname) {
+        showFieldError('lastname', 'Last name is required');
+        hasErrors = true;
+    }
+    
+    if (!email) {
+        showFieldError('email', 'Email address is required');
+        hasErrors = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showFieldError('email', 'Please enter a valid email address');
+        hasErrors = true;
+    }
+    
+    if (!shopName) {
+        showFieldError('shop_name', 'Shop name is required');
+        hasErrors = true;
+    }
+    
+    if (!shopLocation) {
+        showFieldError('shop_location', 'Shop location is required');
+        hasErrors = true;
+    }
+    
+    if (!shopType) {
+        showFieldError('shop_type', 'Please select a shop type');
+        hasErrors = true;
+    }
+    
+    if (!password) {
+        showFieldError('password', 'Password is required');
+        hasErrors = true;
+    } else if (password.length < 6) {
+        showFieldError('password', 'Password must be at least 6 characters');
+        hasErrors = true;
+    }
+    
+    if (!confirmPassword) {
+        showFieldError('confirm_password', 'Please confirm your password');
+        hasErrors = true;
+    } else if (password !== confirmPassword) {
+        showFieldError('confirm_password', 'Passwords do not match');
+        hasErrors = true;
+    }
+    
+    if (hasErrors) {
+        showAlert('Please fix the errors above', 'error');
         return;
     }
 
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="material-icons-outlined spinner">refresh</span> Submitting...';
 
-    const data = {
-        firstname: document.getElementById('firstname').value,
-        lastname: document.getElementById('lastname').value,
-        email: document.getElementById('email').value,
-        phone_number: document.getElementById('phone_number').value,
-        address: document.getElementById('address').value,
+    const formData = {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        phone_number: document.getElementById('phone_number').value.trim(),
+        address: document.getElementById('address').value.trim(),
         password: password,
-        shop_name: document.getElementById('shop_name').value,
-        shop_type: document.getElementById('shop_type').value,
-        shop_description: document.getElementById('shop_description').value,
-        shop_location: document.getElementById('shop_location').value
+        shop_name: shopName,
+        shop_type: shopType,
+        shop_description: document.getElementById('shop_description').value.trim(),
+        shop_location: shopLocation
     };
 
     try {
-        console.log('Submitting data:', data);
+        console.log('Submitting data:', formData);
         const response = await fetch('../api/auth/register-trader.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(formData)
         });
         console.log('Response status:', response.status);
         
@@ -411,9 +496,12 @@ form.addEventListener('submit', async (e) => {
         console.log('Response data:', result);
         
         if (result.success) {
-            showAlert(result.message + ' You will be redirected to login...', 'success');
-            setTimeout(() => window.location.href = 'login.html', 3000);
+            showAlert(result.message + ' Redirecting...', 'success');
+            setTimeout(() => window.location.href = 'registration-success.html', 1500);
         } else {
+            if (result.message.toLowerCase().includes('email')) {
+                showFieldError('email', result.message);
+            }
             showAlert(result.message, 'error');
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span class="material-icons-outlined">storefront</span> Submit Application';

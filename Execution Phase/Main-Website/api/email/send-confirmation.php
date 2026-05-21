@@ -1,6 +1,7 @@
 <?php
 require_once '../../config/database.php';
 require_once '../../config/config.php';
+require_once '../../config/mailer.php';
 
 header('Content-Type: application/json');
 
@@ -18,7 +19,6 @@ if (!$order_id) {
 
 $conn = getDB();
 
-// Get order details
 $sql = "SELECT o.order_id, o.order_date, o.status, o.slot_id,
                u.firstname, u.email,
                cs.slot_date, cs.slot_time, cs.location,
@@ -38,7 +38,6 @@ if (!$order) {
     exit;
 }
 
-// Get products
 $prodSql = "SELECT op.product_id, p.name, op.quantity, op.unit_price
              FROM ORDER_PRODUCT op
              JOIN PRODUCT p ON op.product_id = p.product_id
@@ -54,70 +53,30 @@ while ($prod = oci_fetch_assoc($prodStmt)) {
 oci_free_statement($prodStmt);
 oci_close($conn);
 
-// Build email content
-$itemsHtml = '';
-foreach ($products as $p) {
-    $itemsHtml .= '<tr><td style="padding:8px;border-bottom:1px solid #eee;">' . $p['NAME'] . ' x' . $p['QUANTITY'] . '</td><td style="padding:8px;border-bottom:1px solid #eee;text-align:right;">£' . number_format($p['QUANTITY'] * $p['UNIT_PRICE'], 2) . '</td></tr>';
-}
-
 $slotDate = $order['SLOT_DATE'] ? date('l, jS F Y', strtotime($order['SLOT_DATE'])) : 'TBD';
 $slotTime = $order['SLOT_TIME'] ?: '10:00 - 13:00';
 
-$emailBody = '
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Order Confirmation - HuddersHub</title>
-</head>
-<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="background: #0F260B; color: white; padding: 20px; text-align: center;">
-        <h1 style="margin:0;font-style:italic;">HuddersHub</h1>
-        <p>Order Confirmation</p>
-    </div>
-    
-    <h2 style="color: #10B981;">✓ Payment Successful!</h2>
-    <p>Dear ' . htmlspecialchars($order['FIRSTNAME']) . ',</p>
-    <p>Thank you for your order! Here are your order details:</p>
-    
-    <h3>Order #' . $order['ORDER_ID'] . '</h3>
-    <p><strong>Total Paid:</strong> £' . number_format($order['AMOUNT'], 2) . '</p>
-    <p><strong>Payment Method:</strong> ' . htmlspecialchars($order['METHOD']) . '</p>
-    
-    <h3>Collection Details</h3>
-    <p><strong>Date:</strong> ' . $slotDate . '</p>
-    <p><strong>Time:</strong> ' . $slotTime . '</p>
-    <p><strong>Location:</strong> ' . htmlspecialchars($order['LOCATION'] ?: 'Queensgate Market Hall, Huddersfield') . '</p>
-    
-    <h3>Order Items</h3>
-    <table style="width:100%;border-collapse:collapse;">
-        <thead>
-            <tr style="background:#f5f5f5;">
-                <th style="padding:8px;text-align:left;">Item</th>
-                <th style="padding:8px;text-align:right;">Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            ' . $itemsHtml . '
-        </tbody>
-    </table>
-    
-    <p style="margin-top:20px;">Please bring your order confirmation when collecting your items.</p>
-    <p>Thank you for shopping local with HuddersHub!</p>
-    
-    <hr style="border:none;border-top:1px solid #eee;margin:20px 0;">
-    <p style="color:#666;font-size:12px;">HuddersHub - Local marketplace for Huddersfield</p>
-</body>
-</html>';
+try {
+    huddershub_send_order_confirmation(
+        $order['EMAIL'],
+        $order['FIRSTNAME'],
+        $order_id,
+        $products,
+        $order['AMOUNT'],
+        $slotDate,
+        $slotTime
+    );
 
-// For now, just return success (email sending requires SMTP configuration)
-echo json_encode([
-    'success' => true,
-    'message' => 'Confirmation email prepared',
-    'email' => $order['EMAIL'],
-    'order_id' => $order_id
-]);
-
-// In production, integrate with PHPMailer to actually send the email
-// The email content is in $emailBody and recipient is $order['EMAIL']
+    echo json_encode([
+        'success' => true,
+        'message' => 'Confirmation email sent successfully',
+        'email' => $order['EMAIL'],
+        'order_id' => $order_id
+    ]);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'error' => 'Failed to send email: ' . $e->getMessage()
+    ]);
+}
 ?>

@@ -72,6 +72,19 @@ if ($clobRow && isset($clobRow['PRODUCT_DETAILS'])) {
 }
 oci_free_statement($clobStmt);
 
+// Fetch image URLs
+$imgStmt = oci_parse($conn, 'SELECT image_url FROM PRODUCT_IMAGE WHERE product_id = :pid ORDER BY display_order');
+oci_bind_by_name($imgStmt, ':pid', $productId);
+oci_execute($imgStmt);
+$images = [];
+while ($imgRow = oci_fetch_assoc($imgStmt)) {
+	if ($imgRow['IMAGE_URL']) {
+		$images[] = $imgRow['IMAGE_URL'];
+	}
+}
+oci_free_statement($imgStmt);
+$row['IMAGES'] = $images;
+
 oci_close($conn);
 
 echo json_encode(['success' => true, 'data' => $row]);

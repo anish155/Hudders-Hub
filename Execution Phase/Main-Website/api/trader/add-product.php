@@ -1,6 +1,6 @@
 <?php
 // api/trader/add-product.php
-// Supports: unit, dietary_tags, multi-image BLOB upload, FormData body
+// Supports: unit, dietary_tags, multi-image URL upload, FormData body
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
@@ -19,7 +19,6 @@ $unit        = trim($_POST['unit']         ?? '');
 $category_name = trim($_POST['category']   ?? '');
 $allergen_info = trim($_POST['allergen_info'] ?? 'None');
 $dietary_tags  = trim($_POST['dietary_tags']  ?? '');
-$images = $_FILES['images'] ?? null;
 
 $details = json_encode([
     'appearance_aroma'       => trim($_POST['appearance_aroma']       ?? ''),
@@ -128,35 +127,24 @@ $product_id = $cur ? (int)$cur[0] : 0;
 oci_free_statement($rid);
 add_log("product_id=$product_id");
 
-// ── Handle image uploads ──────────────────────────────────────────────────
-$uploaded = 0;
-if ($images && isset($images['tmp_name']) && is_array($images['tmp_name'])) {
-    foreach ($images['tmp_name'] as $key => $tmp_name) {
-        if ($uploaded >= 5 || $images['error'][$key] !== UPLOAD_ERR_OK || !is_uploaded_file($tmp_name)) {
-            continue;
-        }
-        $file_content = file_get_contents($tmp_name);
-        $mime   = $images['type'][$key];
-        $fname  = $images['name'][$key];
-
+// ── Handle image URLs ───────────────────────────────────────────────────
+$image_urls = $_POST['image_urls'] ?? '';
+if ($image_urls) {
+    $urls = array_filter(array_map('trim', explode(',', $image_urls)));
+    $uploaded = 0;
+    foreach ($urls as $url) {
+        if ($uploaded >= 5 || empty($url)) continue;
         $sql_img = "INSERT INTO PRODUCT_IMAGE"
-                 . " (product_id, image, mime_type, file_name, display_order)"
-          . " VALUES (:b_pid, EMPTY_BLOB(), :b_mime, :b_fname, :b_ord)"
-          . " RETURNING image INTO :b_blob";
+                 . " (product_id, image_url, mime_type, file_name, display_order)"
+                 . " VALUES (:b_pid, :b_url, 'image/jpeg', :b_fname, :b_ord)";
         $stmt_img = oci_parse($conn, $sql_img);
-        $blob = oci_new_descriptor($conn, OCI_D_LOB);
-
-        $_prod_id = (int)$product_id;
-        $_ord = (int)$uploaded;
-        oci_bind_by_name($stmt_img, ':b_pid',  $_prod_id);
-        oci_bind_by_name($stmt_img, ':b_mime', $mime);
-        oci_bind_by_name($stmt_img, ':b_fname',$fname);
-        oci_bind_by_name($stmt_img, ':b_ord',  $_ord);
-        oci_bind_by_name($stmt_img, ':b_blob', $blob, -1, OCI_B_BLOB);
-
+        $fname = basename(parse_url($url, PHP_URL_PATH) ?: 'image-' . $uploaded);
+        oci_bind_by_name($stmt_img, ':b_pid',  $product_id);
+        oci_bind_by_name($stmt_img, ':b_url',  $url);
+        oci_bind_by_name($stmt_img, ':b_fname', $fname);
+        oci_bind_by_name($stmt_img, ':b_ord',  $uploaded);
         $img_ok = @oci_execute($stmt_img, OCI_NO_AUTO_COMMIT);
-        add_log("img#$key: " . ($img_ok ? "OK" : "FAIL " . (oci_error($stmt_img)['message'] ?? '')));
-        if ($img_ok) $blob->save($file_content);
+        add_log("img#$uploaded: " . ($img_ok ? "OK" : "FAIL " . (oci_error($stmt_img)['message'] ?? '')));
         oci_free_statement($stmt_img);
         $uploaded++;
     }

@@ -25,34 +25,58 @@ if ($quantity < 1) {
     exit;
 }
 
-$stmt = oci_parse($conn, 'UPDATE CART_ITEM SET quantity = :quantity WHERE cart_item_id = :cart_item_id AND cart_id IN (SELECT cart_id FROM CART WHERE user_id = :user_id)');
-oci_bind_by_name($stmt, ':quantity', $quantity);
-oci_bind_by_name($stmt, ':cart_item_id', $cartItemId);
-oci_bind_by_name($stmt, ':user_id', $userId);
+try {
+    // 1. Check product stock
+    $stockStmt = oci_parse($conn, 'SELECT p.stock, p.name FROM PRODUCT p JOIN CART_ITEM ci ON p.product_id = ci.product_id WHERE ci.cart_item_id = :cart_item_id');
+    oci_bind_by_name($stockStmt, ':cart_item_id', $cartItemId);
+    oci_execute($stockStmt);
+    $stockRow = oci_fetch_assoc($stockStmt);
+    oci_free_statement($stockStmt);
 
-if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
-    $e = oci_error($stmt);
+    if ($stockRow && (int)$stockRow['STOCK'] < $quantity) {
+        echo json_encode(['success' => false, 'error' => 'Only ' . $stockRow['STOCK'] . ' units of ' . $stockRow['NAME'] . ' are available.']);
+        exit;
+    }
+
+    // 2. Check total cart quantity
+    $countStmt = oci_parse($conn, 'SELECT SUM(quantity) as total_qty FROM CART_ITEM WHERE cart_id IN (SELECT cart_id FROM CART WHERE user_id = :user_id) AND cart_item_id != :cart_item_id');
+    oci_bind_by_name($countStmt, ':user_id', $userId);
+    oci_bind_by_name($countStmt, ':cart_item_id', $cartItemId);
+    oci_execute($countStmt);
+    $countRow = oci_fetch_assoc($countStmt);
+    $otherItemsQty = (int)($countRow['TOTAL_QTY'] ?? 0);
+    oci_free_statement($countStmt);
+
+    if ($otherItemsQty + $quantity > 20) {
+        echo json_encode(['success' => false, 'error' => 'Cart limit reached. You can only have up to 20 products in your cart.']);
+        exit;
+    }
+
+    $stmt = oci_parse($conn, 'UPDATE CART_ITEM SET quantity = :quantity WHERE cart_item_id = :cart_item_id AND cart_id IN (SELECT cart_id FROM CART WHERE user_id = :user_id)');
+    oci_bind_by_name($stmt, ':quantity', $quantity);
+    oci_bind_by_name($stmt, ':cart_item_id', $cartItemId);
+    oci_bind_by_name($stmt, ':user_id', $userId);
+
+    if (!oci_execute($stmt, OCI_NO_AUTO_COMMIT)) {
+        $e = oci_error($stmt);
+        throw new Exception($e['message']);
+    }
+
+    $rowsUpdated = oci_num_rows($stmt);
+    if ($rowsUpdated === 0) {
+        throw new Exception('Cart item not found');
+    }
+
+    oci_commit($conn);
+    oci_free_statement($stmt);
+    echo json_encode(['success' => true, 'message' => 'Cart item updated']);
+
+} catch (Exception $e) {
+    if (isset($conn)) oci_rollback($conn);
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e['message']]);
-    oci_free_statement($stmt);
-    oci_close($conn);
-    exit;
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 
-$rowsUpdated = oci_num_rows($stmt);
-
-if ($rowsUpdated === 0) {
-    oci_rollback($conn);
-    http_response_code(404);
-    echo json_encode(['success' => false, 'error' => 'Cart item not found']);
-    oci_free_statement($stmt);
-    oci_close($conn);
-    exit;
-}
-
-oci_commit($conn);
-oci_free_statement($stmt);
 oci_close($conn);
-
-echo json_encode(['success' => true, 'message' => 'Cart item updated']);
+exit;
 ?>

@@ -1,172 +1,349 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Logging Out - HuddersHub</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-        />
-        <link
-            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
-            rel="stylesheet"
-        />
-        <style>
-            :root {
-                --orange: #ff5e3a;
-                --orange-dark: #e3472c;
-                --green: #0f260b;
-            }
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-            body {
-                font-family: "Plus Jakarta Sans", sans-serif;
-                min-height: 100vh;
-                background: linear-gradient(
-                    135deg,
-                    #0f260b 0%,
-                    #1a3a1c 50%,
-                    #0f260b 100%
-                );
-                color: #fff;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 24px;
-            }
-            .container {
-                text-align: center;
-                animation: fadeIn 0.8s ease-out;
-            }
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            .icon-wrap {
-                width: 140px;
-                height: 140px;
-                background: linear-gradient(135deg, #ff5e3a 0%, #e3472c 100%);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 auto 32px;
-                box-shadow: 0 25px 60px rgba(255, 94, 58, 0.5);
-            }
-            .icon-wrap .material-icons-outlined {
-                font-size: 64px;
-                color: #fff;
-            }
-            h1 {
-                font-family: "Google Sans Flex", sans-serif;
-                font-size: 48px;
-                font-weight: 700;
-                font-style: italic;
-                color: #fff;
-                margin-bottom: 16px;
-            }
-            p {
-                font-size: 20px;
-                color: rgba(255, 255, 255, 0.8);
-                margin-bottom: 40px;
-            }
-            .countdown {
-                display: inline-flex;
-                align-items: center;
-                gap: 20px;
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(20px);
-                padding: 24px 40px;
-                border-radius: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-            .count {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-width: 64px;
-                height: 64px;
-                background: linear-gradient(135deg, #ff5e3a 0%, #e3472c 100%);
-                color: #fff;
-                border-radius: 16px;
-                font-size: 32px;
-                font-weight: 800;
-            }
-            .countdown-text {
-                font-size: 18px;
-                color: rgba(255, 255, 255, 0.9);
-                font-weight: 500;
-            }
-            .hint {
-                margin-top: 32px;
-                font-size: 16px;
-                color: rgba(255, 255, 255, 0.6);
-            }
-            .hint a {
-                color: #ff5e3a;
-                text-decoration: none;
-                font-weight: 600;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="icon-wrap">
-                <span class="material-icons-outlined">logout</span>
-            </div>
-            <h1>Goodbye!</h1>
-            <p>
-                You've been successfully logged out.<br />Taking you back to
-                home in...
-            </p>
-            <div class="countdown">
-                <div class="count" id="count">3</div>
-                <span class="countdown-text">seconds</span>
-            </div>
-            <p class="hint">
-                Not redirecting? <a href="index.html">Click here</a>
-            </p>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logging Out — HuddersHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+        rel="stylesheet"
+    />
+    <style>
+        /* ── VARIABLES ──────────────────────────────────── */
+        :root {
+            --bg:          #F7F8FA;
+            --surface:     #FFFFFF;
+            --surface-alt: #F0F2F5;
+            --border:      rgba(0,0,0,0.07);
+            --border-md:   rgba(0,0,0,0.12);
+            --primary:     #0F260B;
+            --primary-soft:rgba(15,38,11,0.06);
+            --accent:      #FF5E3A;
+            --accent-soft: rgba(255,94,58,0.07);
+            --accent-mid:  rgba(255,94,58,0.14);
+            --text:        #0F260B;
+            --text-2:      #1E2A1C;
+            --text-3:      #5E6A63;
+            --text-4:      #9CA8A0;
+            --green-pale:  #E8F5EE;
+            --green-ring:  #D4EFE1;
+        }
+
+        /* ── RESET ─────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── SUBTLE GRID OVERLAY ────────────────────────── */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,0,0,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.022) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── FLOATING SHAPES ────────────────────────────── */
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px; height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+            top: -160px; right: -160px;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift2 20s ease-in-out infinite alternate;
+        }
+        @keyframes drift2 {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(-30px, 20px) scale(1.06); }
+        }
+
+        /* ── MAIN CARD ─────────────────────────────────── */
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 460px;
+            background: var(--surface);
+            border: 1px solid var(--border-md);
+            border-radius: 24px;
+            padding: 52px 44px 48px;
+            text-align: center;
+            animation: slideUp 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
+            box-shadow:
+                0  1px  3px rgba(0,0,0,0.04),
+                0  8px 28px rgba(0,0,0,0.06),
+                0 28px 64px rgba(0,0,0,0.08);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0)    scale(1);    }
+        }
+
+        /* ── LOGO RING ─────────────────────────────────── */
+        .logo-ring {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: var(--green-pale);
+            border: 1.5px solid var(--green-ring);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 32px;
+            position: relative;
+            box-shadow: 0 10px 36px var(--accent-soft);
+            animation: ringIn 0.65s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .logo-ring::after {
+            content: "";
+            position: absolute; inset: -7px;
+            border-radius: 50%;
+            border: 2px dashed var(--green-ring);
+            animation: ringSpin 8s linear infinite;
+            opacity: 0.7;
+        }
+        .logo-ring .material-icons-outlined {
+            font-size: 48px;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes ringIn {
+            from { transform: scale(0.5) rotate(-12deg); opacity: 0; }
+            to   { transform: scale(1)   rotate(0deg);    opacity: 1; }
+        }
+        @keyframes ringSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── TYPOGRAPHY ────────────────────────────────── */
+        h1 {
+            font-family: "Google Sans Flex", sans-serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: clamp(34px, 5.5vw, 46px);
+            letter-spacing: -0.3px;
+            line-height: 1.15;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        p {
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 400;
+            color: var(--text-3);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        /* ── COUNTDOWN PLATE ───────────────────────────── */
+        .countdown-plate {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border-md);
+            border-radius: 16px;
+            padding: 18px 32px;
+            margin-bottom: 20px;
+            animation: fadeUp 0.55s 0.55s ease-out both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+        .count-num {
+            min-width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            box-shadow: 0 6px 20px rgba(255,94,58,0.32);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .count-num.pulse {
+            animation: numPulse 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes numPulse {
+            0%   { transform: scale(1);    }
+            35%  { transform: scale(0.78); }
+            70%  { transform: scale(1.1);  }
+            100% { transform: scale(1);    }
+        }
+        .countdown-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-4);
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+            text-align: left;
+            line-height: 1.55;
+        }
+        .countdown-label strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* ── PROGRESS BAR ──────────────────────────────── */
+        .progress-track {
+            height: 4px;
+            background: var(--surface-alt);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            animation: fadeUp 0.55s 0.65s ease-out both;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #FF8C70);
+            border-radius: 4px;
+            width: 100%;
+            transform-origin: left;
+            transition: width 1s linear;
+        }
+
+        /* ── FOOTER ────────────────────────────────────── */
+        .hint {
+            font-size: 13px;
+            color: var(--text-4);
+            animation: fadeUp 0.55s 0.75s ease-out both;
+        }
+        .hint a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1.5px solid transparent;
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .hint a:hover {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── LOGO WATERMARK ────────────────────────────── */
+        .watermark {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: "Google Sans Flex", sans-serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-4);
+            letter-spacing: 0.4px;
+            z-index: 1;
+            animation: fadeUp 0.6s 1s ease-out both;
+        }
+
+        /* ── RESPONSIVE ────────────────────────────────── */
+        @media (max-width: 520px) {
+            .card            { padding: 44px 28px 40px; border-radius: 20px; }
+            .logo-ring       { width: 88px; height: 88px; margin-bottom: 28px; }
+            .logo-ring .material-icons-outlined { font-size: 42px; }
+            .countdown-plate { padding: 14px 22px; gap: 12px; }
+            .count-num       { min-width: 46px; height: 46px; font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- Logo ring -->
+        <div class="logo-ring">
+            <span class="material-icons-outlined">logout</span>
         </div>
 
-        <script>
-            // Immediately clear everything - no waiting for API
-            sessionStorage.clear();
+        <!-- Headline -->
+        <h1>See you soon</h1>
 
-            // Clear all cookies
-            var cookies = document.cookie.split(";");
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i];
-                var eqPos = cookie.indexOf("=");
-                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie =
-                    name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        <!-- Subtext -->
+        <p>You've been securely logged out of HuddersHub.<br>We're taking you back home in a moment.</p>
+
+        <!-- Countdown plate -->
+        <div class="countdown-plate">
+            <div class="count-num" id="count">3</div>
+            <span class="countdown-label">seconds<strong>to home</strong></span>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="bar"></div>
+        </div>
+
+        <!-- Fallback -->
+        <p class="hint">
+            Not redirecting? <a href="index.html">Click here</a>
+        </p>
+    </div>
+
+    <!-- Watermark -->
+    <span class="watermark">HuddersHub</span>
+
+    <script>
+        // Clear everything on logout
+        sessionStorage.clear();
+        localStorage.clear();
+
+        document.cookie.split(";").forEach(function (c) {
+            var eq = c.indexOf("=");
+            var name = eq > -1 ? c.substr(0, eq).trim() : c.trim();
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+        });
+
+        // Countdown
+        var bar      = document.getElementById("bar");
+        var countEl  = document.getElementById("count");
+        var total    = 3;
+        var remaining = total;
+
+        bar.style.transition = "none";
+        bar.style.width      = "100%";
+        void bar.offsetHeight;
+        bar.style.transition = "width " + (total * 1000) + "ms linear";
+        bar.style.width      = "0%";
+
+        var interval = setInterval(function () {
+            remaining--;
+            countEl.textContent = remaining;
+
+            countEl.classList.remove("pulse");
+            void countEl.offsetHeight;
+            countEl.classList.add("pulse");
+
+            if (remaining <= 0) {
+                clearInterval(interval);
+                window.location.href = "index.html";
             }
-
-            console.log("All data cleared");
-
-            let seconds = 3;
-            const countEl = document.getElementById("count");
-
-            const t = setInterval(() => {
-                seconds -= 1;
-                countEl.textContent = String(seconds);
-                if (seconds <= 0) {
-                    clearInterval(t);
-                    window.location.href = "index.html";
-                }
-            }, 1000);
-        </script>
-    </body>
+        }, 1000);
+    </script>
+</body>
 </html>

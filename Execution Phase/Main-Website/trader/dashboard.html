@@ -31,6 +31,27 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Professional Modal */
+.prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+.prof-modal-overlay.show{display:flex;opacity:1}
+.prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+.prof-modal-overlay.show .prof-modal{transform:scale(1)}
+.prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+.prof-modal-icon.error{background:#ffebee;color:#c62828}
+.prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+.prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+.prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+.prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+.prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+.prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+.prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+.prof-modal-btn.primary{background:#0f260b;color:#fff}
+.prof-modal-btn.primary:hover{background:#1c3c17}
+.prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+.prof-modal-btn.secondary:hover{background:#e0e0e0}
+.prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+.prof-modal-close:hover{color:#333}
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: var(--text-black);
@@ -573,7 +594,7 @@ body {
           <img src="../public/assets/logo.png" alt="HuddersHub">
           <span>HuddersHub</span>
         </div>
-        <span class="top-nav-title">Trader Dashboard</span>
+        <span class="top-nav-title" id="headerShopName">Trader Dashboard</span>
       </div>
       <div class="top-nav-right">
         <button class="top-nav-icon" aria-label="Notifications">
@@ -581,9 +602,6 @@ body {
         </button>
         <button class="top-nav-icon" aria-label="Profile">
           <span class="material-icons-outlined">account_circle</span>
-        </button>
-        <button class="top-nav-icon" aria-label="Dark mode">
-          <span class="material-icons-outlined">dark_mode</span>
         </button>
       </div>
     </header>
@@ -633,10 +651,12 @@ if (!userId) {
 function handleLogout() {
   fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
     .then(() => {
+      localStorage.removeItem('hh_remember');
       sessionStorage.clear();
       window.location.href = '../public/login.html';
     })
     .catch(() => {
+      localStorage.removeItem('hh_remember');
       sessionStorage.clear();
       window.location.href = '../public/login.html';
     });
@@ -671,6 +691,10 @@ function loadDashboard() {
             : formatCurrency(stats.weekly_revenue);
 
         dashboardContent.innerHTML = `
+            <section class="welcome-section">
+                <h1 class="welcome-title">Welcome back, ${data.firstname}!</h1>
+                <p class="welcome-shop">${data.shop_name || 'Your Shop'}</p>
+            </section>
             <section class="stats-section">
                 <div class="stats-label">Quick stats</div>
                 <div class="stats-grid">
@@ -771,6 +795,12 @@ function loadDashboard() {
         // Update sidebar name
         document.querySelector('.sidebar-name').textContent = data.firstname || data.email || 'Trader';
         document.querySelector('.sidebar-status').innerHTML = `<span class="status-dot"></span>Status: ${data.trader_status}`;
+        
+        // Update header shop name
+        const headerShopName = document.getElementById('headerShopName');
+        if (headerShopName && data.shop_name) {
+            headerShopName.textContent = data.shop_name;
+        }
     })
     .catch(err => {
         dashboardContent.innerHTML = `<p style="color:red;">Failed to load dashboard.</p>`;
@@ -789,14 +819,20 @@ function updateOrderStatus(orderId, newStatus) {
         if (data.success) {
             loadDashboard();
         } else {
-            alert('Failed to update status: ' + data.message);
+            showModal('Failed to update status: ' + data.message, 'error');
         }
     })
-    .catch(() => alert('Error updating status'));
+    .catch(() => showModal('Error updating status', 'error'));
 }
 
 function quickUpdateStock(productId) {
-    const newStock = prompt('Enter new stock quantity:');
+    showModal('<input type="number" id="newStockInput" placeholder="Enter new stock quantity" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;margin-bottom:16px;">', 'info', 'Update Stock');
+    document.getElementById('profModalButtons').innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal()">Cancel</button><button class="prof-modal-btn primary" onclick="submitStockUpdate(' + productId + ')">Update</button>';
+}
+
+function submitStockUpdate(productId) {
+    const newStock = document.getElementById('newStockInput').value;
+    closeProfModal();
     if (newStock !== null && !isNaN(newStock)) {
         fetch('../api/trader/update-product-stock.php', {
             method: 'POST',
@@ -808,13 +844,61 @@ function quickUpdateStock(productId) {
             if (data.success) {
                 loadDashboard();
             } else {
-                alert('Failed to update stock: ' + data.message);
+                showModal('Failed to update stock: ' + data.message, 'error');
             }
         });
     }
 }
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+<!-- Professional Modal -->
+<div class="prof-modal-overlay" id="profModal">
+    <div class="prof-modal" style="position:relative;">
+        <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+        <div class="prof-modal-icon" id="profModalIcon"></div>
+        <div class="prof-modal-title" id="profModalTitle"></div>
+        <div class="prof-modal-message" id="profModalMessage"></div>
+        <div class="prof-modal-buttons" id="profModalButtons"></div>
+    </div>
+</div>
+<script>
+function showModal(msg, type = "info", title = "") {
+    const overlay = document.getElementById("profModal");
+    const icon = document.getElementById("profModalIcon");
+    const titleEl = document.getElementById("profModalTitle");
+    const msgEl = document.getElementById("profModalMessage");
+    const btns = document.getElementById("profModalButtons");
+    const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+    const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+    icon.className = "prof-modal-icon " + type;
+    icon.textContent = icons[type] || "ℹ";
+    titleEl.textContent = title || titles[type] || "";
+    msgEl.textContent = msg;
+    btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+    overlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+}
+function showConfirm(msg, onConfirm, title = "Confirm") {
+    const overlay = document.getElementById("profModal");
+    const icon = document.getElementById("profModalIcon");
+    const titleEl = document.getElementById("profModalTitle");
+    const msgEl = document.getElementById("profModalMessage");
+    const btns = document.getElementById("profModalButtons");
+    icon.className = "prof-modal-icon confirm";
+    icon.textContent = "?";
+    titleEl.textContent = title;
+    msgEl.textContent = msg;
+    btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+    overlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+    window._profConfirmCallback = onConfirm;
+}
+function closeProfModal(confirmed = false) {
+    document.getElementById("profModal").classList.remove("show");
+    document.body.style.overflow = "";
+    if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+}
 </script>
 </body>
 </html>

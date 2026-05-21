@@ -29,9 +29,11 @@ if (!$order) {
 }
 
 $productsSql = "SELECT op.product_id, p.name, op.quantity, op.unit_price,
-                       (op.quantity * op.unit_price) AS subtotal
+                       (op.quantity * op.unit_price) AS subtotal,
+                       s.name AS shop_name, s.shop_type
                 FROM ORDER_PRODUCT op
                 JOIN PRODUCT p ON op.product_id = p.product_id
+                JOIN SHOP s ON p.shop_id = s.shop_id
                 WHERE op.order_id = :order_id";
 $productsStmt = oci_parse($conn, $productsSql);
 oci_bind_by_name($productsStmt, ':order_id', $order_id);

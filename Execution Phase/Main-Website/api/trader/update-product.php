@@ -4,7 +4,7 @@
 // Fields:  user_id, product_id, name, description, price, stock,
 //          min_order, max_order, unit, category (name), allergen_info, dietary_tags,
 //          delete_images  (JSON array of image_id),
-//          new_images[]   (multiple file uploads)
+//          new_image_urls (comma-separated URLs)
 require_once '../../config/database.php';
 header('Content-Type: application/json');
 
@@ -116,9 +116,8 @@ if (isset($_POST['delete_images'])) {
     }
 }
 
-// ── Insert new images (max 5 total) ──────────────────────────────────────────
-if (isset($_FILES['new_images']) && is_array($_FILES['new_images']['tmp_name'])) {
-    // Count existing images after deletions
+// ── Insert new image URLs (max 5 total) ──────────────────────────────────
+if (isset($_POST['new_image_urls']) && trim($_POST['new_image_urls']) !== '') {
     $cnt_s = oci_parse($conn, "SELECT COUNT(*) AS cnt FROM PRODUCT_IMAGE WHERE product_id = :pid");
     oci_bind_by_name($cnt_s, ':pid', $product_id);
     oci_execute($cnt_s);
@@ -126,28 +125,20 @@ if (isset($_FILES['new_images']) && is_array($_FILES['new_images']['tmp_name']))
     $curCnt = (int)($crow['CNT'] ?? 0);
     oci_free_statement($cnt_s);
 
+    $urls = array_filter(array_map('trim', explode(',', $_POST['new_image_urls'])));
     $uploaded = 0;
-    foreach ($_FILES['new_images']['tmp_name'] as $key => $tmp_name) {
-        if ($uploaded >= 5 || ($curCnt + $uploaded) >= 5) break;
-        if ($_FILES['new_images']['error'][$key] !== UPLOAD_ERR_OK || !is_uploaded_file($tmp_name)) continue;
-
-        $file_content = file_get_contents($tmp_name);
-        $mime  = $_FILES['new_images']['type'][$key];
-        $fname = $_FILES['new_images']['name'][$key];
-
+    foreach ($urls as $url) {
+        if ($uploaded >= 5 || ($curCnt + $uploaded) >= 5 || empty($url)) break;
         $sql_img = "INSERT INTO PRODUCT_IMAGE
-                       (product_id, image, mime_type, file_name, display_order)
-                    VALUES (:pid, EMPTY_BLOB(), :mime, :fname, :ord)
-                    RETURNING image INTO :blob";
+                       (product_id, image_url, mime_type, file_name, display_order)
+                    VALUES (:pid, :url, 'image/jpeg', :fname, :ord)";
         $si   = oci_parse($conn, $sql_img);
-        $blob = oci_new_descriptor($conn, OCI_D_LOB);
+        $fname = basename(parse_url($url, PHP_URL_PATH) ?: 'image-' . ($curCnt + $uploaded));
         oci_bind_by_name($si, ':pid',   $product_id);
-        oci_bind_by_name($si, ':mime',  $mime);
+        oci_bind_by_name($si, ':url',   $url);
         oci_bind_by_name($si, ':fname', $fname);
         oci_bind_by_name($si, ':ord',   $curCnt + $uploaded);
-        oci_bind_by_name($si, ':blob',  $blob, -1, OCI_B_BLOB);
         oci_execute($si, OCI_NO_AUTO_COMMIT);
-        $blob->save($file_content);
         oci_free_statement($si);
         $uploaded++;
     }

@@ -39,6 +39,27 @@ CSS VARIABLES - HuddersHub Design System
   --radius-sm: 0;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Professional Modal */
+.prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+.prof-modal-overlay.show{display:flex;opacity:1}
+.prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+.prof-modal-overlay.show .prof-modal{transform:scale(1)}
+.prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+.prof-modal-icon.error{background:#ffebee;color:#c62828}
+.prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+.prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+.prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+.prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+.prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+.prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+.prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+.prof-modal-btn.primary{background:#0f260b;color:#fff}
+.prof-modal-btn.primary:hover{background:#1c3c17}
+.prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+.prof-modal-btn.secondary:hover{background:#e0e0e0}
+.prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+.prof-modal-close:hover{color:#333}
 body {
   font-family: 'Google Sans Flex', sans-serif;
   font-weight: 500;
@@ -335,13 +356,15 @@ FOOTER
         </a>
     </div>
     <div class="search-wrap">
-        <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
+        <form class="search-bar" action="search.php" method="get">
+            <input type="text" name="q" placeholder="Search">
+            <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+        </form>
     </div>
     <div class="actions">
         <a class="user-menu" href="../customer/profile.html"><span class="material-icons-outlined">account_circle</span><span id="userGreetingText">Welcome</span></a>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="../customer/wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge" href="#"><span class="material-icons-outlined" style="font-size:20px;">dark_mode</span></a>
+        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge" id="cartCount">0</span></a>
+        <a class="icon-with-badge" href="../customer/wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge" id="wishlistCount">0</span></a>
     </div>
 </div>
 </div>
@@ -743,13 +766,13 @@ uploadZone.addEventListener('drop', e => {
 fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
 
 function handleFile(file) {
-    if (file.size > 5 * 1024 * 1024) { alert('File too large. Max 5MB.'); return; }
+    if (file.size > 5 * 1024 * 1024) { showModal('File too large. Max 5MB.', 'error'); return; }
     if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = e => { previewImg.src = e.target.result; uploadPreview.style.display = 'block'; uploadZone.style.display = 'none'; };
         reader.readAsDataURL(file);
     } else {
-        alert('Please upload an image file (PNG, JPG).');
+        showModal('Please upload an image file (PNG, JPG).', 'error');
     }
 }
 
@@ -787,6 +810,54 @@ function loadUserGreeting() {
   } catch (err) {}
 }
 loadUserGreeting();
+</script>
+<!-- Professional Modal -->
+<div class="prof-modal-overlay" id="profModal">
+    <div class="prof-modal" style="position:relative;">
+        <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+        <div class="prof-modal-icon" id="profModalIcon"></div>
+        <div class="prof-modal-title" id="profModalTitle"></div>
+        <div class="prof-modal-message" id="profModalMessage"></div>
+        <div class="prof-modal-buttons" id="profModalButtons"></div>
+    </div>
+</div>
+<script>
+function showModal(msg, type = "info", title = "") {
+    const overlay = document.getElementById("profModal");
+    const icon = document.getElementById("profModalIcon");
+    const titleEl = document.getElementById("profModalTitle");
+    const msgEl = document.getElementById("profModalMessage");
+    const btns = document.getElementById("profModalButtons");
+    const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+    const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+    icon.className = "prof-modal-icon " + type;
+    icon.textContent = icons[type] || "ℹ";
+    titleEl.textContent = title || titles[type] || "";
+    msgEl.textContent = msg;
+    btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+    overlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+}
+function showConfirm(msg, onConfirm, title = "Confirm") {
+    const overlay = document.getElementById("profModal");
+    const icon = document.getElementById("profModalIcon");
+    const titleEl = document.getElementById("profModalTitle");
+    const msgEl = document.getElementById("profModalMessage");
+    const btns = document.getElementById("profModalButtons");
+    icon.className = "prof-modal-icon confirm";
+    icon.textContent = "?";
+    titleEl.textContent = title;
+    msgEl.textContent = msg;
+    btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+    overlay.classList.add("show");
+    document.body.style.overflow = "hidden";
+    window._profConfirmCallback = onConfirm;
+}
+function closeProfModal(confirmed = false) {
+    document.getElementById("profModal").classList.remove("show");
+    document.body.style.overflow = "";
+    if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+}
 </script>
 </body>
 </html>

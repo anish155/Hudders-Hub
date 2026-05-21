@@ -5,6 +5,8 @@
 //   delete_account     — JSON POST, cascading deletes (trader/shop/products/user)
 //   update_all         — multipart POST, updates shop+owner+logo+collection+notifications in one call
 
+ob_start();
+error_reporting(0);
 require_once '../../config/database.php';
 header('Content-Type: application/json');
 
@@ -81,12 +83,23 @@ try {
         $row = oci_fetch_assoc($verify);
         oci_free_statement($verify);
 
-        if (!$row || $row['USER_PASSWORD'] !== $current) {
+        if (!$row) {
+            commitAndClose($conn, false, 'User not found');
+        }
+
+        $db_pass = $row['USER_PASSWORD'];
+        $valid = password_verify($current, $db_pass);
+        if (!$valid) {
+            $valid = ($current === $db_pass);
+        }
+        
+        if (!$valid) {
             commitAndClose($conn, false, 'Current password is incorrect');
         }
 
+        $new_hash = password_hash($new, PASSWORD_DEFAULT);
         $update = oci_parse($conn, "UPDATE HUDDER_USER SET user_password = :pwd WHERE user_id = :user_id");
-        oci_bind_by_name($update, ':pwd', $new);
+        oci_bind_by_name($update, ':pwd', $new_hash);
         oci_bind_by_name($update, ':user_id', $user_id);
         oci_execute($update, OCI_COMMIT_ON_SUCCESS);
         oci_free_statement($update);
@@ -154,9 +167,14 @@ try {
         $notify_weekly    = isset($_POST['notify_weekly_finance']) ? (int)$_POST['notify_weekly_finance'] : 1;
         $notify_monthly   = isset($_POST['notify_monthly_report']) ? (int)$_POST['notify_monthly_report'] : 1;
 
-        if (!$shop_name || !$firstname || !$lastname) {
-            commitAndClose($conn, false, 'Shop name and owner first/last name are required');
+        if (!$shop_name) {
+            commitAndClose($conn, false, 'Shop name is required');
         }
+        if (!$shop_id) {
+            commitAndClose($conn, false, 'No shop found for this account');
+        }
+
+        $errors = [];
 
         // ── Update SHOP ──
         $sql_up_shop = "UPDATE SHOP SET name=:nm, description=:desc, location=:loc,
@@ -170,46 +188,78 @@ try {
         oci_bind_by_name($stmt_s, ':thu',  $collection_thu);
         oci_bind_by_name($stmt_s, ':fri',  $collection_fri);
         oci_bind_by_name($stmt_s, ':sid',  $shop_id);
-        oci_execute($stmt_s, OCI_NO_AUTO_COMMIT);
+        if (!oci_execute($stmt_s, OCI_NO_AUTO_COMMIT)) {
+            $e = oci_error($stmt_s);
+            $errors[] = 'Shop update failed: ' . $e['message'];
+        }
         oci_free_statement($stmt_s);
 
-        // ── Update HUDDER_USER ──
-        $sql_up_user = "UPDATE HUDDER_USER SET firstname=:fn, lastname=:ln, email=:em,
-                             phone_number=:ph,
-                             notify_new_order=:nno, notify_daily_report=:ndr,
-                             notify_weekly_finance=:nwf, notify_monthly_report=:nmr
-                        WHERE user_id=:user_id";
-        $stmt_u = oci_parse($conn, $sql_up_user);
-        oci_bind_by_name($stmt_u, ':fn',  $firstname);
-        oci_bind_by_name($stmt_u, ':ln',  $lastname);
-        oci_bind_by_name($stmt_u, ':em',  $email);
-        oci_bind_by_name($stmt_u, ':ph',  $phone);
-        oci_bind_by_name($stmt_u, ':nno', $notify_new_order);
-        oci_bind_by_name($stmt_u, ':ndr', $notify_daily);
-        oci_bind_by_name($stmt_u, ':nwf', $notify_weekly);
-        oci_bind_by_name($stmt_u, ':nmr', $notify_monthly);
-        oci_bind_by_name($stmt_u, ':user_id', $user_id);
-        oci_execute($stmt_u, OCI_NO_AUTO_COMMIT);
-        oci_free_statement($stmt_u);
+        // ── Update notification toggles on HUDDER_USER (always run) ──
+        $notifySql = "UPDATE HUDDER_USER
+                         SET notify_new_order=:nno,
+                             notify_daily_report=:ndr,
+                             notify_weekly_finance=:nwf,
+                             notify_monthly_report=:nmr
+                       WHERE user_id=:uid";
+        $notifyStmt = oci_parse($conn, $notifySql);
+        oci_bind_by_name($notifyStmt, ':nno', $notify_new_order);
+        oci_bind_by_name($notifyStmt, ':ndr', $notify_daily);
+        oci_bind_by_name($notifyStmt, ':nwf', $notify_weekly);
+        oci_bind_by_name($notifyStmt, ':nmr', $notify_monthly);
+        oci_bind_by_name($notifyStmt, ':uid', $user_id);
+        if (!oci_execute($notifyStmt, OCI_NO_AUTO_COMMIT)) {
+            $e = oci_error($notifyStmt);
+            $errors[] = 'Notification settings update failed: ' . $e['message'];
+        }
+        oci_free_statement($notifyStmt);
+
+        // ── Update owner details on HUDDER_USER (only when fields are non-empty) ──
+        if ($firstname !== '' || $lastname !== '' || $email !== '' || $phone !== '') {
+            $sql_up_user = "UPDATE HUDDER_USER SET firstname=:fn, lastname=:ln, email=:em,
+                                 phone_number=:ph
+                            WHERE user_id=:user_id";
+            $stmt_u = oci_parse($conn, $sql_up_user);
+            oci_bind_by_name($stmt_u, ':fn',  $firstname);
+            oci_bind_by_name($stmt_u, ':ln',  $lastname);
+            oci_bind_by_name($stmt_u, ':em',  $email);
+            oci_bind_by_name($stmt_u, ':ph',  $phone);
+            oci_bind_by_name($stmt_u, ':user_id', $user_id);
+            if (!oci_execute($stmt_u, OCI_NO_AUTO_COMMIT)) {
+                $e = oci_error($stmt_u);
+                $errors[] = 'User update failed: ' . $e['message'];
+            }
+            oci_free_statement($stmt_u);
+        }
 
         // ── Update logo if uploaded ──
         if (isset($_FILES['shop_logo']) && $_FILES['shop_logo']['error'] === UPLOAD_ERR_OK) {
             updateShopLogo($conn, $shop_id, $_FILES['shop_logo']);
         }
 
-        oci_commit($conn);
+        if (!empty($errors)) {
+            oci_rollback($conn);
+            commitAndClose($conn, false, implode(' | ', $errors));
+        }
+
+        if (!oci_commit($conn)) {
+            $e = oci_error($conn);
+            commitAndClose($conn, false, 'Commit failed: ' . $e['message']);
+        }
         commitAndClose($conn, true, 'Profile updated successfully');
     }
 
     // Unknown action — reach multi-action (merge) if still needed for backwards compat
     if ($action === 'update_shop' || $action === 'update_owner') {
-        $shop_name = trim($data['shop_name']        ?? $_POST['shop_name']        ?? '');
-        $shop_desc = trim($data['shop_description'] ?? $_POST['shop_description'] ?? '');
+        $input = json_decode(file_get_contents('php://input'), true) ?: [];
+        $data = array_merge($_POST, $input);
+        
+        $shop_name = trim($data['shop_name']        ?? '');
+        $shop_desc = trim($data['shop_description'] ?? '');
         $location  = trim($data['location']         ?? $_POST['shop_address']     ?? '');
-        $firstname = trim($data['firstname']         ?? $_POST['firstname']        ?? '');
-        $lastname  = trim($data['lastname']          ?? $_POST['lastname']         ?? '');
-        $email     = trim($data['email']             ?? $_POST['email']            ?? '');
-        $phone     = trim($data['phone']             ?? $_POST['phone']            ?? '');
+        $firstname = trim($data['firstname']         ?? '');
+        $lastname  = trim($data['lastname']          ?? '');
+        $email     = trim($data['email']             ?? '');
+        $phone     = trim($data['phone']             ?? '');
 
         if ($action === 'update_shop' && $shop_name) {
             $sql = "UPDATE SHOP SET name=:nm, description=:desc, location=:loc WHERE shop_id=:sid";
@@ -245,3 +295,4 @@ try {
 oci_close($conn);
 exit;
 ?>
+

@@ -36,13 +36,13 @@ if ($star && $star >=1 && $star <=5) {
 // Build SQL with pagination (Oracle OFFSET/FETCH)
  $sql = "SELECT r.review_id, r.review_text, r.rating, NULL AS created_at_iso,
                u.firstname, u.lastname,
-               CASE WHEN EXISTS (
-                   SELECT 1 FROM ORDER_PRODUCT op
-                   JOIN HUDDER_ORDER o ON op.order_id = o.order_id
-                   WHERE op.product_id = r.product_id
-                     AND o.user_id = r.user_id
-                     AND (LOWER(o.status) LIKE '%complete%' OR LOWER(o.status) LIKE '%collect%')
-               ) THEN 1 ELSE 0 END AS VERIFIED,
+                CASE WHEN EXISTS (
+                    SELECT 1 FROM ORDER_PRODUCT op
+                    JOIN HUDDER_ORDER o ON op.order_id = o.order_id
+                    WHERE op.product_id = r.product_id
+                      AND o.user_id = r.user_id
+                      AND o.status IN ('Completed', 'Delivered', 'Collected', 'Ready')
+                ) THEN 1 ELSE 0 END AS VERIFIED,
                r.user_id
         FROM REVIEW r
         JOIN HUDDER_USER u ON r.user_id = u.user_id

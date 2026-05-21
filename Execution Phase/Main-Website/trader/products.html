@@ -222,7 +222,6 @@ body {
       <span class="notification-badge"></span>
     </button>
    <div class="user-pill"><span class="material-icons-outlined">person</span><span id="topNavName">...</span></div>
-    <button class="top-nav-icon" aria-label="Dark mode"><span class="material-icons-outlined">dark_mode</span></button>
   </div>
 </header>
 
@@ -288,8 +287,8 @@ if (!userId) {
 
 function handleLogout() {
   fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
-    .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
-    .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+    .then(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; })
+    .catch(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }
 
 const firstname = sessionStorage.getItem('firstname') || '';

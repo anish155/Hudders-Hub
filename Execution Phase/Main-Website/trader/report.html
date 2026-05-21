@@ -138,6 +138,15 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   .report-type-toggle { display: none; }
   .order-table th, .order-table td { padding: 8px 12px; font-size: 12px; }
 }
+
+@media print {
+  .sidebar, .top-nav, .fab, .report-type-toggle, #dailyControls, .graph-section, #statsGrid { display: none !important; }
+  .main-content { margin-left: 0; padding: 0; }
+  .page-header { display: none; }
+  .report-card { break-inside: avoid; }
+  #labelsSection { display: block !important; }
+  .label-card { break-inside: avoid; border: 1px solid #000; }
+}
 </style>
 </head>
 <body>
@@ -171,7 +180,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
         </details>
       </li>
       <li><a href="profile.html" class="sidebar-nav-item"><span class="material-icons-outlined">settings</span>Profile</a></li>
-      <li><a href="../api/auth/logout.php" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
+      <li><a href="#" onclick="handleLogout(); return false;" class="sidebar-nav-item logout"><span class="material-icons-outlined">logout</span>Logout</a></li>
     </ul>
   </nav>
 </aside>
@@ -186,7 +195,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
   <div class="top-nav-title">Reports</div>
   <div class="top-nav-right">
     <button class="top-nav-icon"><span class="material-icons-outlined">notifications_none</span><span class="notification-badge"></span></button>
-    <div class="user-pill"><span class="material-icons-outlined">account_circle</span><span>John</span></div>
+    <div class="user-pill"><span class="material-icons-outlined">account_circle</span><span id="topNavName">...</span></div>
   </div>
 </header>
 
@@ -208,8 +217,57 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
       <button class="download-btn" id="downloadReportBtn" type="button"><span class="material-icons-outlined">picture_as_pdf</span>Download Report PDF</button>
     </div>
 
+    <div id="dailyControls" style="display:none; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <input type="date" id="reportDate" class="form-input" style="padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:14px; font-family:inherit;">
+      <button id="generateReportBtn" type="button" style="padding:8px 20px; background:var(--primary-green); color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;">
+        <span class="material-icons-outlined" style="font-size:18px; vertical-align:middle; margin-right:4px;">auto_fix_high</span>Generate Report
+      </button>
+      <button id="printLabelsBtn" type="button" style="display:none; padding:8px 20px; background:var(--primary-orange); color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;">
+        <span class="material-icons-outlined" style="font-size:18px; vertical-align:middle; margin-right:4px;">print</span>Print Labels
+      </button>
+    </div>
+
+    <div id="weeklyControls" style="display:none; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <button id="weekPrevBtn" type="button" style="padding:8px 12px; background:var(--bg-white); border:1px solid var(--border-light); border-radius:6px; cursor:pointer;">
+        <span class="material-icons-outlined" style="font-size:20px;">chevron_left</span>
+      </button>
+      <span id="weekLabel" style="font-size:14px; font-weight:600; color:var(--text-dark-gray); min-width:200px; text-align:center;"></span>
+      <button id="weekNextBtn" type="button" style="padding:8px 12px; background:var(--bg-white); border:1px solid var(--border-light); border-radius:6px; cursor:pointer;">
+        <span class="material-icons-outlined" style="font-size:20px;">chevron_right</span>
+      </button>
+      <button id="generateWeeklyBtn" type="button" style="padding:8px 20px; background:var(--primary-green); color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;">
+        <span class="material-icons-outlined" style="font-size:18px; vertical-align:middle; margin-right:4px;">auto_fix_high</span>Generate Report
+      </button>
+    </div>
+
+    <div id="monthlyControls" style="display:none; margin-bottom:24px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <button id="monthPrevBtn" type="button" style="padding:8px 12px; background:var(--bg-white); border:1px solid var(--border-light); border-radius:6px; cursor:pointer;">
+        <span class="material-icons-outlined" style="font-size:20px;">chevron_left</span>
+      </button>
+      <span id="monthLabel" style="font-size:14px; font-weight:600; color:var(--text-dark-gray); min-width:160px; text-align:center;"></span>
+      <button id="monthNextBtn" type="button" style="padding:8px 12px; background:var(--bg-white); border:1px solid var(--border-light); border-radius:6px; cursor:pointer;">
+        <span class="material-icons-outlined" style="font-size:20px;">chevron_right</span>
+      </button>
+      <button id="generateMonthlyBtn" type="button" style="padding:8px 20px; background:var(--primary-green); color:#fff; border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;">
+        <span class="material-icons-outlined" style="font-size:18px; vertical-align:middle; margin-right:4px;">auto_fix_high</span>Generate Report
+      </button>
+      <select id="monthlySort" style="padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:14px; font-family:inherit; margin-left:auto;">
+        <option value="income-desc">Sort by Income (Highest)</option>
+        <option value="income-asc">Sort by Income (Lowest)</option>
+        <option value="orders-desc">Sort by Orders (Most)</option>
+        <option value="orders-asc">Sort by Orders (Least)</option>
+        <option value="name-asc">Sort by Name (A-Z)</option>
+        <option value="name-desc">Sort by Name (Z-A)</option>
+      </select>
+    </div>
+
     <div id="statsGrid" class="stats-grid"></div>
     <div id="reportCards"></div>
+
+    <div id="labelsSection" style="display:none; margin-top:24px;">
+      <h3 style="font-size:16px; font-weight:700; color:var(--text-dark-gray); margin-bottom:16px;">Collection Labels</h3>
+      <div id="labelsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px;"></div>
+    </div>
 
     <div class="graph-section">
       <div class="graph-header">
@@ -232,9 +290,105 @@ const pageTitle = document.getElementById('pageTitle');
 const reportButtons = document.querySelectorAll('.toggle-btn');
 const statsGrid = document.getElementById('statsGrid');
 const downloadReportBtn = document.getElementById('downloadReportBtn');
+const dailyControls = document.getElementById('dailyControls');
+const reportDateInput = document.getElementById('reportDate');
+const generateReportBtn = document.getElementById('generateReportBtn');
+const printLabelsBtn = document.getElementById('printLabelsBtn');
+const labelsSection = document.getElementById('labelsSection');
+const labelsGrid = document.getElementById('labelsGrid');
+const weeklyControls = document.getElementById('weeklyControls');
+const weekPrevBtn = document.getElementById('weekPrevBtn');
+const weekNextBtn = document.getElementById('weekNextBtn');
+const weekLabel = document.getElementById('weekLabel');
+const generateWeeklyBtn = document.getElementById('generateWeeklyBtn');
+const monthlyControls = document.getElementById('monthlyControls');
+const monthPrevBtn = document.getElementById('monthPrevBtn');
+const monthNextBtn = document.getElementById('monthNextBtn');
+const monthLabel = document.getElementById('monthLabel');
+const generateMonthlyBtn = document.getElementById('generateMonthlyBtn');
+const monthlySort = document.getElementById('monthlySort');
 
 let currentType = 'weekly';
 let reportData = null;
+let currentWeekStart = getWednesdayDate();
+let currentMonth = new Date().toISOString().slice(0, 7);
+
+reportDateInput.value = new Date().toISOString().split('T')[0];
+
+function getWednesdayDate() {
+    const now = new Date();
+    const day = now.getDay();
+    const diff = (day >= 3) ? (day - 3) : (day + 4);
+    const wed = new Date(now);
+    wed.setDate(now.getDate() - diff);
+    return wed.toISOString().split('T')[0];
+}
+
+function formatWeekLabel(dateStr) {
+    const start = new Date(dateStr);
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    const opts = { month: 'short', day: 'numeric' };
+    return `${start.toLocaleDateString('en-GB', opts)} – ${end.toLocaleDateString('en-GB', opts)} ${end.getFullYear()}`;
+}
+
+function formatMonthLabel(monthStr) {
+    const [y, m] = monthStr.split('-');
+    const date = new Date(parseInt(y), parseInt(m) - 1);
+    return date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+}
+
+function updateWeekLabel() {
+    weekLabel.textContent = formatWeekLabel(currentWeekStart);
+}
+
+function updateMonthLabel() {
+    monthLabel.textContent = formatMonthLabel(currentMonth);
+}
+
+weekPrevBtn.addEventListener('click', () => {
+    const d = new Date(currentWeekStart);
+    d.setDate(d.getDate() - 7);
+    currentWeekStart = d.toISOString().split('T')[0];
+    updateWeekLabel();
+    loadReport('weekly');
+});
+
+weekNextBtn.addEventListener('click', () => {
+    const d = new Date(currentWeekStart);
+    d.setDate(d.getDate() + 7);
+    currentWeekStart = d.toISOString().split('T')[0];
+    updateWeekLabel();
+    loadReport('weekly');
+});
+
+generateWeeklyBtn.addEventListener('click', () => {
+    loadReport('weekly');
+});
+
+monthPrevBtn.addEventListener('click', () => {
+    const d = new Date(currentMonth + '-01');
+    d.setMonth(d.getMonth() - 1);
+    currentMonth = d.toISOString().slice(0, 7);
+    updateMonthLabel();
+    loadReport('monthly');
+});
+
+monthNextBtn.addEventListener('click', () => {
+    const d = new Date(currentMonth + '-01');
+    d.setMonth(d.getMonth() + 1);
+    currentMonth = d.toISOString().slice(0, 7);
+    updateMonthLabel();
+    loadReport('monthly');
+});
+
+generateMonthlyBtn.addEventListener('click', () => {
+    loadReport('monthly');
+});
+
+monthlySort.addEventListener('change', () => {
+    renderReport();
+});
 
 // Auth guard - only traders allowed
 const userId = parseInt(sessionStorage.getItem('user_id') || '0');
@@ -246,17 +400,47 @@ if (!userId) {
     window.location.href = '../public/login.html';
 }
 
+function handleLogout() {
+    fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
+        .then(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; })
+        .catch(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; });
+}
+
 fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
     .then(r => r.json())
-    .then(d => { if (d.success) document.getElementById('sidebarName').textContent = d.firstname || d.email || 'Trader'; })
+    .then(d => {
+        if (d.success) {
+            document.getElementById('sidebarName').textContent = d.firstname || d.email || 'Trader';
+            document.getElementById('topNavName').textContent = d.firstname || 'Trader';
+            document.querySelector('.welcome-text strong').textContent = d.firstname || 'Trader';
+            document.querySelector('.shop-name').textContent = d.shop_name || '';
+        }
+    })
     .catch(() => {});
 
 function loadReport(type) {
     currentType = type;
     let url = '';
-    if (type === 'daily') url = `../api/trader/get-daily-report.php?user_id=${userId}`;
-    else if (type === 'weekly') url = `../api/trader/get-weekly-report.php?user_id=${userId}`;
-    else url = `../api/trader/get-monthly-report.php?user_id=${userId}`;
+    
+    dailyControls.style.display = 'none';
+    weeklyControls.style.display = 'none';
+    monthlyControls.style.display = 'none';
+    labelsSection.style.display = 'none';
+    printLabelsBtn.style.display = 'none';
+    
+    if (type === 'daily') {
+        dailyControls.style.display = 'flex';
+        const date = reportDateInput.value || new Date().toISOString().split('T')[0];
+        url = `../api/trader/get-daily-report.php?user_id=${userId}&date=${date}`;
+    } else if (type === 'weekly') {
+        weeklyControls.style.display = 'flex';
+        updateWeekLabel();
+        url = `../api/trader/get-weekly-report.php?user_id=${userId}&week_start=${currentWeekStart}`;
+    } else {
+        monthlyControls.style.display = 'flex';
+        updateMonthLabel();
+        url = `../api/trader/get-monthly-report.php?user_id=${userId}&month=${currentMonth}`;
+    }
 
     fetch(url)
         .then(r => r.json())
@@ -264,10 +448,21 @@ function loadReport(type) {
             if (data.success) {
                 reportData = data;
                 renderReport();
+                if (type === 'daily') {
+                    renderLabels(data);
+                }
             }
         })
         .catch(() => {});
 }
+
+generateReportBtn.addEventListener('click', () => {
+    weeklyControls.style.display = 'none';
+    monthlyControls.style.display = 'none';
+    if (currentType === 'daily') {
+        loadReport('daily');
+    }
+});
 
 sidebarToggle.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('active'); });
 sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); });
@@ -424,9 +619,9 @@ function renderReportCards(data, type) {
 
       const rows = orders.map((order) => `
         <tr>
-          <td class="product-name">${order.order_num}</td>
+          <td class="product-name">${order.order_num}<br><span style="font-size:11px; color:var(--text-medium-gray);">Customer ID: ${order.customer_id}</span></td>
           <td class="qty">${order.products.map((p) => `${p.name} x${p.quantity}`).join(', ')}</td>
-          <td class="customer">${formatCurrency(order.total)}</td>
+          <td class="customer">${formatCurrency(order.total)}<br><span style="font-size:11px;">Slot: ${order.collection_slot}</span></td>
         </tr>
       `).join('');
 
@@ -443,33 +638,49 @@ function renderReportCards(data, type) {
       `;
     }).filter(Boolean).join('');
 
-    reportCardsContainer.innerHTML = sections;
+    reportCardsContainer.innerHTML = sections || '<p style="text-align:center; color:var(--text-medium-gray); padding:40px;">No orders for this date</p>';
     return;
   }
 
   if (type === 'weekly') {
     const daily = Array.isArray(data.daily) ? data.daily : [];
     if (!daily.length) {
-      reportCardsContainer.innerHTML = '';
+      reportCardsContainer.innerHTML = '<p style="text-align:center; color:var(--text-medium-gray); padding:40px;">No data for this week</p>';
       return;
     }
 
-    const rows = daily.map((item) => `
-      <tr>
-        <td class="product-name">${item.date}</td>
-        <td class="qty">${item.orders || 0}</td>
-        <td class="customer">${formatCurrency(item.revenue || 0)}</td>
-      </tr>
-    `).join('');
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const rows = daily.map((item) => {
+      const d = new Date(item.date + 'T00:00:00');
+      const dayName = dayNames[d.getDay()];
+      return `
+        <tr>
+          <td class="product-name">${dayName}, ${item.date}</td>
+          <td class="qty">${item.orders} (${item.collected} collected)</td>
+          <td class="customer">${formatCurrency(item.revenue)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const totalRev = data.summary?.total_revenue || 0;
+    const totalOrd = data.summary?.total_orders || 0;
+    const totalCol = data.summary?.total_collected || 0;
 
     reportCardsContainer.innerHTML = `
       <div class="report-card">
         <div class="report-card-header">
-          <span class="report-card-title">Weekly Breakdown</span>
+          <span class="report-card-title">Weekly Breakdown (Revenue from collected orders only)</span>
         </div>
         <table class="order-table">
-          <thead><tr><th>Date</th><th>Orders</th><th>Revenue</th></tr></thead>
-          <tbody>${rows}</tbody>
+          <thead><tr><th>Date</th><th>Orders (Collected)</th><th>Revenue</th></tr></thead>
+          <tbody>
+            ${rows}
+            <tr style="background:var(--bg-gray); font-weight:700;">
+              <td class="product-name">TOTAL</td>
+              <td class="qty">${totalOrd} (${totalCol} collected)</td>
+              <td class="customer">${formatCurrency(totalRev)}</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     `;
@@ -478,17 +689,31 @@ function renderReportCards(data, type) {
 
   const products = Array.isArray(data.products) ? data.products : [];
   if (!products.length) {
-    reportCardsContainer.innerHTML = '';
+    reportCardsContainer.innerHTML = '<p style="text-align:center; color:var(--text-medium-gray); padding:40px;">No data for this month</p>';
     return;
   }
 
-  const rows = products.map((item) => `
+  let sortedProducts = [...products];
+  const sortVal = monthlySort ? monthlySort.value : 'income-desc';
+  
+  if (sortVal === 'name-asc') sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortVal === 'name-desc') sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+  else if (sortVal === 'orders-desc') sortedProducts.sort((a, b) => (b.orders || 0) - (a.orders || 0));
+  else if (sortVal === 'orders-asc') sortedProducts.sort((a, b) => (a.orders || 0) - (b.orders || 0));
+  else if (sortVal === 'income-asc') sortedProducts.sort((a, b) => (a.income || 0) - (b.income || 0));
+  else sortedProducts.sort((a, b) => (b.income || 0) - (a.income || 0));
+
+  const rows = sortedProducts.map((item) => `
     <tr>
       <td class="product-name">${item.name}</td>
-      <td class="qty">${item.quantity || 0}</td>
+      <td class="qty">${item.orders || 0} orders (${item.quantity || 0} sold)</td>
       <td class="customer">${formatCurrency(item.income || 0)}</td>
     </tr>
   `).join('');
+
+  const totalIncome = data.summary?.total_income || 0;
+  const totalOrders = data.summary?.total_orders || 0;
+  const totalQty = data.summary?.products_sold || 0;
 
   reportCardsContainer.innerHTML = `
     <div class="report-card">
@@ -496,8 +721,15 @@ function renderReportCards(data, type) {
         <span class="report-card-title">Monthly Product Summary</span>
       </div>
       <table class="order-table">
-        <thead><tr><th>Product</th><th>Quantity</th><th>Income</th></tr></thead>
-        <tbody>${rows}</tbody>
+        <thead><tr><th>Product</th><th>Orders</th><th>Income</th></tr></thead>
+        <tbody>
+          ${rows}
+          <tr style="background:var(--bg-gray); font-weight:700;">
+            <td class="product-name">TOTAL</td>
+            <td class="qty">${totalOrders} orders (${totalQty} sold)</td>
+            <td class="customer">${formatCurrency(totalIncome)}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   `;
@@ -518,6 +750,53 @@ function renderReport() {
     drawBarChart(chartCanvas, chartData);
 }
 
+function renderLabels(data) {
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    let allLabels = [];
+    
+    slotNames.forEach(slot => {
+        const orders = Array.isArray(data.slots?.[slot]) ? data.slots[slot] : [];
+        orders.forEach(order => {
+            order.products.forEach(product => {
+                allLabels.push({
+                    order_num: order.order_num,
+                    customer_id: order.customer_id,
+                    customer_name: order.customer_name,
+                    product_name: product.name,
+                    quantity: product.quantity,
+                    slot: order.collection_slot,
+                    date: data.date
+                });
+            });
+        });
+    });
+    
+    if (allLabels.length === 0) {
+        labelsSection.style.display = 'none';
+        printLabelsBtn.style.display = 'none';
+        return;
+    }
+    
+    labelsSection.style.display = 'block';
+    printLabelsBtn.style.display = 'inline-flex';
+    
+    labelsGrid.innerHTML = allLabels.map(label => `
+        <div class="label-card" style="border:2px dashed var(--border-light); padding:16px; background:var(--bg-white); page-break-inside:avoid;">
+            <div style="font-size:11px; color:var(--text-medium-gray); margin-bottom:4px;">HuddersHub Collection Label</div>
+            <div style="font-size:16px; font-weight:800; color:var(--primary-green); margin-bottom:8px;">${label.order_num}</div>
+            <div style="font-size:12px; margin-bottom:4px;"><strong>Customer:</strong> ${label.customer_name} (ID: ${label.customer_id})</div>
+            <div style="font-size:12px; margin-bottom:4px;"><strong>Product:</strong> ${label.product_name}</div>
+            <div style="font-size:12px; margin-bottom:4px;"><strong>Qty:</strong> ${label.quantity}</div>
+            <div style="font-size:12px; margin-bottom:4px;"><strong>Slot:</strong> ${label.slot}</div>
+            <div style="font-size:12px;"><strong>Date:</strong> ${label.date}</div>
+        </div>
+    `).join('');
+}
+
+printLabelsBtn.addEventListener('click', () => {
+    window.print();
+});
+
 function setReportType(type) {
   currentType = type;
 
@@ -534,6 +813,11 @@ function setReportType(type) {
   url.searchParams.set('type', type);
   window.history.replaceState({}, '', url.toString());
 
+  if (type !== 'daily') {
+      labelsSection.style.display = 'none';
+      printLabelsBtn.style.display = 'none';
+  }
+
   loadReport(type);
 }
 
@@ -543,7 +827,6 @@ function downloadReportPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const summary = getReportSummary(reportData, currentType);
-  const chartData = getReportChartData(reportData, currentType);
   const margin = 14;
   let y = 16;
 
@@ -554,6 +837,18 @@ function downloadReportPDF() {
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
+  
+  if (currentType === 'weekly') {
+    doc.text(`Week: ${formatWeekLabel(currentWeekStart)}`, margin, y);
+    y += 6;
+  } else if (currentType === 'monthly') {
+    doc.text(`Month: ${formatMonthLabel(currentMonth)}`, margin, y);
+    y += 6;
+  } else if (currentType === 'daily') {
+    doc.text(`Date: ${reportData.date}`, margin, y);
+    y += 6;
+  }
+  
   doc.text(`Total Orders: ${summary.total_orders}`, margin, y);
   y += 6;
   doc.text(`Total Revenue: ${formatCurrency(summary.total_revenue)}`, margin, y);
@@ -561,19 +856,43 @@ function downloadReportPDF() {
   doc.text(`Avg Order Value: ${formatCurrency(summary.avg_order_value)}`, margin, y);
   y += 10;
 
-  doc.setFont('helvetica', 'bold');
-  doc.text('Chart data', margin, y);
-  y += 7;
-  doc.setFont('helvetica', 'normal');
-
-  chartData.labels.forEach((label, index) => {
-    if (y > 275) {
-      doc.addPage();
-      y = 16;
-    }
-    doc.text(`${label}: ${formatCurrency(chartData.values[index])}`, margin, y);
-    y += 6;
-  });
+  if (currentType === 'weekly' && reportData.daily) {
+    doc.setFont('helvetica', 'bold');
+    doc.text('Daily Breakdown', margin, y);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    reportData.daily.forEach(item => {
+      if (y > 275) { doc.addPage(); y = 16; }
+      doc.text(`${item.date}: ${formatCurrency(item.revenue)} (${item.collected} collected)`, margin, y);
+      y += 6;
+    });
+  } else if (currentType === 'monthly' && reportData.products) {
+    doc.setFont('helvetica', 'bold');
+    doc.text('Product Summary', margin, y);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    reportData.products.forEach(item => {
+      if (y > 275) { doc.addPage(); y = 16; }
+      doc.text(`${item.name}: ${item.orders} orders, ${formatCurrency(item.income)}`, margin, y);
+      y += 6;
+    });
+  } else if (currentType === 'daily' && reportData.slots) {
+    const slotNames = ['10:00-13:00', '13:00-16:00', '16:00-19:00'];
+    slotNames.forEach(slot => {
+      const orders = reportData.slots[slot] || [];
+      if (!orders.length) return;
+      if (y > 260) { doc.addPage(); y = 16; }
+      doc.setFont('helvetica', 'bold');
+      doc.text(slot, margin, y);
+      y += 7;
+      doc.setFont('helvetica', 'normal');
+      orders.forEach(order => {
+        if (y > 275) { doc.addPage(); y = 16; }
+        doc.text(`${order.order_num}: ${order.products.map(p => `${p.name} x${p.quantity}`).join(', ')} - ${formatCurrency(order.total)}`, margin, y);
+        y += 6;
+      });
+    });
+  }
 
   doc.save(`${currentType}_report.pdf`);
 }

@@ -7,6 +7,7 @@ require_once '../../config/database.php';
 $shop_id = isset($_GET['shop_id']) ? (int)$_GET['shop_id'] : 0;
 $exclude = isset($_GET['exclude']) ? (int)$_GET['exclude'] : 0;
 $limit   = isset($_GET['limit'])   ? min((int)$_GET['limit'], 20) : 8;
+$offset  = isset($_GET['offset'])  ? (int)$_GET['offset'] : 0;
 
 if (!$shop_id) {
     echo json_encode(['success' => false, 'error' => 'shop_id required']);
@@ -15,9 +16,14 @@ if (!$shop_id) {
 
 $conn = getDB();
 
-$sql = "SELECT p.product_id, p.name, p.price, p.stock, p.unit,
+$sql = "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.unit,
+               s.name AS shop_name, s.shop_type,
+               pi.image_url, c.category_name,
                NVL(d.discount_percent, 0) AS discount_percent
         FROM PRODUCT p
+        JOIN SHOP s ON p.shop_id = s.shop_id
+        LEFT JOIN PRODUCT_IMAGE pi ON pi.product_id = p.product_id AND pi.display_order = 0
+        LEFT JOIN PRODUCT_CATEGORY c ON p.category_id = c.category_id
         LEFT JOIN (
             SELECT product_id, MAX(discount_percent) AS discount_percent
             FROM DISCOUNT WHERE valid_until >= TRUNC(SYSDATE)
@@ -26,12 +32,13 @@ $sql = "SELECT p.product_id, p.name, p.price, p.stock, p.unit,
         WHERE p.shop_id = :shop_id
           AND p.product_id != :exclude
           AND p.status = 'Active'
-          AND ROWNUM <= :lim
-        ORDER BY p.product_id DESC";
+        ORDER BY p.product_id DESC
+        OFFSET :off ROWS FETCH NEXT :lim ROWS ONLY";
 
 $stmt = oci_parse($conn, $sql);
 oci_bind_by_name($stmt, ':shop_id', $shop_id);
 oci_bind_by_name($stmt, ':exclude', $exclude);
+oci_bind_by_name($stmt, ':off',     $offset);
 oci_bind_by_name($stmt, ':lim',     $limit);
 oci_execute($stmt);
 

@@ -20,6 +20,36 @@ $productId = (int) $input['product_id'];
 $quantity = max(1, (int) $input['quantity']);
 
 try {
+	// 1. Check current product stock
+	$stockStmt = oci_parse($conn, 'SELECT stock, name FROM PRODUCT WHERE product_id = :product_id');
+	oci_bind_by_name($stockStmt, ':product_id', $productId);
+	oci_execute($stockStmt);
+	$stockRow = oci_fetch_assoc($stockStmt);
+	oci_free_statement($stockStmt);
+
+	if (!$stockRow) {
+		throw new Exception('Product not found');
+	}
+
+	$availableStock = (int)$stockRow['STOCK'];
+	if ($availableStock <= 0) {
+		echo json_encode(['success' => false, 'error' => 'Sorry, ' . $stockRow['NAME'] . ' is currently out of stock.']);
+		exit;
+	}
+
+	// 2. Check current total quantity in cart
+	$countStmt = oci_parse($conn, 'SELECT SUM(ci.quantity) AS total_qty FROM CART c JOIN CART_ITEM ci ON c.cart_id = ci.cart_id WHERE c.user_id = :user_id');
+	oci_bind_by_name($countStmt, ':user_id', $userId);
+	oci_execute($countStmt);
+	$countRow = oci_fetch_assoc($countStmt);
+	$currentTotal = (int)($countRow['TOTAL_QTY'] ?? 0);
+	oci_free_statement($countStmt);
+
+	if ($currentTotal + $quantity > 20) {
+		echo json_encode(['success' => false, 'error' => 'Cart limit reached. You can only have up to 20 products in your cart.']);
+		exit;
+	}
+
 	$cartId = null;
 	$cartStmt = oci_parse($conn, 'SELECT cart_id FROM CART WHERE user_id = :user_id');
 	oci_bind_by_name($cartStmt, ':user_id', $userId);

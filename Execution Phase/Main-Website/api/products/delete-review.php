@@ -16,10 +16,10 @@ if (!$review_id) {
 }
 
 // Verify the review belongs to the user
-$checkSql = "SELECT review_id FROM REVIEW WHERE review_id = :id AND user_id = :user_id";
+$checkSql = "SELECT review_id FROM REVIEW WHERE review_id = :p_review_id AND user_id = :p_user_id";
 $checkStmt = oci_parse($conn, $checkSql);
-oci_bind_by_name($checkStmt, ':id', $review_id);
-oci_bind_by_name($checkStmt, ':user_id', $user_id);
+oci_bind_by_name($checkStmt, ':p_review_id', $review_id);
+oci_bind_by_name($checkStmt, ':p_user_id', $user_id);
 oci_execute($checkStmt);
 $review = oci_fetch_assoc($checkStmt);
 oci_free_statement($checkStmt);
@@ -29,9 +29,9 @@ if (!$review) {
     exit;
 }
 
-$deleteSql = "DELETE FROM REVIEW WHERE review_id = :id";
+$deleteSql = "DELETE FROM REVIEW WHERE review_id = :p_review_id";
 $deleteStmt = oci_parse($conn, $deleteSql);
-oci_bind_by_name($deleteStmt, ':id', $review_id);
+oci_bind_by_name($deleteStmt, ':p_review_id', $review_id);
 
 if (oci_execute($deleteStmt)) {
     echo json_encode(['success' => true, 'message' => 'Review deleted successfully']);

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -60,13 +60,10 @@ header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: 
 header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .top-bar { background: rgba(255,255,255,0.98); border-bottom: 1px solid var(--border-light); padding: 14px 0; transition: var(--transition-smooth); }
 .page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-.top-bar-inner { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+.top-bar-inner { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand img { width: 56px; height: 56px; object-fit: contain; }
 .brand-text { font-family: 'Google Sans Flex', sans-serif; font-weight: 700; font-style: italic; font-size: 36px; color: #0F260B; }
-.search-wrap { display: flex; align-items: center; gap: 12px; }
-.search-bar { position: relative; flex: 1; min-width: 280px; }
-.search-bar input { width: 100%; padding: 6px 44px 6px 14px; height: 36px; border: 1px solid #C8D1C6; background: #fff; font-size: 14px; outline: none; border-radius: 0; }
 .actions { display: flex; align-items: center; gap: 16px; }
 .action-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; cursor: pointer; padding: 8px 12px; }
 .icon-with-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 6px; color: var(--text-black); }
@@ -88,6 +85,15 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .signup-form-side { padding: 48px; }
 .signup-header h2 { font-size: 32px; font-weight: 800; color: var(--text-dark-gray); margin-bottom: 8px; }
 
+/* ROLE TABS */
+.role-tabs { display: flex; background: #F2F4F1; border: 1px solid var(--border-light); padding: 4px; gap: 4px; margin-bottom: 28px; }
+.role-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border: none; background: transparent; font-weight: 600; color: var(--text-medium-gray); cursor: pointer; }
+.role-tab.active { background: var(--primary-green); color: #fff; }
+
+/* FORM AREA CONTAINER (toggles between customer and trader) */
+.form-area { display: flex; flex-direction: column; }
+#traderFormArea { display: none; }
+
 .signup-form { display: flex; flex-direction: column; gap: 18px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .form-group { position: relative; }
@@ -99,6 +105,20 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 .signup-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; background: var(--primary-green); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: var(--transition-smooth); margin-top: 8px; }
 .signup-btn:hover { background: var(--primary-green-dark); }
 .signup-btn:disabled { background: #9CA3AF; cursor: not-allowed; }
+
+.form-error-msg { font-size: 13px; color: #EF4444; margin-top: 6px; display: none; }
+.form-input.error { border-color: #EF4444; background: #FEF2F2; }
+.form-error-msg.visible { display: block; }
+
+/* MESSAGE BANNER */
+.signup-message-banner { display: none; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 10px; margin-bottom: 18px; font-size: 14px; font-weight: 500; }
+.signup-message-banner.visible { display: flex; }
+.signup-message-banner.error { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+.signup-message-banner.success { background: #F0FDF4; border: 1px solid #BBF7D0; color: #166534; }
+.signup-message-banner .banner-icon { font-size: 22px; flex-shrink: 0; }
+.signup-message-banner .banner-msg { flex: 1; }
+.signup-message-banner .banner-close { background: none; border: none; cursor: pointer; color: inherit; font-size: 18px; opacity: .6; flex-shrink: 0; }
+.signup-message-banner .banner-close:hover { opacity: 1; }
 
 .password-strength { margin-top: 6px; height: 4px; background: #E5E7EB; }
 .strength-bar { height: 100%; width: 0%; transition: width 0.3s; }
@@ -125,16 +145,11 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 <div class="page-wrap top-bar-inner">
     <div class="brand">
         <a href="index.html" style="display: flex; align-items: center; gap: 12px;">
-            <img src="Asstes/logo.png" alt="Logo">
-            <span class="brand-text">HuddersHub</span>
+            <img src="assets/logo.png" alt="Logo" style="width:64px;height:64px;object-fit:contain;">
+            <span class="brand-text" style="font-size:40px;">HuddersHub</span>
         </a>
     </div>
-    <div class="search-wrap">
-        <div class="search-bar"><input type="text" placeholder="Search"><span class="search-icon material-icons-outlined">search</span></div>
-    </div>
-    <div class="actions">
-        <a href="login.html" class="action-btn"><span class="material-icons-outlined">person</span>Login</a>
-        <a class="icon-with-badge" href="#" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
+    <div class="actions" style="gap:4px;">
     </div>
 </div>
 </div>
@@ -156,19 +171,30 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 
     <!-- RIGHT: FORM SIDE -->
     <div class="signup-form-side">
+        <div class="role-tabs">
+            <button class="role-tab active" id="tabCustomer" onclick="switchRole('customer')">Customer</button>
+            <button class="role-tab" id="tabTrader" onclick="switchRole('trader')">Trader</button>
+        </div>
+
+        <div class="form-area" id="customerFormArea">
+        <div id="customerBanner" class="signup-message-banner">
+            <span class="material-icons-outlined banner-icon"></span>
+            <span class="banner-msg" id="customerBannerMsg"></span>
+            <button class="banner-close" onclick="hideBanner('customerBanner')"><span class="material-icons-outlined">close</span></button>
+        </div>
         <div class="signup-header">
-            <h2>Create your account</h2>
+            <h2 id="customerFormTitle">Create your account</h2>
             <p>Please fill in all details to register.</p>
         </div>
 
         <form class="signup-form" id="signupForm" novalidate>
             <div class="form-row">
-                <div class="form-group"><label class="form-label">First name *</label><input class="form-input" type="text" id="firstName" required></div>
-                <div class="form-group"><label class="form-label">Last name *</label><input class="form-input" type="text" id="lastName" required></div>
+                <div class="form-group"><label class="form-label">First name *</label><input class="form-input" type="text" id="firstName" required><div class="form-error-msg" id="firstNameError">First name required.</div></div>
+                <div class="form-group"><label class="form-label">Last name *</label><input class="form-input" type="text" id="lastName" required><div class="form-error-msg" id="lastNameError">Last name required.</div></div>
             </div>
 
             <div class="form-row">
-                <div class="form-group"><label class="form-label">Email address *</label><input class="form-input" type="email" id="signupEmail" required></div>
+                <div class="form-group"><label class="form-label">Email address *</label><input class="form-input" type="email" id="signupEmail" required><div class="form-error-msg" id="signupEmailError">Valid email required.</div></div>
                 <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" type="text" id="phone"></div>
             </div>
 
@@ -188,25 +214,91 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Password *</label>
-                    <input class="form-input" type="password" id="signupPassword" required>
+                    <div style="position:relative;">
+                        <input class="form-input" type="password" id="signupPassword" required>
+                        <button type="button" onclick="togglePw('signupPassword','pwIcon1')" style="position:absolute;right:12px;top:12px;border:none;background:none;cursor:pointer;display:flex;align-items:center;"><span class="material-icons-outlined" id="pwIcon1" style="font-size:20px;color:#888;">visibility_off</span></button>
+                    </div>
+                    <div class="form-error-msg" id="signupPasswordError">Password must be at least 8 characters.</div>
                     <div class="password-strength"><div class="strength-bar" id="strengthBar"></div></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Confirm password *</label>
-                    <input class="form-input" type="password" id="confirmPassword" required>
+                    <div style="position:relative;">
+                        <input class="form-input" type="password" id="confirmPassword" required>
+                        <button type="button" onclick="togglePw('confirmPassword','pwIcon2')" style="position:absolute;right:12px;top:12px;border:none;background:none;cursor:pointer;display:flex;align-items:center;"><span class="material-icons-outlined" id="pwIcon2" style="font-size:20px;color:#888;">visibility_off</span></button>
+                    </div>
+                    <div class="form-error-msg" id="confirmPasswordError">Confirm your password.</div>
                 </div>
             </div>
 
             <div style="display:flex; gap:10px; margin-top:5px;">
                 <input type="checkbox" id="agreeTerms" required>
-                <label for="agreeTerms" style="font-size:13px;">I agree to the Terms and Privacy Policy.</label>
+                <label for="agreeTerms" style="font-size:13px; color: var(--primary-orange);">I agree to the <a href="terms.html" target="_blank" style="color: var(--primary-orange); font-weight:700;">Terms</a> and <a href="privacy.html" target="_blank" style="color: var(--primary-orange); font-weight:700;">Privacy Policy</a>.</label>
+                <div class="form-error-msg" id="agreeTermsError">You must agree to the terms.</div>
             </div>
 
             <button type="submit" class="signup-btn" id="signupSubmitBtn"><span id="signupBtnTextInner">Create account</span></button>
 
             <p style="text-align:center; font-size:14px; margin-top:10px;">Already have an account? <a href="login.html" style="color:var(--primary-green); font-weight:700;">Log in</a></p>
         </form>
-    </div>
+        </div><!-- /customerFormArea -->
+
+        <div class="form-area" id="traderFormArea">
+            <div id="traderBanner" class="signup-message-banner">
+                <span class="material-icons-outlined banner-icon"></span>
+                <span class="banner-msg" id="traderBannerMsg"></span>
+                <button class="banner-close" onclick="hideBanner('traderBanner')"><span class="material-icons-outlined">close</span></button>
+            </div>
+            <div class="signup-header">
+                <h2 id="traderFormTitle">Become a Trader</h2>
+                <p id="traderFormDesc">Join our marketplace as a trader.</p>
+            </div>
+
+            <form id="traderRegisterForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Shop Name *</label><input class="form-input" type="text" id="traderShopName" required><div class="form-error-msg" id="traderShopNameErr">Shop name required.</div></div>
+                    <div class="form-group"><label class="form-label">Shop Type *</label><select class="form-input" id="traderShopType" required><option value="">Select type</option><option>Butcher</option><option>Greengrocer</option><option>Fishmonger</option><option>Bakery</option><option>Delicatessen</option></select><div class="form-error-msg" id="traderShopTypeErr">Select a shop type.</div></div>
+                </div>
+
+                <div class="form-group"><label class="form-label">Shop Location *</label><input class="form-input" type="text" id="traderShopLocation" placeholder="e.g., 123 Market Street, Huddersfield" required><div class="form-error-msg" id="traderShopLocationErr">Shop location required.</div></div>
+
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">First name *</label><input class="form-input" type="text" id="traderFirstName" required><div class="form-error-msg" id="traderFirstNameErr">Required.</div></div>
+                    <div class="form-group"><label class="form-label">Last name *</label><input class="form-input" type="text" id="traderLastName" required><div class="form-error-msg" id="traderLastNameErr">Required.</div></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Email address *</label><input class="form-input" type="email" id="traderEmail" required><div class="form-error-msg" id="traderEmailErr">Valid email required.</div></div>
+                    <div class="form-group"><label class="form-label">Phone number</label><input class="form-input" type="text" id="traderPhone"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Password *</label>
+                        <div style="position:relative;">
+                            <input class="form-input" type="password" id="traderPassword" required>
+                            <button type="button" onclick="togglePw('traderPassword','pwIconT1')" style="position:absolute;right:12px;top:12px;border:none;background:none;cursor:pointer;display:flex;align-items:center;"><span class="material-icons-outlined" id="pwIconT1" style="font-size:20px;color:#888;">visibility_off</span></button>
+                        </div>
+                        <div class="form-error-msg" id="traderPasswordErr">Password must be at least 8 characters.</div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Confirm password *</label>
+                        <div style="position:relative;">
+                            <input class="form-input" type="password" id="traderConfirmPassword" required>
+                            <button type="button" onclick="togglePw('traderConfirmPassword','pwIconT2')" style="position:absolute;right:12px;top:12px;border:none;background:none;cursor:pointer;display:flex;align-items:center;"><span class="material-icons-outlined" id="pwIconT2" style="font-size:20px;color:#888;">visibility_off</span></button>
+                        </div>
+                        <div class="form-error-msg" id="traderConfirmPasswordErr">Confirm your password.</div>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:5px;">
+                    <input type="checkbox" id="traderAgreeTerms" required>
+                    <label for="traderAgreeTerms" style="font-size:13px; color: var(--primary-orange);">I agree to the <a href="terms.html" target="_blank" style="color: var(--primary-orange); font-weight:700;">Terms and Conditions</a> and <a href="privacy.html" target="_blank" style="color: var(--primary-orange); font-weight:700;">Privacy Policy</a>. I understand my application will be reviewed by an admin.</label>
+                    <div class="form-error-msg" id="traderAgreeTermsErr">You must agree to the terms.</div>
+                </div>
+
+                <button type="submit" class="signup-btn" id="traderSubmitBtn"><span id="traderBtnText">Submit Application</span></button>
+                <p style="text-align:center;font-size:14px;margin-top:10px;">Already have an account? <a href="login.html" style="color:var(--primary-green);font-weight:700;">Log in</a></p>
+            </form>
+        </div><!-- /traderFormArea -->
 </div>
 </main>
 
@@ -218,7 +310,7 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
 </div>
 <div class="page-wrap footer-grid">
     <div class="footer-brand"><div class="brand-row"><span class="brand-name">HuddersHub</span></div><p>Eat Fresh. Buy Local.</p></div>
-    <div class="footer-col"><h4>Shop</h4><a href="category.html?type=greengrocer">Greengrocer</a><a href="category.html?type=butcher">Butcher</a></div>
+    <div class="footer-col"><h4>Shop</h4><a href="category.php?shop=greengrocer">Greengrocer</a><a href="category.php?shop=butcher">Butcher</a></div>
     <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="register-trader.html">Become a Trader</a></div>
     <div class="footer-col"><h4>Contact</h4><p>Huddersfield, UK</p><p>support@huddershub.test</p></div>
 </div>
@@ -272,7 +364,36 @@ header.scrolled { box-shadow: var(--shadow-md); background: var(--bg-white); }
         </script>
 
 <script>
-// Password Strength
+// ==================== VALIDATION UTILS ====================
+function showError(inputId, errorId) {
+    document.getElementById(inputId).classList.add('error');
+    document.getElementById(errorId).classList.add('visible');
+}
+function clearError(inputId, errorId) {
+    document.getElementById(inputId).classList.remove('error');
+    document.getElementById(errorId).classList.remove('visible');
+}
+function clearAllErrors() {
+    document.querySelectorAll('.form-error-msg').forEach(e => e.classList.remove('visible'));
+    document.querySelectorAll('.form-input').forEach(i => i.classList.remove('error'));
+    hideBanner('customerBanner');
+    hideBanner('traderBanner');
+}
+
+// ==================== BANNER HELPERS ====================
+function showBanner(id, msgId, msg, type) {
+    var el = document.getElementById(id);
+    var msgEl = document.getElementById(msgId);
+    el.classList.remove('error','success');
+    el.classList.add(type, 'visible');
+    msgEl.textContent = msg;
+    el.querySelector('.banner-icon').textContent = type === 'error' ? 'error' : 'check_circle';
+}
+function hideBanner(id) {
+    document.getElementById(id).classList.remove('visible');
+}
+
+// ==================== PASSWORD STRENGTH ====================
 document.getElementById('signupPassword').addEventListener('input', function() {
     const bar = document.getElementById('strengthBar');
     let score = 0;
@@ -287,50 +408,222 @@ document.getElementById('signupPassword').addEventListener('input', function() {
     }
 });
 
-// REAL SUBMIT LOGIC
+// ==================== CUSTOMER FORM BLUR VALIDATION ====================
+document.getElementById('firstName').addEventListener('blur', () => {
+    if (!document.getElementById('firstName').value.trim()) showError('firstName','firstNameError'); else clearError('firstName','firstNameError');
+});
+document.getElementById('lastName').addEventListener('blur', () => {
+    if (!document.getElementById('lastName').value.trim()) showError('lastName','lastNameError'); else clearError('lastName','lastNameError');
+});
+document.getElementById('signupEmail').addEventListener('blur', () => {
+    const v = document.getElementById('signupEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) showError('signupEmail','signupEmailError'); else clearError('signupEmail','signupEmailError');
+});
+document.getElementById('signupPassword').addEventListener('blur', () => {
+    const v = document.getElementById('signupPassword').value;
+    if (v.length === 0) { document.getElementById('signupPasswordError').textContent = 'Password required.'; showError('signupPassword','signupPasswordError'); }
+    else if (v.length < 8) { document.getElementById('signupPasswordError').textContent = 'Password must be at least 8 characters.'; showError('signupPassword','signupPasswordError'); }
+    else clearError('signupPassword','signupPasswordError');
+});
+document.getElementById('confirmPassword').addEventListener('blur', () => {
+    if (!document.getElementById('confirmPassword').value) showError('confirmPassword','confirmPasswordError'); else clearError('confirmPassword','confirmPasswordError');
+});
+
+// ==================== CUSTOMER FORM SUBMIT ====================
 document.getElementById('signupForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    clearAllErrors();
+    let valid = true;
+
+    const fields = [
+        { input: 'firstName',   error: 'firstNameError',    test: () => document.getElementById('firstName').value.trim() !== '' },
+        { input: 'lastName',    error: 'lastNameError',     test: () => document.getElementById('lastName').value.trim() !== '' },
+        { input: 'signupEmail', error: 'signupEmailError',  test: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('signupEmail').value.trim()) },
+        { input: 'signupPassword', error: 'signupPasswordError', test: () => document.getElementById('signupPassword').value.length >= 8 },
+        { input: 'confirmPassword', error: 'confirmPasswordError', test: () => document.getElementById('confirmPassword').value !== '' },
+    ];
+
+    fields.forEach(f => { if (!f.test()) { showError(f.input, f.error); valid = false; } });
+
+    if (document.getElementById('signupPassword').value !== document.getElementById('confirmPassword').value) {
+        showError('confirmPassword','confirmPasswordError');
+        document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+        valid = false;
+    } else {
+        document.getElementById('confirmPasswordError').textContent = 'Confirm your password.';
+    }
+
+    if (!document.getElementById('agreeTerms').checked) {
+        showError('agreeTerms','agreeTermsError');
+        valid = false;
+    }
+
+    if (!valid) return;
+
     const btn = document.getElementById('signupSubmitBtn');
-    const pass = document.getElementById('signupPassword').value;
-    const confirm = document.getElementById('confirmPassword').value;
-
-    if (pass !== confirm) { alert("Passwords do not match!"); return; }
-    if (!document.getElementById('agreeTerms').checked) { alert("Please agree to terms."); return; }
-
     btn.disabled = true;
     document.getElementById('signupBtnTextInner').textContent = 'Connecting...';
-
-    const payload = {
-        firstname: document.getElementById('firstName').value.trim(),
-        lastname: document.getElementById('lastName').value.trim(),
-        email: document.getElementById('signupEmail').value.trim(),
-        password: pass,
-        phone_number: document.getElementById('phone').value.trim(),
-        address: document.getElementById('address').value.trim(),
-        date_of_birth: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value
-    };
 
     fetch('../api/auth/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+            firstname: document.getElementById('firstName').value.trim(),
+            lastname:  document.getElementById('lastName').value.trim(),
+            email:     document.getElementById('signupEmail').value.trim(),
+            password:  document.getElementById('signupPassword').value,
+            phone_number: document.getElementById('phone').value.trim(),
+            address:   document.getElementById('address').value.trim(),
+            date_of_birth: document.getElementById('dob').value,
+            gender:    document.getElementById('gender').value
+        })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert('SUCCESS! Account created.');
-            window.location.href = 'login.html';
+            showBanner('customerBanner','customerBannerMsg',data.message, 'success');
+            setTimeout(function(){ window.location.href = 'login.html?registered=1&name=' + encodeURIComponent(document.getElementById('firstName').value.trim()); }, 3500);
         } else {
-            alert('FAILED: ' + data.message);
+            showBanner('customerBanner','customerBannerMsg','FAILED: ' + data.message, 'error');
             btn.disabled = false;
             document.getElementById('signupBtnTextInner').textContent = 'Create account';
         }
     })
     .catch(err => {
-        alert('Server connection error. Check XAMPP.');
+        showBanner('customerBanner','customerBannerMsg','Server connection error.', 'error');
         btn.disabled = false;
         document.getElementById('signupBtnTextInner').textContent = 'Create account';
+    });
+});
+
+// ==================== TOGGLE PASSWORD VISIBILITY ====================
+function togglePw(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = 'visibility';
+    } else {
+        input.type = 'password';
+        icon.textContent = 'visibility_off';
+    }
+}
+
+function switchRole(role) {
+    currentRole = role;
+    document.getElementById('tabCustomer').classList.toggle('active', role === 'customer');
+    document.getElementById('tabTrader').classList.toggle('active', role === 'trader');
+    document.getElementById('customerFormArea').style.display = role === 'customer' ? 'flex' : 'none';
+    document.getElementById('traderFormArea').style.display = role === 'trader' ? 'flex' : 'none';
+    clearAllErrors();
+}
+
+// ==================== TRADER FORM BLUR VALIDATION ====================
+document.addEventListener('DOMContentLoaded', function() {
+    const tFields = [
+        { input: 'traderShopName',    error: 'traderShopNameErr'    },
+        { input: 'traderShopType',    error: 'traderShopTypeErr'    },
+        { input: 'traderShopLocation',error: 'traderShopLocationErr'},
+        { input: 'traderFirstName',   error: 'traderFirstNameErr'   },
+        { input: 'traderLastName',    error: 'traderLastNameErr'    },
+        { input: 'traderEmail',       error: 'traderEmailErr'       },
+        { input: 'traderPassword',    error: 'traderPasswordErr'    },
+        { input: 'traderConfirmPassword', error: 'traderConfirmPasswordErr' },
+    ];
+    tFields.forEach(f => {
+        document.getElementById(f.input).addEventListener('blur', () => {
+            if (!document.getElementById(f.input).value.trim() && document.getElementById(f.input).type !== 'password') {
+                showError(f.input, f.error);
+            } else {
+                clearError(f.input, f.error);
+            }
+        });
+    });
+    // Email format check on blur
+    document.getElementById('traderEmail').addEventListener('blur', () => {
+        const v = document.getElementById('traderEmail').value.trim();
+        if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+            showError('traderEmail','traderEmailErr');
+        }
+    });
+    // Password length check on blur
+    document.getElementById('traderPassword').addEventListener('blur', () => {
+        const v = document.getElementById('traderPassword').value;
+        if (v.length === 0) { document.getElementById('traderPasswordErr').textContent = 'Password required.'; showError('traderPassword','traderPasswordErr'); }
+        else if (v.length < 8) { document.getElementById('traderPasswordErr').textContent = 'Password must be at least 8 characters.'; showError('traderPassword','traderPasswordErr'); }
+        else clearError('traderPassword','traderPasswordErr');
+    });
+});
+
+// ==================== TRADER FORM SUBMIT ====================
+document.getElementById('traderRegisterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearAllErrors();
+    clearAllErrors();
+    let valid = true;
+
+    const tFields = [
+        { input: 'traderShopName',        error: 'traderShopNameErr',         test: () => document.getElementById('traderShopName').value.trim() !== '' },
+        { input: 'traderShopType',        error: 'traderShopTypeErr',         test: () => document.getElementById('traderShopType').value !== '' },
+        { input: 'traderShopLocation',    error: 'traderShopLocationErr',     test: () => document.getElementById('traderShopLocation').value.trim() !== '' },
+        { input: 'traderFirstName',       error: 'traderFirstNameErr',        test: () => document.getElementById('traderFirstName').value.trim() !== '' },
+        { input: 'traderLastName',        error: 'traderLastNameErr',         test: () => document.getElementById('traderLastName').value.trim() !== '' },
+        { input: 'traderEmail',           error: 'traderEmailErr',            test: () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('traderEmail').value.trim()) },
+        { input: 'traderPassword',        error: 'traderPasswordErr',         test: () => document.getElementById('traderPassword').value.length >= 8 },
+        { input: 'traderConfirmPassword', error: 'traderConfirmPasswordErr',  test: () => document.getElementById('traderConfirmPassword').value !== '' },
+    ];
+
+    tFields.forEach(f => { if (!f.test()) { showError(f.input, f.error); valid = false; } });
+
+    const tp = document.getElementById('traderPassword').value;
+    const tc = document.getElementById('traderConfirmPassword').value;
+    if (tp !== tc) {
+        showError('traderConfirmPassword','traderConfirmPasswordErr');
+        document.getElementById('traderConfirmPasswordErr').textContent = 'Passwords do not match.';
+        valid = false;
+    }
+
+    if (!document.getElementById('traderAgreeTerms').checked) {
+        showError('traderAgreeTerms','traderAgreeTermsErr');
+        valid = false;
+    }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('traderSubmitBtn');
+    btn.disabled = true;
+    document.getElementById('traderBtnText').textContent = 'Submitting...';
+
+    fetch('../api/auth/register-trader.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            firstname:       document.getElementById('traderFirstName').value.trim(),
+            lastname:        document.getElementById('traderLastName').value.trim(),
+            email:           document.getElementById('traderEmail').value.trim(),
+            password:        tp,
+            phone_number:    document.getElementById('traderPhone').value.trim(),
+            address:         '',
+            shop_name:       document.getElementById('traderShopName').value.trim(),
+            shop_type:       document.getElementById('traderShopType').value,
+            shop_location:   document.getElementById('traderShopLocation').value.trim()
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showBanner('traderBanner','traderBannerMsg',data.message, 'success');
+            setTimeout(function(){ window.location.href = 'login.html?registered=1'; }, 3500);
+        } else {
+            showBanner('traderBanner','traderBannerMsg','FAILED: ' + data.message, 'error');
+            btn.disabled = false;
+            document.getElementById('traderBtnText').textContent = 'Submit Application';
+        }
+    })
+    .catch(err => {
+        showBanner('traderBanner','traderBannerMsg','Server connection error.', 'error');
+        btn.disabled = false;
+        document.getElementById('traderBtnText').textContent = 'Submit Application';
     });
 });
 </script>

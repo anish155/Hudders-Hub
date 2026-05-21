@@ -47,9 +47,21 @@ if (!$row) {
     exit;
 }
 
+// ── Fetch CLOB product_details separately ──────────────────────────────────────
+$clobStmt = oci_parse($conn, 'SELECT product_details FROM PRODUCT WHERE product_id = :pid');
+oci_bind_by_name($clobStmt, ':pid', $product_id);
+oci_execute($clobStmt);
+$clobRow = oci_fetch_assoc($clobStmt);
+$row['PRODUCT_DETAILS'] = '';
+if ($clobRow && isset($clobRow['PRODUCT_DETAILS'])) {
+    $clob = $clobRow['PRODUCT_DETAILS'];
+    $row['PRODUCT_DETAILS'] = is_object($clob) ? $clob->load() : (string)($clob ?? '');
+}
+oci_free_statement($clobStmt);
+
 // ── Images for this product ──────────────────────────────────────────────────
 $img_sql = "
-    SELECT image_id, mime_type, file_name, display_order
+    SELECT image_id, image_url, mime_type, file_name, display_order
     FROM PRODUCT_IMAGE
     WHERE product_id = :pid
     ORDER BY display_order, image_id
@@ -60,25 +72,11 @@ oci_execute($img_stmt);
 
 $images = [];
 while ($img = oci_fetch_assoc($img_stmt)) {
-    // Fetch BLOB content
-    $blob_sql = "SELECT image FROM PRODUCT_IMAGE WHERE image_id = :iid";
-    $blob_stmt = oci_parse($conn, $blob_sql);
-    oci_bind_by_name($blob_stmt, ':iid', $img['IMAGE_ID']);
-    oci_execute($blob_stmt);
-    $blob_row = oci_fetch_array($blob_stmt, OCI_ASSOC);
-    $blob_data = '';
-    if ($blob_row && isset($blob_row['IMAGE'])) {
-        $lob   = $blob_row['IMAGE'];
-        $blob_data = $lob->load();
-        $lob->free();
-    }
-    oci_free_statement($blob_stmt);
-
     $images[] = [
         'image_id'   => (int)$img['IMAGE_ID'],
-        'mime_type'  => $img['MIME_TYPE']  ?? 'image/jpeg',
-        'file_name'  => $img['FILE_NAME']  ?? '',
-        'image_data' => base64_encode($blob_data),
+        'image_url'  => $img['IMAGE_URL']    ?? '',
+        'mime_type'  => $img['MIME_TYPE']    ?? 'image/jpeg',
+        'file_name'  => $img['FILE_NAME']    ?? '',
     ];
 }
 oci_free_statement($img_stmt);
@@ -100,9 +98,10 @@ echo json_encode([
         'dietary_tags'  => $row['DIETARY_TAGS']   ?? '',
         'status'        => $row['STATUS'],
         'category_id'   => (int)$row['CATEGORY_ID'],
-        'category'         => $row['CATEGORY_NAME']   ?? '',
+        'category'      => $row['CATEGORY_NAME']   ?? '',
         'discount_percent' => (float)($row['DISCOUNT_PERCENT'] ?? 0),
-        'images'           => $images,
+        'product_details' => $row['PRODUCT_DETAILS'] ?? '',
+        'images'        => $images,
     ]
 ]);
 ?>

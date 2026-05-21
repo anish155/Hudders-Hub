@@ -55,6 +55,27 @@
                 margin: 0;
                 padding: 0;
             }
+            /* Professional Modal */
+            .prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+            .prof-modal-overlay.show{display:flex;opacity:1}
+            .prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+            .prof-modal-overlay.show .prof-modal{transform:scale(1)}
+            .prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+            .prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+            .prof-modal-icon.error{background:#ffebee;color:#c62828}
+            .prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+            .prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+            .prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+            .prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+            .prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+            .prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+            .prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+            .prof-modal-btn.primary{background:#0f260b;color:#fff}
+            .prof-modal-btn.primary:hover{background:#1c3c17}
+            .prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+            .prof-modal-btn.secondary:hover{background:#e0e0e0}
+            .prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+            .prof-modal-close:hover{color:#333}
             html {
                 scroll-behavior: smooth;
             }
@@ -199,6 +220,10 @@
                 font-size: 18px;
                 color: #1b2419;
                 opacity: 0.55;
+                border: none;
+                background: transparent;
+                padding: 0;
+                cursor: pointer;
             }
             .actions {
                 display: flex;
@@ -452,193 +477,6 @@
                 background: var(--primary-orange);
                 color: var(--bg-white);
                 border-left-color: var(--primary-orange);
-            }
-
-            /* CART DRAWER */
-            .cart-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition-smooth);
-                z-index: 1200;
-            }
-            .cart-drawer {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100vh;
-                width: min(420px, 92vw);
-                background: #fff;
-                box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
-                transform: translateX(100%);
-                transition: var(--transition-smooth);
-                z-index: 1300;
-                display: flex;
-                flex-direction: column;
-            }
-            .cart-drawer.open {
-                transform: translateX(0);
-            }
-            .cart-overlay.open {
-                opacity: 1;
-                visibility: visible;
-            }
-            .cart-header {
-                padding: 20px 22px 16px;
-                border-bottom: 1px solid var(--border-light);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-            .cart-header h3 {
-                font-size: 20px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-close {
-                border: none;
-                background: transparent;
-                font-size: 20px;
-                cursor: pointer;
-                color: var(--text-dark-gray);
-            }
-            .cart-body {
-                padding: 18px 22px;
-                flex: 1;
-                display: grid;
-                gap: 14px;
-                align-content: start;
-                overflow-y: auto;
-            }
-            .cart-item {
-                display: grid;
-                grid-template-columns: 64px 1fr;
-                gap: 14px;
-                align-items: flex-start;
-                border: 1px solid var(--border-light);
-                padding: 12px;
-                background: #fff;
-                box-shadow: var(--shadow-sm);
-            }
-            .cart-item img {
-                width: 56px;
-                height: 56px;
-                object-fit: cover;
-                background: var(--bg-gray);
-            }
-            .cart-item-details {
-                display: grid;
-                gap: 10px;
-            }
-            .cart-item-top {
-                display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 10px;
-            }
-            .cart-item h4 {
-                font-size: 14px;
-                margin-bottom: 4px;
-                color: var(--text-dark-gray);
-            }
-            .cart-item p {
-                font-size: 12px;
-                color: var(--text-medium-gray);
-            }
-            .cart-price {
-                font-weight: 700;
-                color: var(--primary-orange);
-                font-size: 14px;
-                white-space: nowrap;
-            }
-            .cart-item-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-            }
-            .cart-qty {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: var(--bg-gray);
-                padding: 6px 10px;
-            }
-            .cart-qty .qty-btn {
-                border: none;
-                background: #fff;
-                width: 22px;
-                height: 22px;
-                font-size: 14px;
-                font-weight: 700;
-                cursor: pointer;
-                color: var(--text-dark-gray);
-                box-shadow: var(--shadow-sm);
-            }
-            .cart-qty .qty-val {
-                font-size: 12px;
-                font-weight: 700;
-                min-width: 12px;
-                text-align: center;
-            }
-            .cart-remove {
-                border: none;
-                background: transparent;
-                color: var(--text-medium-gray);
-                font-size: 12px;
-                cursor: pointer;
-                text-decoration: underline;
-            }
-            .cart-empty {
-                text-align: center;
-                color: var(--text-medium-gray);
-                font-size: 13px;
-                padding: 24px 0 10px;
-            }
-            .cart-footer {
-                border-top: 1px solid var(--border-light);
-                padding: 16px 22px 20px;
-                display: grid;
-                gap: 12px;
-            }
-            .cart-total {
-                display: flex;
-                justify-content: space-between;
-                font-size: 14px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 14px;
-            }
-            .cart-link {
-                font-size: 13px;
-                color: var(--text-medium-gray);
-                text-decoration: none;
-                border-bottom: 1px solid var(--border-light);
-                padding-bottom: 2px;
-            }
-            .cart-checkout {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 16px;
-                border: none;
-                background: linear-gradient(
-                    135deg,
-                    var(--primary-orange) 0%,
-                    var(--primary-orange-light) 100%
-                );
-                color: #fff;
-                font-size: 13px;
-                font-weight: 700;
-                cursor: pointer;
-                box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
             }
 
             /* BANNER SLIDER */
@@ -989,6 +827,8 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+            .shop-link { color: inherit; border-bottom: 1px solid transparent; transition: var(--transition-smooth); }
+            .shop-link:hover { color: var(--primary-orange); border-bottom-color: var(--primary-orange); }
             .price-row {
                 display: flex;
                 align-items: center;
@@ -1022,6 +862,7 @@
                 border-radius: 0;
                 white-space: nowrap;
             }
+            .unit { font-size: 12px; color: #6b7280; }
             .rating-row {
                 display: flex;
                 align-items: center;
@@ -1065,14 +906,8 @@
                 background: #1c3c17;
                 transform: translateY(-1px);
             }
-            .add-to-cart-btn[disabled] {
-                background: #e5e7eb;
-                color: #9ca3af;
-                cursor: not-allowed;
-            }
-            .add-to-cart-btn .material-icons-outlined {
-                font-size: 15px;
-            }
+            .add-to-cart-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+            .add-to-cart-btn .material-icons-outlined { font-size: 16px; }
 
             /* PRODUCTS GRID */
             .products-grid {
@@ -1559,12 +1394,10 @@
                         </a>
                     </div>
                     <div class="search-wrap">
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search" />
-                            <span class="search-icon material-icons-outlined"
-                                >search</span
-                            >
-                        </div>
+                        <form class="search-bar" action="search.php" method="get">
+                            <input type="text" name="q" placeholder="Search" />
+                            <button class="search-icon material-icons-outlined" type="submit" aria-label="Search">search</button>
+                        </form>
                     </div>
                     <div class="actions">
                         <!-- USER MENU -->
@@ -1671,17 +1504,6 @@
                             >
                             <span class="badge" id="wishlistCount">0</span>
                         </a>
-                        <a
-                            class="icon-with-badge"
-                            href="#"
-                            aria-label="Dark mode"
-                        >
-                            <span
-                                class="material-icons-outlined"
-                                style="font-size: 20px"
-                                >dark_mode</span
-                            >
-                        </a>
                     </div>
                 </div>
             </div>
@@ -1710,60 +1532,25 @@
                                         Browse by Shop
                                     </div>
                                     <div class="dropdown-divider"></div>
-                                    <a href="butcher.html" class="dropdown-item"
-                                        >Butcher</a
-                                    >
-                                    <a
-                                        href="greengrocer.html"
-                                        class="dropdown-item"
-                                        >Greengrocer</a
-                                    >
-                                    <a
-                                        href="fishmonger.html"
-                                        class="dropdown-item"
-                                        >Fishmonger</a
-                                    >
-                                    <a href="bakery.html" class="dropdown-item"
-                                        >Bakery</a
-                                    >
-                                    <a href="delicat.html" class="dropdown-item"
-                                        >Delicatessen</a
-                                    >
+                                    <a href="search.php?shop=BUTCHER" class="dropdown-item">Butcher</a>
+                                    <a href="search.php?shop=GREENGROCER" class="dropdown-item">Greengrocer</a>
+                                    <a href="search.php?shop=FISHMONGER" class="dropdown-item">Fishmonger</a>
+                                    <a href="search.php?shop=BAKERY" class="dropdown-item">Bakery</a>
+                                    <a href="search.php?shop=DELICATESSEN" class="dropdown-item">Delicatessen</a>
                                 </div>
                                 <div class="dropdown-section">
                                     <div class="dropdown-section-title">
                                         Browse by Type
                                     </div>
                                     <div class="dropdown-divider"></div>
-                                    <a
-                                        href="meat-poultry.html"
-                                        class="dropdown-item"
-                                        >Meat &amp; Poultry</a
-                                    >
-                                    <a
-                                        href="fish-seafood.html"
-                                        class="dropdown-item"
-                                        >Fish &amp; Seafood</a
-                                    >
-                                    <a
-                                        href="fruits-veg.html"
-                                        class="dropdown-item"
-                                        >Fruits &amp; Veg</a
-                                    >
-                                    <a
-                                        href="bakery-items.html"
-                                        class="dropdown-item"
-                                        >Bakery Items</a
-                                    >
-                                    <a
-                                        href="deli-foods.html"
-                                        class="dropdown-item"
-                                        >Deli Foods</a
-                                    >
+                                    <a href="search.php?type=NON-VEG" class="dropdown-item">Non-Vegetarian</a>
+                                    <a href="search.php?type=VEG" class="dropdown-item">Vegetarian</a>
+                                    <a href="search.php?type=VEGAN" class="dropdown-item">Vegan</a>
+                                    <a href="search.php?type=GLUTEN-FREE" class="dropdown-item">Gluten Free</a>
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <a
-                                    href="all-categories.html"
+                                    href="category.php"
                                     class="dropdown-item all-categories"
                                     >All Categories</a
                                 >
@@ -1772,43 +1559,13 @@
                         <span class="nav-separator"></span>
                         <a href="about.html" class="nav-item">About</a>
                         <span class="nav-separator"></span>
+                        <a href="traders.php" class="nav-item">Traders</a>
+                        <span class="nav-separator"></span>
                         <a href="contact.html" class="nav-item">Contact</a>
                     </div>
                 </div>
             </nav>
         </header>
-
-        <!-- CART DRAWER -->
-        <div class="cart-overlay" id="cartOverlay"></div>
-        <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-            <div class="cart-header">
-                <h3>Your cart</h3>
-                <button
-                    class="cart-close"
-                    id="cartClose"
-                    aria-label="Close cart"
-                >
-                    &times;
-                </button>
-            </div>
-            <div class="cart-body" id="cartBody">
-                <div class="cart-empty" id="cartEmpty" style="display: none">
-                    Your cart is empty.
-                </div>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total</span
-                    ><span class="cart-total-value">�2.70</span>
-                </div>
-                <div class="cart-actions">
-                    <a class="cart-link" href="cart.html">Go to cart</a
-                    ><button class="cart-checkout" type="button">
-                        Checkout ?
-                    </button>
-                </div>
-            </div>
-        </aside>
 
         <!-- BANNER SLIDER -->
         <section class="banner-slider">
@@ -1981,7 +1738,7 @@
                 </div>
                 <div class="products-grid" id="foryou-grid"></div>
                 <div class="load-more-wrap">
-                    <button class="load-more-btn" id="load-more-btn">
+                    <button class="load-more-btn" id="load-more-btn" style="display:none;" onclick="window.loadMoreForYou && window.loadMoreForYou()">
                         Load more picks
                     </button>
                 </div>
@@ -2257,11 +2014,12 @@
                 </div>
                 <div class="footer-col">
                     <h4>Shop</h4>
-                    <a href="category.html?type=greengrocer">Green Grocer</a>
-                    <a href="category.html?type=butcher">The Butcher</a>
-                    <a href="category.html?type=bakery">Bakery</a>
-                    <a href="category.html?type=delicatessen">Delicatessen</a>
-                    <a href="category.html?type=dairy">Dairy &amp; Eggs</a>
+                    <a href="shop.php?shop=greengrocer">Green Grocer</a>
+                    <a href="shop.php?shop=butcher">The Butcher</a>
+                    <a href="shop.php?shop=bakery">Bakery</a>
+                    <a href="shop.php?shop=delicatessen">Delicatessen</a>
+                    <a href="shop.php?shop=fishmonger">Fishmonger</a>
+                    <a href="category.php">Dairy &amp; Eggs</a>
                 </div>
                 <div class="footer-col">
                     <h4>Company</h4>
@@ -2511,7 +2269,7 @@
                     try {
                         if (!homepageProductsPromise) {
                             homepageProductsPromise = fetch(
-                                "../api/products/get-homepage-products.php?limit=12",
+                                "../api/products/get-homepage-products.php?limit=100",
                             )
                                 .then((res) => res.json())
                                 .then((data) =>
@@ -2535,6 +2293,22 @@
                     }
                 }
 
+                function fetchFlashSaleProducts() {
+                    return fetch(
+                        "../api/products/get-flash-sale.php?limit=20",
+                    )
+                        .then((res) => res.json())
+                        .then((data) =>
+                            data.success && Array.isArray(data.data)
+                                ? data.data
+                                : [],
+                        )
+                        .catch((err) => {
+                            console.error("Flash sale load error:", err);
+                            return [];
+                        });
+                }
+
                 function renderHomepageProducts(products) {
                     const forYouGrid = document.getElementById("foryou-grid");
                     const trendingTrack = document.getElementById(
@@ -2547,11 +2321,12 @@
                         "top-rated-track",
                     );
 
+                    window._allHomepageProducts = products || [];
+                    window._forYouShown = 0;
+
                     if (forYouGrid) {
-                        products.slice(0, 8).forEach((product) => {
-                            const card = buildProductCard(product);
-                            if (card) forYouGrid.appendChild(card);
-                        });
+                        forYouGrid.innerHTML = "";
+                        loadMoreForYou();
                     }
 
                     if (trendingTrack) {
@@ -2562,15 +2337,21 @@
                     }
 
                     if (flashSaleTrack) {
-                        const discounted = products.filter(
-                            (product) =>
-                                parseFloat(product.DISCOUNT_PERCENT || 0) > 0,
-                        );
-                        const toShow =
-                            discounted.length > 0 ? discounted : products;
-                        toShow.slice(0, 10).forEach((product) => {
-                            const card = buildCarouselCard(product);
-                            if (card) flashSaleTrack.appendChild(card);
+                        fetchFlashSaleProducts().then((flashProducts) => {
+                            flashSaleTrack.innerHTML = "";
+                            const toShow =
+                                flashProducts.length > 0
+                                    ? flashProducts
+                                    : products.filter(
+                                          (p) =>
+                                              parseFloat(
+                                                  p.DISCOUNT_PERCENT || 0,
+                                              ) > 0,
+                                      );
+                            toShow.slice(0, 10).forEach((product) => {
+                                const card = buildCarouselCard(product);
+                                if (card) flashSaleTrack.appendChild(card);
+                            });
                         });
                     }
 
@@ -2582,6 +2363,38 @@
                     }
                 }
 
+                function loadMoreForYou() {
+                    const forYouGrid = document.getElementById("foryou-grid");
+                    const loadMoreBtn = document.getElementById("load-more-btn");
+                    const all = window._allHomepageProducts || [];
+                    const shown = window._forYouShown || 0;
+                    const perLoad = shown === 0 ? 15 : 10;
+                    const next = Math.min(shown + perLoad, all.length);
+
+                    if (!forYouGrid) return;
+
+                    for (let i = shown; i < next; i++) {
+                        const card = buildProductCard(all[i]);
+                        if (card) forYouGrid.appendChild(card);
+                    }
+
+                    window._forYouShown = next;
+
+                    if (loadMoreBtn) {
+                        if (next >= all.length) {
+                            loadMoreBtn.style.display = "none";
+                        } else {
+                            loadMoreBtn.style.display = "";
+                            loadMoreBtn.textContent = "Load more picks";
+                            loadMoreBtn.disabled = false;
+                            loadMoreBtn.style.opacity = "";
+                            loadMoreBtn.style.cursor = "";
+                        }
+                    }
+                }
+
+                window.loadMoreForYou = loadMoreForYou;
+
                 // Build a carousel card (same structure as product cards but for carousel track)
                 function buildCarouselCard(p) {
                     const name = p.NAME || "";
@@ -2590,6 +2403,9 @@
                     const shop = p.SHOP_NAME || "";
                     const type = (p.SHOP_TYPE || "").toLowerCase();
                     const discPct = parseFloat(p.DISCOUNT_PERCENT || 0);
+                    const avgRating = parseFloat(p.AVG_RATING || 0);
+                    const revCount = parseInt(p.REVIEW_COUNT || 0, 10);
+                    const unit = p.UNIT || "unit";
 
                     const imgMap = {
                         beef: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
@@ -2600,18 +2416,39 @@
                         pork: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
                         sausage:
                             "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        rib: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        bacon: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        burger: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        duck: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        prosciutto: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        salami: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                        pate: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
                         salmon: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
                         cod: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
                         prawn: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        shrimp: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
                         fish: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
                         mackerel:
                             "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        tuna: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        trout: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        bass: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        haddock: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        sardine: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        sole: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        mussel: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        scallop: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        seafood: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                        marinara: "assets/other-images/top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
                         cheese: "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                         brie: "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                         cheddar:
                             "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                         stilton:
                             "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
+                        manchego: "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
+                        feta: "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
+                        ricotta: "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                         bread: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
                         sourdough:
                             "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
@@ -2619,6 +2456,12 @@
                             "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
                         cinnamon:
                             "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        baguette: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        focaccia: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        loaf: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        brownie: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        cookie: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        cake: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
                         spinach:
                             "assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
                         carrot: "assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
@@ -2626,6 +2469,12 @@
                         egg: "assets/Item-image/green-broccoli.jpg",
                         pepper: "assets/Item-image/green-bell-pepper-isolated.jpg",
                         tomato: "assets/Item-image/green-bell-pepper-isolated.jpg",
+                        olive: "assets/Item-image/green-bell-pepper-isolated.jpg",
+                        tapenade: "assets/Item-image/green-bell-pepper-isolated.jpg",
+                        coleslaw: "assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
+                        salad: "assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
+                        quiche: "assets/other-images/imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                        dolma: "assets/Item-image/green-bell-pepper-isolated.jpg",
                     };
                     const typeImgMap = {
                         butcher:
@@ -2639,12 +2488,15 @@
                             "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                     };
                     const nm = name.toLowerCase();
-                    let imgSrc =
-                        "assets/Item-image/green-bell-pepper-isolated.jpg";
-                    for (const [k, v] of Object.entries(imgMap)) {
-                        if (nm.includes(k)) {
-                            imgSrc = v;
-                            break;
+                    let imgSrc = p.IMAGE_URL || null;
+                    if (!imgSrc) {
+                        imgSrc =
+                            "assets/Item-image/green-bell-pepper-isolated.jpg";
+                        for (const [k, v] of Object.entries(imgMap)) {
+                            if (nm.includes(k)) {
+                                imgSrc = v;
+                                break;
+                            }
                         }
                     }
                     if (
@@ -2686,12 +2538,20 @@
                             price.toFixed(2) +
                             "</span>";
                     }
-                    priceHtml += "</div>";
+                    priceHtml += ' <span class="unit">/ ' + unit + '</span></div>';
                     if (discPct > 0)
                         priceHtml +=
                             '<span class="discount-text">' +
                             Math.round(discPct) +
                             "% off</span>";
+
+                    // Rating stars
+                    const starCount = Math.round(avgRating);
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        starsHtml += '<span class="material-icons-outlined">' + (i <= starCount ? 'star' : 'star_border') + '</span>';
+                    }
+                    const ratingHtml = '<div class="rating-row"><div class="rating-stars">' + starsHtml + '</div><div class="rating-count">(' + revCount + ')</div></div>';
 
                     const outOfStock = stock === 0;
                     const carouselCard = document.createElement("div");
@@ -2722,6 +2582,7 @@
                         (shop
                             ? '<div class="product-shop">' + shop + "</div>"
                             : "") +
+                        ratingHtml +
                         '<div class="price-row">' +
                         priceHtml +
                         "</div>" +
@@ -2744,6 +2605,9 @@
                     const shop = p.SHOP_NAME || "";
                     const type = (p.SHOP_TYPE || "").toLowerCase();
                     const discPct = parseFloat(p.DISCOUNT_PERCENT || 0);
+                    const avgRating = parseFloat(p.AVG_RATING || 0);
+                    const revCount = parseInt(p.REVIEW_COUNT || 0, 10);
+                    const unit = p.UNIT || "unit";
 
                     const imgMap = {
                         beef: "assets/other-images/fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
@@ -2797,13 +2661,9 @@
                             "assets/other-images/imgi_47_cheese-wood_573717-86.jpg",
                     };
 
-                    // Priority: IMAGE_FILENAME from API → name keyword → shop type → placeholder
+                    // Priority: IMAGE_URL from API → name keyword → shop type → placeholder
                     const nm = name.toLowerCase();
-                    let imgSrc = p.IMAGE_FILENAME
-                        ? p.IMAGE_FILENAME.startsWith("assets/")
-                            ? p.IMAGE_FILENAME
-                            : "assets/" + p.IMAGE_FILENAME
-                        : null;
+                    let imgSrc = p.IMAGE_URL || null;
                     if (!imgSrc) {
                         imgSrc =
                             "assets/Item-image/green-bell-pepper-isolated.jpg";
@@ -2856,12 +2716,20 @@
                             price.toFixed(2) +
                             "</span>";
                     }
-                    priceHtml += "</div>";
+                    priceHtml += ' <span class="unit">/ ' + unit + '</span></div>';
                     if (discPct > 0)
                         priceHtml +=
                             '<span class="discount-text">' +
                             Math.round(discPct) +
                             "% off</span>";
+
+                    // Rating stars
+                    const starCount = Math.round(avgRating);
+                    let starsHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        starsHtml += '<span class="material-icons-outlined">' + (i <= starCount ? 'star' : 'star_border') + '</span>';
+                    }
+                    const ratingHtml = '<div class="rating-row"><div class="rating-stars">' + starsHtml + '</div><div class="rating-count">(' + revCount + ')</div></div>';
 
                     const outOfStock = stock === 0;
                     const div = document.createElement("div");
@@ -2889,6 +2757,7 @@
                         (shop
                             ? '<div class="product-shop">' + shop + "</div>"
                             : "") +
+                        ratingHtml +
                         '<div class="price-row">' +
                         priceHtml +
                         "</div>" +
@@ -2963,7 +2832,7 @@
                 e.stopPropagation();
                 const userId = sessionStorage.getItem("user_id");
                 if (!userId) {
-                    alert("Please login to add to wishlist");
+                    showModal("Please login to add to wishlist", "warning");
                     window.location.href = "login.html";
                     return;
                 }
@@ -2989,7 +2858,7 @@
                     } catch (err) {}
                 }
                 if (!productId) {
-                    alert("Product not found");
+                    showModal("Product not found", "error");
                     return;
                 }
 
@@ -3018,7 +2887,7 @@
                             response.status,
                             rawText.slice(0, 300),
                         );
-                        alert("Server error. Make sure you are logged in.");
+                        showModal("Server error. Make sure you are logged in.", "error");
                         return;
                     }
 
@@ -3038,17 +2907,16 @@
                                 : Math.max(0, count - 1);
                         }
                     } else {
-                        // If unauthorised, redirect to login
                         if (response.status === 401) {
-                            alert("Please log in to use the wishlist.");
+                            showModal("Please log in to use the wishlist.", "warning");
                             window.location.href = "login.html";
                         } else {
-                            alert(result.error || "Error updating wishlist");
+                            showModal(result.error || "Error updating wishlist", "error");
                         }
                     }
                 } catch (err) {
                     console.error("Wishlist error:", err);
-                    alert("Network error updating wishlist.");
+                    showModal("Network error updating wishlist.", "error");
                 }
             });
 
@@ -3060,7 +2928,7 @@
 
                 const userId = sessionStorage.getItem("user_id");
                 if (!userId) {
-                    alert("Please login to add items to cart");
+                    showModal("Please login to add items to cart", "warning");
                     window.location.href = "login.html";
                     return;
                 }
@@ -3086,7 +2954,7 @@
                     } catch (err) {}
                 }
                 if (!productId) {
-                    alert("Product not found");
+                    showModal("Product not found", "error");
                     return;
                 }
 
@@ -3114,20 +2982,21 @@
                             response.status,
                             rawText.slice(0, 300),
                         );
-                        alert(
+                        showModal(
                             "Server error (status " +
                                 response.status +
                                 "). Check you are logged in.",
+                            "error"
                         );
                         return;
                     }
 
                     if (!result.success) {
-                        alert(
-                            result.error ||
-                                result.message ||
-                                "Failed to add to cart",
-                        );
+                        if (result.error && result.error.includes("20 products")) {
+                            showModal("Only 20 items are allowed per order. Please check your cart and remove items before adding more.", "warning", "Cart Limit Reached");
+                        } else {
+                            showModal(result.error || result.message || "Failed to add to cart", "error");
+                        }
                         return;
                     }
 
@@ -3136,12 +3005,10 @@
                         cartCountEl.textContent =
                             result.new_count ??
                             (parseInt(cartCountEl.textContent) || 0) + 1;
-                    alert("Added to cart!");
+                    showModal("Added to cart!", "success");
                 } catch (err) {
                     console.error("Add to cart error:", err);
-                    alert(
-                        "Network error. Please check your connection and try again.",
-                    );
+                    showModal("Network error. Please check your connection and try again.", "error");
                 }
             });
 
@@ -3174,252 +3041,6 @@
 
                 if (link) window.location.href = link;
             });
-
-            /* -- CART DRAWER ---------------------------------------------------------- */
-            const cartTrigger = document.getElementById("cartTrigger");
-            const cartDrawer = document.getElementById("cartDrawer");
-            const cartOverlay = document.getElementById("cartOverlay");
-            const cartClose = document.getElementById("cartClose");
-
-            function formatMoney(v) {
-                return "�" + v.toFixed(2);
-            }
-
-            function updateCartTotals() {
-                if (!cartDrawer) return;
-                let total = 0;
-                cartDrawer.querySelectorAll(".cart-item").forEach((item) => {
-                    const price = parseFloat(item.dataset.price || "0");
-                    const qtyEl = item.querySelector(".qty-val");
-                    const qty =
-                        parseInt(qtyEl ? qtyEl.textContent : "0", 10) || 0;
-                    const line = price * qty;
-                    const priceEl = item.querySelector(".cart-price");
-                    const metaEl = item.querySelector(".cart-meta");
-                    if (priceEl) priceEl.textContent = formatMoney(line);
-                    if (metaEl)
-                        metaEl.textContent =
-                            (item.dataset.category || "Item") + " � Qty " + qty;
-                    total += line;
-                });
-                const totalEl = cartDrawer.querySelector(".cart-total-value");
-                if (totalEl) totalEl.textContent = formatMoney(total);
-                const emptyEl = cartDrawer.querySelector(".cart-empty");
-                const items = cartDrawer.querySelectorAll(".cart-item");
-                if (emptyEl)
-                    emptyEl.style.display = items.length ? "none" : "block";
-            }
-
-            async function loadCartDrawer() {
-                const body = document.getElementById("cartBody");
-                const emptyEl = document.getElementById("cartEmpty");
-                if (!body) return;
-
-                const userId = sessionStorage.getItem("user_id");
-                if (!userId) {
-                    if (emptyEl) emptyEl.style.display = "block";
-                    return;
-                }
-
-                try {
-                    const res = await fetch("../api/cart/get-cart.php", {
-                        credentials: "same-origin",
-                    });
-                    const rawText = await res.text();
-                    let data;
-                    try {
-                        data = JSON.parse(rawText);
-                    } catch (e) {
-                        return;
-                    }
-
-                    // Remove old items (keep the empty div)
-                    body.querySelectorAll(".cart-item").forEach((el) =>
-                        el.remove(),
-                    );
-
-                    if (!data.success || !data.data || data.data.length === 0) {
-                        if (emptyEl) emptyEl.style.display = "block";
-                        const totalEl =
-                            document.querySelector(".cart-total-value");
-                        if (totalEl) totalEl.textContent = "£0.00";
-                        return;
-                    }
-
-                    if (emptyEl) emptyEl.style.display = "none";
-                    let total = 0;
-
-                    const imgMap = {
-                        beef: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        steak: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        lamb: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        chicken:
-                            "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        pork: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        sausage:
-                            "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        salmon: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        cod: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        prawn: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        fish: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        mackerel:
-                            "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        cheese: "imgi_47_cheese-wood_573717-86.jpg",
-                        brie: "imgi_47_cheese-wood_573717-86.jpg",
-                        cheddar: "imgi_47_cheese-wood_573717-86.jpg",
-                        stilton: "imgi_47_cheese-wood_573717-86.jpg",
-                        bread: "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        sourdough:
-                            "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        croissant:
-                            "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        cinnamon:
-                            "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        spinach:
-                            "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
-                        carrot: "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
-                        broccoli: "green-broccoli.jpg",
-                        egg: "green-broccoli.jpg",
-                        pepper: "green-bell-pepper-isolated.jpg",
-                        tomato: "green-bell-pepper-isolated.jpg",
-                    };
-
-                    data.data.forEach((item) => {
-                        const nm = (item.NAME || "").toLowerCase();
-                        let imgFile = "green-bell-pepper-isolated.jpg";
-                        for (const [k, v] of Object.entries(imgMap)) {
-                            if (nm.includes(k)) {
-                                imgFile = v;
-                                break;
-                            }
-                        }
-                        const price = parseFloat(item.PRICE || 0);
-                        const qty = parseInt(item.QUANTITY || 1);
-                        const line = price * qty;
-                        total += line;
-
-                        const div = document.createElement("div");
-                        div.className = "cart-item";
-                        div.dataset.price = price;
-                        div.dataset.cartItemId = item.CART_ITEM_ID;
-                        div.innerHTML = `
-                            <img src="assets/Item-image/${imgFile}" alt="${item.NAME}" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'">
-                            <div class="cart-item-details">
-                                <div class="cart-item-top">
-                                    <div><h4>${item.NAME}</h4><p class="cart-meta">Qty ${qty}</p></div>
-                                    <span class="cart-price">£${line.toFixed(2)}</span>
-                                </div>
-                                <div class="cart-item-actions">
-                                    <div class="cart-qty">
-                                        <button class="qty-btn" data-action="decrease" data-id="${item.CART_ITEM_ID}" type="button">-</button>
-                                        <span class="qty-val">${qty}</span>
-                                        <button class="qty-btn" data-action="increase" data-id="${item.CART_ITEM_ID}" type="button">+</button>
-                                    </div>
-                                    <button class="cart-remove" data-id="${item.CART_ITEM_ID}" type="button">Remove</button>
-                                </div>
-                            </div>`;
-                        body.insertBefore(div, emptyEl);
-                    });
-
-                    const totalEl = document.querySelector(".cart-total-value");
-                    if (totalEl) totalEl.textContent = "£" + total.toFixed(2);
-
-                    const cartCountEl = document.getElementById("cartCount");
-                    if (cartCountEl)
-                        cartCountEl.textContent = data.data.reduce(
-                            (s, i) => s + parseInt(i.QUANTITY || 1),
-                            0,
-                        );
-                } catch (err) {
-                    console.error("Cart drawer load error:", err);
-                }
-            }
-
-            function openCart() {
-                cartDrawer.classList.add("open");
-                cartOverlay.classList.add("open");
-                document.body.style.overflow = "hidden";
-                loadCartDrawer();
-            }
-            function closeCart() {
-                cartDrawer.classList.remove("open");
-                cartOverlay.classList.remove("open");
-                document.body.style.overflow = "";
-            }
-
-            if (cartTrigger)
-                cartTrigger.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    openCart();
-                });
-            if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
-            if (cartClose) cartClose.addEventListener("click", closeCart);
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") closeCart();
-            });
-
-            if (cartDrawer) {
-                cartDrawer.addEventListener("click", async function (e) {
-                    const qtyBtn = e.target.closest(".qty-btn");
-                    if (qtyBtn) {
-                        const cartItemId = qtyBtn.dataset.id;
-                        const item = qtyBtn.closest(".cart-item");
-                        const qtyEl = item
-                            ? item.querySelector(".qty-val")
-                            : null;
-                        if (!item || !qtyEl) return;
-                        let qty = parseInt(qtyEl.textContent, 10) || 1;
-                        qty =
-                            qtyBtn.dataset.action === "increase"
-                                ? qty + 1
-                                : Math.max(1, qty - 1);
-                        if (cartItemId) {
-                            try {
-                                const r = await fetch(
-                                    "../api/cart/update-cart.php",
-                                    {
-                                        method: "POST",
-                                        credentials: "same-origin",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify({
-                                            cart_item_id: parseInt(cartItemId),
-                                            quantity: qty,
-                                        }),
-                                    },
-                                );
-                                const d = JSON.parse(await r.text());
-                                if (d.success) loadCartDrawer();
-                            } catch (err) {}
-                        }
-                        return;
-                    }
-                    const removeBtn = e.target.closest(".cart-remove");
-                    if (removeBtn) {
-                        const cartItemId = removeBtn.dataset.id;
-                        if (cartItemId) {
-                            try {
-                                const r = await fetch(
-                                    "../api/cart/remove-from-cart.php",
-                                    {
-                                        method: "POST",
-                                        credentials: "same-origin",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify({
-                                            cart_item_id: parseInt(cartItemId),
-                                        }),
-                                    },
-                                );
-                                const d = JSON.parse(await r.text());
-                                if (d.success) loadCartDrawer();
-                            } catch (err) {}
-                        }
-                    }
-                });
-            }
 
             /* -- BANNER SLIDER -------------------------------------------------------- */
             let slideIndex = 0;
@@ -3518,6 +3139,7 @@
                 carouselAutoSlide = setInterval(() => {
                     slideCarousel("trending", 1);
                     slideCarousel("flash-sale", 1);
+                    slideCarousel("top-rated", 1);
                 }, 3200);
             }
 
@@ -3573,11 +3195,56 @@
             const loadMoreBtn = document.getElementById("load-more-btn");
             if (loadMoreBtn) {
                 loadMoreBtn.addEventListener("click", function () {
-                    this.textContent = "No more picks";
-                    this.disabled = true;
-                    this.style.opacity = "0.6";
-                    this.style.cursor = "default";
+                    loadMoreForYou();
                 });
+            }
+        </script>
+        <!-- Professional Modal -->
+        <div class="prof-modal-overlay" id="profModal">
+            <div class="prof-modal" style="position:relative;">
+                <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+                <div class="prof-modal-icon" id="profModalIcon"></div>
+                <div class="prof-modal-title" id="profModalTitle"></div>
+                <div class="prof-modal-message" id="profModalMessage"></div>
+                <div class="prof-modal-buttons" id="profModalButtons"></div>
+            </div>
+        </div>
+        <script>
+            function showModal(msg, type = "info", title = "") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+                const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+                icon.className = "prof-modal-icon " + type;
+                icon.textContent = icons[type] || "ℹ";
+                titleEl.textContent = title || titles[type] || "";
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+            function showConfirm(msg, onConfirm, title = "Confirm") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                icon.className = "prof-modal-icon confirm";
+                icon.textContent = "?";
+                titleEl.textContent = title;
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+                window._profConfirmCallback = onConfirm;
+            }
+            function closeProfModal(confirmed = false) {
+                document.getElementById("profModal").classList.remove("show");
+                document.body.style.overflow = "";
+                if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
             }
         </script>
     </body>

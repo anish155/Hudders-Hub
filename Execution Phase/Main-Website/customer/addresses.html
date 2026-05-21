@@ -11,7 +11,28 @@
   <style>
     :root{--orange:#FF5E3A;--orange-dark:#E3472C;--green:#0F260B;--bg:#F7F6F3;--line:#DCE3DA;--muted:#5E6A63}
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
+/* Professional Modal */
+.prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+.prof-modal-overlay.show{display:flex;opacity:1}
+.prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+.prof-modal-overlay.show .prof-modal{transform:scale(1)}
+.prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+.prof-modal-icon.error{background:#ffebee;color:#c62828}
+.prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+.prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+.prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+.prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+.prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+.prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+.prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+.prof-modal-btn.primary{background:#0f260b;color:#fff}
+.prof-modal-btn.primary:hover{background:#1c3c17}
+.prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+.prof-modal-btn.secondary:hover{background:#e0e0e0}
+.prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+.prof-modal-close:hover{color:#333}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:#0B140A}
     .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
     .header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:2}
     .header-inner{height:72px;display:flex;align-items:center;justify-content:space-between}
@@ -190,7 +211,7 @@
     async function saveAddr(e) {
       e.preventDefault();
       const addr = document.getElementById('line1').value;
-      if (!addr) return alert('Please enter an address');
+      if (!addr) { showModal('Please enter an address', 'error'); return; }
 
       try {
         const res = await fetch('../api/customer/add-address.php', {
@@ -200,13 +221,13 @@
         });
         const data = await res.json();
         if (data.success) {
-          alert('Address saved!');
+          showModal('Address saved!', 'success');
           loadAddresses();
           e.target.reset();
         } else {
-          alert(data.error || 'Error saving address');
+          showModal(data.error || 'Error saving address', 'error');
         }
-      } catch (err) { alert('Error connecting'); }
+      } catch (err) { showModal('Error connecting', 'error'); }
     }
 
     function editAddr() {
@@ -214,22 +235,74 @@
     }
 
     async function deleteAddr() {
-      if (!confirm('Delete this address?')) return;
-      try {
-        const res = await fetch('../api/customer/delete-address.php', { method: 'POST' });
-        const data = await res.json();
-        if (data.success) {
-          alert('Address deleted');
-          loadAddresses();
-        } else {
-          alert(data.error);
-        }
-      } catch (err) { alert('Error'); }
+      showConfirm('Delete this address?', function(confirmed){
+        if(!confirmed) return;
+        (async () => {
+          try {
+            const res = await fetch('../api/customer/delete-address.php', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+              showModal('Address deleted', 'success');
+              loadAddresses();
+            } else {
+              showModal(data.error, 'error');
+            }
+          } catch (err) { showModal('Error', 'error'); }
+        })();
+      }, "Delete Address");
     }
 
     loadProfile();
     loadAddresses();
     document.querySelector('form').addEventListener('submit', saveAddr);
+  </script>
+  <!-- Professional Modal -->
+  <div class="prof-modal-overlay" id="profModal">
+      <div class="prof-modal" style="position:relative;">
+          <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+          <div class="prof-modal-icon" id="profModalIcon"></div>
+          <div class="prof-modal-title" id="profModalTitle"></div>
+          <div class="prof-modal-message" id="profModalMessage"></div>
+          <div class="prof-modal-buttons" id="profModalButtons"></div>
+      </div>
+  </div>
+  <script>
+  function showModal(msg, type = "info", title = "") {
+      const overlay = document.getElementById("profModal");
+      const icon = document.getElementById("profModalIcon");
+      const titleEl = document.getElementById("profModalTitle");
+      const msgEl = document.getElementById("profModalMessage");
+      const btns = document.getElementById("profModalButtons");
+      const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+      const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+      icon.className = "prof-modal-icon " + type;
+      icon.textContent = icons[type] || "ℹ";
+      titleEl.textContent = title || titles[type] || "";
+      msgEl.textContent = msg;
+      btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+  }
+  function showConfirm(msg, onConfirm, title = "Confirm") {
+      const overlay = document.getElementById("profModal");
+      const icon = document.getElementById("profModalIcon");
+      const titleEl = document.getElementById("profModalTitle");
+      const msgEl = document.getElementById("profModalMessage");
+      const btns = document.getElementById("profModalButtons");
+      icon.className = "prof-modal-icon confirm";
+      icon.textContent = "?";
+      titleEl.textContent = title;
+      msgEl.textContent = msg;
+      btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+      overlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+      window._profConfirmCallback = onConfirm;
+  }
+  function closeProfModal(confirmed = false) {
+      document.getElementById("profModal").classList.remove("show");
+      document.body.style.overflow = "";
+      if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+  }
   </script>
 </body>
 </html>

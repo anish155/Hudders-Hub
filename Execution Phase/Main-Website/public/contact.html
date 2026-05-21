@@ -531,10 +531,10 @@ header.scrolled .nav-bar {
         </a>
     </div>
     <div class="search-wrap">
-        <div class="search-bar">
-            <input type="text" placeholder="Search">
-            <span class="search-icon material-icons-outlined">search</span>
-        </div>
+        <form class="search-bar" action="search.php" method="get">
+            <input type="text" name="q" placeholder="Search">
+            <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+        </form>
     </div>
     <div class="actions">
         <span class="action-btn" id="loginBtn" style="cursor: pointer;">
@@ -543,14 +543,11 @@ header.scrolled .nav-bar {
         </span>
         <a class="icon-with-badge" href="cart.html" aria-label="Cart" id="cartTrigger">
             <span class="material-icons-outlined">shopping_cart</span>
-            <span class="badge">3</span>
+            <span class="badge" id="cartCount">0</span>
         </a>
         <a class="icon-with-badge" href="../customer/wishlist.html" aria-label="Wishlist">
             <span class="material-icons-outlined">favorite_border</span>
-            <span class="badge">5</span>
-        </a>
-        <a class="icon-with-badge moon" href="#" aria-label="Dark mode">
-            <span class="material-icons-outlined" style="font-size: 20px;">dark_mode</span>
+            <span class="badge" id="wishlistCount">0</span>
         </a>
     </div>
 </div>
@@ -693,9 +690,10 @@ header.scrolled .nav-bar {
                 Message
                 <textarea rows="5" placeholder="Tell us what went wrong"></textarea>
             </label>
-            <button type="button" class="btn-primary">Send message</button>
+            <button type="submit" class="btn-primary">Send message</button>
         </form>
     </div>
+
     <div class="contact-panel">
         <div class="contact-panel-card">
             <div class="map-card">
@@ -938,6 +936,51 @@ document.addEventListener('keydown', function(e) {
 });
 
 updateCartTotals();
+
+// =========================================================================
+// CONTACT FORM
+// =========================================================================
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const name    = this.querySelector('input[type="text"]')?.value.trim() ?? '';
+        const email   = this.querySelector('input[type="email"]')?.value.trim() ?? '';
+        const subject = this.querySelectorAll('input[type="text"]')[1]?.value.trim() ?? '';
+        const message = this.querySelector('textarea')?.value.trim() ?? '';
+        const btn     = this.querySelector('button[type="submit"]');
+
+        // Client-side validation
+        if (!name)    { alert('Please enter your name.');    return; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+        if (!subject) { alert('Please enter a subject.');   return; }
+        if (!message || message.length < 10) { alert('Please enter a message (at least 10 characters).'); return; }
+
+        btn.textContent = 'Sending…';
+        btn.disabled    = true;
+
+        try {
+            const res = await fetch('../api/email/contact.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, subject, message })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('✅ ' + data.message);
+                contactForm.reset();
+            } else {
+                alert('❌ ' + (data.error || 'Failed to send message. Please try again.'));
+            }
+        } catch (err) {
+            alert('❌ Network error. Please try again later.');
+        } finally {
+            btn.textContent = 'Send message';
+            btn.disabled    = false;
+        }
+    });
+}
 
 // =========================================================================
 // USER GREETING

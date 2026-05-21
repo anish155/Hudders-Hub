@@ -336,16 +336,15 @@ FOOTER
         </a>
     </div>
     <div class="search-wrap">
-        <div class="search-bar">
-            <input type="text" placeholder="Search products, traders...">
-            <span class="search-icon material-icons-outlined">search</span>
-        </div>
+        <form class="search-bar" action="search.php" method="get">
+            <input type="text" name="q" placeholder="Search products, traders...">
+            <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+        </form>
     </div>
     <div class="actions">
         <a class="user-menu" href="../customer/profile.html"><span class="material-icons-outlined">account_circle</span><span id="userGreetingText">Welcome</span></a>
-        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge">3</span></a>
-        <a class="icon-with-badge" href="../customer/wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge">5</span></a>
-        <a class="icon-with-badge" href="#"><span class="material-icons-outlined">dark_mode</span></a>
+        <a class="icon-with-badge" href="cart.html" id="cartTrigger"><span class="material-icons-outlined">shopping_cart</span><span class="badge" id="cartCount">0</span></a>
+        <a class="icon-with-badge" href="../customer/wishlist.html"><span class="material-icons-outlined">favorite_border</span><span class="badge" id="wishlistCount">0</span></a>
     </div>
 </div>
 </div>
@@ -390,10 +389,10 @@ FOOTER
         <p class="error-subtitle">Looks like the link you followed expired, got misplaced, or was never stocked. No worries, our fresh picks are still waiting.</p>
     </div>
     
-    <div class="error-search-wrap">
-        <input type="text" id="errorSearch" placeholder="Search for products, categories, or help...">
-        <span class="search-icon material-icons-outlined">search</span>
-    </div>
+    <form class="error-search-wrap" action="search.php" method="get">
+        <input type="text" name="q" id="errorSearch" placeholder="Search for products, categories, or help...">
+        <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+    </form>
     
     <div class="error-actions">
         <a href="index.html" class="btn btn-primary">Back to Homepage</a>

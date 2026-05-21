@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Successful - HuddersHub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<style>
+:root {
+    --primary-green: #0F260B;
+    --primary-green-light: rgba(15, 38, 11, 0.14);
+    --primary-orange: #FF5E3A;
+    --primary-orange-light: #FF8C70;
+    --bg-white: #FFFFFF;
+    --bg-light: #F7F6F3;
+    --bg-gray: #F2F4F1;
+    --border-light: #DCE3DA;
+    --text-black: #0B140A;
+    --text-dark-gray: #1E2A1C;
+    --text-medium-gray: #5E6A63;
+    --shadow-md: 0 16px 32px rgba(15, 38, 11, 0.16);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-black);
+    background: linear-gradient(180deg, #F7F6F3 0%, #FFFFFF 35%, #F7F6F3 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.success-container {
+    background: var(--bg-white);
+    border-radius: 16px;
+    padding: 48px 40px;
+    box-shadow: var(--shadow-md);
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-green);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 24px;
+    animation: checkPop 0.5s ease-out 0.2s both;
+}
+.success-icon .material-icons-outlined {
+    font-size: 40px;
+}
+
+.success-container h1 {
+    font-family: 'Google Sans Flex', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 12px;
+}
+
+.success-container .subtitle {
+    font-size: 16px;
+    color: var(--text-medium-gray);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.info-box {
+    background: var(--primary-green-light);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.info-box h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-green);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.info-box h3 .material-icons-outlined {
+    font-size: 18px;
+}
+
+.info-box p {
+    font-size: 14px;
+    color: var(--text-dark-gray);
+    line-height: 1.6;
+}
+
+.info-box ul {
+    list-style: none;
+    margin-top: 12px;
+}
+.info-box ul li {
+    font-size: 13px;
+    color: var(--text-dark-gray);
+    padding: 6px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.info-box ul li .material-icons-outlined {
+    font-size: 16px;
+    color: var(--primary-green);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff3cd;
+    color: #856404;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+.status-badge .material-icons-outlined {
+    font-size: 16px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--primary-green);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--primary-green-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--bg-gray);
+    color: var(--text-dark-gray);
+    border: 1px solid var(--border-light);
+}
+.btn-secondary:hover {
+    background: var(--border-light);
+}
+
+@media (max-width: 600px) {
+    .success-container { padding: 32px 24px; }
+    .success-container h1 { font-size: 24px; }
+    .btn-group { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="success-container">
+    <div class="success-icon">
+        <span class="material-icons-outlined">check</span>
+    </div>
+
+    <h1>Registration Successful!</h1>
+    <p class="subtitle">Your trader application has been submitted successfully.</p>
+
+    <div class="status-badge">
+        <span class="material-icons-outlined">hourglass_top</span>
+        Status: Pending Admin Approval
+    </div>
+
+    <div class="info-box">
+        <h3>
+            <span class="material-icons-outlined">info</span>
+            What happens next?
+        </h3>
+        <p>We've sent a confirmation email to your registered email address. Our admin team will review your application.</p>
+        <ul>
+            <li>
+                <span class="material-icons-outlined">schedule</span>
+                <span>Approval typically takes <strong>1-2 business days</strong></span>
+            </li>
+            <li>
+                <span class="material-icons-outlined">email</span>
+                <span>You'll receive an email once your account is approved</span>
+            </li>
+            <li>
+                <span class="material-icons-outlined">storefront</span>
+                <span>After approval, you can start adding products to your shop</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="btn-group">
+        <a href="login.html" class="btn btn-primary">
+            <span class="material-icons-outlined">login</span>
+            Go to Login
+        </a>
+        <a href="index.html" class="btn btn-secondary">
+            <span class="material-icons-outlined">home</span>
+            Back to Home
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

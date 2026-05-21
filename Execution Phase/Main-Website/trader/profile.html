@@ -193,20 +193,21 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
       <span class="material-icons-outlined">manage_accounts</span>
       Profile Setting
     </div>
-    <div class="profile-header-section">
-      <div class="profile-photo-wrapper">
-        <div class="profile-photo-placeholder">
-          <span class="material-icons-outlined">camera_alt</span>
+      <div class="profile-header-section">
+        <div class="profile-photo-wrapper">
+          <div class="profile-photo-placeholder" id="profilePhotoPlaceholder">
+            <span class="material-icons-outlined">camera_alt</span>
+          </div>
+          <div class="profile-photo-overlay">Upload</div>
         </div>
-        <div class="profile-photo-overlay">Upload</div>
+        <div>
+          <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+          <button class="btn-upload" type="button" onclick="document.getElementById('logoFileInput').click()">
+            <span class="material-icons-outlined">cloud_upload</span>
+            Change Logo
+          </button>
+        </div>
       </div>
-      <div>
-        <button class="btn-upload" type="button">
-          <span class="material-icons-outlined">cloud_upload</span>
-          Upload Photo
-        </button>
-      </div>
-    </div>
 
     <form id="profileForm">
       <div class="card-title" style="margin-top: 12px;">
@@ -220,14 +221,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-black); b
         </div>
         <div class="form-group">
           <label class="form-label">Shop Type</label>
-          <select class="form-select" id="shopType">
-            <option value="">Select type...</option>
-            <option value="Butcher" selected>Butcher</option>
-            <option value="Greengrocer">Greengrocer</option>
-            <option value="Bakery">Bakery</option>
-            <option value="Fishmonger">Fishmonger</option>
-            <option value="Delicatessen">Delicatessen</option>
-          </select>
+          <input type="text" class="form-input" id="shopType" readonly style="background:var(--bg-gray); cursor:not-allowed;">
         </div>
         <div class="form-group full-width">
           <label class="form-label">Description</label>
@@ -357,8 +351,8 @@ if (!userId) {
 
 function handleLogout() {
   fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
-    .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
-    .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+    .then(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; })
+    .catch(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }
 
 const sidebar = document.getElementById('sidebar');
@@ -374,6 +368,18 @@ document.querySelectorAll('.sidebar-nav-item, .sidebar-report-link').forEach(ite
   item.addEventListener('click', () => { if (window.innerWidth <= 900) { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('active'); } });
 });
 
+document.getElementById('logoFileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const preview = document.getElementById('shopLogoPreview');
+            preview.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
 // Load profile data
 console.log('Loading profile for user:', userId);
 fetch(`../api/trader/get-profile.php?user_id=${userId}`)
@@ -386,11 +392,30 @@ fetch(`../api/trader/get-profile.php?user_id=${userId}`)
         if (data.success) {
             const p = data.data;
             document.getElementById('shopName').value = p.shop_name || '';
+            document.getElementById('shopType').value = p.shop_type || 'Butcher';
             document.getElementById('shopDescription').value = p.shop_description || '';
             document.getElementById('shopAddress').value = p.location || '';
             document.getElementById('ownerName').value = (p.firstname || '') + ' ' + (p.lastname || '');
             document.getElementById('email').value = p.email || '';
             document.getElementById('phone').value = p.phone || '';
+            
+            // Collection days
+            document.getElementById('day-WEDNESDAY').checked = p.collection_wed === 1;
+            document.getElementById('day-THURSDAY').checked = p.collection_thu === 1;
+            document.getElementById('day-FRIDAY').checked = p.collection_fri === 1;
+            
+            // Notifications
+            document.getElementById('notifNewOrder').checked = p.notify_new_order === 1;
+            document.getElementById('notifDaily').checked = p.notify_daily_report === 1;
+            document.getElementById('notifWeekly').checked = p.notify_weekly_finance === 1;
+            document.getElementById('notifMonthly').checked = p.notify_monthly_report === 1;
+            
+            // Logo preview
+            if (p.logo_data && p.logo_data.length > 10) {
+                const preview = document.getElementById('shopLogoPreview');
+                preview.innerHTML = `<img src="data:${p.logo_mime};base64,${p.logo_data}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+            }
+            
             // Update sidebar name
             const sidebarNameEl = document.getElementById('sidebarName');
             if (sidebarNameEl) sidebarNameEl.textContent = (p.firstname || '') + ' ' + (p.lastname || '');
@@ -412,72 +437,57 @@ function showErrorToast(message) {
   setTimeout(() => errorToast.classList.remove('show'), 4000);
 }
 
-async function saveSection(action, data) {
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.textContent = 'Saving...';
-    saveBtn.disabled = true;
-    
-    try {
-        const response = await fetch('../api/trader/update-profile.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: userId, action: action, ...data })
-        });
-        const result = await response.json();
-        if (result.success) {
-            showSuccessToast(result.message);
-            return true;
-        } else {
-            showErrorToast(result.message);
-            return false;
-        }
-    } catch (err) {
-        showErrorToast('Failed to save');
-        return false;
-    } finally {
-        saveBtn.textContent = 'Save Changes';
-        saveBtn.disabled = false;
-    }
-}
-
 document.getElementById('profileForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
-  // Get form values
   const ownerName = document.getElementById('ownerName').value.split(' ');
   const firstname = ownerName[0] || '';
   const lastname = ownerName.slice(1).join(' ') || '';
   
-  // Save owner details
-  await saveSection('update_owner', {
-    firstname: firstname,
-    lastname: lastname,
-    email: document.getElementById('email').value,
-    phone: document.getElementById('phone').value,
-    address: document.getElementById('shopAddress').value
-  });
+  const formData = new FormData();
+  formData.append('user_id', userId);
+  formData.append('action', 'update_all');
+  formData.append('shop_name', document.getElementById('shopName').value);
+  formData.append('shop_description', document.getElementById('shopDescription').value);
+  formData.append('shop_address', document.getElementById('shopAddress').value);
+  formData.append('firstname', firstname);
+  formData.append('lastname', lastname);
+  formData.append('email', document.getElementById('email').value);
+  formData.append('phone', document.getElementById('phone').value);
+  formData.append('collection_wed', document.getElementById('day-WEDNESDAY').checked ? '1' : '0');
+  formData.append('collection_thu', document.getElementById('day-THURSDAY').checked ? '1' : '0');
+  formData.append('collection_fri', document.getElementById('day-FRIDAY').checked ? '1' : '0');
+  formData.append('notify_new_order', document.getElementById('notifNewOrder').checked ? '1' : '0');
+  formData.append('notify_daily_report', document.getElementById('notifDaily').checked ? '1' : '0');
+  formData.append('notify_weekly_finance', document.getElementById('notifWeekly').checked ? '1' : '0');
+  formData.append('notify_monthly_report', document.getElementById('notifMonthly').checked ? '1' : '0');
   
-  // Save shop details (note: logo_url not supported by API)
-  await saveSection('update_shop', {
-    shop_name: document.getElementById('shopName').value,
-    shop_description: document.getElementById('shopDescription').value,
-    location: document.getElementById('shopAddress').value
-  });
+  const logoFile = document.getElementById('logoFileInput').files[0];
+  if (logoFile) {
+    formData.append('shop_logo', logoFile);
+  }
   
-  // Save collection days
-  await saveSection('update_collection_days', {
-    wednesday: document.getElementById('day-WEDNESDAY').checked,
-    thursday: document.getElementById('day-THURSDAY').checked,
-    friday: document.getElementById('day-FRIDAY').checked
-  });
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.textContent = 'Saving...';
+  saveBtn.disabled = true;
   
-  // Save notifications
-  await saveSection('update_notifications', {
-    new_order: document.getElementById('notifNewOrder').checked,
-    daily_report: document.getElementById('notifDaily').checked,
-    weekly_finance: document.getElementById('notifWeekly').checked,
-    monthly_report: document.getElementById('notifMonthly').checked
-  });
+  try {
+    const response = await fetch('../api/trader/update-profile.php', {
+      method: 'POST',
+      body: formData
+    });
+    const result = await response.json();
+    if (result.success) {
+      showSuccessToast(result.message);
+    } else {
+      showErrorToast(result.message);
+    }
+  } catch (err) {
+    showErrorToast('Failed to save profile');
+  } finally {
+    saveBtn.textContent = 'Save Changes';
+    saveBtn.disabled = false;
+  }
 });
 
 async function changePassword() {
@@ -498,20 +508,60 @@ async function changePassword() {
         return;
     }
     
-    await saveSection('update_password', { new_password: newPass });
-    document.getElementById('currentPassword').value = '';
-    document.getElementById('newPassword').value = '';
-    document.getElementById('confirmPassword').value = '';
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.textContent = 'Updating...';
+    saveBtn.disabled = true;
+    
+    try {
+        const response = await fetch('../api/trader/update-profile.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, action: 'update_password', current_password: current, new_password: newPass })
+        });
+        const result = await response.json();
+        if (result.success) {
+            showSuccessToast(result.message);
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        } else {
+            showErrorToast(result.message);
+        }
+    } catch (err) {
+        showErrorToast('Failed to update password');
+    } finally {
+        saveBtn.textContent = 'Save Changes';
+        saveBtn.disabled = false;
+    }
 }
 
 async function deleteAccount() {
-    if (!confirm('⚠️ WARNING: This will delete your account and all products permanently. This cannot be undone! Are you sure?')) return;
+    if (!confirm('WARNING: This will delete your account and all products permanently. This cannot be undone! Are you sure?')) return;
     if (!confirm('Are you REALLY sure? All your data will be lost forever!')) return;
     
-    const success = await saveSection('delete_account', {});
-    if (success) {
-        sessionStorage.clear();
-        window.location.href = '../public/login.html';
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.textContent = 'Deleting...';
+    saveBtn.disabled = true;
+    
+    try {
+        const response = await fetch('../api/trader/update-profile.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, action: 'delete_account' })
+        });
+        const result = await response.json();
+        if (result.success) {
+            sessionStorage.clear();
+            window.location.href = '../public/login.html';
+        } else {
+            showErrorToast(result.message);
+            saveBtn.textContent = 'Save Changes';
+            saveBtn.disabled = false;
+        }
+    } catch (err) {
+        showErrorToast('Failed to delete account');
+        saveBtn.textContent = 'Save Changes';
+        saveBtn.disabled = false;
     }
 }
 </script>

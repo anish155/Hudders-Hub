@@ -266,8 +266,8 @@ if (!userRole || userRole.toLowerCase() !== 'trader') window.location.href = '..
 
 function handleLogout() {
     fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
-        .then(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; })
-        .catch(() => { sessionStorage.clear(); window.location.href = '../public/login.html'; });
+        .then(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; })
+        .catch(() => { localStorage.removeItem('hh_remember'); sessionStorage.clear(); window.location.href = '../public/login.html'; });
 }
 
 // ── Sidebar / overlay ───────────────────────────────────────────────────────

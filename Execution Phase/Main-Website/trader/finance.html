@@ -236,10 +236,12 @@ fetch(`../api/trader/get-dashboard.php?user_id=${userId}`)
 function handleLogout() {
   fetch('../api/auth/logout.php', { method: 'POST', credentials: 'same-origin' })
     .then(() => {
+      localStorage.removeItem('hh_remember');
       sessionStorage.clear();
       window.location.href = '../public/login.html';
     })
     .catch(() => {
+      localStorage.removeItem('hh_remember');
       sessionStorage.clear();
       window.location.href = '../public/login.html';
     });

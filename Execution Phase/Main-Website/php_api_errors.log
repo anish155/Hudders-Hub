@@ -1,5 +1,0 @@
-[19-May-2026 08:09:07 Europe/Berlin] add-product: parse=OK
-[19-May-2026 08:09:07 Europe/Berlin] add-product: all binds done
-[19-May-2026 08:09:07 Europe/Berlin] add-product: bind_names=b_name,b_desc,b_price,b_stock,b_min_ord,b_max_ord,b_unit,b_allergen,b_diet,b_sid,b_cat_id,b_clob
-[19-May-2026 08:09:07 Europe/Berlin] >>>EXEC_CHECK: exec_ok=true err_msg=no_err
-[19-May-2026 08:09:07 Europe/Berlin] >>>FINAL: exec=OK

@@ -55,6 +55,27 @@
                 margin: 0;
                 padding: 0;
             }
+            /* Professional Modal */
+            .prof-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:10000;opacity:0;transition:opacity 0.25s ease}
+            .prof-modal-overlay.show{display:flex;opacity:1}
+            .prof-modal{background:#fff;border-radius:12px;padding:28px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.25s ease}
+            .prof-modal-overlay.show .prof-modal{transform:scale(1)}
+            .prof-modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+            .prof-modal-icon.success{background:#e8f5e9;color:#2e7d32}
+            .prof-modal-icon.error{background:#ffebee;color:#c62828}
+            .prof-modal-icon.warning{background:#fff3e0;color:#ef6c00}
+            .prof-modal-icon.info{background:#e3f2fd;color:#1565c0}
+            .prof-modal-icon.confirm{background:#f3e5f5;color:#7b1fa2}
+            .prof-modal-title{font-size:20px;font-weight:600;margin-bottom:12px;color:#1a1a1a}
+            .prof-modal-message{font-size:15px;color:#555;line-height:1.5;margin-bottom:24px}
+            .prof-modal-buttons{display:flex;gap:12px;justify-content:center}
+            .prof-modal-btn{padding:12px 28px;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s ease}
+            .prof-modal-btn.primary{background:#0f260b;color:#fff}
+            .prof-modal-btn.primary:hover{background:#1c3c17}
+            .prof-modal-btn.secondary{background:#f0f0f0;color:#333}
+            .prof-modal-btn.secondary:hover{background:#e0e0e0}
+            .prof-modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;line-height:1}
+            .prof-modal-close:hover{color:#333}
             body {
                 font-family: "Plus Jakarta Sans", sans-serif;
                 color: #1b2419;
@@ -263,205 +284,6 @@
             }
 
             /* =========================================================================
-   CART DRAWER
-   ========================================================================= */
-            .cart-overlay {
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.35);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition-smooth);
-                z-index: 1200;
-            }
-            .cart-overlay.open {
-                opacity: 1;
-                visibility: visible;
-            }
-            .cart-drawer {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100vh;
-                width: min(420px, 92vw);
-                background: #fff;
-                box-shadow: -16px 0 40px rgba(15, 38, 11, 0.18);
-                transform: translateX(100%);
-                transition: var(--transition-smooth);
-                z-index: 1300;
-                display: flex;
-                flex-direction: column;
-            }
-            .cart-drawer.open {
-                transform: translateX(0);
-            }
-            .cart-header {
-                padding: 20px 22px 16px;
-                border-bottom: 1px solid var(--border-light);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .cart-header h3 {
-                font-size: 20px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-close {
-                border: none;
-                background: transparent;
-                font-size: 20px;
-                color: var(--text-dark-gray);
-            }
-            .cart-body {
-                padding: 18px 22px;
-                flex: 1;
-                display: grid;
-                gap: 14px;
-                align-content: start;
-                overflow-y: auto;
-            }
-            .cart-item {
-                display: grid;
-                grid-template-columns: 64px 1fr;
-                gap: 14px;
-                align-items: flex-start;
-                border: 1px solid var(--border-light);
-                padding: 12px;
-                background: #fff;
-                box-shadow: var(--shadow-sm);
-            }
-            .cart-item img {
-                width: 56px;
-                height: 56px;
-                object-fit: cover;
-                background: var(--bg-gray);
-            }
-            .cart-item-details {
-                display: grid;
-                gap: 10px;
-            }
-            .cart-item-top {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .cart-item h4 {
-                font-size: 14px;
-                margin-bottom: 4px;
-                color: var(--text-dark-gray);
-            }
-            .cart-item p {
-                font-size: 12px;
-                color: var(--text-medium-gray);
-            }
-            .cart-price {
-                font-weight: 700;
-                color: var(--primary-orange);
-                font-size: 14px;
-                white-space: nowrap;
-            }
-            .cart-item-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-            }
-            .cart-qty {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: var(--bg-gray);
-                padding: 6px 10px;
-                border-radius: 0;
-            }
-            .cart-qty button {
-                border: none;
-                background: #fff;
-                width: 22px;
-                height: 22px;
-                font-size: 14px;
-                font-weight: 700;
-                cursor: pointer;
-                color: var(--text-dark-gray);
-                box-shadow: var(--shadow-sm);
-                border-radius: 0;
-            }
-            .qty-val {
-                font-size: 12px;
-                font-weight: 700;
-                min-width: 12px;
-                text-align: center;
-            }
-            .cart-remove {
-                border: none;
-                background: transparent;
-                color: var(--text-medium-gray);
-                font-size: 12px;
-                cursor: pointer;
-                text-decoration: underline;
-            }
-            .cart-empty {
-                text-align: center;
-                color: var(--text-medium-gray);
-                font-size: 13px;
-                padding: 24px 0 10px;
-                display: none;
-            }
-            .cart-footer {
-                border-top: 1px solid var(--border-light);
-                padding: 16px 22px 20px;
-                display: grid;
-                gap: 12px;
-            }
-            .cart-total {
-                display: flex;
-                justify-content: space-between;
-                font-size: 14px;
-                font-weight: 700;
-                color: var(--text-dark-gray);
-            }
-            .cart-actions {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 14px;
-            }
-            .cart-link {
-                font-size: 13px;
-                color: var(--text-medium-gray);
-                text-decoration: none;
-                border-bottom: 1px solid var(--border-light);
-                padding-bottom: 2px;
-            }
-            .cart-link:hover {
-                color: var(--primary-green);
-                border-bottom-color: var(--primary-green);
-            }
-            .cart-checkout {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 16px;
-                border: none;
-                background: linear-gradient(
-                    135deg,
-                    var(--primary-orange) 0%,
-                    var(--primary-orange-light) 100%
-                );
-                color: #fff;
-                font-size: 13px;
-                font-weight: 700;
-                cursor: pointer;
-                box-shadow: 0 10px 22px rgba(255, 94, 58, 0.28);
-                border-radius: 0;
-            }
-            .cart-checkout:hover {
-                transform: translateY(-1px);
-            }
-
-            /* =========================================================================
    CART PAGE SPECIFIC STYLES
    ========================================================================= */
             .cart-page {
@@ -622,6 +444,34 @@
             .line-total {
                 font-size: 18px;
                 color: #0b140a;
+            }
+            .stock-warning {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                font-weight: 700;
+                padding: 10px 14px;
+                margin-top: 12px;
+                border-radius: 8px;
+                animation: pulseWarning 2s infinite;
+            }
+            @keyframes pulseWarning {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); }
+            }
+            .stock-warning.out {
+                background: #FEF2F2;
+                color: #DC2626;
+                border: 2px solid #DC2626;
+                box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+            }
+            .stock-warning.low {
+                background: #FFFBEB;
+                color: #D97706;
+                border: 2px solid #D97706;
+                box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);
             }
             .cart-summary {
                 position: sticky;
@@ -1121,12 +971,10 @@
                         </a>
                     </div>
                     <div class="search-wrap">
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search" />
-                            <span class="search-icon material-icons-outlined"
-                                >search</span
-                            >
-                        </div>
+                        <form class="search-bar" action="search.php" method="get">
+                            <input type="text" name="q" placeholder="Search" />
+                            <button type="submit" class="search-icon material-icons-outlined" style="background:none; border:none; cursor:pointer; color:inherit; padding:0;">search</button>
+                        </form>
                     </div>
                     <div class="actions">
                         <a
@@ -1160,14 +1008,6 @@
                             >
                             <span class="badge" id="wishlistCount">0</span>
                         </a>
-                        <a
-                            class="icon-with-badge moon"
-                            href="#"
-                            style="font-size: 20px"
-                            ><span class="material-icons-outlined"
-                                >dark_mode</span
-                            ></a
-                        >
                     </div>
                 </div>
             </div>
@@ -1185,133 +1025,6 @@
                 </div>
             </nav>
         </header>
-
-        <!-- CART DRAWER -->
-        <div class="cart-overlay" id="cartOverlay"></div>
-        <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-            <div class="cart-header">
-                <h3>Your cart</h3>
-                <button
-                    class="cart-close"
-                    id="cartClose"
-                    aria-label="Close cart"
-                >
-                    &times;
-                </button>
-            </div>
-            <div class="cart-body">
-                <div
-                    class="cart-item"
-                    data-price="6.50"
-                    data-category="Hudders Butchers"
-                >
-                    <img
-                        src="assets/Item-image/green-bell-pepper-isolated.jpg"
-                        alt="Fresh chicken breast"
-                    />
-                    <div class="cart-item-details">
-                        <div class="cart-item-top">
-                            <div>
-                                <h4>Fresh chicken breast</h4>
-                                <p class="cart-meta">
-                                    Hudders Butchers Â· Qty 2
-                                </p>
-                            </div>
-                            <span class="cart-price">Â£13.00</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <div class="cart-qty">
-                                <button class="qty-btn" data-action="decrease">
-                                    -
-                                </button>
-                                <span class="qty-val">2</span>
-                                <button class="qty-btn" data-action="increase">
-                                    +
-                                </button>
-                            </div>
-                            <button class="cart-remove">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="cart-item"
-                    data-price="8.20"
-                    data-category="Hudders Butchers"
-                >
-                    <img
-                        src="assets/Item-image/green-broccoli.jpg"
-                        alt="Lamb mince"
-                    />
-                    <div class="cart-item-details">
-                        <div class="cart-item-top">
-                            <div>
-                                <h4>Lamb mince</h4>
-                                <p class="cart-meta">
-                                    Hudders Butchers Â· Qty 1
-                                </p>
-                            </div>
-                            <span class="cart-price">Â£8.20</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <div class="cart-qty">
-                                <button class="qty-btn" data-action="decrease">
-                                    -
-                                </button>
-                                <span class="qty-val">1</span>
-                                <button class="qty-btn" data-action="increase">
-                                    +
-                                </button>
-                            </div>
-                            <button class="cart-remove">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="cart-item"
-                    data-price="9.00"
-                    data-category="Hudders Butchers"
-                >
-                    <img
-                        src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg"
-                        alt="Dry aged steak"
-                    />
-                    <div class="cart-item-details">
-                        <div class="cart-item-top">
-                            <div>
-                                <h4>Dry aged steak</h4>
-                                <p class="cart-meta">
-                                    Hudders Butchers Â· Qty 3
-                                </p>
-                            </div>
-                            <span class="cart-price">Â£27.00</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <div class="cart-qty">
-                                <button class="qty-btn" data-action="decrease">
-                                    -
-                                </button>
-                                <span class="qty-val">3</span>
-                                <button class="qty-btn" data-action="increase">
-                                    +
-                                </button>
-                            </div>
-                            <button class="cart-remove">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="cart-empty">Your cart is empty.</div>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total</span
-                    ><span class="cart-total-value">Â£48.20</span>
-                </div>
-                <div class="cart-actions">
-                    <a class="cart-link" href="cart.html">Go to cart</a
-                    ><button class="cart-checkout">Checkout â†’</button>
-                </div>
-            </div>
-        </aside>
 
         <!-- =========================================================================
    MAIN CONTENT
@@ -1331,11 +1044,6 @@
                         id="cart-items-container"
                         class="cart-items card-panel"
                     >
-                        <div class="panel-head">
-                            <h2>Items (3)</h2>
-                            <span>Ready for pickup today</span>
-                        </div>
-
                         <div id="cart-items-dynamic">
                             <p style="color: #5e6a63">Loading cart items...</p>
                         </div>
@@ -1346,7 +1054,7 @@
                         <div class="panel-head"><h2>Summary</h2></div>
                         <div class="summary-row">
                             <span>Subtotal</span
-                            ><strong data-subtotal>GBP 48.20</strong>
+                            ><strong data-subtotal>£0.00</strong>
                         </div>
                         <div
                             class="summary-row"
@@ -1354,17 +1062,15 @@
                             style="display: none; color: #10b981"
                         >
                             <span>Discount</span
-                            ><strong data-discount>-GBP 0.00</strong>
+                            ><strong data-discount>-£0.00</strong>
                         </div>
                         <div class="summary-row">
                             <span>Service fee</span
-                            ><strong data-fee data-fixed-fee="2.40"
-                                >GBP 2.40</strong
-                            >
+                            ><strong data-fee>£2.40</strong>
                         </div>
                         <div class="summary-row total-row">
                             <span>Total</span
-                            ><strong data-total>GBP 50.60</strong>
+                            ><strong data-total>£2.40</strong>
                         </div>
                         <a
                             class="btn btn-primary full-width"
@@ -1404,67 +1110,7 @@
             <section class="cart-for-you">
                 <div class="page-wrap">
                     <div class="section-head"><h2>For you</h2></div>
-                    <div class="for-you-grid">
-                        <article class="for-you-card">
-                            <div class="for-you-image-wrap">
-                                <img
-                                    src="assets/Item-image/green-bell-pepper-isolated.jpg"
-                                    alt="Premium chicken wings"
-                                />
-                            </div>
-                            <div class="for-you-info">
-                                <h3>Premium chicken wings</h3>
-                                <strong>GBP 5.90</strong>
-                                <button type="button" class="mini-add-btn">
-                                    Add to cart
-                                </button>
-                            </div>
-                        </article>
-                        <article class="for-you-card">
-                            <div class="for-you-image-wrap">
-                                <img
-                                    src="assets/Item-image/green-broccoli.jpg"
-                                    alt="Lean beef mince"
-                                />
-                            </div>
-                            <div class="for-you-info">
-                                <h3>Lean beef mince</h3>
-                                <strong>GBP 7.40</strong>
-                                <button type="button" class="mini-add-btn">
-                                    Add to cart
-                                </button>
-                            </div>
-                        </article>
-                        <article class="for-you-card">
-                            <div class="for-you-image-wrap">
-                                <img
-                                    src="assets/Item-image/imgi_46_chinese-broccoli-vegetables_1203-6831.jpg"
-                                    alt="Marinated lamb chops"
-                                />
-                            </div>
-                            <div class="for-you-info">
-                                <h3>Marinated lamb chops</h3>
-                                <strong>GBP 11.80</strong>
-                                <button type="button" class="mini-add-btn">
-                                    Add to cart
-                                </button>
-                            </div>
-                        </article>
-                        <article class="for-you-card">
-                            <div class="for-you-image-wrap">
-                                <img
-                                    src="assets/Item-image/green-bell-pepper-isolated.jpg"
-                                    alt="Family grill pack"
-                                />
-                            </div>
-                            <div class="for-you-info">
-                                <h3>Family grill pack</h3>
-                                <strong>GBP 15.20</strong>
-                                <button type="button" class="mini-add-btn">
-                                    Add to cart
-                                </button>
-                            </div>
-                        </article>
+                    <div class="for-you-grid" id="cartForYouGrid">
                     </div>
                 </div>
             </section>
@@ -1627,91 +1273,9 @@
                 }
             });
 
-            const cartTrigger = document.getElementById("cartTrigger");
-            const cartDrawer = document.getElementById("cartDrawer");
-            const cartOverlay = document.getElementById("cartOverlay");
-            const cartClose = document.getElementById("cartClose");
-
             function formatMoney(value) {
                 return "Â£" + value.toFixed(2);
             }
-            function updateCartDrawerTotals() {
-                if (!cartDrawer) return;
-                const items = cartDrawer.querySelectorAll(".cart-item");
-                let total = 0;
-                items.forEach((item) => {
-                    const price = parseFloat(item.dataset.price || "0");
-                    const qtyEl = item.querySelector(".qty-val");
-                    const qty =
-                        parseInt(qtyEl ? qtyEl.textContent : "0", 10) || 0;
-                    const lineTotal = price * qty;
-                    const priceEl = item.querySelector(".cart-price");
-                    if (priceEl) priceEl.textContent = formatMoney(lineTotal);
-                    total += lineTotal;
-                });
-                const totalEl = cartDrawer.querySelector(".cart-total-value");
-                if (totalEl) totalEl.textContent = formatMoney(total);
-                const emptyEl = cartDrawer.querySelector(".cart-empty");
-                if (emptyEl)
-                    emptyEl.style.display = items.length ? "none" : "block";
-                // Update header badge
-                const badge = document.querySelector("#cartTrigger .badge");
-                if (badge) badge.textContent = items.length;
-            }
-
-            function openCart() {
-                cartDrawer.classList.add("open");
-                cartOverlay.classList.add("open");
-                cartDrawer.setAttribute("aria-hidden", "false");
-                document.body.style.overflow = "hidden";
-            }
-            function closeCart() {
-                cartDrawer.classList.remove("open");
-                cartOverlay.classList.remove("open");
-                cartDrawer.setAttribute("aria-hidden", "true");
-                document.body.style.overflow = "";
-            }
-
-            if (cartTrigger)
-                cartTrigger.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    openCart();
-                });
-            if (cartDrawer) {
-                cartDrawer.addEventListener("click", function (e) {
-                    const qtyBtn = e.target.closest(".qty-btn");
-                    if (qtyBtn) {
-                        const item = qtyBtn.closest(".cart-item");
-                        const qtyEl = item
-                            ? item.querySelector(".qty-val")
-                            : null;
-                        if (!item || !qtyEl) return;
-                        let qty = parseInt(qtyEl.textContent, 10) || 1;
-                        if (qtyBtn.dataset.action === "increase") {
-                            qty += 1;
-                        } else {
-                            qty = Math.max(1, qty - 1);
-                        }
-                        qtyEl.textContent = qty;
-                        updateCartDrawerTotals();
-                        return;
-                    }
-                    const removeBtn = e.target.closest(".cart-remove");
-                    if (removeBtn) {
-                        const item = removeBtn.closest(".cart-item");
-                        if (item) item.remove();
-                        updateCartDrawerTotals();
-                    }
-                });
-            }
-            if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
-            if (cartClose) cartClose.addEventListener("click", closeCart);
-            document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") {
-                    closeCart();
-                }
-            });
-            updateCartDrawerTotals();
 
             // USER GREETING
             function loadUserGreeting() {
@@ -1777,97 +1341,176 @@
             // =========================================================================
             async function loadCart() {
                 try {
-                    const res = await fetch("../api/cart/get-cart.php");
-                    const data = await res.json();
-                    if (data.success && data.data.length > 0) {
+                    const res = await fetch("../api/cart/get-cart.php", { credentials: "same-origin" });
+                    const text = await res.text();
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (parseErr) {
+                        document.getElementById("cart-items-dynamic").innerHTML =
+                            '<p style="padding:20px;color:#EF4444;">Error loading cart. <a href="../public/login.html" style="color:#FF5E3A;">Login again</a></p>';
+                        console.error("Cart parse error:", text);
+                        return;
+                    }
+                    if (!data.success) {
+                        document.getElementById("cart-items-dynamic").innerHTML =
+                            '<p style="padding:20px;color:#EF4444;">' + (data.error || "Error loading cart") + ' <a href="../public/login.html" style="color:#FF5E3A;">Login</a></p>';
+                        return;
+                    }
+                    if (data.data && data.data.length > 0) {
                         renderCartItems(data.data, data.total);
+                        
+                        // Check for out of stock items
+                        const hasOutOfStock = data.data.some(item => parseInt(item.STOCK) <= 0);
+                        const checkoutBtn = document.querySelector('a[href="collection.html"]');
+                        if (checkoutBtn) {
+                            if (hasOutOfStock) {
+                                checkoutBtn.style.pointerEvents = 'none';
+                                checkoutBtn.style.opacity = '0.5';
+                                checkoutBtn.innerHTML = 'Remove out-of-stock items to proceed';
+                                checkoutBtn.style.background = '#94a3b8';
+                            } else {
+                                checkoutBtn.style.pointerEvents = 'auto';
+                                checkoutBtn.style.opacity = '1';
+                                checkoutBtn.innerHTML = 'Choose collection slot';
+                                checkoutBtn.style.background = 'var(--primary-green)';
+                            }
+                        }
                     } else {
                         document.getElementById(
                             "cart-items-dynamic",
                         ).innerHTML =
                             '<div class="panel-head"><h2>Items (0)</h2><span>Your cart is empty</span></div><p style="padding:20px;color:#5E6A63;">No items in your cart. <a href="index.html" style="color:#FF5E3A;">Continue shopping</a></p>';
+                        updateSummary(0);
                     }
                 } catch (err) {
                     console.error("Error loading cart:", err);
+                    document.getElementById("cart-items-dynamic").innerHTML =
+                        '<p style="padding:20px;color:#EF4444;">Failed to load cart. <a href="../public/login.html" style="color:#FF5E3A;">Login</a></p>';
                 }
+            }
+
+            function updateSummary(subtotal) {
+                const fee = 2.4;
+                const subtotalEl = document.querySelector("[data-subtotal]");
+                const totalEl = document.querySelector("[data-total]");
+                if (subtotalEl) subtotalEl.textContent = "£" + subtotal.toFixed(2);
+                if (totalEl) totalEl.textContent = "£" + (subtotal + fee).toFixed(2);
             }
 
             function renderCartItems(items, total) {
                 const container = document.getElementById("cart-items-dynamic");
-                let html =
-                    '<div class="panel-head"><h2>Items (' +
-                    items.length +
-                    ")</h2><span>Ready for pickup today</span></div>";
-
-                items.forEach((item) => {
-                    // Match product name against known assets so every cart item shows a real image
-                    const nm = (item.NAME || "").toLowerCase();
-                    const imgMap = {
-                        "green bell pepper": "green-bell-pepper-isolated.jpg",
-                        eggs: "green-broccoli.jpg",
-                        broccoli: "green-broccoli.jpg",
-                        beef: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        steak: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        sausage:
-                            "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        lamb: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
-                        salmon: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        cod: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        prawn: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        seafood:
-                            "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        fish: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
-                        brie: "imgi_47_cheese-wood_573717-86.jpg",
-                        cheese: "imgi_47_cheese-wood_573717-86.jpg",
-                        bread: "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        sourdough:
-                            "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        croissant:
-                            "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
-                        spinach:
-                            "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
-                        carrot: "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
-                        vegetable:
-                            "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
-                    };
-                    let imgFile = "green-bell-pepper-isolated.jpg";
-                    for (const [k, v] of Object.entries(imgMap)) {
-                        if (nm.includes(k)) {
-                            imgFile = v;
-                            break;
-                        }
+                
+                // Group items by shop
+                const shops = {};
+                items.forEach(item => {
+                    const shopName = item.SHOP_NAME || 'Unknown Shop';
+                    if (!shops[shopName]) {
+                        shops[shopName] = [];
                     }
-
+                    shops[shopName].push(item);
+                });
+                
+                const shopNames = Object.keys(shops);
+                let html = '<div class="panel-head"><h2>Items (' + items.length + ')</h2><span>' + shopNames.length + ' shop' + (shopNames.length !== 1 ? 's' : '') + ' • Ready for pickup today</span></div>';
+                
+                // Shop colors for visual distinction
+                const shopColors = ['#0f260b', '#ff5e3a', '#2e7d32', '#1565c0', '#7b1fa2', '#ef6c00'];
+                
+                let shopIndex = 0;
+                for (const shopName in shops) {
+                    const shopItems = shops[shopName];
+                    const shopColor = shopColors[shopIndex % shopColors.length];
+                    const shopSubtotal = shopItems.reduce((sum, item) => sum + parseFloat(item.SUBTOTAL || 0), 0);
+                    
+                    // Shop header
                     html += `
-            <article class="cart-item-row" data-item-row data-cart-item-id="${item.CART_ITEM_ID}">
+                    <div class="shop-group" style="margin: 20px 0 10px 0; padding: 14px 16px; background: linear-gradient(135deg, ${shopColor}08 0%, ${shopColor}15 100%); border-left: 4px solid ${shopColor}; border-radius: 0 8px 8px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="material-icons-outlined" style="color: ${shopColor}; font-size: 22px;">store</span>
+                                <div>
+                                    <strong style="font-size: 16px; color: #1a1a1a;">${shopName}</strong>
+                                    <span style="font-size: 13px; color: #5e6a63; margin-left: 8px;">${shopItems.length} item${shopItems.length !== 1 ? 's' : ''}</span>
+                                </div>
+                            </div>
+                            <span style="font-weight: 600; color: ${shopColor};">£${shopSubtotal.toFixed(2)}</span>
+                        </div>
+                    </div>`;
+                    
+                    // Items in this shop
+                    shopItems.forEach((item) => {
+                        const nm = (item.NAME || "").toLowerCase();
+                        const imgMap = {
+                            "green bell pepper": "green-bell-pepper-isolated.jpg",
+                            eggs: "green-broccoli.jpg",
+                            broccoli: "green-broccoli.jpg",
+                            beef: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                            steak: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                            sausage: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                            lamb: "fresh-raw-meat-cuts-with-rosemary-spices-dark-slate.jpg",
+                            salmon: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                            cod: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                            prawn: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                            seafood: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                            fish: "top-view-fresh-fish-slices-dark-table-seafood-ocean-meat-sea-meal-dish-food-salad-water-pepper.jpg",
+                            brie: "imgi_47_cheese-wood_573717-86.jpg",
+                            cheese: "imgi_47_cheese-wood_573717-86.jpg",
+                            bread: "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                            sourdough: "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                            croissant: "imgi_57_sweet-bun-with-chocolate-syrup-peeled-orange_114579-2623.jpg",
+                            spinach: "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
+                            carrot: "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
+                            vegetable: "imgi_46_chinese-broccoli-vegetables_1203-6831.jpg",
+                        };
+                        let imgFile = "green-bell-pepper-isolated.jpg";
+                        for (const [k, v] of Object.entries(imgMap)) {
+                            if (nm.includes(k)) {
+                                imgFile = v;
+                                break;
+                            }
+                        }
+                        
+                        // Use IMAGE_SRC from API if available
+                        const imageSrc = item.IMAGE_SRC || "assets/Item-image/" + imgFile;
+                        
+                        const stock = parseInt(item.STOCK);
+                        let stockHtml = '';
+                        if (stock <= 0) {
+                            stockHtml = `<div class="stock-warning out"><span class="material-icons-outlined" style="font-size:16px">error_outline</span>Out of Stock - This item will be removed from your order</div>`;
+                        } else if (stock < 5) {
+                            stockHtml = `<div class="stock-warning low"><span class="material-icons-outlined" style="font-size:16px">warning</span>Low Stock - Only ${stock} left</div>`;
+                        }
+
+                        html += `
+            <article class="cart-item-row" data-item-row data-cart-item-id="${item.CART_ITEM_ID}" style="margin-left: 0; ${stock <= 0 ? 'opacity: 0.6; border-color: #FECACA;' : ''}">
                 <div class="item-image-wrap">
-                    <img src="assets/Item-image/${imgFile}" alt="${item.NAME}" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'">
+                    <img src="${imageSrc}" alt="${item.NAME}" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'">
                 </div>
                 <div class="item-meta">
                     <h3>${item.NAME}</h3>
                     <p style="color:#5E6A63;">${item.ALLERGEN_INFO || "No allergens"}</p>
+                    ${stockHtml}
                     <button type="button" class="remove-btn" onclick="removeFromCart(${item.CART_ITEM_ID})">Remove</button>
                 </div>
                 <div class="item-actions">
                     <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="updateQty(${item.CART_ITEM_ID}, -1)">-</button>
+                        <button type="button" class="qty-btn" onclick="updateQty(${item.CART_ITEM_ID}, -1)" ${stock <= 0 ? 'disabled' : ''}>-</button>
                         <span class="qty-value" data-qty-value>${item.QUANTITY}</span>
-                        <button type="button" class="qty-btn" onclick="updateQty(${item.CART_ITEM_ID}, 1)">+</button>
+                        <button type="button" class="qty-btn" onclick="updateQty(${item.CART_ITEM_ID}, 1)" ${stock <= 0 ? 'disabled' : ''}>+</button>
                     </div>
                     <div class="item-pricing">
-                        <span class="unit-price">GBP ${parseFloat(item.PRICE).toFixed(2)}</span>
-                        <strong class="line-total">GBP ${parseFloat(item.SUBTOTAL).toFixed(2)}</strong>
+                        <span class="unit-price">£${parseFloat(item.PRICE).toFixed(2)}</span>
+                        <strong class="line-total">£${parseFloat(item.SUBTOTAL).toFixed(2)}</strong>
                     </div>
                 </div>
             </article>`;
-                });
+                    });
+                    shopIndex++;
+                }
 
                 container.innerHTML = html;
-                const fee = 2.4;
-                document.querySelector("[data-subtotal]").textContent =
-                    "GBP " + total.toFixed(2);
-                document.querySelector("[data-total]").textContent =
-                    "GBP " + (total + fee).toFixed(2);
+                updateSummary(total);
             }
 
             async function updateQty(cartItemId, change) {
@@ -1891,6 +1534,8 @@
                     if (data.success) {
                         loadCart();
                         loadBadgeCounts();
+                    } else {
+                        showModal(data.error || "Could not update quantity.", "error", "Stock Limit");
                     }
                 } catch (err) {
                     console.error(err);
@@ -1936,7 +1581,7 @@
             function recalculateWithDiscount(discountPercent) {
                 const subtotalEl = document.querySelector("[data-subtotal]");
                 const subtotal = subtotalEl
-                    ? parseFloat(subtotalEl.textContent.replace("GBP ", ""))
+                    ? parseFloat(subtotalEl.textContent.replace("£", ""))
                     : 0;
                 const discount = subtotal * (discountPercent / 100);
                 const fee = 2.4;
@@ -1944,55 +1589,160 @@
                 const discountEl = document.querySelector("[data-discount]");
                 const totalEl = document.querySelector("[data-total]");
                 if (discountEl)
-                    discountEl.textContent = "-GBP " + discount.toFixed(2);
-                if (totalEl) totalEl.textContent = "GBP " + total.toFixed(2);
+                    discountEl.textContent = "-£" + discount.toFixed(2);
+                if (totalEl) totalEl.textContent = "£" + total.toFixed(2);
             }
 
             async function clearCart() {
-                if (
-                    !confirm("Are you sure you want to clear your entire cart?")
-                )
-                    return;
-                try {
-                    const res = await fetch("../api/cart/clear-cart.php", {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: { "Content-Type": "application/json" },
-                    });
-                    const data = JSON.parse(await res.text());
-                    if (data.success) {
-                        loadCart();
-                        loadBadgeCounts();
-                    } else {
-                        alert(data.error || "Could not clear cart.");
-                    }
-                } catch (err) {
-                    console.error(err);
-                }
+                showConfirm("Are you sure you want to clear your entire cart?", function(confirmed){
+                    if(!confirmed) return;
+                    (async () => {
+                        try {
+                            const res = await fetch("../api/cart/clear-cart.php", {
+                                method: "POST",
+                                credentials: "same-origin",
+                                headers: { "Content-Type": "application/json" },
+                            });
+                            const data = JSON.parse(await res.text());
+                            if (data.success) {
+                                loadCart();
+                                loadBadgeCounts();
+                            } else {
+                                showModal(data.error || "Could not clear cart.", "error");
+                            }
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    })();
+                }, "Clear Cart");
             }
 
             async function removeFromCart(cartItemId) {
-                if (!confirm("Remove this item?")) return;
-                try {
-                    const res = await fetch(
-                        "../api/cart/remove-from-cart.php",
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ cart_item_id: cartItemId }),
-                        },
-                    );
-                    const data = await res.json();
-                    if (data.success) {
-                        loadCart();
-                        loadBadgeCounts();
-                    }
-                } catch (err) {
-                    console.error(err);
-                }
+                showConfirm("Remove this item?", function(confirmed){
+                    if(!confirmed) return;
+                    (async () => {
+                        try {
+                            const res = await fetch(
+                                "../api/cart/remove-from-cart.php",
+                                {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ cart_item_id: cartItemId }),
+                                },
+                            );
+                            const data = await res.json();
+                            if (data.success) {
+                                loadCart();
+                                loadBadgeCounts();
+                            }
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    })();
+                }, "Remove Item");
             }
 
             loadCart();
+        </script>
+        <!-- Professional Modal -->
+        <div class="prof-modal-overlay" id="profModal">
+            <div class="prof-modal" style="position:relative;">
+                <button class="prof-modal-close" onclick="closeProfModal()">&times;</button>
+                <div class="prof-modal-icon" id="profModalIcon"></div>
+                <div class="prof-modal-title" id="profModalTitle"></div>
+                <div class="prof-modal-message" id="profModalMessage"></div>
+                <div class="prof-modal-buttons" id="profModalButtons"></div>
+            </div>
+        </div>
+        <script>
+            function showModal(msg, type = "info", title = "") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                const icons = { success: "✓", error: "✕", warning: "⚠", info: "ℹ", confirm: "?" };
+                const titles = { success: "Success", error: "Error", warning: "Warning", info: "Notice", confirm: "Confirm" };
+                icon.className = "prof-modal-icon " + type;
+                icon.textContent = icons[type] || "ℹ";
+                titleEl.textContent = title || titles[type] || "";
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn primary" onclick="closeProfModal()">OK</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+            function showConfirm(msg, onConfirm, title = "Confirm") {
+                const overlay = document.getElementById("profModal");
+                const icon = document.getElementById("profModalIcon");
+                const titleEl = document.getElementById("profModalTitle");
+                const msgEl = document.getElementById("profModalMessage");
+                const btns = document.getElementById("profModalButtons");
+                icon.className = "prof-modal-icon confirm";
+                icon.textContent = "?";
+                titleEl.textContent = title;
+                msgEl.textContent = msg;
+                btns.innerHTML = '<button class="prof-modal-btn secondary" onclick="closeProfModal(false)">Cancel</button><button class="prof-modal-btn primary" onclick="closeProfModal(true)">Confirm</button>';
+                overlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+                window._profConfirmCallback = onConfirm;
+            }
+            function closeProfModal(confirmed = false) {
+                document.getElementById("profModal").classList.remove("show");
+                document.body.style.overflow = "";
+                if (window._profConfirmCallback) { window._profConfirmCallback(confirmed); window._profConfirmCallback = null; }
+            }
+
+            async function loadCartForYou() {
+                const grid = document.getElementById("cartForYouGrid");
+                if (!grid) return;
+                try {
+                    const res = await fetch("../api/products/get-homepage-products.php?limit=8");
+                    const data = await res.json();
+                    if (!data.success || !data.data || !data.data.length) return;
+                    grid.innerHTML = data.data.slice(0, 8).map(p => {
+                        const name = p.NAME || "";
+                        const price = parseFloat(p.PRICE || 0);
+                        const disc = parseFloat(p.DISCOUNT_PERCENT || 0);
+                        const displayPrice = disc > 0 ? price * (1 - disc / 100) : price;
+                        let imgSrc = p.IMAGE_URL || "assets/Item-image/green-bell-pepper-isolated.jpg";
+                        return `<article class="for-you-card">
+                            <div class="for-you-image-wrap">
+                                <img src="${imgSrc}" alt="${name}" onerror="this.src='assets/Item-image/green-bell-pepper-isolated.jpg'">
+                            </div>
+                            <div class="for-you-info">
+                                <h3>${name}</h3>
+                                <strong>£${displayPrice.toFixed(2)}</strong>
+                                <button type="button" class="mini-add-btn" onclick="addToCartFromForYou(${p.PRODUCT_ID})">Add to cart</button>
+                            </div>
+                        </article>`;
+                    }).join("");
+                } catch (e) {}
+            }
+
+            async function addToCartFromForYou(productId) {
+                const uid = sessionStorage.getItem("user_id");
+                if (!uid) { window.location.href = "login.html"; return; }
+                try {
+                    const r = await fetch("../api/cart/add-to-cart.php", {
+                        method: "POST", credentials: "same-origin",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ product_id: productId, quantity: 1 })
+                    });
+                    const d = JSON.parse(await r.text());
+                    if (d.success) {
+                        const el = document.getElementById("cartCount");
+                        if (el) el.textContent = d.new_count || (parseInt(el.textContent) || 0) + 1;
+                    } else {
+                        if (d.error && d.error.includes("20 products")) {
+                            showModal("Only 20 items are allowed per order. Please check your cart and remove items before adding more.", "warning", "Cart Limit Reached");
+                        } else {
+                            showModal(d.error || "Could not add to cart.", "error");
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            document.addEventListener("DOMContentLoaded", loadCartForYou);
         </script>
     </body>
 </html>
