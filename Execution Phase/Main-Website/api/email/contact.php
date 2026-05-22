@@ -2,6 +2,13 @@
 // api/email/contact.php
 // Handles the public contact-page form submission.
 // Fields (POST): name, email, subject, message
+
+// Disable error reporting to prevent non-JSON output
+error_reporting(0);
+ini_set('display_errors', 0);
+
+ob_start();
+
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../config/mailer.php';
 
@@ -9,6 +16,7 @@ header('Content-Type: application/json');
 
 // Accept only POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Method not allowed']);
     exit;
 }
@@ -22,28 +30,33 @@ $message = trim($input['message'] ?? '');
 
 // ── Basic validation ──────────────────────────────────────────────────────────
 if ($name === '') {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Your name is required']);
     exit;
 }
 if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'A valid email address is required']);
     exit;
 }
 if ($subject === '') {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Please enter a subject']);
     exit;
 }
 if ($message === '') {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Please enter a message']);
     exit;
 }
 if (strlen($message) < 10) {
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Message must be at least 10 characters']);
     exit;
 }
 
 // ── Build & send email ────────────────────────────────────────────────────────
-$to      = 'support@huddershub.test';
+$to      = 'adminhuddershub@gmail.com';
 $toName  = 'HuddersHub Support';
 
 $textBody = "New contact form submission from HuddersHub\n\n"
@@ -79,12 +92,14 @@ try {
         . '<p style="color:#374151;line-height:1.6;">Hi ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ',</p>'
         . '<p style="color:#374151;line-height:1.6;">Thank you for contacting HuddersHub. We have received your message and will get back to you within 1 business day.</p>'
         . '<p style="color:#374151;line-height:1.6;"><strong>Original subject:</strong> ' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</p>'
-        . '<p style="color:#6b7280;font-size:12px;">HuddersHub Customer Support — support@huddershub.test</p>'
+        . '<p style="color:#6b7280;font-size:12px;">HuddersHub Customer Support — adminhuddershub@gmail.com</p>'
         . '</div>';
-    @hudderhub_send_html_mail($email, $name, 'Message Received — HuddersHub', $autoReplyHtml);
+    huddershub_send_html_mail($email, $name, 'Message Received — HuddersHub', $autoReplyHtml);
 
+    ob_end_clean();
     echo json_encode(['success' => true, 'message' => 'Thank you for contacting us! We\'ll reply within 1 business day.']);
 } catch (Exception $e) {
     error_log('Contact form email failed: ' . $e->getMessage());
+    ob_end_clean();
     echo json_encode(['success' => false, 'error' => 'Failed to send message. Please try again later.']);
 }

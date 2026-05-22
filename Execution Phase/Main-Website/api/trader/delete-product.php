@@ -1,4 +1,8 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 // api/trader/delete-product.php
 // POST body: { user_id: int, product_id: int }
 // Owned-product check, explicit image cleanup, FK-safe
@@ -54,4 +58,3 @@ if (oci_execute($del_prod, OCI_COMMIT_ON_SUCCESS)) {
 
 oci_free_statement($del_prod);
 oci_close($conn);
-?>

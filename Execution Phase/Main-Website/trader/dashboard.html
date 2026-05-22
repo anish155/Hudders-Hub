@@ -839,13 +839,20 @@ function submitStockUpdate(productId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId, product_id: productId, stock: parseInt(newStock) })
         })
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) throw new Error('HTTP error ' + r.status);
+            return r.json();
+        })
         .then(data => {
             if (data.success) {
                 loadDashboard();
             } else {
                 showModal('Failed to update stock: ' + data.message, 'error');
             }
+        })
+        .catch(err => {
+            console.error('Stock update error:', err);
+            showModal('Error updating stock. Please check your connection.', 'error');
         });
     }
 }

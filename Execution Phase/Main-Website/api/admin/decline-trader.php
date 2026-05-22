@@ -111,10 +111,10 @@ try {
                     . "After careful review, we regret to inform you that your application for $shopName has not been approved at this time.\n"
                     . "$reasonLine\n"
                     . "We encourage you to address the feedback above and re-apply in the future.\n\n"
-                    . "If you have any questions, contact us at support@huddershub.test.\n\n"
+                    . "If you have any questions, contact us at adminhuddershub@gmail.com.\n\n"
                     . "Thank you for your interest in HuddersHub.\nThe HuddersHub Team";
                 $headers = "From: " . MAIL_FROM . "\r\n";
-                $headers .= "Reply-To: support@huddershub.test\r\n";
+                $headers .= "Reply-To: adminhuddershub@gmail.com\r\n";
                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
                 $mailResult = mail($traderEmail, $subject, $body, $headers);
                 $emailSent = (bool)$mailResult;
@@ -143,4 +143,3 @@ try {
 } finally {
     if (isset($conn)) oci_close($conn);
 }
-?>

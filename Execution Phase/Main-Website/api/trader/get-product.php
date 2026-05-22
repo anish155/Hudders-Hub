@@ -1,4 +1,8 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 /**
  * Get Single Product API
  * GET /api/trader/get-product.php?product_id=N&user_id=N

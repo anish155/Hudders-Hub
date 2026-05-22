@@ -1,4 +1,8 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 /**
  * Update Order Status API
  * POST /api/trader/update-order-status.php
@@ -19,10 +23,11 @@ if (!$user_id || !$order_id || !$new_status) {
 }
 
 // Must match DB CHECK constraint exactly
-$valid_statuses = ['Pending', 'Preparing', 'Ready', 'Collected', 'Cancelled'];
+// Traders are restricted from marking orders as 'Collected' (Done via Staff/Arduino bridge)
+$valid_statuses = ['Pending', 'Preparing', 'Ready', 'Cancelled'];
 if (!in_array($new_status, $valid_statuses)) {
     echo json_encode(['success' => false,
-        'message' => 'Invalid status. Allowed: ' . implode(', ', $valid_statuses)]);
+        'message' => 'Invalid status or permission denied. Allowed: ' . implode(', ', $valid_statuses)]);
     exit;
 }
 
@@ -75,4 +80,3 @@ if (oci_execute($su, OCI_COMMIT_ON_SUCCESS)) {
 
 oci_free_statement($su);
 oci_close($conn);
-?>

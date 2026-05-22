@@ -172,7 +172,7 @@ if (!function_exists('huddershub_send_order_cancellation')) {
             . '<p style="margin:4px 0;color:#374151;"><strong>Original Collection:</strong> ' . htmlspecialchars($slotDate) . ' at ' . htmlspecialchars($slotTime) . '</p>'
             . '</div>'
             . '<p style="color:#6b7280;font-size:14px;margin-top:16px;">If you did not request this cancellation, please contact us immediately.</p>'
-            . '<p style="color:#6b7280;font-size:12px;">HuddersHub Customer Support - support@huddershub.test</p>'
+            . '<p style="color:#6b7280;font-size:12px;">HuddersHub Customer Support - adminhuddershub@gmail.com</p>'
             . '</div>';
         
         return huddershub_send_html_mail($toEmail, $toName, $subject, $html);
@@ -196,7 +196,7 @@ if (!function_exists('huddershub_send_trader_welcome')) {
             . '</ul>'
             . '</div>'
             . '<p><a href="' . htmlspecialchars($loginLink, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;background:#FF5E3A;color:#fff;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:700;">Go to Dashboard</a></p>'
-            . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:16px;">If you have any questions, contact us at support@huddershub.test</p>'
+            . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:16px;">If you have any questions, contact us at adminhuddershub@gmail.com</p>'
             . '<p style="color:#6b7280;font-size:12px;">HuddersHub Team - Connecting local traders with the community</p>'
             . '</div>';
         return huddershub_send_html_mail($toEmail, $traderName, $subject, $html);
@@ -218,7 +218,7 @@ if (!function_exists('huddershub_send_trader_apex_credentials')) {
             . '<div style="background:#fef3c7;padding:12px;border-radius:8px;margin:16px 0;border-left:4px solid #f59e0b;">'
             . '<p style="margin:4px 0;color:#92400e;font-size:13px;"><strong>Important:</strong> Please keep these credentials secure. Do not share them with anyone. We recommend changing your password after your first login.</p>'
             . '</div>'
-            . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:16px;">If you did not register as a trader on HuddersHub, please contact us immediately at support@huddershub.test</p>'
+            . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:16px;">If you did not register as a trader on HuddersHub, please contact us immediately at adminhuddershub@gmail.com</p>'
             . '<p style="color:#6b7280;font-size:12px;">HuddersHub Team</p>'
             . '</div>';
         return huddershub_send_html_mail($toEmail, $traderName, $subject, $html);
@@ -250,7 +250,7 @@ if (!function_exists('huddershub_send_trader_approved')) {
             . '<p style="text-align:center;margin:24px 0;"><a href="' . htmlspecialchars($dashboardLink, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;background:#FF5E3A;color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:16px;">Go to Trader Dashboard</a></p>'
             . '<div style="background:#f9fafb;padding:16px;border-radius:8px;margin:16px 0;">'
             . '<p style="margin:4px 0;color:#374151;font-size:14px;"><strong>Need help getting started?</strong></p>'
-            . '<p style="margin:4px 0;color:#6b7280;font-size:13px;">Contact our trader support team at <a href="mailto:support@huddershub.test" style="color:#FF5E3A;">support@huddershub.test</a></p>'
+            . '<p style="margin:4px 0;color:#6b7280;font-size:13px;">Contact our trader support team at <a href="mailto:adminhuddershub@gmail.com" style="color:#FF5E3A;">adminhuddershub@gmail.com</a></p>'
             . '</div>'
             . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:16px;">Thank you for joining HuddersHub. We look forward to helping your business grow!</p>'
             . '<p style="color:#6b7280;font-size:12px;">HuddersHub Team - Connecting local traders with the community</p>'
@@ -283,7 +283,7 @@ if (!function_exists('huddershub_send_trader_registration_received')) {
             . '<li>If approved, you will gain instant access to your trader dashboard</li>'
             . '<li>You can start listing your products and receiving orders immediately</li>'
             . '</ul>'
-            . '<p style="color:#374151;line-height:1.6;">If you have any questions in the meantime, feel free to contact us at <a href="mailto:support@huddershub.test" style="color:#FF5E3A;">support@huddershub.test</a>.</p>'
+            . '<p style="color:#374151;line-height:1.6;">If you have any questions in the meantime, feel free to contact us at <a href="mailto:adminhuddershub@gmail.com" style="color:#FF5E3A;">adminhuddershub@gmail.com</a>.</p>'
             . '<p style="color:#6b7280;font-size:12px;line-height:1.6;margin-top:24px;">Thank you for choosing HuddersHub.<br>The HuddersHub Team</p>'
             . '</div>';
         return huddershub_send_html_mail($toEmail, $traderName, $subject, $html);
@@ -311,7 +311,7 @@ if (!function_exists('huddershub_send_trader_declined')) {
             . $reasonBlock
             . '<p style="color:#374151;line-height:1.6;">We encourage you to address the feedback above and re-apply in the future. Our team always looks forward to welcoming new local traders into the HuddersHub community.</p>'
             . '<p style="color:#374151;line-height:1.6;">If you have any questions or would like more information, please don\'t hesitate to reach out: '
-            . '<a href="mailto:support@huddershub.test" style="color:#FF5E3A;">support@huddershub.test</a>.</p>'
+            . '<a href="mailto:adminhuddershub@gmail.com" style="color:#FF5E3A;">adminhuddershub@gmail.com</a>.</p>'
             . '<div style="background:#fef3c7;padding:16px;border-radius:8px;margin:16px 0;border-left:4px solid #f59e0b;">'
             . '<p style="margin:4px 0;color:#92400e;"><strong>Note:</strong> You may submit a new application at any time from our <a href="' . htmlspecialchars(huddershub_base_url() . '/public/register-trader.html', ENT_QUOTES, 'UTF-8') . '" style="color:#FF5E3A;">trader registration page</a>.</p>'
             . '</div>'

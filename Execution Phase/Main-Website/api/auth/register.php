@@ -149,4 +149,3 @@ try {
 } finally {
     if (isset($conn)) oci_close($conn);
 }
-?>

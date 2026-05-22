@@ -223,6 +223,11 @@
                 background: #d1fae5;
                 color: #065f46;
             }
+            .collected {
+                background: #065f46;
+                color: #ffffff;
+                border-radius: 4px;
+            }
             .cancel {
                 background: #fee2e2;
                 color: #b91c1c;
@@ -475,7 +480,9 @@
                     const statusClass =
                         order.STATUS === "Pending"
                             ? "pending"
-                            : order.STATUS === "Completed" ||
+                            : order.STATUS === "Collected"
+                              ? "collected"
+                              : order.STATUS === "Completed" ||
                                 order.STATUS === "Delivered"
                               ? "done"
                               : "cancel";
@@ -505,8 +512,11 @@
                         order.STATUS === "Pending"
                             ? `<button onclick="cancelOrderFromList(${order.ORDER_ID})" style="padding:6px 12px;background:#FEE2E2;color:#991B1B;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px;">Cancel</button>`
                             : "";
-                    const reorderBtn = (order.STATUS === "Completed" || order.STATUS === "Ready" || order.STATUS === "Delivered")
+                    const reorderBtn = (order.STATUS === "Completed" || order.STATUS === "Ready" || order.STATUS === "Delivered" || order.STATUS === "Collected")
                             ? `<button onclick="reorderFromList(${order.ORDER_ID})" style="padding:6px 12px;background:#DEF7EC;color:#03543F;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px;">Reorder</button>`
+                            : "";
+                    const reviewBtn = order.STATUS === "Collected"
+                            ? `<a href="../public/product.html" style="padding:6px 12px;background:#0f260b;color:#ffffff;text-decoration:none;border-radius:6px;font-size:12px;font-weight:600;display:inline-block;margin-left:8px;">Add Review</a>`
                             : "";
                     html +=
                         '<td data-label="Action"><a class="link" href="order-detail.html?order_id=' +
@@ -514,6 +524,7 @@
                         '">View Details</a>' +
                         cancelBtn +
                         reorderBtn +
+                        reviewBtn +
                         "</td>";
                     html += "</tr>";
                 });

@@ -1881,8 +1881,9 @@
                         submitBtn.innerHTML =
                             '<span class="material-icons-outlined">save</span> Save Changes';
                     }
-                } catch (_) {
-                    showToast("Network error. Please try again.", "error");
+                } catch (err) {
+                    console.error("Update error:", err);
+                    showToast("Network error or invalid response. Please try again.", "error");
                     submitBtn.disabled = false;
                     submitBtn.innerHTML =
                         '<span class="material-icons-outlined">save</span> Save Changes';

@@ -138,7 +138,7 @@ try {
                 $subject = 'Your Trader Account Has Been Approved - HuddersHub';
                 $body = "Hi $traderName,\n\nGreat news! Your trader application for $shopName has been approved.\n\nYou can now access your dashboard at: $baseUrl/public/login.html?role=trader\n\nLogin with the same email and password you used to register.\n\nThe HuddersHub Team";
                 $headers = "From: " . MAIL_FROM . "\r\n";
-                $headers .= "Reply-To: support@huddershub.test\r\n";
+                $headers .= "Reply-To: adminhuddershub@gmail.com\r\n";
                 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
                 $mailResult = mail($traderEmail, $subject, $body, $headers);
                 $emailSent = (bool)$mailResult;
@@ -179,4 +179,3 @@ try {
 } finally {
     if (isset($conn)) oci_close($conn);
 }
-?>

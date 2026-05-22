@@ -1,4 +1,8 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 /**
  * Trader Dashboard API
  * GET /api/trader/get-dashboard.php?user_id=N

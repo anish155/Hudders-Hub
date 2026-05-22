@@ -1,4 +1,8 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 require_once '../../config/database.php';
 header('Content-Type: application/json');
 

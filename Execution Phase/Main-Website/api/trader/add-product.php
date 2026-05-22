@@ -1,10 +1,10 @@
 <?php
+// Disable error reporting to prevent warnings from breaking JSON
+error_reporting(0);
+ini_set('display_errors', 0);
+
 // api/trader/add-product.php
 // Supports: unit, dietary_tags, multi-image URL upload, FormData body
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
-ini_set('error_log', 'C:/xampp/htdocs/Main-Website/php_api_errors.log');
 require_once '../../config/database.php';
 header('Content-Type: application/json');
 
